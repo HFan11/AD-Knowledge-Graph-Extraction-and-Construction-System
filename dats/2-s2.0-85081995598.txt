@@ -1,0 +1,204 @@
+Machine Learning Predictive Models Can Improve Efficacy of Clinical Trials for Alzheimer's Disease
+The ideal participants for Alzheimer's disease (AD) clinical trials would show cognitive decline in the absence of treatment (i.e., placebo arm) and also would be responsive to the therapeutic intervention being studied (i.e., drug arm).
+One strategy to boost the power of trials is to enroll individuals who are more likely to progress targeted using data-driven predictive models.
+Objective: To investigate if machine learning (ML) models can effectively predict clinical disease progression (cognitive decline) in mild-to-moderate AD patients during the timeframe of a phase III clinical trial.
+Methods: Data from 202 participants with a diagnosis of AD at baseline from the Alzheimer's Disease Neuroimaging Initiative (ADNI) was used to train ML classifiers that can differentiate between individuals who had declining cognitive function (DC) and individuals with stable cognitive function (SC).
+DC was defined as any downward change in the Alzheimer's Disease Assessment Scale cognitive subscale (ADAS-cog) score over 12 months of follow-up.
+SC was defined by the absence of decline in ADAS-cog.
+Trained models were applied to data from 77 participants from the placebo arm of the phase III trial of Semagacestat (LFAN study) to identify subgroups of SC versus DC.
+Results: Only 74.8% of ADNI participants and 63.6% of LFAN participants had cognitive decline after one year of follow up.
+K-nearest neighbors (kNN) classifier had an accuracy of 68.3%, sensitivity of 80.1%, and specificity of 33.3% for identifying decliners in ADNI (training sample).
+In LFAN (validation sample), the model showed an overall accuracy of 61.3%, sensitivity of 65.5%, and specificity of 47.0% in identifying decliners at the 12 months of follow-up.
+The model had a positive predictive value of 80.8%, which was 17.2% more than the base prevalence of decliners.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common cause of dementia accounting for 60-80% of the cases
+AD is age related and with the aging of the world's population it is becoming markedly more common
+Considering the increasing costs and burden of AD on the healthcare and society, disease-modifying therapies (DMTs) that will prevent or delay the onset or slow the progression of AD are urgently needed.
+However, since the approval of memantine in 2003, no new molecular entity for the prevention or treatment of AD have been approved
+This failure has occurred despite major advances in the understanding of the biology of AD and substantial investment by the NIH and the pharmaceutical industry to develop drugs for well-established and novel targets
+Failure may arise from a variety of factors including inappropriate biological targets, biological heterogeneity, late intervention, or poor selection of participants.
+In AD trials, active treatment is intended to slow the rate of cognitive decline.
+Enrollment of individuals who will not show cognitive decline reduces the chance of detecting therapeutic effects of a drug
+The most common method used to select homogenous patients who are more likely to decline during a trial is by using specific inclusion and exclusion criteria.
+Until late 2000 s, most trials used simple enrollment criteria
+More recently these criteria became stricter and in addition to previous criteria, patients need to meet certain biomarker-based criteria such as amyloid positivity on positron emission tomography (PET) scans or have evidence of neurodegeneration (e.g., hippocampal atrophy) to pass the screening step
+While these measures can decrease heterogeneity of the enrolled patients and increase power of trial to detect the therapeutic effect, they are also associated with some tradeoff in increased trial costs, burden, and consequences.
+Furthermore, even with implementation of strict inclusion or exclusion criteria, a substantial number of patients fail to show any signs of cognitive decline during the follow-up
+One strategy to overcome this problem, and simultaneously boosting the power of trials, is to only enroll individuals likely to progress based on data-driven predictive models.
+Quantitative risk prediction for AD using structured data sources and classical statistical methods have been available for many years.
+However, predictive models have not been used in design of AD clinical trials.
+Machine learning (ML) techniques, which are specifically designed for the purpose of prediction, can provide incremental improvement in predictive performance using complex and high-dimensional data
+Considering the high performance of such models, they have huge potential for practical use in "real-world" research and clinical practice.
+Showing effectiveness of predictive models in data from clinical trials is one of the most first steps toward implementing such methods in practice.
+In this study, we aimed to investigate if ML models can be used to identify individuals who will show cognitive decline during the timeframe of a clinical trial.
+For this purpose, we used baseline data from the Alzheimer's Disease Neuroimaging Initiative (ADNI), a longitudinal cohort of aging and dementia, to train ML models that can predict rate of cognitive decline in individuals with AD.
+Subsequently, the trained ML models were applied to baseline data from the placebo arm of Semagacestat trial, a phase III randomized clinical trial, to predict which of the individuals are more likely to have cognitive decline during follow-up.
+While these two datasets have substantial differences, they are both multicenter studies, have longitudinal data on patients with diagnosis of AD at enrollment, have collected imaging data, and have similar processes features (e.g., volumetric MRIs).
+Furthermore, showing high performance of a model developed using data from a cohort in predicting cognitive trajectory in a clinical trial's data, would be a testament for effectiveness of such models.
+
+METHODS
+
+Study design and participants
+Two data-sets were used for this study: I) Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), PET, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment and early AD.
+The data used for our analysis were downloaded from the ADNI database in March 2019 after obtaining permission from the investigative team.
+The individuals included in the current study were initially recruited as part of ADNI-1, ADNI-GO, and ADNI-2 between 2005 and 2013.
+ADNI study was approved by the Institutional Review Boards (IRB) of all participating institutions.
+Informed written consent was obtained from all participants at each site.
+Details of the ADNI cohort and study methods are describes fully at (
+II) Semagacestat trial (H6L-MC-LFAN study), which is a clinical trial conducted by Eli-Lilly between December 2009 and April 2011 to evaluate the efficacy of Semagacestat, a small-molecule γ-secretase inhibitor, for treatment of AD trial.
+The trial was terminated before completion on the basis of a recommendation by the data and safety monitoring board and the results showed that as compared with placebo, semagacestat did not improve cognitive status, and patients receiving the higher dose had significant worsening of functional ability
+The research protocol was approved by the institutional review board at each institution where the trial was conducted, and all participants provided written informed consent.
+Other details of LFAN study, including recruitment and methods are explained previously
+ADNI sample included participants with mild AD and LFAN participants included participants with mild-to-moderate AD.
+For both studies, participants had to satisfy the criteria of the National Institute of Neurological and Communicative Disorders and Stroke-Alzheimer's Disease and Related Disorders Association (NINCDS-ADRDA) criteria for probable AD
+
+Inclusion criteria
+Eligible participants for current study were all of the ADNI and LFAN participants who had a diagnosis of mild-to-moderate AD at baseline, had baseline MRI, and at least 1 year of longitudinal follow-up.
+A total of 202 participants from the ADNI study and 77 participants from the LFAN study met the criteria for inclusion in our study.
+
+Neuropsychological data and APOE gene status
+The following neuropsychological (NP) tests were available for both studies and used in our models:
+
+Mini-Mental State Examination (MMSE) [17]:
+A brief screening instrument for cognitive dysfunction with raw scores that range from 0 to 30, where lower scores indicate greater cognitive dysfunction.
+
+Alzheimer's Disease Assessment Scale cognitive subscale (ADAS-cog) [18]:
+The ADAS-Cog was developed as an outcome measure for dementia interventions; its primary purpose was to be an index of global cognition in response to antidementia therapies.
+ADAS-cog raw scores range from 0 to 70, where higher scores indicate greater cognitive dysfunction.
+Apolipoprotein E (APOE) ε4 allele frequency was available for all participants included in this study.
+ApoE4 status was defined as ApoE4 negative (-) if they carried no ApoE4 allele or ApoE4 positive (+) if they carried at least one ApoE4 allele.
+For more information on these measures and methods of assessment, please visit ADNI website at
+
+MRI measures
+MRIs were collected using a unified protocol for each study and preprocessing for measurement of MRI volumetrics were completed using methods previously describes in detail (For more information for ADNI protocols, see
+MRI volumetrics available for participants of both studies included left hippocampal volume, right hippocampal volume, ventricular volume (sum of lateral and third ventricles), and total brain volume.
+Considering that MRI analysis methods were different between studies (ADNI and LFAN) and to harmonize data-sets, standardized scores (Z-score = (X-μ)/σ; where X = score, μ = mean, and σ = standard deviation) for volumetric measures were computed separately for each sample and used for further analysis in this study.
+The MRI measures had a normal distribution in our sample and therefore converting measures using the standard score was deemed appropriate for our purpose.
+
+Data analysis
+Selection of feature-set-A total of 11 features (measures) were selected for inclusion in the ML models: Selection of features was based on availability of feature in both ADNI and LFAN data-sets.
+Considering relatively small size of this feature-set, we did not use any feature selection algorithm and all the available features were included in the models.
+Considering that features used in current study had considerably different ranges, in addition to MRI measures, all other continuous measures (age, education, MMSE, ADAS-cog, GDS) were normalized separately for each dataset, and Z-values were used in the models.
+Data normalization is considered to be essential for improving performance of ML models
+Predictive models-We used two ML models of decision trees (DTs)
+• DTs are powerful classifiers that sequentially dichotomize the feature space into regions associated with different classes.
+As such, they are capable of learning arbitrarily complex Boolean functions that map the features/predictors to class labels
+While they are widely used due to their ease of training based on labeled data, and robustness to missing features, they are known to be unstable due to their hierarchical structure: an incorrect decision at a high node in the tree would propagate down the nodes and results in misclassification (for details, see
+We used a fine DT (f-DT) model in the current study.
+• kNNs are among the simplest, yet effective machine learning methods that use the idea of polling among the labels of the training examples closest to a new sample, and assigning the majority vote as its predicted label.
+To this end, for a positive integer K, the Euclidean distance between the new sample and the elements of the training set are computer and K training examples with the smallest distance are chosen to poll from (for details, see
+In brief, the Euclidean distance is specified by the following formula, where p is the new sample to be labeled and q is any of the examples in the training set, each having n features.
+The term p i refers to the value of the i th feature of example p, while q i refers to the value of the i th feature of example q, for i = 1,2, …, n:
+The value of K in kNN was determined by using different K values in the models, starting from one to the square root of the size of the training set (approximately 3 in our analysis).
+The K-value of 1 showed the best classification performance in the training dataset, therefore results presented in this study are based on that.
+Five-fold cross-validation was used for testing validity of all ML models.
+Analysis and computation of machine learning models were conducted using MATLAB ©(version 2018b).
+Finally, for the purpose of a head-to-head comparison between conventional statistical methods (also known as an old machine learning approach) and newer ML models, a classical logistic regression model was applied to the same feature-set to classify participants.
+Analytical approach-Study design and general analytical approach is summarized in Fig.
+We used baseline data from the ADNI participants to train ML models.
+Based on the longitudinal data at 12-month follow-up, ADNI participants were divided into two groups: 1) Stable cognition (SC), who had either no change in cognitive function or showed improvement in cognitive function based on ADAS-cog scores (i.e., ADAS-cog12month -ADAS-cog baseline ≥0); and 2) Declining cognition (DC), who showed some decline in cognitive function at 12 months follow up based on ADAS-cog scores (i.e., ADAScog 12month -ADAS-cog baseline <0).
+The model with better classification performance was applied to the baseline data from LFAN study to predict cognitive trajectory (remaining stable or declining).
+The results from ML models were compared with actual longitudinal data at 12 months and 23 months of follow-up.
+The overall performance of each model was calculated based on the percentage of correct classification (accuracy), sensitivity, specificity, positive predictive value (PPV), and negative predictive value (NPV).
+McNemar test was to select the most accurate ML model, which was trained using ADNI data.
+Based on the results of this test the best model was selected for prediction of outcomes in the validation sample (LFAN).
+
+RESULTS
+
+Demographics and baseline characteristics
+
+Performance of predictive models in classification of SC versus DC in ADNI
+Data from ADNI was used to train the predictive models to classify participants to SC versus DC subgroups.
+Logistic Regression model failed to classify participants (classified all participants as DC), and therefore was dropped from subsequent analysis.
+kNN model had an overall accuracy of 68.3%, while accuracy of DT model was 64.9%.
+Sensitivity, specificity, PPV and NPV of ML models are summarized in Table
+KNN model outperformed DT model in all measures of performance (sensitivity, specificity, PPV, and NPV).
+In addition, McNemar test confirmed that kNN model have a better performance in comparison with DTs (p < 0.001).
+Therefore, the trained kNN model was selected for predicting outcomes in LFAN study.
+Performance of predictive models in LFAN-Trained models were applied to LFAN data, to predict if each participant is more like the SC group (i.e., their cognition is predicted to remain stable) or more like the DC group (i.e., their cognition is predicted to decline).
+Results of this prediction by ML model was compared with actual data from 12 months and 23 months of longitudinal follow-up (Table
+The model showed an overall accuracy of 61.3%, sensitivity of 65.5%, and specificity of 47.0% in identifying decliners at the 12 months of follow-up.
+Models performance at 23 months of follow-up improved, with overall accuracy of 65.8%, sensitivity of 67.6%, and specificity of 65.8% in identifying decliners.
+
+DISCUSSION
+In this study we showed that using baseline information from a cohort of aging and AD (ADNI), ML predictive models can effectively identify individuals who are more likely to show cognitive decline over the follow up time in an independent sample from a phase III clinical trial of AD (LFAN).
+We showed that positive predictive value of the model is 80.8% at 12 months and 88.5% at 23 months, which is 17.2% and 25.1% higher than the observed base-rate of cognitive decline in the same sample (63.6%).
+Many studies have previously shown that different measures such as neuropsychological tests, genomic risk scores, MRI or PET measures, or other cerebrospinal fluid (CSF) and blood-based biomarkers can predict cognitive trajectories in older adults in different stages of AD
+Most of these studies use longitudinal data from prospective cohorts of aging and dementia, which have the advantage information collected over extended follow-up periods.
+However, due to the costs, burden, and regulations, the first assessment of treatment efficacy in clinical trials is scheduled 3 to 24 months after initiation of the trial and it is expected to conclude the trial within a timeframe of 18 months to 5 years.
+Our results indicated that predictive models can provide approximately 17% and 25% improvement in prediction of cognitive decline at 12 months and 24 months follow-up, respectively.
+This could boost the power of trial by inclusion of individuals who are more likely to decline.
+The idea of targeting a subgroup for analysis of treatment effects is not new
+In fact, recently many drug trials for prodromal AD or mild-AD have been recruiting subjects, with an inclusion criterion based on amyloid PET positivity
+We extend this approach to the selection of participants based on a machine learning classifier that combines numerous clinical measures and biomarkers.
+The goal is to enroll only patients likely to decline and exclude patients likely to have stable cognition.
+ML models do not solely rely on the absolute value of the features and account for pattern on the relationship between the features.
+Therefore, ML models provide a better alternative to conventional statistical methods (i.e., using cut offs or index scores) for predicting clinical outcomes
+A major challenge to this approach is that the statistical power must be traded off against the logistical complexity and cost of collecting and analyzing multiple biomarker assessments).
+This study showed that even by using a small feature-set consisted of demographics information, ApoE4, and a few neuropsychological and MRI measures, ML learning models are strong tools for prediction of clinical disease progression.
+A limitation of our study is the small sample size.
+This is in part due to using data from an older clinical trial, in which only a small subsample of study had MRI measures.
+Due to the small size of LFAN study, we were not able to use the same sample for both training and validation of models and therefore we had to rely on the ADNI sample for training the ML models.
+That poses another limitation to this work: ADNI and LFAN studies are substantially different in design, recruitment, participant characteristics, and preprocessing of data.
+Furthermore, the features available in LFAN study to include in ML models were relatively small, which limited our ability to use feature engineering or more complex ML models.
+Training models using data from participants with longer follow-up periods (e.g., 24 months) might lead to improved performance of models.
+However, restricting inclusion criteria to those who had at least 24 months of follow-up (or longer) would substantially decrease the number of eligible participants for this study, which negatively impacts performance of models.
+Another limitation of this study is using the change in a single cognitive test (ADAS-cog) to classify participants into cognitively stable or declining groups.
+However, it is well known that most cognitive tests, including ADAS-cog, are prone to measurement errors and might not provide an accurate assessment for cognitive status
+Therefore, many AD-related clinical and cognitive measures (i.e., cognitive domains other than memory) or biomarkers (amyloid and tau imaging, or CSF biomarkers) were not collected at all or only collected for a very small proportion of sample, making it implausible to assess the effect of these important measures in our models.
+Logistic regressions failed in classification of participants in our study, which might be due to small sample size, noisy data, or small differences at decision boundary (small sample).
+This shows the importance of features availability and sample size on performance of predictive models.
+Of note, in this study we trained our models to classify those who had stable cognition versus those who had any cognitive decline, which is a conservative approach.
+It is expected that models achieve even higher performance if the goal was to identify individuals with more rapid cognitive decline.
+Despite all limitations, it is encouraging that this study indicates that ML models trained in cohorts like ADNI (and potentially in populations-based studies) can be used to boost the power of clinical trials.
+Future studies should be conducted to validate our findings in more recent clinical trials with larger sample size and longer duration of follow-up, which also have additional modalities of data such as amyloid and tau imaging, and blood and CSF biomarkers for prediction of clinical disease progression.
+Another future direction would be to employ advanced feature selection methods
+
+
+
+•
+Demographics: age, sex, and education.
+• Genomics: ApoE4 status • Cognitive scores: MMSE, ADAS-cog • Clinical information: Geriatric depression scale (GDS) [19] • MRI volumetrics: left hippocampal volume, right Hippocampal volume, Ventricular volume (sum of lateral and third ventricles), and total brain volume.
+
+
+
+Fig. 1 .
+Fig. 1.
+Study design diagram and schematic illustration of training models and prediction of cognitive decline.
+Data from ADNI were used for training the models.
+Participants were dichotomized to two groups based on the longitudinal change in ADAS-cog score at 12 months: stable cognition (SC) and declining cognition (DC).
+Models were trained to classify participants of training data-set (Yellow block).
+Subsequently, participants from LFAN study were introduced to the newly developed model to predict if they will have decline in cognition or will remain cognitively stable in longitudinal follow-up (Orange block).
+
+
+in ADAS-cog score. 2 Numbers represent mean (standard deviation) unless otherwise stated.
+3 Data at 23m was available only for a total of 41 participants.
+* indicates significant differences between subgroups (p < 0.05), using t-test for continuous variables, and Chi-square test for categorical variables.
+MMSE, Mini-Mental State Examination; ADAS-cog, Alzheimer's Disease Assessment Scale cognitive subscale; GDS, Geriatric Depression Scale.
+
+
+
+Table 1
+
+
+
+Table 1
+Baseline characteristics of ADNI study
+
+
+
+ADNI sample Total Sample Remained cognitively stable or improved at 12 months follow-up 1 Cognitively declined at 12 months follow-up 1
+indicates significant differences between subgroups (p < 0.05), using t-test for continuous variables, and Chi-square test for categorical variables.
+MMSE, Mini-Mental State Examination; ADAS-cog, Alzheimer's Disease Assessment Scale cognitive subscale; GDS, Geriatric Depression Scale.
+
+
+
+Table 2
+Baseline characteristics of LFAN study
+
+
+
+LFAN study Total Sample Remained cognitively stable or improved at 12 months follow-up 1 Cognitively declined at 12 months follow-up 1 Remained cognitively stable or improved at 23 months follow-up 1 Cognitively declined at 23 months follow-up 1

@@ -1,0 +1,281 @@
+Identification of KIAA0513 and Other Hub Genes Associated With Alzheimer Disease Using Weighted Gene Coexpression Network Analysis
+Alzheimer disease (AD) is the most common cause of dementia and creates a significant burden on society.
+As a result, the investigation of hub genes for the discovery of potential therapeutic targets and candidate biomarkers is warranted.
+In this study, we used the ComBat method to merge three gene expression datasets of AD from the Gene Expression Omnibus (GEO).
+During combined analysis, we identified 850 differentially expressed genes (DEGs) from the temporal cortex of AD and cognitively normal (CN) samples.
+We performed weighted gene coexpression network analysis to build gene coexpression networks incorporating these DEGs to identify key modules and hub genes.
+We found one module most strongly correlated with AD onset as the key module and 19 hub genes in the key module that were down-regulated in AD brains.
+According to Gene Ontology and Kyoto Encyclopedia of Genes and Genomes analyses, DEGs were mostly enriched in synapse function, and genes in the key module were mostly related to learning and memory.
+We selected five little-studied genes, AP3B2, GABRD, GPR158, KIAA0513, and MAL2, to validate their expression in AD mouse model by performing quantitative real-time polymerase chain reaction.
+We found that all of them were down-regulated in cortices of 8-month 5xFAD mice compared to those of wild-type mice.
+We then further investigated their correlations with β-secretase activity and Aβ42 levels in AD samples of different Braak stages.
+We found that all five hub genes had significant negative associations with β-secretase activity and that AP3B2 and KIAA0513 had significant negative associations with Aβ42 levels.
+We tested the differential expressions of the five hub genes in two AD GEO datasets from the blood and found that KIAA0513 was significantly up-regulated in patients with both mild cognitive impairment (MCI) and AD and was able to differentiate MCI and AD from CN in the two datasets.
+In conclusion, these five novel vulnerable genes were involved in AD progression, and KIAA0513 was a promising candidate biomarker for early diagnosis of AD.
+
+INTRODUCTION
+Alzheimer disease (AD) is the most common cause of dementia and is manifested as progressive impairments of memory and other cognitive domains.
+Pathological lesions in AD include β-amyloid (Aβ) plaques, neurofibrillary tangles, synaptic failure, neuronal loss, and brain atrophy
+At present, only APP, PSEN1, PSEN2, and APOEε4 are considered to be causal genes or variants for AD
+In addition, genome-wide association studies also found AD risk genes including ABCA7, CLU, SORL1, TREM2, and so on
+Network analyses of AD-related genes from publications revealed the complexed molecular mechanisms of AD
+In vitro studies have identified other genes such as AChE
+However, there are still no effective drugs for AD treatment.
+Because AD is a complicated disease affected by age, genetic, and environmental factors, a greater number of key genes and their underlying mechanisms must be identified in order to facilitate the discovery of novel therapeutic targets and candidate biomarkers.
+Weighted gene coexpression network analysis (WGCNA) is a gene-screening (i.e., ranking) method and a data exploratory tool for finding clusters (i.e., modules) that includes highly correlated genes, which can then be used for identification of candidate biomarkers and therapeutic targets
+This analysis has been applied widely in studies of various diseases, including cancers and neuropsychiatric disorders
+In the current study, we merged three independent gene expression datasets from the Gene Expression Omnibus (GEO) database 1 using the ComBat method
+These DEGs were then used to find key modules and hub genes associated with AD by WGCNA.
+Gene Ontology (GO) enrichment and Kyoto Encyclopedia of Genes and Genomes (KEGG) pathway analyses were further utilized to identify possible functions of the DEGs and key modules.
+Finally, five little-characterized hub genes, AP3B2, GABRD, GPR158, KIAA0513, and MAL2, were chosen to test their expression levels in different Braak stages, their diagnostic values for AD and mild cognitive impairment (MCI), and their correlations with β-secretase activity and Aβ42 levels.
+Gene Set Enrichment Analysis (GSEA) was used to explore potential biological functions of these hub genes.
+
+MATERIALS AND METHODS
+
+Data Collection
+Figure
+All microarray datasets were downloaded from the GEO database 1 .
+We searched the GEO database for microarray datasets using the keyword "Alzheimer."
+Datasets were included if they met the following criteria: (1) were from humans; (2) included expression data from the temporal cortex of both AD and cognitively normal (CN) samples, expression data from the temporal cortex of AD samples with different Braak stages, or blood expression data from AD, MCI, and CN samples; (3) the number of rows in each platform was >30,000; (4) the number of AD samples was ≥10, and the number of CN samples was ≥10; and (5) there were no repeated samples among datasets.
+Finally, five datasets from the temporal cortex of AD and CN samples; one dataset from the temporal cortex of AD samples with different Braak stages; and two datasets from the blood of AD, MCI, and CN samples were selected.
+Detailed information for these datasets, including GEO accession ID, dataset country, sample numbers, platform ID, and number of genes in each platform, as well as usage in the current study and references, was recorded and is shown in Table
+Because GSE132903 had far more samples (98 AD, 97 CN) than the other four datasets from the temporal cortex of AD and CN samples, combining this dataset would have blurred the results of the combined analysis.
+Thus, GSE132903
+Datasets GSE122063
+AD, Alzheimer disease; CN, cognitively normal; GSE, Gene Expression Omnibus Series; GPL, Gene Expression Omnibus Platform; MCI, mild cognitive impairment.
+similar sample sizes and were chosen for the combined analysis in the current study.
+Dataset GSE118553 (52 AD, 31 CN;
+Dataset GSE106241
+Datasets GSE63060 and GSE63061
+Series matrix files of these datasets and their corresponding platform files were downloaded for the current analysis.
+
+Identification of Differentially Expressed Genes by Combined Analysis
+Combined analysis was performed for three datasets, including GSE122063
+Converting probes to gene symbols for series matrix files of each dataset and merging the gene expression data of these three datasets were conducted using Perl (version 5.18.4)
+Batch normalization of the merged file was conducted using the ComBat method from the R package "sva"
+DEG screenings were conducted using the R package "limma"
+P-values were adjusted using the false discovery rate (FDR) method.
+Genes with adjusted P <0.05 and | log 2 fold change (FC)| >0.5 were considered as DEGs in the combined analysis.
+A heatmap of all DEGs was made by the R package "pheatmap"
+The R package "OmicCircos" was used to show the chromosomal locations, as well as expression patterns of the top 100 DEGs from the combined analysis.
+
+Function Enrichment Analyses
+GO and KEGG pathway analyses were conducted utilizing the R package "clusterProfiler"
+GO terms and KEGG pathways with adjusted P <0.05 were considered to be significant and were exhibited using the R package "GOplot"
+
+Weighted Gene Coexpression Network Analysis
+We used the DEGs from the combined analysis to perform WGCNA using expression data from GSE118553
+The R package "WGCNA" was used to conduct this analysis and to find clinical trait-related modules and hub genes among the DEGs
+To transform the adjacency matrix to a topological overlap matrix, a soft-threshold power with a scale-free R
+We set the soft-threshold power as 5 (scale-free R 2 = 0.9, slope = -0.96),
+cut height as 0.25, and the minimal module size as 10 for network construction and module detection.
+The module with the highest correlation with AD was considered the key module.
+The network of the key module from WGCNA was generated by Cytoscape (version 3.7.1) 2 .
+Genes in the key module were selected to perform GO and KEGG analyses to explore their biological functions.
+Hub genes in WGCNA were defined as those with a gene significance (GS) >0.4 and a module membership (MM) >0.8.
+
+Validation of Hub Genes in Datasets
+Expression data of hub genes extracted from Dataset GSE132903
+Hub gene expression data, β-secretase activity, and Aβ42 levels in AD samples from GSE106241
+Moreover, GSE63060 and GSE63061
+Using the two datasets, receiver operating characteristic (ROC) curves were made by GraphPad Prism (version 8.0.0)
+Bar plots, box plots, and correlation analysis in this section were all generated using GraphPad Prism (version 8.0.0) 3 .
+
+Mice
+The animal study protocol was reviewed and approved by the Ethics Committee of Capital Medical University.
+5xFAD mice express five AD-related mutations in human forms of APP and PSEN1, including three in APP (K670N/M671L, I716V, and V717I) and two in PSEN1 (M146L and L286V).
+Eight-month 5xFAD and wild-type (WT, non-transgenic littermates) mice with mixed genders were used in the experiments.
+
+Quantitative Real-Time Polymerase Chain Reaction
+Total RNA was extracted from cortices of 8-month 5xFAD and WT mice by RNAsimple Total RNA Kit (#DP419, TIANGEN, China).
+RNA 1 µg was used in the following reverse transcription (#RR047, Takara, Japan).
+Quantitative real-time polymerase chain reaction (qRT-PCR) was done on Applied Biosystems ViiA TM 7 Real-Time PCR System using TB Green R Premix Ex Taq (#RR420, Takara, Japan).
+β-Actin was used as internal control, and relative expression was determined using 2 -CT method.
+Primers were designed and synthesized by BGI Tech Solutions (Beijing Liu He) Co., Ltd.
+Sequences of primers were shown in Supplementary Table
+
+Gene Set Enrichment Analysis
+GSEA (version 4.0.3,
+Broad Institute, Inc., Massachusetts Institute of Technology, and Regents of the University of California) was conducted to explore the possible biological functions of the hub genes
+AD samples in GSE118553
+The database "c2.cp.kegg.v7.0.symbols.gmt"
+was chosen for enrichment.
+Terms with P <0.05 and FDR <0.25 were defined as significant.
+
+Statistical Analysis
+The normality test and homogeneity of variance test were performed on data extracted from GEO datasets.
+Data that passed these two tests then underwent t-testing for comparisons between two groups and analysis of variance (ANOVA) testing for comparisons among three or more groups.
+After ANOVA analysis, a Dunnett multiple-comparisons test was used for posthoc testing.
+Data that passed the normality test, but did not pass the homogeneity of variance test, underwent t-testing with Welch correction for comparisons between two groups and the Brown-Forsythe ANOVA test for comparisons among three or more groups.
+Data that did not pass the normality test underwent non-parametric testing, using the Kruskal-Wallis test and Dunn
+
+RESULTS
+
+Screening of DEGs by Combined Analysis
+Datasets GSE122063
+After combined analysis, 850 DEGs (223 up-regulated and 627 downregulated) were identified and are shown in heatmap and volcano plots (Supplementary Figures
+The polarity of genes described as "up-regulated" or "downregulated" in this article is with respect to AD vs. CN.
+The top 100 DEGs (according to | log 2 FC|, including top 50 upregulated genes, as well as top 50 down-regulated genes) were chosen to visualize their chromosomal locations and expression patterns across the three datasets used for combined analysis, as well as their logarithmic adjusted P-values shown in the inner layer (Figure
+The top five up-regulated genes were SERPINA3, FCGBP, MAFF, SCIN, and CD163, whereas the top five down-regulated genes were CARTPT, SST, PCSK1, PPEF1, and NPTX2 (Figure
+
+Functional Enrichment Analysis of DEGs
+All DEGs were utilized to perform GO and KEGG analyses, and the top five of these terms based on their adjusted P-values are shown in chord plots (Figure
+We found enrichments in several biological process terms for GO analysis.
+The top five terms were neurotransmitter transport, synaptic vesicle cycle, neurotransmitter secretion, signal release from synapse, and vesicle-mediated transport in synapse, which are shown in Figure
+The top five cellular component terms for GO analysis were presynapse, glutamatergic synapse, synaptic membrane, axon part, and exocytic vesicle (Figure
+The top five molecular function terms for GO analysis were neurotransmitter receptor activity, voltage-gated ion channel activity, voltage-gated channel activity, ion gated channel activity, and gated channel activity (Figure
+For KEGG pathway analysis, DEGs were mostly enriched in neuroactive ligand-receptor interaction, nicotine addiction, GABAergic synapse, synaptic vesicle cycle, and amphetamine addiction pathways (Figure
+Further, we did enrichment analyses in up-regulated genes and down-regulated genes of AD brains separately and found that up-regulated genes were mostly enriched in regulation of angiogenesis, whereas downregulated genes were mostly related to synaptic functions (Supplementary Figures
+
+WGCNA and Key Module Identification
+Expression data of 823 DEGs were extracted from GSE118553 (27 DEGs not available;
+By setting the soft-threshold power as 5 (scale-free R 2 = 0.9, slope = -0.96; Figure
+Genes in each module are shown in Supplementary Table
+From the heatmap of module-trait correlations, we found that the green module was the most highly correlated with AD (correlation coefficient = -0.57,
+P = 2 × 10 -8 ; Figures
+We also found that the blue, yellow, and brown modules had similar correlation coefficients with the green module.
+However, after comparing the relationships between GS and MM, we considered the green module (correlation coefficient = 0.74, P = 2 × 10 -6 ; Figure
+The key module contained 31 genes (Figure
+To  endocannabinoid signaling (Figure
+Under the threshold of MM >0.8 and GS >0.4,
+we identified the following 19 downregulated hub genes in the key module: AP3B2, CAMKK2, CHGB, CLSTN1, CRYM, GABRD, GPR158, KIAA0513, MAL2, NPTX1, NRXN3, PHYHIP, RASGRF1, RPH3A, SCN2A, SCN2B, SLC8A2, STMN2, and TERF2IP.
+
+Validation of the Expression of Hub Genes
+All 19 hub genes underwent expression validation in GSE132903
+Except for CRYM, GABRD, PHYHIP, SCN2B, and TERF2IP in GSE36980 and CAMKK2, PHYHIP, and GPR158 in GSE132903, all other hub genes were significantly down-regulated in AD samples from the five datasets (P < 0.05, 0.01, 0.001, or 0.0001; Figure
+Among the 19 hub genes, we selected AP3B2, GABRD, GPR158, KIAA0513, and MAL2, which have been little studied on the associations with AD, in order to validate their expressions in cortices of 5xFAD and WT mice and in different Braak stages of AD samples (GSE106241;
+All five hub genes were down-regulated in cortices of 5xFAD mice compared to those of WT (Figure
+We also found that the five hub genes were down-regulated as AD progressed, especially AP3B2, KIAA0513, and MAL2, which were significantly downregulated in Braak III-IV and Braak V-VI when compared with Braak 0 (P < 0.05, 0.01, respectively, Figure
+β-Secretase activity and Aβ42 levels in GSE106241 were identified to be up-regulated during AD progression (Figure
+We found that all five hub genes were negatively associated with β-secretase activity (P < 0.0001, P = 0.001, P = 0.0004, P < 0.0001, and P = 0.0002, respectively, Figure
+Next, we tested the differential expressions of the five hub genes in the two AD GEO datasets from the blood (data not shown;
+We also found that KIAA0513 had the ability to differentiate MCI and AD from CN in the two datasets (Figure
+In GSE63060, the area under the curve (AUC) for differentiating MCI and CN samples is 0.69 [95% confidence interval (CI) = 0.61-0.77],
+and AUC for AD and CN samples is 0.63 (95% CI = 0.56-0.70).
+In GSE63061, AUC for MCI and CN is 0.62 (95% CI = 0.55-0.69),
+and AUC for AD and CN is 0.58 (95% CI = 0.51-0.65).
+Furthermore, KIAA0513 was found to be enriched in neurons of healthy human brains, as determined using an online database AlzData
+
+GSEA Reveals Potential Biological Functions of Hub Genes
+We conducted GSEA of the five little-studied hub genes in the expression data of GSE118553.
+AD samples in GSE118553 were divided into a "high-expression group" and a "low-expression group."
+We acquired 17, 9, 1, 7, and 33 significant gene sets enriched in the expression groups of AP3B2, GABRD, GPR158, KIAA0513, and MAL2, respectively (Supplementary Table
+According to normalized enrichment scores, genes in the lowexpressed KIAA0513 group were mostly related to ribosome function, antigen processing and presentation, and graft-vs.-host
+disease (Figure
+
+DISCUSSION
+The current study incorporated gene expression data extracted from the temporal cortex in three GEO datasets for combined analysis and identified a key module and hub genes associated with AD via WGCNA.
+We believe that this is the first study to integrate combined analysis and WGCNA to identify potential hub genes as candidate biomarkers or therapeutic targets for AD using temporal cortex datasets.
+According to GO and KEGG analyses, the DEGs identified by combined analysis were mostly enriched in synapse function, and genes from the key module were mostly related to learning and memory, which are closely correlated with AD onset.
+Among these DEGs, we identified some robust genes that played vital roles in AD pathogenesis, such as SERPINA3
+We also found 19 down-regulated hub genes.
+Some of these genes and their encoded proteins have been implicated in AD proceeding.
+For example, it was reported that aberrant Ca 2+ /calmodulin-dependent protein kinase kinase 2 (CaMKK2) may lead to the interference of iron homeostasis in the brain of AD.
+Also, a loss of calsyntenin-1 (CLSTN1) induced alterations to amyloid precursor protein (APP) processing
+Among these 19 hub genes, we selected five that have been little studied in AD, namely, AP3B2, GABRD, GPR158, KIAA0513, and MAL2, in order to explore their potential functions.
+Results of qRT-PCR revealed their down-regulation in 8-month 5xFAD mice, and reference mining suggested that these genes are involved in synaptic functions.
+AP3B2 encodes adaptor-related protein complex 3 subunit β2 (AP3B2) that composes the neuronal isoform of adaptor-related protein complex 3 (AP-3 complex), which is involved in the sorting of synaptic vesicle proteins
+It was reported that AP3B2-knockout mouse exhibited neurobehavioral abnormalities
+GABRD encodes the delta subunit of γ-aminobutyric acid type A (GABA-A) receptor, named GABRD, which was necessary for synaptic plasticity in the hippocampi of mouse models
+GPR158 encodes G protein-coupled receptor 158 (GPR158), which was found to be important in synaptic modulation, especially in the hippocampus
+KIAA0513 encodes the protein KIAA0513, which was assumed to participate in neuroplasticity and apoptosis
+MAL2 encodes a multispan transmembrane protein belonging to the myelin and lymphocyte (MAL) proteolipid family named MAL2, which was shown to be necessary as a membrane constituent of synaptic vesicles
+We determined that all five hub genes were not only significantly downregulated as AD progressed, but also in negative correlation with β-secretase activity, indicating their strong involvement existed during AD proceeding.
+We also explored the diagnostic values of these five hub genes.
+Intriguingly, expression of KIAA0513 was found to have a negative correlation with Aβ42 levels in the temporal cortex of AD samples and was able to distinguish MCI and AD samples from CN samples in the blood, according to ROC curves.
+These findings indicate that KIAA0513 could be an interesting target for further exploration.
+Further investigation of KIAA0513 revealed that it was shown to be enriched in neurons of normal human brains, suggesting that low expression level of this gene might reflect the pathological condition of the brains.
+Furthermore, GSEA indicated that the low-expression group of this gene was related to immune function during AD progression.
+In addition, its encoded protein KIAA0513 was found to potentially interact with kidney and brain expressed protein (KIBRA) in vitro, a cytoplasmic phosphoprotein exerting neuroprotective effects in AD
+KIBRA was reported to be involved in exosome secretion and synaptic plasticity
+Because of its involvement in immune function, exosome secretion, and synaptic plasticity, a low level of expression of KIAA0513 in neurons may cause synaptic dysfunction and neuronal apoptosis during AD progression.
+Based on these findings, KIAA0513 could be a promising  biomarker for AD diagnosis, as well as a potential target for AD treatment.
+Previous microarray analyses used for combined analysis in the present study had identified genes that were involved in cellular physiological process
+However, after combining the three datasets (total: 54AD, 53CN), we obtained genes that mainly participated in synaptic functions, which is consistent with the results of datasets having similar or larger sample sizes
+The accordance indicates that a large sample size for analysis may bring us closer to understand the genuine pathogenesis of a disease.
+In addition, when the resources are limited, a valid combined analysis could be of great help to enlarge the sample size.
+
+CONCLUSION
+In conclusion, after integrating combined analysis and WGCNA, we identified that AP3B2, GABRD, GPR158, KIAA0513, and MAL2, which have been little characterized previously to be associated with AD, are vulnerable to AD.
+Among them, KIAA0513 was found to be a potential biomarker for early diagnosis of AD and potentially even a therapeutic target.
+Further research is needed to validate further the roles of these hub genes in AD pathogenesis.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Circos plot of expression patterns and chromosomal positions of top 100 differentially expressed genes (DEGs).
+The outer circle represents chromosomes, and lines coming from each gene point to their specific chromosomal locations.
+The three Alzheimer disease (AD) microarray datasets from Gene Expression Omnibus (GEO) used for combined analysis are represented in the inner circular heatmaps.
+GSE122063, GSE36980, and GSE5281 are presented from the outside to the inside.
+The red lines in the inner layer indicate -log 10 (adjusted P-value) of each gene.
+According to |log 2 fold change|, the top five up-regulated genes (red) and the top five down-regulated genes (blue) are connected with red and blue lines in the center of the Circos plot.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Gene Ontology (GO) and Kyoto Encyclopedia of Genes and Genomes (KEGG) analyses of all differentially expressed genes.
+Chord plots indicate enrichment analysis of genes.
+(A) Biological process of GO analysis.
+(B) Cellular component of GO analysis.
+(C) Molecular function of GO analysis.
+(D) KEGG pathways.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Functional enrichment of the key module.
+(A) Scatter plot of module eigengenes in the key module.
+(B) Interaction network of genes in the key module.
+Genes in black circles are hub genes in the key module.
+(C) Bubble plots of biological process of gene ontology (GO) analysis.
+(D) Bubble plots of cellular component of GO analysis.
+(E) Bubble plots of molecular function of GO analysis.
+(F) Bubble plots of KEGG pathways.
+
+
+
+FIGURE 6 |
+FIGURE 6 | Expression of five hub genes in the temporal cortex.
+Only hub genes that have been little characterized to be associated with Alzheimer disease (AD) are listed.
+The green box indicates the cognitively normal group, and the orange box indicates the AD group.
+T-testing was performed to compare the means of two groups.
+*P < 0.05; **P < 0.01; ***P < 0.001; ****P < 0.0001.
+AD, Alzheimer disease; CN, cognitively normal; ns, no significance.
+
+
+
+FIGURE 7 |
+FIGURE 7 | Expression of five hub genes in cortex of 5xFAD mice.
+The results were presented as mean ± standard deviation (t-testing; n = 4 in each group).
+*P < 0.05; **P < 0.01.
+WT, wild type.
+
+
+
+FIGURE 8 |
+FIGURE 8 | Correlation of five hub genes with β-secretase activity and Aβ42 levels using GSE106241.
+(A) The five hub gene expression, β-secretase activity, and Aβ42 levels in different Braak stages.
+Red asterisks indicate significant vs. Braak 0 groups.
+(B) Correlation between five hub genes and β-secretase activity.
+(C) Correlation between five hub genes and Aβ42 levels.
+For Panels B and C, P values in red are significant (P < 0.05).
+*P < 0.05; **P < 0.01; ****P < 0.0001.
+AD, Alzheimer disease; CN, cognitively normal.
+
+
+
+FIGURE 9 |
+FIGURE 9 | Disease-predicting ability and Gene Set Enrichment Analysis (GSEA) of KIAA0513.
+(A) The expression of KIAA0513 in two blood GEO datasets, GSE63060 and GSE63061.
+(B) Receiver operating characteristic (ROC) curve of KIAA0513 for predicting AD and MCI.
+(C) The top three GSEA terms, according to normalized enrichment scores in the low-expression group of KIAA0513.
+*P < 0.05; **P < 0.01; ****P < 0.0001.
+AD, Alzheimer disease; CN, cognitively normal; MCI, mild cognitive impairment.
+
+
+
+TABLE 1 |
+Characteristics of the included datasets.
+
+
+Beijing Municipal Administration of Hospitals (SML20150801); the Beijing Scholars Program; the Beijing Brain Initiative from Beijing Municipal Science & Technology Commission (Z161100000216137); the Project for Outstanding Doctor with Combined Ability of Western and Chinese Medicine; and the Beijing Municipal Commission of Health and Family Planning (PXM2019_026283_000003).

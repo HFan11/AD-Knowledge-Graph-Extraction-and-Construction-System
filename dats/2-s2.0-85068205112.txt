@@ -1,0 +1,346 @@
+Predicting the course of Alzheimer’s progression
+Alzheimer's disease is the most common neurodegenerative disease and is characterized by the accumulation of amyloid-beta peptides leading to the formation of plaques and tau protein tangles in brain.
+These neuropathological features precede cognitive impairment and Alzheimer's dementia by many years.
+To better understand and predict the course of disease from early-stage asymptomatic to late-stage dementia, it is critical to study the patterns of progression of multiple markers.
+In particular, we aim to predict the likely future course of progression for individuals given only a single observation of their markers.
+Improved individual-level prediction may lead to improved clinical care and clinical trials.
+We propose a two-stage approach to modeling and predicting measures of cognition, function, brain imaging, fluid biomarkers, and diagnosis of individuals using multiple domains simultaneously.
+In the first stage, joint (or multivariate) mixed-effects models are used to simultaneously model multiple markers over time.
+In the second stage, random forests are used to predict categorical diagnoses (cognitively normal, mild cognitive impairment, or dementia) from predictions of continuous markers based on the first-stage model.
+The combination of the two models allows one to leverage their key strengths in order to obtain improved accuracy.
+We characterize the predictive accuracy of this two-stage approach using data from the Alzheimer's Disease Neuroimaging Initiative.
+The two-stage approach using a single joint mixed-effects model for all continuous outcomes yields better diagnostic classification accuracy compared to using separate univariate mixed-effects models for each of the continuous outcomes.
+Overall prediction accuracy above 80% was achieved over a period of 2.5 years.
+The results further indicate that overall accuracy is improved when markers from multiple assessment domains, such as cognition, function, and brain imaging, are used in the prediction algorithm as compared to the use of markers from a single domain only.
+
+Introduction
+Prediction of future Alzheimer's disease (AD)-related progression is extremely valuable in clinical practice and in medical research.
+In clinical practice, the ability to accurately predict the diagnosis of a patient can help physicians make more informed clinical decisions on treatment strategies
+Clinical trials are more likely to be successful if the individuals selected for the trials are those most likely to benefit from the therapy.
+Many researches in the field contend that preventative strategies initiated prior to the appearance of advanced symptoms are most likely to be successful
+Therefore identifying candidates for therapies while they are still cognitively normal (CN) or mildly cognitively impaired (MCI) is key for clinical trials, and eventually clinical practice.
+The pathology of AD is characterized by the accumulation of amyloid plaques and neurofibrillary tangles in the brain beginning as early as middle age.
+The amyloid hypothesis posits that plaques caused by the gradual buildup of beta-amyloid ( Aβ ) peptides damage brain regions responsible for cognition thereby leading to
+
+Open Access
+Brain Informatics *Correspondence: mdonohue@usc.edu 1 Alzheimer's Therapeutic Research Institute, Keck School of Medicine, University of Southern California, San Diego, USA Full list of author information is available at the end of the article impairment.
+Recent studies have shown that the pathology of the disease occurs several years before the onset of clinical symptoms, making the disease difficult to detect at an early stage
+In addition, prediction of the future diagnosis of an individual (CN, MCI, or dementia) is very challenging due to high subjectivity and individual-level variability in cognitive assessments and levels of biomarkers, which have typically been used for staging of AD.
+The assessment of an individual's current diagnosis can vary from one clinician to the next, or from one day to the next.
+Classification and prediction based on expert knowledge, machine learning algorithms
+Beheshti et al
+Zheng et al
+The reliability of these approaches is often assessed by the sensitivity and specificity of the methods, accuracy rate, and absolute error rates, among other criteria.
+Approaches with high accuracy rates and precision are desirable.
+The diagnosis of CN, MCI, or mild dementia by expert clinicians has traditionally relied on cognitive assessments such as the Mini-Mental State Examination (MMSE)
+However, including multiple domains might help explain and more accurately predict the varying rates of decline that are typical.
+For example, it is common to find individuals who present with symptoms consistent with MCI or mild AD dementia, but who lack biomarker evidence of AD pathology.
+Such an individual might have other pathology that will exhibit a different rate of progression.
+Going beyond the cognitive domain to multi-domain analysis is therefore appealing.
+Longitudinal cognitive assessments combined with neuroimaging and biomarkers can more easily facilitate diagnosis and increase prediction accuracy
+While multi-domain analyses are interesting, intuitive and potentially more informative, they have been relatively uncommon due to modeling challenges.
+The Alzheimer's Disease Prediction Of Longitudinal Evolution (TADPOLE) Challenge
+Motivated by this challenge, we aim to propose a two-stage approach that can reliably predict an individual's future course of disease, including transition to MCI and dementia, using only a single assessment (i.e., "baseline").
+This emphasis on subject-level prediction from a single timepoint is distinct from much of the literature which focuses on group-level prediction and the relative importance of various predictors.
+In the first stage, we model continuous disease markers using joint mixed-effects models.
+In the first stage, the joint mixed-effect model allows the simultaneous modeling and prediction of multiple modalities such as cognitive and functional assessments, brain imaging, and biofluid assays with fixed effects for covariates like age, sex, and genetic risk.
+Joint models have the advantage of modeling the correlation among outcomes to improve prediction and precision of estimates
+In the second stage of prediction, a random forest algorithm is used to categorize the panel of predicted continuous markers into a diagnosis of CN, MCI, or dementia.
+Random forests combine many decision trees created from random sampling of the data and predictors
+Each decision tree recursively partitions the predictors to classify individuals into one of the three diagnoses.
+While an alternative approach might view diagnosis as a random variable correlated with other disease markers, we view diagnosis as a deterministic categorization of the clinical presentation of each individual.
+That is, diagnosis should be algorithmically determined for given presentation of the continuous markers.
+The random forest model gives us an estimate of this algorithmic categorization.
+Overall performance is assessed using an independent validation set.
+
+Data description
+The two-stage approach is applied to data from the Alzheimer's Disease Neuroimaging Initiative (ADNI).
+ADNI is a prospective observational cohort study, which began in 2004 and continues to this day.
+The study is carried out across 55 research centers in the USA and Canada.
+Over 1900 volunteers with normal cognition or impairment consistent with MCI or AD dementia were recruited for this study.
+The first cohort, referred to as ADNI-1, consists of 800 individuals: 200 CN, 400 with late MCI, and 200 with mild dementia.
+ADNI-GO, the second cohort, added about 200 additional individuals with early MCI.
+In ADNI-2, more participants at different stages of AD were recruited to monitor AD progression.
+ADNI-3 is presently enrolling additional individuals with CN, MCI, and dementia.
+At each new phase, prior cohorts were invited back for continued follow-up, with the exception of individuals enrolled with dementia, who were followed for a maximum of 2 years.
+Some ADNI-1 individuals have now been followed in excess of 10 years.
+Key objectives of ADNI are to validate the use of markers of AD for diagnosis and clinical trials, and to study rates of change in cognitive and functional assessments, brain imaging and a number of biomarkers.
+The inclusion and exclusion criteria, schedule of assessments, and other details can be found at
+We focus on the following assessments: Alzheimer's Disease Assessment- We also focus on a second set of analyses among individuals where beta-amyloid data were available.
+The buildup of beta-amyloid in the brain and in cerebrospinal fluid (CSF) is known to be strongly involved in AD
+For some patients in the ADNI study, florbetapir PET scans or CSF Aβ42 was acquired to detect amyloid lev- els in brain.
+We classified individuals as having elevated amyloid ("amyloid positive") if florbetapir PET standardized uptake value ratio (SUVR) was above 1.10
+The CSF Aβ cutoff was determined so that it yielded the same proportion of amyloid positives as the florbetapir cutoff.
+Amyloid elevation status was included as a predictor in this second set of analysis.
+
+Methodology
+We propose a two-stage approach for prediction of continuous disease markers and categorical diagnosis.
+For the first stage, we propose the traditional joint, or multivariate outcome, mixed-effects model; but we also consider two alternative approaches.
+We also consider a latent-time joint mixed-effects model and a Bayesian model averaging combining posterior estimates of the aforementioned joint models.
+In the second stage, the predicted markers are submitted to a random forest to further predict diagnosis.
+We next describe the first-stage model in greater detail.
+
+Methods for predicting continuous markers
+Suppose y ijk represents k outcomes (k = 1, . . .
+, p) observed at time t ij (j = 1, . . .
+, q i ) for each individual, i (i = 1, . . .
+, n) , and x ijk is a set of covariates for the ith individual at time j.
+The joint mixed-effect model is defined where β k ; k = 1, 2, . . .
+, p , are sets of fixed-effect regres- sion coefficients, α 0ik and α 1ik are outcome-and individ- ual-specific random intercepts and slopes, respectively.
+The random intercepts and slopes are assumed to follow a multivariate normal distribution with mean vector, 0 and variance-covariance matrix, D for the entire 2p-dimensional vector of random effects for each subject.
+The error term follows ε ijk ∼ N (0, σ 2 k ) .
+The assumed homogeneity is over time of the error term for a given outcome and across all subjects.
+We assume that the random components α ik and ε ijk for k = 1, 2, . . .
+, p are independent.
+The random effects allow the model to accommodate both the temporal correlation and correlation among the markers.
+A special case of this joint model is the independent mixed-effects model (IMM), which does not explicitly model the correlation among outcomes.
+This is similar to fitting separate mixed-effects model per outcome.
+We also consider the latent time joint mixed-effects model (LTJMM)
+The model is similar to 1, but introduces individualspecific latent time shifts, δ i , representing "long-term" disease time.
+The model also includes outcome-specific slopes γ k > 0 with respect to δ i .
+The δ i are assumed to be normally distributed with zero mean and variance, σ 2 δ .
+The random components, δ i , α ik and ε ijk for k = 1, 2, . . .
+, p are also assumed to be independent.
+An extension of this model to allow heterogeneous latenttime (i.e., the variability of the latent-time is made to vary across individuals) is described in
+Estimation of the joint models is by Markov Chain Monte Carlo (MCMC).
+Posterior draws are obtained from the posterior distributions of the joint models given respectively by: where the variance-covariance matrix, D is decomposed as D = V V .
+For numerical stability, the Cholesky fac- torization is applied to the correlation matrix, = LL ′ , where L is a lower triangular matrix.
+For the latent time joint mixed-effects model, θ
+standard deviations (square-root of diagonal entries of D ).
+Furthermore, the random component, α ik is stand- ardized to z ∼ N (0, I) , where I is the identity matrix and the random effects are then calculated as VLz .
+Prior dis- tributions are placed on the hyperparameters.
+A weakly informative normal prior, N (0, 10 2 ) is placed on β k , and a weakly informative half-Cauchy prior, Cauchy(0, 2.5) , is assumed for the components of V, σ k , γ k and σ δ .
+Finally, the LKJ prior is placed on the Cholesky factors of
+MCMC sampling is done using the R software package, RStan
+We used 5000 iterations, and the first 2500 warmup iterations are discarded.
+Two MCMC chains were used and thinned by a factor of 5. Predictions of biomarkers and their corresponding credible intervals were based on posterior draws.
+We apply Bayesian model averaging to the multivariate mixed models for the selected continuous biomarkers
+The predictions of future values of biomarkers and the corresponding credible intervals are obtained after combining all posterior prediction estimates of all the models (model averaging).
+Suppose y * ijk is the prediction of outcome k for individual i at future time j.
+The posterior distribution of the prediction given the data, D is the average of posterior distribution of the models weighted by the posterior model probabilities and is given by where M s , s = 1, 2, . . .
+, S represents the models.
+The pos- terior distribution of the models is expressed as where P(D|M s ) = P(D|θ s , M s )P(θ s |M s )dθ s and θ s is the vector of parameters under model s.
+The predicted mean and variance are obtained from the posterior distribution of the predictions.
+The JMM, and LTJMM were fit to training data described in Sect. 4. To demonstrate the benefit of joint modeling, single or independent mixed-effects (IMM) model were fit to the data for comparison.
+For the JMM and IMM models, age, gender, APOEe4, and baseline diagnosis were included as covariates.
+The latent-time models did not include baseline diagnosis since including this would make the model parameters uninterpretable due to the presence of the latent-time component (see
+Two common model selection criteria are applied, the widely applicable information criterion (WAIC) or the leave-one-out information criterion (LOOIC)
+Models with lower values of WAIC and LOOIC are preferred.
+The models described above are fitted to the training dataset in order to make follow-up prediction for subjects
+in the test dataset.
+However, in fitting these models to the training data, we propose to include baseline data for subjects in the test data to allow for the estimation of random effects for these subject.
+The estimated outcomespecific random intercepts and slopes for each subject are required to make the subject-level predictions.
+The resulting follow-up predictions are then used as inputs in the random forest for the next stage of algorithmically predicting diagnosis status.
+
+Method for predicting clinical diagnosis
+The random forest algorithm is an ensemble learning method for classification and regression.
+It operates by generating several classification or regression trees and aggregating them.
+Each tree in the forest is constructed using bootstrap samples of the data.
+The algorithm, implemented in the R package "randomForest"
+In particular, diagnosis which was re-evaluated at every visit by clinicians was used as the target feature for the random forest, and predicted follow-up continuous markers and baseline predictors of subjects as input features.
+Observation times are also included as a continuous predictor.
+A number of individuals had incomplete assessments at some study visits, which the random forest algorithm is not able to accommodate.
+To avoid discarding these incomplete visits entirely when fitting the random forest, we apply an imputation method, the "MissForest" algorithm
+This algorithm, implemented in the R package "miss-Forest", imputes missing values for mixed-type data (e.g., continuous and categorical) using a nonparametric random forest methodology.
+The method can flexibly accommodate mixed-type outcomes, complex interactions and nonlinear relationships among variables.
+In addition, it does not require the specification of a parametric model or distributional assumptions.
+To determine variables which are important for predicting the response, we use the variable importance plot, which depicts the influence of each variable characterized by the mean decrease in node impurity (Gini Index
+
+Model performance metrics
+To evaluate the quality of the predictions of the continuous markers, we use two performance metrics.
+The first metric, the mean absolute error (MAE), is calculated as where N is the observation count, Pi represent the pre- dicted or forecasted future values, and P i is the observed value of the marker for an individual i in the test data.
+The second metric, which takes confidence interval
+widths into account, is the weighted error score (WES).
+It is the weighted sum of the absolute difference between the predicted and actual values for each continuous marker in the test data at each time point.
+That is, where the weights, Ĉi , is the inverse of the width of the confidence interval of predicted estimates for each individual.
+High values of MAE and WES denote poor predictive performance of the model.
+The diagnoses provided by site clinicians is used as the 'gold standard' in assessing the accuracy of the predictions of diagnosis from the random forest algorithm.
+Performance is assessed on the basis of the overall accuracy and balanced classification accuracy (BCA).
+Overall accuracy is defined as the percentage of correct predictions out of all the predictions made.
+This metric tends to work better for data with balanced classes (e.g., equal number of CN, MCI, or dementia) but can provide a misleading assessment of performance for data with imbalanced classes.
+To account for possible class imbalance, we also use the overall BCA.
+The balanced classification accuracy for class, ℓ = 1, 2, . . .
+, L is obtained from where TP ℓ is the number of true positives, FN ℓ is the number of false negatives, TN ℓ is the number of true negatives, and FP ℓ is the number of false positives.
+That is, for each class, ℓ , TP is the number of cases that are correctly predicted by the model and TN ℓ is the number of cases in class, ℓ , which are incorrectly classified into any of the other classes.
+Similarly, TN ℓ for class, ℓ repre- sents the number of cases in the other classes correctly labeled as belonging to class, ℓ , and FP ℓ is the number of cases which actually belong to the other classes but are wrongly classified to class, ℓ .
+These balanced accuracies are aggregated to obtain the overall BCA score as follows:
+Higher value of overall accuracy or BCA is indicative of good performance.
+
+Application and model validation
+
+Descriptive statistics and data preparation
+The ADNI data consist of 1737 individuals enrolled in ADNI-1, ADNI-GO and ADNI-2, 19.7% of whom have dementia, 30.1% are CN and 50.2% are MCI at baseline.
+About
+Figure
+It can be seen that the imputation algorithm appears to generate plausible values of missing data.
+Before fitting the models to the data, the original values of the outcomes were transformed into percentiles using a weighted empirical cumulative distribution function so that all outcomes are on a common scale.
+The weights were constructed using the inverse of the proportion of disease category for each outcome.
+The predicted values on the transformed scale are then back transformed into the original scale.
+Next, we apply the two-stage approach to the data.
+Figure
+
+Stage 1
+The joint mixed-effects models were trained on longitudinal data from ADNI-1, ADNI-GO, and only baseline data from ADNI-2.
+We then assessed the ability of the proposed methodology to accurately predict followup observations of individuals in ADNI-2.
+Table
+Based on these results, the JMM model seems to be the best fitting model, followed closely by the LTJMM model.
+Figure
+Cognitive outcomes share strong correlations [0.7-0.9) with other cognitive measures except for Everyday Cognition (ECog) by participant.
+There are generally moderate correlations [0.5-0.7)
+among cognitive measures and FDG-PET but weaker correlation [0.3-0.5) between cognition and structural MRI measures.
+There are generally moderate correlations among slopes for structural MRI measures.
+We also performed a Bayesian model averaging to combine predictions from the JMM, LTJMM and IMM.
+Furthermore, the joint mixed-effect model was fitted to cognitive and function outcomes (JMMCognitive), and imaging markers (JMMImage) to demonstrate how these marker domains perform individually.
+Longitudinal predictions on the validation dataset were obtained from these fitted models.
+Figure
+The graph shows that the models' predicted profiles appear to differ only slightly.
+It is worth noting that, the predicted values appear nonlinear because the models were fitted to transformed values of the outcome and back transformed to the original scale.
+We evaluated the performance of our model predictions using metrics on both the continuous markers and the multi-class diagnosis.
+The metrics described in Sect.
+3.3 are used.
+From Figs.
+As expected, the MAE and WES increased beyond 2 years.
+All models yielded consistent performance over time with the JMMs occasionally out-performing the other models.
+The JMM that combined both cognitive and imaging outcomes performed similar to the JMM from cognitive/functional outcomes (JMMCognitive) and JMM from imaging markers (JMMImage) in terms of weighted error scores.
+However, at time points where the models differed, JMM with both cognitive and imaging outcomes was generally more accurate than JMMCognitive and JMMImage.
+The IMM performed worse for MCI and dementia subgroups.
+
+Stage 2
+Table
+Predictors in the random forest classification algorithm included all continuous markers, years from baseline, and baseline characteristics such as age, education, marital status, APOE4 status and gender.
+An overall out-of-bag (OOB) estimated error rate of 4.55% was achieved.
+The variable importance plot in Fig.
+The random forest predictions using predicted longitudinal markers from the joint models as inputs along with time-varying age, APOEe4 status and gender, achieve overall accuracy and balanced classification accuracy above 80% for periods less than 2 years (see Fig.
+Between 2 and 5 years, we achieve an overall accuracy     of between 60-80%.
+To facilitate overall comparisons, we computed BCA aggregated across all the time points and weighted according to the amount of data available at each time point.
+These weighted aggregate BCAs were 88.9%, 85.2%, 86.6%, 87.4%, 87.7% and 85.7% for JMM, IMM, LTJMM, BMA, JMMCognitive and JMMimage, respectively.
+This reinforces the interpretation that the JMM with both cognitive and imaging markers performs better than the models with either cognitive or imaging markers only.
+
+Sub-analysis for subjects with amyloid pathology information
+To explore the role of amyloid pathology, we applied our approach to a subset of the original data involving only individuals with amyloid information in both the training and test dataset as described in Sect. 2. Baseline amyloid elevation status was included as a predictor in both the random forest and multivariate mixed-effects models.
+To highlight the important role of amyloid status in the models, we compare the out-of-bag accuracy of the random forest with versus without including baseline amyloid status as a predictor on the subset of the training set with observed amyloid status.
+The OOB estimate of error rates were 4.99% and 5.13% for analysis with and without amyloid information, respectively.
+Thus, there is a modest added benefit with the inclusion of amyloid elevation status.
+This is not too surprising as the diagnostic classification in ADNI is based solely on the clinical presentation done without the clinicians' knowledge of any biomarkers.
+Figure
+We observed that the models predict follow-up biomarkers outcomes better for the individuals with non-elevated amyloid, owing to the fact that these individuals are likely to be more stable over time.
+joint models and baseline characteristics again yields balance classification accuracy of above 80% for the first two and a half years and declined over time.
+Again, the joint mixed-effects model combined with the random forest algorithm consistently outperformed the others.
+
+Discussion and conclusion
+In this study, we have investigated the use of a two-stage data-driven approach to modeling and predicting the progression of AD markers and clinical diagnosis.
+Longitudinal data were jointly modeled to take advantage of correlations among outcomes and within individuals.
+Random forests were used to derive an algorithm to categorize diagnoses.
+Predictions were assessed on an independent validation set.
+The approach achieved overall accuracy and balanced classification accuracy of above 80% for the first 2 years, but accuracy diminished precipitously beyond 2 years.
+This finding supports the utility of our two-stage method for predicting disease course over a limited time frame.
+The findings also support the use of machine learning methods to derive algorithms which might help avoid subjectivity in diagnostic categorization.
+A number of publications have addresses diagnostic prediction at various stages of AD.
+For example, Tierney et al.
+By using a univariate logistic regression model, their approach yielded accuracies of 82% at 5 years and 71% at 10 years.
+Using a survival regression approach, Tabert et al.
+Their approach resulted in a 3-year predictive accuracy of 86%.
+Time-to-event outcomes generally have the ability to improve predictions over univariate logistic regression models.
+A more recent review by Rathore et al.
+Classification accuracies ranged from 70 to 95% for binary classification.
+These accuracies are impressive, but might not be comparable to the accuracies that we have reported.
+One reason for the incomparability is that the accuracies that we report are based on a held-out test that was not used to fit models.
+The accuracies we report also blend initial diagnoses and consider all possible transitions (multinomial outcome) of disease status rather than the binary approach adopted by these authors.
+For example, the classification approach by Tierney et al.
+However, it is generally more difficult to discriminate between adjacent diagnoses (e.g., cognitively normal and MCI) compared to non-adjacent diagnoses (e.g., cognitively normal and dementia).
+The different approaches we considered for the "stage one" modeling each have their own strengths and weaknesses.
+The independent mixed model, for example, is easier to fit than the joint mixed-effects models and is also less cumbersome to interpret.
+However, this model ignores the correlations among outcomes which are generally known to be mild to strong for some pairs of AD markers.
+The correlation matrix of the random effects estimated in this study provides evidence of these between-outcome associations.
+On the other hand, joint models are complex, take more computational time, and can be challenging to interpret.
+In the presence of baseline diagnosis, the conventional joint mixed-effects model was preferred by the model selection criteria we considered.
+The latent-time joint mixed-effects model, motivated by the desire to predict long-term trajectories with short-term follow-up data, may be useful when baseline diagnosis is unknown.
+The Bayesian model averaging, which aggregates the other models, is probably the most complex but helps to account for model uncertainty in the estimation of parameters and prediction.
+Some modifications might improve the prediction accuracy of the proposed two-stage algorithm.
+Instead of relying on a single time point to predict future course, one could utilize run-in data from multiple time points, which would likely improve estimates of subject-specific trajectories.
+Also, our models only considered a simple linear time trend.
+And while nonlinear trends were not supported by the data at hand, it is possible that a more flexible mean structure might improve model performance.
+Larger datasets and/or improved disease markers might also serve to enhance the quality of predictions in the future.
+The approach can be applied to sharpen clinical trial inclusion and exclusion criteria to provide target populations with desired predicted longitudinal characteristics, e.g., a cognitively normal population with increased risk of imminent progression to MCI.
+However, such an application might complicate and prolong the recruitment process and eventual drug labeling.
+In the clinic, these methods can be applied to improve the accuracy of prognosis.
+Improved prognostic accuracy can help physicians, patients, and families make more informed decisions regarding therapies and care through the transitions from healthy cognition, to mild impairment, to dementia.
+Once effective therapies have been discovered, the proposed two-stage approach could be fit to clinical trial data to provide a more sophisticated model of treatment response.
+Such a treatment response model, would provide personalized "theragnoses, " or predictions of treatment response; and help make decisions on when, and to whom, to prescribe therapies.
+
+
+
+Fig. 1
+Fig. 1 Schematic diagram showing the inputs and outputs of the two-stage approach
+
+
+
+Fig. 2
+Fig. 2 For each pair of outcomes, the correlations among random intercepts are above the anti-diagonal, and the correlations among random slopes are below the anti-diagonal.
+ADAS13 Alzheimer's Disease Assessment Scale, CDRSB Clinical Dementia Rating-Sum of Boxes, EcogPtTotal everyday cognition participant, EcogSPTotal everyday cognition study partner, FAQ Functional Assessment Questionnaire, FDG FluoroDeoxyGlucose, MMSE Mini-Mental State Examination, MOCA Montreal Cognitive Assessment, RAVLT Rey Auditory Verbal Learning Test, ICV intracranial volume
+
+
+
+Fig. 3
+Fig. 3 Observed values (points) versus predicted lines (lines) of markers for five randomly selected individuals for each of the four modeling approaches.
+IMM Independent mixed-effects model, JMM joint mixed-effects model, LTJMM latent-time joint mixed-effects model, BMA Bayesian model averaging, ADAS13 Alzheimer's Disease Assessment Scale, CDRSB Clinical Dementia Rating-Sum of Boxes, EcogPtTotal everyday cognition participant, EcogSPTotal everyday cognition study partner, FAQ Functional Assessment Questionnaire, FDG FluoroDeoxyGlucose, MMSE Mini-Mental State Examination, MOCA Montreal Cognitive Assessment, RAVLT Rey Auditory Verbal Learning Test, ICV intracranial volume
+
+
+
+Fig. 4
+Fig. 4 Validation set weighted error scores over time for each model by diagnosis.
+CN Control, MCI mild cognitive impairment, IMM independent mixed-effects model, JMM joint mixed-effects model, LTJMM latent-time joint mixed-effects model, BMA Bayesian model averaging, JMMCognitive JMM fitted to cognitive and function outcomes only, JMMImage JMM fitted to imaging markers only
+
+
+
+b
+Balanced classification accuracy.
+
+
+
+Fig. 6
+Fig. 6 Comparison of performance metrics for categorical diagnosis.
+Note that only the LTJMM did not include baseline diagnosis as a covariate.
+The numbers on the graph represent the number of subjects at each of the time points.
+IMM Independent mixed-effects model, JMM joint mixed-effects model, LTJMM latent-time joint mixed-effects model, BMA Bayesian model averaging, JMMCognitive JMM fitted to cognitive and function outcomes only, JMMImage JMM fitted to imaging markers only
+
+
+
+Fig. 9
+Fig. 9 Observed values (points) versus predicted lines (lines) based on only their baseline data for each of the four modeling approaches for subject#314 and for subject#4263.
+IMM Independent mixed-effects model, JMM joint mixed-effects model, LTJMM latent-time joint mixed-effects model, BMA Bayesian model averaging, ADAS13 Alzheimer's Disease Assessment Scale, CDRSB Clinical Dementia Rating-Sum of Boxes, EcogPtTotal everyday cognition participant, EcogSPTotal everyday cognition study partner, FAQ Functional Assessment Questionnaire, FDG FluoroDeoxyGlucose, MMSE Mini-Mental State Examination, MOCA Montreal Cognitive Assessment, RAVLT Rey Auditory Verbal Learning Test, ICV intracranial volume
+
+
+
+Fig. 10 Fig. 11
+Fig. 10 Mean absolute error.
+CN Control, MCI mild cognitive impairment
+
+
+44.9% are females, and 55.1% are males.
+All follow-up data on ADNI-1 and ADNI-GO participants who did not continue into the ADNI-2 phase, form part of the training dataset.
+In addition, baseline data from individu-
+
+
+
+Table 1 Summary measures at baseline for raw and imputed data ADAS13
+Alzheimer's Disease Assessment Scale, CDRSB Clinical Dementia Rating-Sum of Boxes, EcogPtTotal everyday cognition participant, EcogSPTotal everyday cognition study partner, FAQ Functional Assessment Questionnaire, FDG FluoroDeoxyGlucose, MMSE Mini-Mental State Examination, MOCA Montreal Cognitive Assessment, RAVLT Rey Auditory Verbal Learning Test, ICV intracranial volume, CN control, MCI mild cognitive impairment, n number of observations, SE standard error
+
+
+
+Steps in the Two-Stage Approach Inputs Outputs
+shows the influence of each variable in predicting clinical status.
+The baseline diagnosis, CDR Sum of Boxes, Study Partner Everyday Cognition, Functional
+
+
+
+Table 2 Model selection criteria WAIC
+widely applicable information criterion, LOOIC leave-one-out information criterion, IMM independent mixed-effects model, JMM joint mixed-effects model, LTJMM latent-time joint mixed-effects model
+
+
+
+Table 3 Confusion matrix
+
+
+The joint mixed-effects model continues to outperform the other models in terms of accuracy.Classification accuracy of clinical diagnosis is also depicted in Fig.12.
+The random forest based on predictions from the

@@ -1,0 +1,237 @@
+Integrate GWAS, eQTL, and mQTL Data to Identify Alzheimer’s Disease-Related Genes
+It is estimated that the impact of related genes on the risk of Alzheimer's disease (AD) is nearly 70%.
+Identifying candidate causal genes can help treatment and diagnosis.
+The maturity of sequencing technology and the reduction of cost make genome-wide association study (GWAS) become an important means to find disease-related mutation sites.
+Because of linkage disequilibrium (LD), neither the gene regulated by SNP nor the specific SNP can be determined.
+Because GWAS is affected by sample size and interaction, we introduced empirical Bayes (EB) to make a meta-analysis of GWAS to greatly eliminate the bias caused by sample and the interaction of SNP.
+In addition, most SNPs are in the noncoding region, so it is not clear how they relate to phenotype.
+In this paper, expression quantitative trait locus (eQTL) studies and methylation quantitative trait locus (mQTL) studies are combined with GWAS to find the genes associated with Alzheimer disease in expression levels by pleiotropy.
+Summary data-based Mendelian randomization (SMR) is introduced to integrate GWAS and eQTL/mQTL data.
+Finally, we prioritized 274 significant SNPs, which belong to 20 genes by eQTL analysis and 379 significant SNPs, which belong to seven known genes by mQTL.
+Among them, 93 SNPs and 2 genes are overlapped.
+Finally, we did 10 case studies to prove the effectiveness of our method.
+
+INTRODUCTION
+It is estimated that the impact of related genes on the risk of AD is nearly 70%.
+Importantly, neuronal cell death precedes the appearance of cognitive symptoms for 10 years or more, suggesting that targeted treatment needs to be performed before symptoms appear.
+Therefore, the identification of AD biomarkers such as genes, RNAs
+In addition, identifying candidate genes and loci can also help us understand the pathogenesis of AD and develop drugs.
+Recently, Jansen et al.
+The sample size is more than eight times that of
+Due to the increase in the number of samples, they found nine AD risk loci more than in previous studies.
+It means that combining GWAS data with transcriptional expression data will greatly advance AD research
+However, GWAS still has certain limitations.
+The SNP is not necessarily the true pathogenic locus, but only related to the SNP that actually causes the disease due to the LD.
+GWAS usually analyzes the edge effects of individual loci while ignoring the interaction of multiple genes in complex diseases
+Therefore, GWAS still cannot fully reveal the genetic susceptibility factors of complex diseases
+It is only an important part of exploring the genetic etiology of complex diseases
+Therefore, using GWAS data for research, we must first start with the expression of SNP, that is, combined with data affecting gene expression, which can weaken the impact of LD on significance.
+Then, the interaction of multiple genes is considered, that is, the statistical values of each SNP are revised within the whole genome.
+It was found that about 80% of the genetic susceptibility loci detected by GWAS were located in the noncoding region of the genome, suggesting that the pathogenic loci may have regulatory functions on gene expression.
+An important role of largescale eQTL research is to be able to prioritize SNP loci
+At present, many studies have used eQTL analysis as a very effective tool to explain the results of GWAS.
+Hormozdiari et al.
+There is no doubt that methylation affects gene expression.
+This is very similar to eQTL, both of which can cause changes in expression through mutations in a single locus.
+Therefore, in recent years, more and more studies have been carried out to screen genes related to traits by combining mQTL with GWAS.
+Hägg et al.
+Pharoah et al.
+In our previous paper
+There are three points to be improved.
+Firstly, mQTL should be included to verify and improve our result.
+Secondly, we used several eQTL datasets in that paper, whereas a meta-analysis method should be used to integrate the datasets, which can improve the accuracy of eQTL's statistical results.
+Finally, GWAS datasets should also be integrated into one dataset so that can overcome the difference of statistical power caused by sample size.
+
+METHODS
+
+SMR
+Since
+Using GWAS and eQTL data, SMR could screen trait-related genes.
+After two years, they applied SMR to mQTL data.
+They found 7,858 DNAm sites which are related to 14 complex traits.
+The basic idea of this method is as follows.
+First, let y be the phenotype, which is the outcome variable.
+x is the gene expression, which is the exposure factor.
+z is the gene mutation, which is the instrumental variable.
+Then, b xy is the effect of x on y, b zx is the effect of z on x, and b zy is the effect of z on y.
+The definition of b xy is b xy = b zy /b zx , which means the effect of gene expression on phenotype without confounding factors.
+This idea is based on the Mendelian randomization
+Figure
+The blue line represents causal relationship.
+Methylation will cause SNP.
+Both SNP and methylation can affect the change of transcription.
+The change of transcription will cause the difference of trait.
+The red line denotes the relationship data represents.
+mQTL denotes the relationship between methylation and SNP.
+eQTL denotes the relationship between transcription and SNP.
+GWAS denotes the relationship between SNP and trait.
+Based on this hypothesis, many researchers have found the genes which are related to certain traits.
+Diseases like bone mineral density (BMD)
+Other traits like height, BMI
+
+Eb-GWAS
+Due to the complex linkage effects and statistical errors of the samples, the contribution of GWAS to biological research is reduced.
+GWAS may associate common diseases with thousands of DNA mutations, that is, every DNA region that happens to be active in diseased tissues may be associated with disease
+Many GWAS matches are not specifically biologically related to disease and, therefore, cannot be used as effective drug targets.
+In fact, these "peripheral" mutations are likely to affect the activity of "core" genes, which are more directly related to disease, through complex biochemical regulatory networks
+As we discussed before in the introduction, the interaction of multiple genes is considered, that is, the statistical values of each SNP are revised within the whole genome.
+In this section, we will process GWAS data in two steps: 1. meta-analysis, 2. using EB, revise the statistical value of each SNP within the whole genome.
+
+Meta-Analysis
+Since SE denotes the standard error of each SNP, it represents the reliability of Beta values.
+Then, weight of each Beta should be:
+SE i denotes the standard error for study i, w i denotes the weight of Beta.
+Then, the Beta after meta-analysis would be:
+(2)
+β i denotes effect size estimate for study i.
+Then, we could use the weight of each Beta to calculate the result of meta-analysis.
+Finally, the overall Z-score could be obtained by the original equation.
+
+Eb-GWAS
+After meta-analysis, we could summary several GWAS datasets into one dataset.
+Then, we used EB to integrate all the Z scores in the whole genomic level.
+As we know that the SNP could interact with each other, the Z score of all SNP should have some relationship and obey normal distribution.
+The overall Z-score we obtained before obeying normal distribution with standard deviation is 1.
+Then,
+ Z i denotes the Z score we obtained.
+It is a value with bias.
+Z i denotes the real Z score.
+Real Z score obeys normal distribution:
+Then, the marginal distribution of
+Moreover, the posterior distribution should be:
+Then, we could know that E Z i ( )  = θ , so the mean of  Z i can be used to estimate θ.
+Then, σ χ
+From the properties of inverse chi-square distribution,
+Then,
+Therefore, the EB estimation of B is (15)
+Finally, we can put the
+Then, we have done the meta-analysis and revised the statistical value of each SNP within the whole genome.
+
+Dataset
+As shown in Table
+All the eQTL and mQTL are from brain tissue.
+Yang Jian et al. have already meta-analysis the eQTL and mQTL datasets.
+Therefore, we used the data they processed.
+For GWAS dataset, Scelsi M A et al. obtained the data from 1,517 Caucasian ADNI subjects.
+Lambert JC et al. 's dataset is For eQTL dataset, SNPs within 1Mb distance from each probe are available in these three datasets.
+After meta-analysis, the estimated effective sample size n = 1194.
+For mQTL dataset, 5kb, 500kb, and 20kb are the available distance for the three datasets, respectively.
+After meta-analysis, the estimated effective sample size n = 1160.
+
+RESULTS
+
+Results of GWAS Meta-Analysis
+We did a meta-analysis of five groups of GWAS data and integrated them into a GWAS file.
+The blue block in Figure
+The red block in Figure
+As we can see in Figure
+After using EB in all SNPs in whole dataset, the P value of the final GWAS data approximates the normal distribution.
+
+Results of SMR
+GWAS included 1,474,846 SNPs, mQTL included 6,966,746, and eQTL included 1,067,443 SNPs.
+There are 149,326 SNPs occur in both GWAS and eQTL and 408,896 SNPs occur in both GWAS and mQTL.
+Therefore, we use SMR to test these repeated SNPs in data sets.
+Note that some SNPs are marked by multiple probes, so one SNP may significant in more than one gene.
+One SNP may affect expression of multiple genes.
+In Figures
+It means that only few significant SNPs in GWAS have significance in eQTL and mQTL.
+Anyway, the points near the upper right corner in the images mean that the difference in expression level caused by these SNPs is related to AD and SMR can help us detect these SNPs.
+We set a threshold as 0.05/(number of probers).
+For eQTL data, the threshold is 0.05/8362 = 5.98e-06.
+For mQTL data, the threshold is 0.05/97263 = 5.14e-07.
+The numbers of SNPs and genes identified by the two experiments are shown in Table
+Figure
+The red points are the P value of GWAS SNPs.
+The blue points are the P value of eQTL SNPs and the green points are the P value of mQTL SNPs.
+There is a black line in the first picture.
+The line is the significant threshold of P value.
+It is -log10(5*10-8).
+The SNPs of eQTL and mQTL are already screened so each SNP's P value is less than 5*10-8.
+Figure
+The first graph is the result of GWAS and eQTL and the second one is the result of GWAS and mQTL.
+The black line in the two graphs is significant threshold, respectively.
+As we can see, only few of SNPs can pass the SMR test.
+Some of them are not very significant in GWAS, but combined with eQTL or mQTL, they would be significant.
+As we can see in Table
+The HLA complex is located in the 21.31 region (6p21.31)
+on the short arm of chromosome 6 and is composed of 3.6 million base pairs.
+It is the region with the highest gene density and the most polymorphic region in human chromosomes.
+Known as "chemical fingerprints in humans".
+Due to the complexity of HLA, the methylation level and expression level differ greatly.
+
+Case Study
+In this section, we want to confirm whether the 25 AD-related genes we found have been reported by others.
+In order to be precise, we only use the literature that got AD-related genes by biological experiments, rather than the bioinformatics method or GWAS method.
+James et al. (
+Therefore, they inferred mRNA expression and methylation of SNCA intron 1 are altered in AD, whereas ZSCAN21 at upstream of these CpG site were reported to bind at intron 1.
+A reduction of PILRA inhibitory signals in R78 carriers could allow more microglial activation via PILRB/DAP12 signaling and reinforce the cellular mechanisms by which TREM2 is believed to protect from AD incidence.
+De
+We found 10 of 25 genes are reported to be related to AD by biological experiments.
+Some literary works may found that the other 15 genes are related to AD via other methods, but we would not discuss in this paper.
+This case study verified the effectiveness of our method and we hope the other 15 genes could be verified by biological experiments in future.
+
+CONCLUSION
+AD brings great burden to patients and society and identifying AD-related genes can help us known the machanism of AD then diagnose and treatment.
+In this paper, we used SMR to find AD-related genes by GWAS, eQTL, and mQTL.
+There are some overlaps between GWAS and the other two datasets, which means that some SNPs are related to AD due to the change of expression level.
+SMR is a method which can identify the genes whose expression levels are associated with a complex trait because of pleiotropy.
+Due to the LD and interaction between genes, GWAS data has bias.
+In order to overcome these, we did meta-analysis on five GWAS datasets and then used EB to revise the Z-score of each SNPs in whole-SNP level.
+Finally, we found 653 SNPs reached the threshold of significance and they are associated with 25 genes.
+Ninety-three of SNPs are significant in both GWAS&eQTL and GWAS&mQTL tests.
+We did 10 case studies at last, which means that the 10 of 25 genes we identified have been verified to correlated to AD by biological experiments in existing literary works.
+
+DATA DEPOSITION eQTL and mQTL Data
+The direct link for accessing eQTL and mQTL data is as follows (origin from PMID: 29891976).
+1) eQTL data:
+tar.gz 2) mQTL data:
+tar.gz
+
+GWAS Dataset 1,2,3
+GWAS dataset 1,2,3 are from paper PMID:29860282.
+The direct link is for accessing them is as following.
+
+
+present a probabilistic method named eCAVIAR, which can detect target genes by colocalization of GWAS and eQTL signals.
+Xu et al. purposed a more powerful method based on PrediXcan and TWAS.
+It can integrate single set or multiple sets of eQTL data with GWAS.
+
+
+
+FIGURE 1 |
+FIGURE 1 | A hypothetical model of a mediation mechanism.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Pvalue density of genome-wide association study (GWAS).
+
+
+
+FIGURE 3 |
+FIGURE 3 | Duplicated SNPs' P value in genome-wide association study (GWAS) and eQTL.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Duplicated SNPs' P value in genome-wide association study (GWAS) and mQTL.
+
+
+
+FIGURE 5 |
+FIGURE 5 | P value of genome-wide association study (GWAS), eQTL, and mQTL.
+
+
+
+TABLE 1 |
+Datasets used in this paper.
+
+
+
+TABLE 2 |
+The results of summary data-based Mendelian randomization (SMR).
+
+
+
+TABLE 3 |
+The candidate genes selected by summary data-based Mendelian randomization (SMR).

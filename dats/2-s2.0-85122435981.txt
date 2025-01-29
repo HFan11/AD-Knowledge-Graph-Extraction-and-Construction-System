@@ -1,0 +1,427 @@
+A deep learning framework identifies dimensional representations of Alzheimer’s Disease from brain structure
+Heterogeneity of brain diseases is a challenge for precision diagnosis/prognosis.
+We describe and validate Smile-GAN (SeMI-supervised cLustEring-Generative Adversarial Network), a semi-supervised deep-clustering method, which examines neuroanatomical heterogeneity contrasted against normal brain structure, to identify disease subtypes through neuroimaging signatures.
+When applied to regional volumes derived from T1-weighted MRI (two studies; 2,832 participants; 8,146 scans) including cognitively normal individuals and those with cognitive impairment and dementia, Smile-GAN identified four patterns or axes of neurodegeneration.
+Applying this framework to longitudinal data revealed two distinct progression pathways.
+Measures of expression of these patterns predicted the pathway and rate of future neurodegeneration.
+Pattern expression offered complementary performance to amyloid/tau in predicting clinical progression.
+These deep-learning derived biomarkers offer potential for precision diagnostics and targeted clinical trial recruitment.
+
+N
+eurologic and neuropsychiatric diseases and disorders are often very heterogeneous in their neuroimaging and clinical phenotypes.
+Artificial intelligence methods, especially deep-learning approaches, have made a notable leap in medical imaging applications
+However, only recently have deep-learning approaches been developed that allow investigation of disease heterogeneity through identification of common but distinct disease subtypes which might have different prognosis, progression patterns, and response to treatments.
+Toward this goal, a semi-supervised deeplearning paradigm is presented herein (Fig.
+Smile-GAN models disease effects via sparse transformations of normal measures, leveraging a GAN that is trained to synthesize transformations producing realistic measures that are hard to distinguish from those derived from real patient data.
+Estimated latent variables capture phenotypical subtypes, modulating this synthesis in an inverse-consistent formulation which ensures that subtype membership can be reliably estimated from respective biomarker signatures.
+Although Smile-GAN is a general methodology, herein it is tested on identifying the heterogeneity in cerebral neuroanatomy -specifically heterogeneity of atrophy as measured by decreases in volumes of gray matter and white matter regions of interest and increases in ventricle volumes-found across a spectrum from early cognitive impairment to dementia among 8146 scans from 2832 individuals across 2 longitudinal cohorts (ADNI, the Alzheimer's Disease Neuroimaging Initiative, and BLSA, the Baltimore Longitudinal Study of Aging
+Alzheimer's disease (AD) is the most common neurodegenerative disease, affecting millions across the globe
+The hallmark pathology of AD includes the presence of ß-amyloid neuritic plaques and tau protein-containing neurofibrillary tangles, which contribute to the characteristic neurodegeneration measured on magnetic resonance imaging (MRI).
+While diagnostic criteria have traditionally focused on the clinical syndrome, typically a predominately amnestic phenotype for AD and a pre-dementia phase called Mild Cognitive Impairment (MCI), recently there has been increasing effort to define AD biologically based on the presence of biomarkers for amyloid deposition (A), tau deposition (T), and neurodegeneration (N), each characterized typically dichotomously as either absent (-) or present (+) and, thus, defining the AT(N) framework
+While useful, such binary characterizations poorly capture biomarker heterogeneity, such as known variability in AD topography or effects of common copathologies, including vascular disease and other comorbid neurodegenerative processes that might affect the 'N' dimension in distinct ways.
+This variability, along with patient resilience to neuropathology, plays an important role in the ultimate expression of cognitive decline in the individual and is therefore critical to understand when moving beyond group effects of disease to personalized diagnostics.
+Further, by more clearly identifying typical patterns and severity of neurodegeneration, including patterns more suggestive of underlying AD, such methods may allow improved selection of participants for clinical trials.
+Several MRI biomarkers have been used to quantify neurodegeneration in AD.
+One of the most common is hippocampal volume
+However, as for other single region-of-interest (ROI) markers, it is neither specific for AD, nor does it capture a complex atrophy pattern across the brain that is relevant to the overall phenotype.
+Composite measures sensitive to the typical temporoparietal atrophy seen in AD, including various regional volumetric signatures
+These methods provide monolithic signatures of AD-like neurodegeneration with high sensitivity and specificity, but do not elucidate the heterogeneity of neurodegenerative patterns found in AD and its preclinical stages, nor do they attempt to relate such heterogeneity with comorbid pathologies.
+Recently, novel data-driven methods that leverage large neuroimaging datasets and novel machine learning methodology have emerged to identify patterns of cerebral atrophy in AD and other neurodegenerative diseases.
+Clustering methods have been used to identify cross-sectional or temporal heterogeneity in patients
+Zhang et al.
+Young et al.
+However, these approaches derive clusters only based on patients and hence may identify clusters or patterns partially incorporating disease-irrelevant confounding factors that influence inter-individual brain variations.
+The semi-supervised method proposed here aims to overcome this limitation by effectively clustering differences between cognitively normal (CN) individuals and patients, thereby focusing on neuroanatomical heterogeneity of pathologic processes rather than heterogeneity that might be caused by a variety of confounding factors
+Generative adversarial networks (GAN)
+Herein, we used GANs to synthesize exceptionally realistic regional volumes derived from imaging data to model disease effects and perform semisupervised clustering.
+Building on GAN-based models
+Via inverseconsistent latent variables, this synthesis is guided by diseaserelated neuroanatomical subtypes, which are estimated from the data.
+Moreover, we extensively validate this method using simulated data as well as synthesized patterns of brain atrophy.
+Smile-GAN does not directly generate predictions of disease stage but quantifies the degree of expression of captured patterns.
+Mixed pathologies and staging can be captured via post-hoc, second stage analysis of the expression of derived patterns or combinations thereof.
+We hypothesized that Smile-GAN, when trained on a sample enriched for AD, would identify common patterns of neurodegeneration seen in patients along the AD pathway.
+We discovered 4 reproducible neuroanatomical patterns of atrophy across the spectrum of cognitive decline and developed ways to quantify the level of expression of each of these patterns in any individual, thereby arriving at a 4-dimensional system capturing major patterns of heterogeneity of the 'N' dimension in the AT(N) system.
+Further, by measuring longitudinal trajectories within this coordinate system, we identified two distinct progression pathways which imply variability in the presence of copathologies and/or heterogeneity of AD pathological processes.
+We identify baseline patterns with predictive abilities for future neurodegenerative and clinical trajectories for individual participants.
+
+Results
+Validation of Smile-GAN model on synthetic and semisynthetic dataset.
+Experiments on a synthetic dataset (Supplementary Method 1.3.1)
+verified the ability of the model to capture heterogeneous disease-related variations while not being confounded by non-disease-related variation.
+Mapping functions captured all regions with simulated atrophy along each direction while almost perfectly avoiding all regions with much stronger simulated non-disease-related variations.
+(Supplementary Fig.
+Experiments on the semi-synthetic dataset, derived from real MRI ROI data but with artificial brain atrophy in selected ROIs (Supplementary Method 1.3.2),
+further validated the ability of the model to avoid non-disease-related variability under more realistic scenarios.
+Moreover, the performance of the model was shown to be superior to other state-of-the-artsemisupervised clustering methods and traditional clustering methods in detecting simulated pattern types even with very small and variable atrophy rates.
+(See Supplementary Table
+Trained on baseline data of ADNI2/GO participants and validated through the permutation test (Supplementary Result 2.4), Smile-GAN identified four significantly reproducible and disease-related patterns of brain atrophy in cognitively impaired participants.
+The four-pattern types were found to be reproducible using a holdout crossvalidation experiment.
+Figure
+Participants with different patterns show distinct atrophy signatures compared to CN, which are shown by voxel-based group comparison results between the CN group and the groups of participants segregated based on the pattern with highest probability (Fig.
+From these results, we can visually interpret the four imaging patterns as: (i) P1, preserved brain volume, exhibits no significant atrophy across the brain compared to CN; (ii) P2, mild diffuse atrophy, with widespread mild cortical atrophy without pronounced medial temporal lobe atrophy; (iii) P3, focal medial temporal lobe atrophy, showing localized atrophy in the hippocampus and the anteriormedial temporal cortex with relative sparing elsewhere; (iv) P4, advanced atrophy, displaying severe atrophy over the whole brain including severe temporal lobe atrophy.
+These four patterns were highly reproducible when we trained the model on participants from various, independent AD studies (Supplementary Fig.
+Moreover, they were reproduced when we trained the model using only participants with positive ß-amyloid (Abeta) status (Supplementary Fig.
+The patterns segregate participants that may demonstrate pathologically identified subtypes of AD
+The P3 pattern includes those who may have Limbic Predominant neuropathology and P2 includes those who may have Hippocampal Sparing neuropathology, while mixed P2-P3 may be more typical AD (Supplementary Fig.
+Two progression pathways.
+Figure
+Participants with dominant P1 features at baseline may express increasing probability of P2 or P3 in the short term followed by later expression of the P4 pattern.
+Participants with dominant P2 or P3 expression at baseline show variable minor expression of the other pattern (other P3/P2 pattern probability range from 0 to 0.5).
+Both P2 and P3 participants have increasing P4 probability at later time points, but do not develop significant expression of the other P3 or P2 pattern, respectively.
+Participants who initially had the highest probability of P4 only show stronger expression of P4 over time.
+From these results, we conclude that P1-2-4 and P1-3-4 are two general MRI progression pathways of neurodegeneration.
+Figure
+These examples demonstrate that despite following similar progression pathways, participants may have difference in pattern purity and progression speed.
+More specifically, though participants denoted in purple color both show higher P3 probability than P2 during progression process, the solid line is closer to the P2 triangle, showing that this participant has a relatively stronger expression of P2.
+Also, participants represented by dashed lines progress from P1 to P4 within 5 years (time not shown in the plot), while participants denoted by solid lines take more than 10 years to progress from P1 to P4. Amyloid/tau/pattern/diagnosis.
+Most of CN participants had negative Abeta status (A-) and express P1 (Fig.
+P1 also included the largest number of cognitively impaired but nondemented participants, classified in BLSA/ADNI as MCI, with disproportionately amyloid negative status compared to the other three patterns.
+There were a comparable amount of MCI/ Dementia participants with P2 and P3 (144 and 178) and they had similar distributions in amyloid status, predominately amyloid positive (66.9% and 72.1%).
+P4 participants were mostly amyloid positive (84.0%) and were rarely CN (3.3%).
+Pattern membership can be used to classify participants based on the AT(N) criteria, providing insight into the stage of the disease, resilience, and presence of copathology.
+Those placed along the AD continuum are further subgrouped into early neurodegeneration (P3), advanced (P4) neurodegeneration, or a P2 group of mild diffuse atrophy that may be classified as N-or N+ by other quantification methods.
+In Fig.
+A+T+ participants tend to have more severe neurodegeneration than A+T-participants, as expected.
+Using pattern membership as a classification of (N) modestly increases the number of classes (from 8 to 16) but provides important severity and prognostic information.
+MRI and clinical characteristics.
+Statistical comparisons of MRI and clinical characteristics were conducted among A+ cognitively impaired participants with different dominant patterns (Supplementary Table
+Relative to P2/P3, P4 and P1 participants showed significantly higher and lower WML volume, respectively, (median (1st-3rd quartile) 50.6 (39.1-66.1)
+mm 3 and 34.1 (25.9-49.6)
+mm 3 , p < 0.001), but there was no significant difference between P2 and P3 (median 46.3 (30.2-59.2) mm 3 and 45.1 (33.6-57.2) mm 3 , p = 0.86).
+P3 and P4 participants showed significantly lower hippocampal volume relative to total brain volume (median percentage 0.54 (0.51-0.56)% and 0.52 (0.48-0.56)%, respectively, for P3 and P4, versus 0.61 (0.58-0.64)% for P1, both p < 0.001).
+Certain features were the highest in P3 participants: ApoE ε4 allele carrier rate (78%), tTau (341.1 (267.9-446.7))
+and pTau (34.9(26.1-46.4))
+levels.
+Participants with different patterns were significantly different in cognitive test scores, with important differences based on A/T status (Fig.
+Regardless of A/T status, P1 participants had much better performance across cognitive domains while P4 participants had the poorest performance.
+P2 participants showed worse performance in executive function than P3 participants but had better function in memory.
+ADNI-EF and ADNI-MEM were significantly different between P2 and P3 participants (p = 0.039 for A-T-, p = 0.003 for A-/T+ and p < 0.001 for A+/T+).
+Investigation of special subgroups showed additional features of disease.
+Within A+P3 participants, CN and impaired groups had similar tTau (p = 0.33) and pTau (p = 0.48) levels, suggesting comparable AD pathologic change.
+However, A +P3 CN participants had significantly longer education (p = 0.001), higher hippocampal volumes (p = 0.018), and somewhat less expression of the P3 pattern probabilities (p = 0.048) compared to A+P3 impaired participants, suggesting that higher cognitive reserve and less neurodegeneration may account for the preservation of cognitive function in this relatively small group (n = 19, Supplementary Table
+A-T-P1 and A+T-P1 participants with MCI/Dementia were not significantly different in cognitive test scores or hippocampal volume (Supplementary Table
+Longitudinal progression of pattern types.
+Cumulative incidence curves in Fig.
+These relationships hold regardless of cognitive diagnosis at baseline, although baseline CN have much slower rate of pattern progression than those with baseline cognitive impairment.
+Figure
+First, participants who persist in P1 show much lower longitudinal atrophy rate in all selected regions.
+Participants progressing from P1 to P3 show faster medial temporal lobe atrophy while those progressing from P1 to P2 show faster frontal and occipital atrophy.
+There is an acceleration in medial temporal lobe atrophy associated with the P2-P4 transition.
+While classified together with a P4 pattern, distinct regional atrophy can be observed between P4 participants who progressed from P2 versus P3, reminiscent of those earlier patterns (Supplementary Fig.
+Prediction of MRI progression.
+Survival curves in Fig.
+Moreover, among baseline P1 participants, their baseline P2 and P3 probabilities predict longitudinal progression pathways and progression speed.
+Using Cox-proportional-hazard models, we found that the baseline probabilities of P2 were able to discriminate participants with different event time of progressing from P1 to P2 and achieve an average concordance index (C-Index) of 0.823 ± 0.022 on the validation set.
+Similar analyses using baseline P3 probabilities to predict risk of progressing to P3 achieved an average C-index of 0.844 ± 0.024.
+Thus, the baseline P2 and P3 probabilities of P1 participants could imply future risks of progressing to P2 or P3 from 2-to 5-year horizon (see Supplementary Table
+Prediction performance worsened beyond 5-year risks and the optimal threshold for predicting progression along either pathway decreased with time (see Supplementary Table
+
+Prediction of clinical progression (change in diagnosis)
+. Clinical categorizations of CN, MCI, and Dementia provide useful information on functional status.
+Survival curves in Fig.
+The discrepancy is greater in the MCI to Dementia progression than for the CN to MCI progression, which occurs less frequently across groups.
+However, only for participants with P2 and P3 at baseline, pTau and Abeta status add significant discrimination power to the risk of converting to Dementia from MCI.
+Furthermore, pattern probabilities at baseline have comparable predictive power with the SPARE-AD score
+Both significantly outperformed hippocampal volume (HV, p < 0.001 for both SPARE-AD vs HV and Pattern vs HV in CN-MCI and MCI-Dementia prediction, Fig.
+Also, compared with other biomarkers including APOE genotype, ADAS-cog score, Abeta and pTau measures, pattern probabilities show either comparable or significantly superior performance in prediction of both CN to MCI and MCI to Dementia progression (Fig.
+Composite score for risk of clinical progression.
+With ADAS-Cog score, the most easily ascertained measure, as the only feature, the Cox-proportional-hazard model was able to achieve an average cross-validated C-Index of 0.654 ± 0.034 for prediction of CN to MCI progression and 0.728 ± 0.020 for prediction of MCI to Dementia progression.
+Further addition of pattern probabilities derived from T1 MRI significantly boosted average C-Indices for both tasks to 0.702 ± 0.042 (p < 0.001) and 0.768 ± 0.017 (p < 0.001) respectively.
+Patterns alone provided equivalent or better predictive performance compared to ADAS-cog alone.
+However, inclusion of Abeta/pTau status, which are derived from either invasive CSF sampling or relatively expensive PET scans, did not bring significant additional improvement to prediction performance (Fig.
+With all these biomarkers utilized together, we could construct a composite score indicating risk of clinical progression that was able to predict survival time from MCI to Dementia with an average C-index of 0.785 ± 0.016, on randomly split validation sets.
+Examples of survival curves stratified by the composite score for one randomly split validation set are shown in Fig.
+
+Discussion
+We have developed a deep-learning approach, Smile-GAN, which disentangles pathologic neuroanatomical heterogeneity and defines subtypes of neurodegeneration by learning to generate mappings from regional volume data of cognitively normal individuals to that of patients.
+Compared with unsupervised methods
+This stems from the fundamental property of Smile-GAN to cluster the transformations from normal to pathologic anatomy, rather that clustering patient data directly.
+Also, the deep-learning-basedSmile-GAN can easily handle high dimensional ROI data.
+Thus, no preprocessing ROI selection is required, and the model is able to fully capture variations in all subdivided ROIs and could feasibly be extended to even smaller/more numerous ROI.
+Moreover, in contrast with other semi-supervised methods
+Critically, pattern probabilities given by Smile-GAN are easily interpretable continuous biomarkers reflecting the neuroanatomical expression of respective patterns.
+These advantages of Smile-GAN allow versatile characterization of pattern types related to both severity and heterogeneity of pathological effects.
+Smile-GAN does not intrinsically model disease stage, nor does it assume any progression pathway between patterns.
+Staging can be inferred at a second-level analysis of the degree of expression of each of the identified patterns, or a linear or nonlinear combination of them.
+In ADNI/BLSA, most individuals expressed multiple patterns at the same time, as reflected by the magnitude of various pattern probabilities, an observation similar to the findings of Zhang et al.
+This feature allows investigation of complex and nonlinear relationships between pattern-based stage and clinical outcomes of interest, which can vary depending on the outcome (e.g., from various cognitive or clinical measures to staging estimates that inform clinical trial recruitment).
+Application of Smile-GAN to MRI data from a sample enriched with AD pathology identified 4 patterns of regional brain atrophy expressed in participants across the AD spectrum, which were highly reproducible on validation experiments, including a permutation test.
+These patterns range from mild to advanced atrophy and define two progression pathways.
+One pathway, here termed the P1-3-4 pathway, shows early atrophy in the medial temporal lobe that is typical for AD.
+The second pathway, P1-2-4, shows early diffuse mild cortical atrophy with MTL sparing that is a less typical pattern for AD.
+The end stage for both pathways is an advanced atrophy pattern, P4.
+This four-pattern system has similarities with other neuroimaging-based clustering studies, including identification of temporal and cortical predominant patterns
+Smile-GAN patterns tentatively correspond to pathologically identified subtypes of AD
+There is one another possible subtype of subcortical atrophy previously identified by several other MRI-based unsupervised clustering algorithms using ADNI data
+There are a few reasons why Smile-GAN did not identify a subcortical pattern.
+First, as observed in Zhang et al.
+Second, a portion of the variability attributed to a subcortical atrophy may not be disease-related, resulting in insufficient signal to separately cluster as a distinct pattern, a possibility potentially supported by the lack of pathological evidence for this subtype and scarce atrophy in subcortical ROIs among the patient group (Supplementary Fig.
+The four Smile-GAN patterns have clinically meaningful implications.
+Pattern membership is associated with differences in cognitive test performance, with P2 having relatively more executive dysfunction, P3 showing greater memory impairment, and P4 showing the worst performance across domains.
+These patterns also have implications for speed and direction of progression, with early pattern features predictive of the future pattern of neurodegeneration and pattern features predictive of clinical progression from CN to MCI and MCI to dementia.
+Critically, pattern expression was the most important predictor of clinical progression, showing comparable or stronger predictive ability than other N measures and biomarkers (Fig.
+Synergistically, pattern expression, A, T and ADAS-Cog provided outstanding cross-validated prediction of clinical progression on an individual basis (Fig.
+While the patterns are relatively distinct in regional specificity and severity, the underlying pathophysiology is more complex.
+P1 indicates that no significant neurodegeneration is present.
+Yet a significant number of participants (N = 306) with dominant P1 pattern still had objective cognitive impairment with MCI, and even a few cases of dementia, both with and without evidence of amyloid and tau deposition.
+These participants likely have reduced cognitive reserve and/or non-neurodegenerative contributions to MCI/dementia.
+The P2 group shows mild diffuse atrophy and is likely a group inclusive of multiple mild or early pathologies, inclusive of hippocampal sparing/cortical presentations of AD and other early neurodegenerative processes or atrophy related to chronic systemic disease, in part evidenced by amyloid negative P2 participants.
+However, P2 is not disproportionately enriched for vascular disease, a common comorbidity for primary neurodegenerative diseases, at least as measured by WML volumes which were relatively similar across P2-P3-P4.
+Regardless of etiology, expression of a P2 pattern is akin to concepts of advanced brain aging or decreased brain reserve
+While P3 is predominately early typical AD within the enriched ADNI sample, this also likely includes other pathologies such as limbic-predominant age-related TDP-43 encephalopathy (LATE)
+P4 appears to be a composite of advanced or 'endstage' neurodegeneration patterns.
+While fully typical of advanced AD, this pattern is also seen in participants with cognitive decline without amyloid or tau deposition, indicating a late-stage similarity of widespread brain atrophy across multiple pathologies.
+With the growing utilization of the AT(N) framework
+Categorization of neurodegeneration as absent (P1), early cortical (P2), temporal-predominant (P3) or advanced (P4) provides important phenotypic information while preserving much of the simplicity of the binary AT(N) framework.
+Together with A/T status, the dynamics of pattern expression shows both severity of disease and identifies reasonably distinct and reasonably sized subgroups with differing balance of AD and non-AD pathology (Fig.
+These groups could be used to enrich for typical AD pathology for clinical trials, reduce the need for ascertaining certain biomarkers, and identify interesting subgroups for focused evaluation, such as for genetic factors of resilience.
+For example, to recruit a group with early, typical AD neurodegeneration, one could initially select those with P3 pattern on MRI (a group that is 25.3% A+T+ in this study sample) and ascertain A/T biomarkers only in this group.
+The Smile-GAN pattern approach has several advantages.
+It captures biologically relevant regional atrophy patterns that are few in number, providing meaningful, top-level detail on neurodegeneration without requiring significant complexity, while simultaneously maintaining quantitative pattern probability information.
+The Smile-GAN method is a data-driven approach that can be applied on features extracted from data beyond neuroimaging, potentially able to cluster patients effectively based on any selected disease-related feature changes from normal group to patient group.
+Therefore, it is generalizable to any diseases and disorders that have reproducible patterns of changes in imaging or other biomedical data, including but not limited to other neurodegenerative and neuropsychiatric diseases
+While there are modest time and computational requirements for training each model primarily dependent on the number of features, the training process is only performed once, and subsequent calculation of individual pattern scores using an existing model is rapid.
+There are limitations to the method and our implementation.
+First, selection of the control group exerts a critical influence on resultant patterns, since, by design, any changes that are common in the control group will not be distinctly segregated (Supplementary Fig.
+For example, this may be a reason that vascular disease was distributed across multiple patterns.
+Similarly, rare and/or subtle patterns of atrophy may not be distinctly learned by the model, as demonstrated in simulation experiments.
+It is possible that larger and more diverse training data may allow identification of more pattern types in the AD continuum.
+Thresholds for assigning participants to groups may benefit from optimizations tailored to specific hypotheses.
+The performance of the four-pattern model in this study was derived and evaluated using data from the ADNI and BLSA studies, which have high and low prevalence of AD, respectively, and relatively low prevalence of non-AD neurodegeneration.
+Direct application of this model to a memory-center population with mixed neurodegenerative disease has not been evaluated.
+Finally, the Smile-GAN model is currently applied to ROI volume data derived from MRI images only, and thus may fail to capture more subtle patterns that do not conform to anatomic ROIs.
+The Smile-GAN model architecture is flexible for use with smaller ROI parcellations or voxel-based analyses as well as non-structural MRI and non-imaging data.
+Extension of current framework to such other types of data is a direction for future development.
+Patterns identified using semi-supervised clustering with generalized adversarial networks provide useful information about the severity and distribution of neurodegeneration across the AD spectrum.
+Baseline patterns are predictive of the future pattern of neurodegeneration as well as clinical progression to MCI and dementia.
+These patterns could augment research and clinical assessments of participants and patients with cognitive decline and contribute to a dimensional characterization of brain diseases and disorders.
+
+Methods
+Smile-GAN model.
+Smile-GAN is a Generative Adversarial Network (GAN) architecture for clustering a group (in our case patients) based on their multivariate differences (in our case regional volumes derived from MRI) to a reference group (in our case healthy controls).
+The general structure of Smile-GAN is shown Fig.
+Cascade of biomarkers can follow a canonical AD pathway, which is the most represented in the ADNI sample (red).
+The relationships of patterns with amyloid/tau status identifies another large group with the presence of AD pathology and significant or even dominant copathology (orange) as well as groups with suspected non-AD pathology (yellow).
+These pathways also indicate that certain typical AD neurodegenerative phenotypes may in some cases be driven by copathology.
+For example, A+T+ nodes are typical for AD; however, there are several potential paths (orange) whereby copathology may be the dominant cause of the neurodegenerative pattern.
+Path thickness estimates approximate flux through nodes in ADNI.
+This model is based on distribution of cross-sectional data in A/T/P categories and the assumption that events happen in certain order (A-→A+; T-→T+; P1→P2→P4 and P1→P3→P4).
+in Fig.
+To sum up, the primary concept of the model is to learn one-to-many mappings from the CN group X (alternatively called domain X: set of CN data) to the patient (PT) group Y (alternatively called domain Y: set of PT data).
+The idea is equivalent to learning one mapping function, f : X Z !
+Y, which generates synthesized PT data y 0 ¼ f ðx; zÞ from the real CN data and sampled subtype variable z, while enforcing the indistinguishability between PT data and synthesized PT data.
+Put simply, given one same value for subtype variable,z, the mapping f ðÁÞ generates image data that match data of patients of similar subtype mix.
+Here, Z ¼ fα : ∑ M i¼1 α i ¼ 1g, referred as the subtype (SUB) group (alternatively called SUB domain), is a class of vectors with dimension M (M = 4 was found to be optimal in our experiments).
+We denote the distribution of the aforementioned variables as x $ p CN , y $ p PT , y 0 $ p f , z $ p Sub , respectively.
+The variable z, independent from x, takes values from a subclass of group Z and can be encoded as a one-hot vector with value 1 being placed at any position with equal probability (i.e., 1/M).
+In addition to the mapping function, an adversarial discriminator D is introduced to distinguish between real PT data y and synthesized PT data y 0 , thereby ensuring that the mappings f generate image data that are indistinguishable from real patient data.
+The fact that a number of functions can potentially achieve equality in distributions makes it hard to guarantee that the mappings learned by the model are closely related to the underlying pathology progression.
+Moreover, during the training procedure, the mapping function backboned by the neural network tends to trivially ignore the Sub variable z.
+Therefore, with the assumption that there is one true underlying function for real PT variable y ¼ hðx; zÞ, Smile-GAN aims to boost the mapping function f to be approximate to the true underlying function h, by constraining the function class via three types of regularization: (1) we encourage sparse transformations, (2) enforce Lipschitz continuity of functions, (3) introduce another function g : Y !
+Z to the model structure.
+The latter is a critical part of the algorithm's ability to cluster the data, as it requires that the mapping functions identify sufficiently distinct imaging patterns in the Y group, which would allow the inverse mapping gðÁÞ to estimate the correct subtype in the PT group.
+More details about regularization terms and clustering inference of function g are stated in Supplementary Method 1.
+The objective of Smile-GAN is a combination of adversarial loss
+First, the adversarial loss
+where the mapping f attempts to transform CN to synthetically generated PT data so that they follow similar distributions as real PT data.
+The discriminator D, providing a probability that y comes from the real data rather than the generator, is trying to identify the synthesized PT data and distinguish it from the real PT data.
+Therefore, the discriminator attempts to maximize the adversarial loss function while the mapping f attempts to minimize against it.
+The corresponding training process can be denoted as:
+Second, the regularization terms include the change loss and cluster loss, both serving to constrain the function space where f is learned from.
+The change loss is defined as:
+By denoting l c to be the cross-entropy loss with l c ða; bÞ ¼ À∑ k i¼1 a i log b i , we define the cluster loss as:
+With the aforementioned losses, we can write the full objective as:
+where μ and λ are two hyperparameters that control the relative importance of each loss function during the training process.
+Through this objective, we aim to find the mapping function f and clustering function g such that:
+More implementation details of the model, including network architecture, training details, algorithm, and training stopping criteria are presented in Supplementary Method 2.
+Study and participants.
+The Alzheimer's Disease Neuroimaging Initiative (ADNI,
+study is a public-private collaborative longitudinal cohort study which has recruited participants categorized as cognitively normal, MCI, and AD participants through 4 phases (ADNI1, ADNIGO, ADNI2)
+ADNI has acquired longitudinal MRI, cerebrospinal fluid (CSF) biomarkers, and cognitive testing.
+The Baltimore Longitudinal Study of Aging, neuroimaging substudy, has been following participants who are cognitively normal at enrollment with imaging and cognitive exams since 1993.
+A total number of 1718 ADNI participants (819 ADNI1 and 899 ADNIGO/ADNI2) and 1114 BLSA participants were included in the study.
+Detailed information of enrollment criteria can be found in Peterson et al.
+Details of both studies including number classified as CN/MCI/Dementia at baseline, number of participants with CSF Abeta/Tau biomarkers, length of follow-up, age, gender, APOE genotype are included in Table
+Participants provided written informed consent to the ADNI and BLSA studies.
+The protocol of this study was approved by the University of Pennsylvania institutional review board.
+MRI data acquisition and processing.
+1.5 T and 3T MRI data were acquired from both ADNI and BLSA study introduced above.
+A fully automated pipeline was applied for processing T1 structural MRIs.
+T1-weighted scan of each participant is first corrected for intensity inhomogeneities
+A multi-atlas skull stripping algorithm was applied for the removal of extra-cranial material
+For the ADNI study, 145 anatomical regions of interest (ROIs) were identified in gray matter (GM, 119 ROIs), white matter (WM, 20 ROIs) and ventricles (6 ROIs) using a multi-atlas label fusion method
+For the BLSA study, this method was combined with haracquisition-specific atlases
+Phase-level cross-sectional harmonization was applied on regional volumes of the 145 ROIs to remove site effects
+For visualization of disease patterns, tissue density maps, referred as RAVENS (regional analysis of volumes examined in normalized space
+Individual images were first registered to a single subject brain template and segmented into GM and WM tissues.
+RAVENS maps encode, locally and separately for each tissue type, the volumetric changes observed during the registration.
+Data separation and preparation.
+After preprocessing, baseline ROI data of 297 CN and 602 cognitively impaired participants from ADNI2/GO participants were selected as the discovery set for training and validation of the model.
+longitudinal ROI data from follow-up visits of all participants from ADNI and BLSA were used for further clinical analysis, including both participants whose baseline data were used for model training and those who were completely independent of the discovery set.
+For analysis requiring measures of CSF Abeta/pTau, only ADNI participants with these two biomarkers were included.
+Otherwise, all participants from ADNI and BLSA study were incorporated for analysis.
+Before being used as features for the Smile-GAN model, ROI volumes were residualized and variance-normalized.
+To correct age and sex effects while keeping disease-associated neuroanatomical variations, we estimated ROIs-specific age and sex associations among 297 CN participants using a linear regression model.
+All cross-sectional and longitudinal data were then residualized by age and sex effects.
+Then, all ROI volumes were further normalized with respect to 297 CN participants in the discovery set to ensure a mean of 1 and standard deviation of 0.1 among CN participants for each ROI.
+Cognitive, clinical, CSF biomarker, and genetic data.
+We used additional clinical, biofluid, and genetic variables, including CSF biomarkers of amyloid and tau, APOE genotype, and cognitive test scores, provided by ADNI.
+These measures were downloaded from the LONI website.
+A total of 1194 participants from ADNI have CSF measurements of ß-amyloid, total tau, and phospho-tau, including 383 CN, 578 MCI and 233 Dementia at baseline; BLSA participants do not have A/T biomarkers and are therefore excluded from analyses based upon those measures.
+Detailed methods for CSF quantification are described in Hansson et al.
+Cutoffs for amyloid status based on ß-amyloid measures and for tau status based upon phospho-tau measures were previously defined
+Tau measures are also presented as continuous variables.
+Composite cognitive scores across several domains have been previously validated in the ADNI cohort.
+The memory composite models based on components from the Rey Auditory Verbal Learning Test, Alzheimer's Disease Assessment Scale-Cognitive Subscale (ADAS-Cog), and mini-mental status exam (MMSE)
+The executive function composite (ADNI-EF) models based on animal and vegetable category fluency, trail-making A and B, digit span backwards, digit symbol substitution from the revised Wechsler Adult Intelligence Scale, and circle, symbol, numbers, hands, and time items from a clock drawing task
+The language composite (ADNI-LAN) models using animal and vegetable category fluency, the Boston naming total, MMSE language elements, following commands/object naming/ideational practice from ADAS-Cog, and Montreal Cognitive Assessment (MoCA) language elements, including letter fluency, naming, and repeating tasks)
+Further detail on these composite measures can be obtained on the ADNI website (
+White matter lesion (WML) volumes were calculated from both ADNI and BLSA using inhomogeneity-corrected and co-registered FLAIR and T1-weighted images and a deep-learning-based segmentation method
+The model was trained using a separate training set with humanvalidated segmentation of WML.
+WML volumes were first cubic rooted.
+Then phaselevel cross-sectional harmonization was applied on them to reduce site effects.
+Pattern memberships and probabilities assignments.
+Smile-GAN model assigns M probability values to each participant, with each probability corresponding to one pattern type and the sum of M probabilities being 1.
+Based on the M probability values, we can further assign each participant to the dominant pattern type, determined by the maximum probability.
+The optimal M was chosen during a cross-validation (CV) procedure based on the clustering reproducibility or stability.
+Specifically, we ran 10 folds of repeated holdout CV for M = 3 to 5. For each fold, we randomly left out 20% of the discovery set to add variability.
+Of note, M = 2 generally stratified the data into mild and severe atrophy patterns, which is not clinically interesting.
+We used the Adjusted Rand Index (ARI)
+ARI is a corrected for chance version of the random index which equals 0 for two random partitions and is, thus, considered a good choice for measuring overlap of clustering results in our case.
+The highest mean pair-wise ARI, 0.48 ± 0.08, was reached at M = 4, with ARI = 0.30 ± 0.12 for M = 3 and ARI = 0.33 ± 0.07 for M = 5.
+A permutation experiment demonstrated significant reproducibility of the Smile-GAN patterns for M = 3-5, as measured by ARI.
+Together, these data suggested that M = 4 yields the optimal number of clusters (Supplementary Section 1.4/2.4).
+With M = 4, we reran Smile-GAN 30 times with all available data in the discovery set and the trained models will be used for external validation and analysis.
+In order to find the best correspondence among cluster assignments across the 30 experiments, we calculated the mean pair-wise ARI values for each resultant model.
+The one with the highest ARI was chosen as the template and the pattern types learned by all other models were reordered so that their clustering results achieved the highest overlap with that of the template.
+After reordering, the average probability of each pattern across all 30 models was taken as the probability of the corresponding pattern for each participant.
+We then applied these learned models to longitudinal data of all CN/MCI/Dementia participants and obtained probabilities of four patterns for all visits of each participant.
+Statistical analysis.
+To visualize the brain signatures of four patterns, we utilized all cross-sectional data of MCI/Dementia participants in the discovery set and performed voxel-wise group comparisons (i.e., CN vs each pattern) via AFNI 3dttest 47 using voxel-wise tissue density (RAVENs) maps
+To access longitudinal progression trajectories of pattern assignment, we grouped for each of the four patterns those participants with probability larger than 0.5.
+We then compared how the pattern probabilities change over time for each of the four groups by calculating pattern probability for P1-P4 of all within group who have data available in a given time interval (i.e., X year-X + 1 year).
+Those who had more than one data point in the selected time interval only contributed once through mean probabilities of all those visits.
+The demographic variables, APOE genotype, CSF biomarker levels, cognitive test scores, WML volumes and pattern probabilities were compared both across pattern types and within pattern types.
+Only participants from the ADNI study whose Abeta/pTau status was available at baseline were included for comparison.
+For categorical variables, the Chi-squared test was used to identify differences between subgroups.
+For other quantitative variables, a one-way ANOVA analysis was performed for group comparison.
+Statistical analyses were conducted via online python packages, statsmodels 0.8.0,
+SciPy 1.6.3,
+NumPy 1.16.6 and pandas 0.21.0.
+To assess the risk of converting from P1 into P2 or P3, we conducted time-toevent survival analysis to evaluate the risk pattern conversions.
+In particular, we treated P2 and P3 as competing events and used Aalen-Johansen estimator to generate cumulative incidence curves for P1 to P2/P3 progression.
+For all other cumulative incidence curves and survival curves corresponding to pattern progression and diagnosis transformation, we applied a nonparametric Kaplan-Meier estimator and used the log-rank test to compare difference in survival distributions between groups.
+For all survival analysis, participants were assigned into one pattern at baseline or labeled as progressing to one pattern only if the corresponding pattern probability is greater than 0.5.
+A few participants not reaching this threshold in any pattern at baseline were discarded to avoid noise in the analysis.
+All survival analyses were conducted via online python package lifelines 0.25.7.
+Evaluation of patterns' predictive ability.
+We further conducted analyses to evaluate the predictive ability of baseline pattern probabilities in the prediction of future pattern changes.
+Also, we compared them with other measures of neurodegeneration (N measures) and clinical biomarkers in prediction of diagnosis transitions.
+For pattern progression prediction, we selected all 940 participants who had longitudinal follow-ups and P1 > 0.7 at baseline to avoid trivial prediction tasks.
+First, the Cox-proportional-hazard model with baseline P2 or P3 probability as the only feature was utilized to predict survival curves from P1 to P2 or P1 to P3, respectively.
+We ran the two-fold cross validation 100 times derived the concordance index on validation sets.
+Second, to predict risk of pattern progression and progression pathways of P1 participants at specific time points X, we directly used P2 probability and P3 probability at baseline as an indication of risk without further fitting any additional models.
+For each time X from 2 years to 8 years, we generated a binary indicator with 0 representing not progressing to P2 till T and 1 representing who have already progressed to P2 before T and directly used baseline P2 probabilities to discriminate these two groups.
+The exact same process was also done for P3.
+Area under the receiver operator characteristic curve (AUC) values were calculated for both P2 and P3 at different time X.
+Optimal discrimination thresholds, at which true positive rate (TP) plus false positive rate (FP) = 1, were reported for two different progression pathways.
+To predict clinical diagnosis changes, we selected out 1178 CN participants and 921 participants categorized as MCI at baseline who had longitudinal follow-ups.
+First, to compare Patterns with other N measures, we again utilized the Coxproportional-hazard model with different N measures as features to predict CN-MCI and MCI-Dementia survival curves.
+Two-fold cross validation was run 100 times to derive the concordance index on validation sets.
+Then, to compare the powers of Pattern, Abeta, pTau, APOE genotype and ADAS-Cog, we reduced samples to 380 CN and 568 MCI participants who had these biomarkers.
+Each biomarker was used independently as the only feature for training the model.
+For all prediction tasks in this section, baseline pattern assignments and progression labelling followed the same rule introduced in the 'Statistical Analysis' section if not specifically annotated.
+Biomarker selection and composite score construction.
+Finally, we evaluated predictive powers of different combinations of biomarkers mentioned above.
+Following the order of accessibility, ADAS-Cog, pattern probabilities derived from T1 MRI, Abeta/pTau derived from PET scan were added successively to the feature set for training the Cox-proportional-hazard model and the same experimental procedure were implemented as introduced in the previous section.
+A composite score indicating the risk of clinical progression can be derived with all biomarkers introduced above.
+Using Pattern-probabilities/Abeta/pTau/ADAS scores at baseline as features, the trained Cox-proportional-hazard model was applied to the validation set to derive the partial hazard as the composite score.
+Pamela LaMontagne
+
+
+
+Fig. 1
+Fig. 1 Conceptual overview of Smile-GAN.
+Blue lines represent non-disease-related variations observed In both normal control (CN) and patient groups.
+Red regions represent disease effects which only exist among patient groups.
+Smile-GAN finds neuroanatomical pattern types by means of clustering transformations from CN data to patient data.
+
+
+
+Fig. 2
+Fig. 2 Characterization of four atrophy patterns (P1-P4) and two progression pathways of neurodegeneration.
+(Data from 899 ADNI2/GO participants in discovery set (a) and all 2832 ADNI/BLSA participants (b-d)).
+a Voxel-wise statistical comparison (one-sided t-test) between CN and participants predominantly belonging to each of the four patterns.
+False discovery rate (FDR) correction for multiple comparisons with p-value threshold of 0.05 was applied.
+b Visualization of participants' expression of four patterns in a diamond plot.
+Pseudo-probabilities of belonging to each pattern reflect levels of expression (i.e., presence) of respective patterns and probabilistic subtype memberships.
+Horizontal axis indicates p1 and p4 probabilities and diagonal axes reveal p2 (solid lines) and p3 (dashed lines) probabilities.
+Since participants never have both P1 and P4 > 0, all observed pattern combinations can be represented in this diamond plot.
+Dots for individual participants are color coded by the dominant pattern.
+c Box and whisker plots of expression of the four patterns over time for each baseline pattern group.
+(center line, median; box limits, upper and lower quartiles; whiskers, 1.5× interquartile range; points, outliers).
+d Progression paths of four representative participants.
+Dashed lines show participants reaching P4 from P1 within 5 years and solid lines show those who take more than 10 years to reach P4 from P1. Source data are provided as a Source Data file.
+
+
+
+Fig. 3
+Fig. 3 Participants grouping and cognitive performance of subgroups.
+(Data from 1194 ADNI participants with Abeta/pTau measures) a Number of participants grouped by diagnosis, amyloid status, and pattern.
+b AT(N) categorization based on participants' patterns and CSF Abeta/pTau status.
+Based on patterns, N is classified as normal (P1), not typical of AD (P2), or characteristic of AD (P3/P4).
+c Box and whisker plots of cognitive performance of MCI/Dementia participants by pattern.
+(A: Abeta; T: pTau) (center line, median; box limits, upper and lower quartiles; whiskers, 1.5× interquartile range; points, outliers).
+Source data are provided as a Source Data file.
+
+
+
+Fig. 4
+Fig. 4 Analysis of longitudinal pattern progression.
+(Data from all 2832 ADNI/BLSA participants) a Cumulative incidence of pattern progression.
+The line styles indicate the diagnosis at baseline.
+95% confidence intervals are shown with estimated cumulative incidence curves as centres.
+b Annual atrophy rate in selected GM regions along different paths.
+Data within 3 years before pattern change or last follow-up point (for stable P1 participants (P1-P1)) were utilized and random intercept mixed effect model with time as fixed effect was used to derive annual volume change rate with respect to baseline volume.
+Data are presented as estimated coefficient of time variable ±standard error.
+(PHC Parahippocampal gyrus, ERC Entorhinal cortex) Source data are provided as a Source Data file.
+
+
+
+Fig. 5
+Fig. 5 Predictive ability of patterns.
+(Data from 1194 ADNI participants with Abeta/pTau measures (a, b, d) and 2832 ADNI/BLSA participants (c)) a Survival curves for neurodegeneration progression to P4; b Survival curves for clinical diagnosis progression from CN to MCI and from MCI to Dementia.
+For both a and b, survival curves are stratified by both initial dominant pattern and Abeta (A) /pTau (T) status; p-values derived from log-rank tests indicate statistical significance of difference between positive and negative Abeta or pTau status within each pattern; c, d Box and whisker plots of concordance Index (C-Index) which measures the performance of Cox-proportional-hazard model in predicting clinical conversion time (from CN to MCI and MCI to Dementia.
+Different biomarkers are utilized as features of the model for evaluation of their predictive performance.
+(Center line, median; box limits, upper and lower quartiles; whiskers, 1.5× interquartile range; points, outliers) Source data are provided as a Source Data file.
+
+
+
+Fig. 6
+Fig. 6 Prediction of clinical diagnosis progression with composite biomarkers.
+Data from 1194 ADNI participants with Abeta/pTau measures.
+a Biomarkers were added successively into features set based an order of accessibility.
+Concordance Index (CI) measures the performance of Coxproportional-hazard model in predicting clinical conversion time (from CN to MCI and MCI to Dementia) Different sets of biomarkers are utilized as features of the model for evaluation of their predictive powers.
+(Center line, median; box limits, upper and lower quartiles; whiskers, 1.5× interquartile range; points, outliers).
+b Survival curves stratified by composite scores (A, T, Pattern, ADAS-Cog jointly predicting outcome in cross-validated fashion) for one randomly split validation set.
+95% confidence intervals are shown with estimated survival curves as centres.
+(A: Abeta; T: pTau, P: Pattern, Cog: ADAS-Cog score) Source data are provided as a Source Data file.
+
+
+
+Fig. 8
+Fig. 8 Schematic diagram and network architectures.
+a General idea behind Smile-GAN.
+The model aims to learn several mappings from the CN group to the PT group b Schematic diagram of Smile-GAN.
+The idea of the model is realized by learning one mapping from joint of two groups X × Z to Y, while learning another function g : Y !
+Z. CN cognitive normal control, PT patient, Sub pattern subtype.
+c Network architecture of three functions: blue arrow represents one linear transformation followed by one leaky rectified linear unit function, green arrow represents one linear transformation followed by one softmax function, red arrow represents only one linear transformation.
+
+
+
+Table 1
+Details of ADNI and BLSA studies.For age and length of follow-ups, median value with first and third quartile are reported.
+APOE E4 carriers include heterozygotes and homozygotes.
+
+
+, Aristeidis Sotiras 19 , Mark Espeland 20 , Colin L. Masters 8 , Paul Maruff 8 Jurgen Fripp 9 , Henry Völzk 21 , Sterling C. Johnson 22 , Marilyn S. Albert 7 , Luigi Ferrucci 23 & R. Nick Bryan 24

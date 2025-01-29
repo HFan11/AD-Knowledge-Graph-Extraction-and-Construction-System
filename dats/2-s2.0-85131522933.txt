@@ -1,0 +1,265 @@
+Automated text‐level semantic markers of Alzheimer's disease
+Introduction: Automated speech analysis has emerged as a scalable, cost-effective tool to identify persons with Alzheimer's disease dementia (ADD).
+Yet, most research is undermined by low interpretability and specificity.
+Methods: Combining statistical and machine learning analyses of natural speech data, we aimed to discriminate ADD patients from healthy controls (HCs) based on automated measures of domains typically affected in ADD: semantic granularity (coarseness of concepts) and ongoing semantic variability (conceptual closeness of successive words).
+To test for specificity, we replicated the analyses on Parkinson's disease (PD) patients.
+Results: Relative to controls, ADD (but not PD) patients exhibited significant differences in both measures.
+Also, these features robustly discriminated between ADD
+
+INTRODUCTION
+Over 43 million individuals are affected by Alzheimer's disease (AD), a disorder characterized by progressive temporo-parieto-hippocampal atrophy alongside semantic and episodic memory impairments.
+Prominent among these is automated speech analysis (ASA).
+Participants are simply required to speak, yielding diverse features that can be automatically extracted and analyzed to detect persons with and without AD dementia (ADD).
+Yet, most research is undermined by low interpretability and specificity, often targeting features unrelated to the disorder's core neuropsychological profile while lacking a disease control group.
+This may cast doubt on the clinical utility of ensuing findings.
+Here, leveraging ASA tools with ADD patients, healthy controls (HCs), and Parkinson's disease (PD) patients, we examined whether ADD-specific markers can be captured through measures of semantic granularity and ongoing semantic variability, two domains that are systematically disrupted in standard assessments.
+10] ASA has proven useful for discriminating between AD patients and HCs,
+Yet, most studies have examined heterogeneous ad hoc domains, revealing patterns that are not readily interpretable against core neuropsychological outcomes.
+For instance, inconsistent accuracy rates are obtained upon targeting mixed articulatory
+6]
+Moreover, several reports have used unmatched and imbalanced groups, restricted tasks eliciting little data, and suboptimal machine learning approaches.
+e present study tackles these issues.
+We investigated disruptions of semantic granularity and ongoing semantic variability, two well-established manifestations of ADD (Figure
+AD patients are typified by coarse (ie, general) conceptual choices, evincing a propensity to use hypernyms (eg, "animal," "fruit") and few hyponyms (eg, "cat," "berry"). 9,10
+Also, they exhibit sudden changes in speech flow, as their discourse becomes progressively digressive, with frequent interruptions and inquiries (eg, "What was I saying?")
+causing conceptual discontinuity.
+Our approach captures these phenomena automatically.
+We employed the WordNet taxonomy
+Furthermore, to test whether such domains are distinctively affected in ADD, we included persons with PD, a neurodegenerative disease with early semantic alterations restricted to particular domains-mainly, action-related concepts.
+Finally, we circumvented key caveats in the literature.
+First, we formed strictly matched groups with similar sample sizes.
+Second, we combined several speech tasks in an integrative analysis, capturing various language behaviors and avoiding inflated results based on unduly small datasets (a key requisite for testing novel metrics).
+Third, we employed robust machine learning methods for patient identification.
+Briefly, we performed the first automated assessment of semantic granularity and variability on ADD patients, relative to HCs and PD patients.
+We integrated statistical (analysis of variance [ANOVA]) and machine learning (Gradient Boosting) analyses on a rich, diverse set of language tasks.
+We hypothesized that automated measures of semantic granularity and ongoing semantic variability would yield (1) significant differences, and (2) high classification accuracy between ADD patients and HCs, but (3) not between PD patients and HCs.
+With this approach, we seek to better test the sensitivity and clinical utility of ASA for dementia assessments.
+
+METHODS
+
+Participants
+We recruited 55 native Spanish speakers, with normal or corrected-to-
+
+HIGHLIGHTS
+• We examined markers of Alzheimer's disease (AD) via automated speech analysis.
+• We targeted semantic granularity and variability, two clinically sensitive domains.
+• Relative to controls, AD patients were impaired in and classified by both measures.
+• These results were not replicated in PD patients.
+• Our approach can reveal scalable, interpretable, condition-specific markers of AD. previous works,
+No patient reported a history of other neurological disorders, psychiatric conditions, primary language deficits, or substance abuse.
+Mean scores on the Montreal Cognitive Assessment fell below the cutoffs for dementia in the ADD group and for mild cognitive impairment in the PD group.
+ADD patients presented executive dysfunction, as established through the INECO Frontal Screening battery.
+patients had no symptoms of Parkinson-plus and were assessed in the "on" phase of medication.
+HCs were cognitively preserved, functionally autonomous, and had no background of neuropsychi-atric disease or drug abuse.
+All groups were matched for sex, age, and education.
+For demographic and neuropsychological details, see
+
+Speech elicitation protocol
+Participants performed seven naturalistic language tasks covering varied communicative behaviors.
+Four were spontaneous speech tasks, requiring participants to describe (1) their daily routine and (2) main interests, and to narrate (3) a pleasant and (4) an unpleasant memory.
+In these, discourse is driven by personal experience, allowing for varied linguistic patterns.
+The remaining three were semi-spontaneous speech tasks, involving descriptions of (5) the modified Picnic Scene of the Western Aphasia Battery 30 and (6) a picture of a family working in an unsafe kitchen, as well as (7) immediate recall and narration of a one-minute silent animated film.
+These tasks elicit diverse and partly predictable linguistic patterns.
+cordings were obtained in a quiet room on laptop computers with noise-cancelling microphones, and saved as .wav
+files (44100 Hz, 16 bits) via Cool Edit Pro 2.0.
+Normal pace and volume were encouraged.
+Recordings were transcribed via an automatic speech-to-text service and manually revised.
+The rare occurrences of unintelligible words were discarded.
+
+Speech data pre-processing
+Transcriptions were pre-processed on Python's TreeTagger library with the AnCora Spanish corpus (
+We converted all characters to lowercase and remove all punctuation marks and symbols.
+Each text was split into individual words.
+These were assigned part-of-speech tags and lemmatized (ie, converted to their base form).
+To maximize statistical power and feature diversity while capturing multiple linguistic scenarios, analyses were performed collapsing all tasks.
+Mean lemmatized word counts did not differ significantly (F[2,52] = 0.64, P = .53,
+2 p = 0.02) among ADD patients (1,051; SD = 112), HCs (1,239; SD = 124), and PD patients (1,193; SD = 140).
+
+measures
+
+Semantic granularity
+Granularity scores were computed via Python's NLTK library (https: //www.nltk.org/)
+as interface to access WordNet's lexical database in English (
+WordNet includes over 155,000 words organized in synonym sets called "synsets."
+Roughly 80,000 correspond to nouns.
+These are grouped into a taxonomy that can be visualized as a hierarchical (direct, acyclic, non-weighted) graph spanning hypernyms from above (eg, "animal") and hyponyms from below (eg, "dog").
+The highest hypernym is "entity," with progressively less coarse terms appearing downstream (Figure
+A noun's granularity can be defined as the number of nodes separating it from "entity."
+Accordingly, general terms like "food" or "animal" have lower granularity scores than more precise terms such as "carrot" or "bulldog."
+Nouns were automatically identified with TreeTagger (Section 2.3), manually checked to avoid erroneous tagging, and automatically translated into English using WordNet.
+Granularity scores were assigned to each noun by considering its shortest path to "entity" (ie, the "synset" with fewer nodes to "entity").
+Nouns not included in WordNet's corpus (∼ 5.68% across texts) were discarded (rejected nouns did not differ significantly among groups, P = .93).
+For subsequent analyses, scores were stored in lists and converted to histograms using bins of increasing granularity, from 2 to 12 (bins 2, 3, and 4 reflect the number of nouns with granularity scores 2, 3, and 4, respectively, and so on).
+Bin 1 was not considered, since the word "entity" was not present in any text.
+Bin 12 included all words with granularity score 12 and the very few words with higher granularity (∼0.18% across texts).
+To avoid verbosity-related confounds, bins were normalized by the total number of nouns.
+
+Ongoing semantic variability
+Ongoing semantic variability was analyzed with a FastText model (
+pre-trained with over 2,000,000 unique Spanish words from Common Crawl and Wikipedia corpora.
+The FastText model assigns a vector to each unique word in the vocabulary and is trained to map similar concepts to vectors that are close within the embedding.
+The distance between words can be quantified with the cosine of the angle between their assigned vectors:
+, for two vectors u and v.
+As in previous works,
+First, each pre-processed text was represented as a series of vectors, [v 1 , v 2 , …],
+preserving the words' sequential order.
+Second, the distances between adjacent vectors, d i = d(v i, v i+1 ) were stored into a time series.
+Third, ongoing semantic variability was computed as the variance of the joint time series across speech tasks:
+ing the mean of all d i .
+Thus, when adjacent words referred to concepts far apart in the embedding space, a text was typified by high semantic variability, reflecting discontinuous discourse.
+To avoid biases driven by disfluencies, hesitations, or word-finding strategies, consecutive repeated words were omitted before the second step (a text consisting of a single repeated word would feature null variability).
+Ultimately, each participant's semantic variability across tasks was used for ANOVA and as a feature for machine learning analyses.
+
+Statistical analysis
+Between-group comparisons were performed via one-way ANOVAs, with Tukey's HSD tests for post hoc contrasts.
+Alpha levels were set at P < .05.
+Effect sizes were computed via partial eta squared ( 2 p ) for ANOVAs and with Cohen's d for pairwise comparisons.
+Given their different distributions and variances, each of the 12 measures (the 11 granularity bins, and the global measure of semantic variability) was framed as a separate dependent variable.
+No participant was detected as an outlier in any measure.
+Analyses were performed with Pingouin Python library (
+
+Machine learning analysis
+We implemented machine learning classifiers between ADD patients and HCs (to reveal candidate ADD markers) and between PD patients and HCs (to test whether predicted markers proved specific to ADD).
+A single model was trained for each contrast using the corresponding histograms of granularity and variability scores as input features.
+Analyses were based on a Gradient Boosting classifier, which surpasses the robustness of other algorithms.
+Scikit-learn (
+org/) was used to implement the classifiers with 5000 independent estimators, a learning rate of 0.01, and a maximum of two features per split.
+For each iteration, data were randomly divided into three folds preserving the proportion of labels (stratified cross-validation).
+Two folds were used for training and the other for testing, so that all folds were used once to test the classifier.
+Univariate feature selection was applied to the training set within each fold (the top five features were selected according to their ANOVA F-value between groups).
+This process was repeated 1000 times with and without shuffling the target labels, and a P-value was constructed by counting the number of times the area under the receiving operator characteristic curve (ROC AUC) value of the classifier with shuffled labels exceeded that obtained without shuffling, normalized by the total number of iterations.
+A feature importance score was constructed by counting the number of times a feature was selected based on its F-value (Appendix B), divided by the number of folds multiplied by the number of iterations.
+Importantly, the
+
+RESULTS
+
+Statistical results
+ADD patients exhibited lower semantic granularity scores than HCs and PD patients in most of the largest bins (8-12), indicating scarcer use of hyponyms (Figure
+Significant group differences were found for bins 5 (F[2,52] = 5.43, P = .007,
+2 p = 0.17) and 11 (F[2,52] = 4.71, P = .013,
+2 p = 0.15).
+Post hoc analyses, via Tukey's HSD tests, revealed that ADD patients scored significantly higher than HCs in bin 5, a low granularity bin (P = .072,
+d = 0.73); and significantly lower than HCs in bin 11, a high granularity bin (P = .008,
+d = 1).
+Bin 5 also yielded significantly higher scores for PD patients than HCs (P = .003,
+d = 1.11).
+The remaining pairwise comparisons yielded non-significant differences (all P-values > .05).
+Ongoing semantic variability results (Figure
+2 p = 0.14), with post hoc comparisons revealing significantly higher scores for ADD patients than HCs (P = .011,
+d = 0.97), alongside non-significant differences for the remaining pairwise comparisons (HCs vs PD patients: P = .21,
+d = 0.58; ADD vs PD patients: P = .45,
+d = 0.39).
+
+Machine learning results
+Collapsing both measures, classification between ADD patients and HCs (Figure
+± .11;
+sensitivity: .80 ± .15;
+precision: .73 ± .12).
+This AUC value was significantly higher (P = .022)
+than that obtained upon shuffling participants' labels, which yielded chance levels (0.49 ± .13) and lower scores across measures (accuracy: .52 ± .16;
+sensitivity: .64 ± .21;
+precision: .57
+± .18).
+Conversely, classification between PD patients and HCs (Figure
+sensitivity: .61
+± .20;
+precision: .64 ± .15).
+This AUC value did not differ significantly (P = .16)
+from that obtained upon shuffling participants' labels, which yielded chance values (.50 ± .13) and chance-level results in other measures (accuracy: .50 ± .15;
+sensitivity: .56 ± .23;
+precision: .53
+± .20).
+
+DISCUSSION
+We examined potential markers of ADD via automated measures of semantic granularity and variability.
+Both measures discriminated ADD patients from HCs (based on ANOVAs) and allowed identifying them robustly on a subject-level basis (based on machine learning).
+No such differentiations were present for PD patients relative to HCs.
+Below we discuss these findings.
+Relative to HCs, ADD patients used more coarse and fewer precise concepts.
+This indicates reduced semantic granularity, a phenomenon observed in controlled tasks (eg, picture naming, category fluency) through standard measures (eg, correct responses).
+Our study suggests that increased reliance on hypernyms in ADD also typifies the patients' natural speech.
+In this sense, reduced granularity has been proposed as a marker of diseases with primary semantic memory impairments.
+Indeed, abnormally coarse-grained abstractions are Abbreviations: ADD, Alzheimer's disease dementia; AUC, area under the curve; HCs, healthy controls; PD, Parkinson's disease; ROC, receiver operating characteristic also typical in semantic dementia patients, 37 some of whose core atrophy regions (eg, hippocampus, temporal lobes) are also affected in AD.
+ADD patients also presented greater semantic variability than HCs, indicating more discontinuous speech (eg, see Appendix C).
+Previous studies have reported reduced cohesion and coherence in AD,
+Similar patterns are observed in persons with mild cognitive impairment, at increased risk for AD.
+Our study shows that dissimilar semantic relations also emerge across word-toword relations.
+Specifically, the patients' discourse abounded in interruptions and gap fillers via ready-made phrases (eg, "I don't know," "I forget the name," "I don't remember"), in line with evidence that this population may overuse formulaic language.
+Here, the Fast-Text word-vectorial representations revealed that such phrases devi-ate from their adjacent semantic choices, revealing further neuropsychological aspects of ADD.
+The robustness of both measures was corroborated by machine learning results.
+Joint analysis of semantic granularity and variability features yielded an AUC of 80%, correctly identifying 80% of HCs and 74% of ADD patients.
+These results surpass those from previous ASA studies targeting domains that are not markedly affected in AD, such as articulation or syntax.
+6]
+Briefly, semantic granularity and variability measures may contribute to revealing clinically relevant differences between ADD patients and HCs.
+Importantly, the above results were partly specific to ADD.
+Except for one granularity bin, the features affected in ADD were preserved in PD.
+Likewise, classification between PD patients and HCs was near chance and non-significantly different from that obtained via random groupings.
+This is a non-trivial finding, since other verbal domains more systematically assessed in AD, such as semantic and phonemic fluency,
+Yet, while we targeted PD patients on levodopa, as in previous works,
+New studies should explore whether the deficits observed in ADD remain specific when considering PD patients with varying levels of dopamine bioavailability.
+Still, our findings suggest that theoretically informed semantic measures may prove useful not only to identify specific brain diseases, but also to discriminate among them.
+Previous ASA studies have often assessed unmotivated, heterogeneous domains in combination with feature importance techniques that favor classification outcomes over interpretability.
+While often successful in terms of classifier performance, this approach fails to capture features that can be readily aligned with mainstream clinical knowledge.
+In fact, diverse constellations of phonological and syntactic features might contribute to patient identification
+Moreover, this evidence is hard to reconcile with abundant neuropsychological literature attesting to the preservation of such domains in AD.
+By bridging the gap between well-established deficits and cutting-edge automated tools, our approach paves the way for more clinically relevant uses of ASA.
+Moreover, our design overcomes key limitations of previous ASA research on AD and related diseases.
+Frequently, these studies are undermined by unbalanced samples
+r strict group-matching protocol circumvented major alternative explanations of our results (ie, higher education levels could entail richer vocabulary, potentially increasing semantic granularity).
+Moreover, while most previous works used isolated tasks or narrow combinations therefrom, we used a range of spontaneous (autobiographical) and semi-spontaneous (stimulus-based) tasks,
+Critically, this approach increases data quantity and variability across groups, avoiding over-optimistic results from brief discourse samples.
+While we obtained similar results even upon considering a single task-the one of longest duration (Appendix, section D)-the present approach avoids important caveats while maximizing the representativeness of ASA.
+This study attests to the usefulness of ASA as a complement for mainstream AD assessments.
+Standard evaluations of neurodegenerative conditions may prove expensive, yield examiner-driven scores,
+Conversely, ASA entails minimal costs, generating objective naturalistic data.
+Tagliazucchi have nothing to disclose.
+We express our deep gratitude to all participants as well as the patients' caregivers for contributing their valuable time to this study.
+
+ORCID
+Adolfo M. García
+
+
+
+F I G U R E 1
+Illustration of target measures.
+(A) Representative phrases of ADD patients, PD patients, and healthy controls, showing the predicted gradient of semantic granularity (red scale) and ongoing semantic variability (blue scale).
+(B) Segment of the WordNet network showing hierarchical relations from the least granular node ("entity") to progressively more granular nodes (down to "bulldog").
+Granularity values are marked by color and number.
+Nodes serving as starting points of dotted lines show network bifurcations that do not lead to the "bulldog" node.
+Multiple relevant and intermediate nodes are omitted for brevity.
+(C) Schemes for the computation of ongoing semantic variability.
+The diagrams show FastText embeddings, adjacent-word-pair similarity series, and distributions for texts presenting high variability (top row), middle variability (middle row), and low variability (bottom row).
+Abbreviations: ADD, Alzheimer's disease dementia; PD, Parkinson's disease
+
+
+
+F I G U R E 2
+Statistical differences in semantic granularity and ongoing semantic variability across diverse speech tasks.
+(A) Normalized values of semantic granularity for each bin.
+Relative to controls, ADD patients exhibited higher values in a low granularity bin(5) and lower values in a high granularity bin(11), suggesting greater reliance on hypernyms and reduced reliance on hyponyms.
+(B) Boxplot representation of ongoing semantic variability.
+Successive semantic choices proved significantly more variable in ADD patients than in HCs.
+Significant pairwise differences (P < .05)
+are indicated with a single asterisk (*) for the contrast between ADD patients and HCs, and with a double asterisk (**) for the contrast between PD patients and HCs.
+Abbreviations: ADD, Alzheimer's disease dementia; HCs, healthy controls; PD, Parkinson's disease number of features per participant (n = 12) was more than four times smaller than the number of participants (n = 55), and the feature selection procedure further reduced the number of features to five.
+This feature-to-sample ratio, combined with the stratified cross-validation procedure, contributed to alleviate potential overfitting issues.
+Classifier performance is reported as the mean and SD (extent of the shaded region) of the ROC curve across all 1000 iterations, both for shuffled and unshuffled labels, and as confusion matrices showing the proportion of correct/incorrect classifications in each class.
+
+
+
+F I G U R E 3
+Classifications between patients and controls combining semantic granularity and ongoing semantic variability features across diverse speech tasks.
+The Gradient Boosting classifier successfully distinguished (A) ADD patients from HCs, but not (B) PD patients from HCs.
+The panels show normalized AUC histograms (left inset), average ROC curves (middle inset), and confusion matrices normalized by row and averaged across iterations (right inset).
+Real results are shown in blue, while results obtained upon shuffling participants' labels are shown in red.
+
+
+
+Table 1 .
+All participants provided written informed consent pursuant to the Declaration of Helsinki.
+The study was approved by the institutional ethics committee of the Memory and Neuropsychiatric Clinic, Neurol-
+
+
+While this is a common hurdle in studies pursuing standardized, good-quality speech samples, it would be important to replicate our work with more participants.Second, while the use of several speech tasks allows capturing diverse linguistic behaviors, it also increases test duration.This can be attenuated by having participants record themselves remotely, which could be especially promising for longitudinal assessments.Third, our study focused exclusively on Spanish speakers.Facundo Carrillo has stocks of a company that makes EHR for mental health professionals (Sigmind: https://www.sigmind.net).In the past 36 months, Facundo Carrillo had a fellowship with a travel grant.In the past 36 months, Gonzalo Forno has served as Associate Professor at Universidad de Los Andes, Santiago, Chile.In the past 36 months, Maria Luisa Gorno Tempini has been supported by grants from the National Institutes of Health (NINDS R01 NS050915, NIDCD K24 DC015544; NIA U01 AG052943).Roque Villagra has received support from ANID/FONDAP/15150012. In the past 36 months, TO EXPAND DEMENTIA RESEARCH IN LATIN AMERICA (ReDLat, supported by National Institutes of Health, National Institutes of Aging [R01 AG057234], Alzheimer's Association [SG-20-725707], Rainwater Charitable foundation -Tau Consortium, and Global Brain Health Institute).The contents of this publication are solely the responsibility of the authors and do not represent the official views of these Institutions.Adolfo García is an Atlantic Fellow at the Global Brain Health Institute (GBHI) and is supported with funding from GBHI, Alzheimer's Association, and Alzheimer's Society (GBHI ALZ UK-22-865742); CONICET; FONCYT-PICT (grant number 2017-1818); ANID, FONDECYT Regular (grant numbers 1210176 and 1210195); and Programa Interdisciplinario de Investigación Experimental en Comunicación y Cognición (PIIECC), Facultad de Humanidades.In the past 36 months, Adolfo García has received grants from the GBHI, the Alzheimer's Association, the Alzheimer's Society, and ANID (FONDECYT Regular 1210176).He has also served as advisory board member for the BrainLat Institute (Chile).No payments are involved in this appointment.In the past 36 months no author has received any royalties, licenses, consulting fees;payment or honoraria for lectures, presentations, speakers bureaus, manuscript writing, or educational events, expert testimony; support for attending meetings and/or travel; equipment, materials, drugs, medical writing, gifts, or other services.
+In the past 36 months, no author has had any patents planned, issued, or pending; nor any financial or non-financial interests.
+Camila Sanz, Roque Villagra, and Enzo

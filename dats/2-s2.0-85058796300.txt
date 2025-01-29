@@ -1,0 +1,540 @@
+A concise and persistent feature to study brain resting‐state network dynamics: Findings from the Alzheimer's Disease Neuroimaging Initiative
+Alzheimer's disease (AD) is the most common type of dementia in the elderly with no effective treatment currently.
+Recent studies of noninvasive neuroimaging, resting-state functional magnetic resonance imaging (rs-fMRI) with graph theoretical analysis have shown that patients with AD and mild cognitive impairment (MCI) exhibit disrupted topological organization in large-scale brain networks.
+In previous work, it is a common practice to threshold such networks.
+However, it is not only difficult to make a principled choice of threshold values, but also worse is the discard of potential important information.
+To address this issue, we propose a threshold-free feature by integrating a prior persistent homology-based topological feature (the zeroth Betti number) and a newly defined connected component aggregation cost feature to model brain networks over all possible scales.
+We show that the induced topological feature (Integrated Persistent Feature) follows a monotonically decreasing convergence function and further propose to use its slope as a concise and persistent brain network topological measure.
+We apply this measure to study rs-fMRI data from the Alzheimer's Disease Neuroimaging Initiative and compare our approach with five other widely used graph measures across five parcellation schemes ranging from 90 to 1,024 region-of-interests.
+The experimental results demonstrate that the proposed network measure shows more statistical power and stronger robustness in group difference studies in that the absolute values of the proposed measure of AD are lower than MCI and much lower than normal controls, providing empirical evidence for decreased functional integration in AD dementia and MCI.
+
+K E Y W O R D S
+Alzheimer's disease, functional connectivity, network measure, persistent homology, restingstate functional magnetic resonance imaging, rips filtration
+
+| INTRODUCTION
+Alzheimer's disease (AD) is a progressive neurodegenerative disorder which is mainly characterized by significant impairments in a global cognitive decline
+There are several available imaging biomarkers for mild cognitive impairment (MCI) and AD including structural imaging markers, such as magnetic resonance imaging (MRI)-based hippocampal morphometry
+Among these biomarkers, FDG-PET has been proven a precise predictor of both MCI and AD
+However, FDG-PET uses ionizing radiation and is relatively expensive.
+As a noninvasive technique, resting-state functional magnetic resonance imaging (rs-fMRI) has been discussed as a functional imaging alternative for FDG-PET
+It evaluates low-frequency fluctuations in the blood oxygen level dependent (BOLD) signal while the subject is at rest, and is particularly useful in the setting for patients who are unable to cooperate with the task-based paradigm
+By measuring functional connectivity (FC) between spatially distinct brain regions, rs-fMRI can be used to evaluate brain functions
+Although rs-fMRI is still investigational, some reports have indicated that this method is ready for clinical application in the preclinical setting
+There are three general aspects/levels in AD-related research with fMRI modality, namely, regional coherence, functional connectivity, and functional network.
+Spontaneous low-frequency fluctuations (SLFF)
+Such methods evaluate fMRI signal similarity or intensity for a given local region in the resting brain.
+However, the functional association between different regions cannot be obtained merely by such analyses.
+Thus, further functional connectivity analysis needs to be done on activated functional regions
+Generally, the functional connectivity maps are then compared with a two-sample t test
+To enable relatively comprehensive mapping of brain functional connectivity and topological organization, numerous studies have been focused on functional network
+With these measures, various nontrivial topological features, including small-world organization
+The weighted networks usually require defining a set of thresholding values to remove spurious connections before quantifying network features
+The fixed thresholding scheme is a common practice to perform the selection of those strongest edges that exceed a given fixed threshold, which can be obtained based on the density of the network
+However, it may result in inconsistent network features when the thresholding value varies as its choice is rather arbitrary
+Therefore, the parameter-free scheme of cost thresholding has been applied to overcome this issue.
+The optimal thresholding value can be sought automatically by maximizing the cost efficiency
+However, such scheme usually only has one single optimal threshold, this operation may discard some potential valuable information during network construction
+To address the issue of network threshold selection, a set of brain network analysis methods called graph filtration based on persistent homology
+It quantifies various persistent topological features at different scales in a coherent manner and avoids the thresholding selection.
+Existing approaches mainly associate persistent topological features, for example, the zeroth Betti numbers, with current varying thresholding values.
+However, they usually ignore the association between such features and forthcoming thresholding value changes to aggregate all connected components into one connected component.
+Imagine that there is an energy cost to consolidate individual brain networks into a fully connected component: we may name this feature the connected component aggregation cost.
+Intuitively, Betti numbers and aggregation cost are complementary, as Betti numbers describe invariant features in the current state, while the aggregation cost estimates the total cost for completing all subsequent evolutions in a nested filtration graph.
+Therefore, we propose a novel univariate and persistent brain network feature that considers both current and forthcoming persistent topological features and hypothesize that such a concise and persistent feature may boost statistical power to detect AD-induced topological changes in resting-state fMRI analysis.
+In this article, we will develop a robust and parameter-free network measure, Integrated Persistent Feature (IPF) and apply it to study resting-state networks (RSN) constructed from rs-fMRI.
+In our experiments, we employ rs-fMRI data from the publicly available Alzheimer's Disease Neuroimaging Initiative (ADNI) to investigate the topological changes in the functional connectomes of patients of AD and MCI comparing with those of normal control (NC) subjects.
+Our data set consists of 106 subjects, including 31 AD, 38 MCI, and 37 NC subjects.
+We set out to test whether the proposed network feature provides a robust, computationally efficient, and statistically powerful measure of human brain network dynamics.
+
+| METHODS
+
+| Theoretic background
+
+| Connected component aggregation cost
+In a graph filtration (defined in Appendix A), the zeroth Betti numbers plot (BNP) (defined in Appendix B) shows how the number of connected components (i.e., the zeroth Betti number) varies over different filtration values
+An example is shown in Figure
+However, the zeroth Betti number only quantifies the invariant feature in a given state, and the state information of future networks (i.e., subsequent evolutional networks in a nested filtration graph) is not measured.
+Thus, we define an additional feature to quantify the process for completing all subsequent evolutions in a nested filtration graph.
+Definition 1: We define connected component aggregation cost as the total of involved edge weights for completing all subsequent evolutions from any current connected components to a future fully connected component in a graph filtration.
+Given λ 0 = 0, as well as a tree T with m ≥ 2 nodes and unique positive edge weights
+The connected component aggregation cost is defined as the summation of subsequent filtration values before evolving into a fully connected component on the collection of binary networks.
+The cost at filtration value λ m -1 is zero where all nodes are connected.
+The connected component aggregation cost can be easily understood through energy consumption in the aggregation process from loose connected components to a fully connected component.
+Suppose each connected component has its energy and the energy will disappear once the component is connected with another.
+In other words, to connect more components, more energy consumption is required.
+In a graph filtration, none of the nodes is connected at the beginning when filtration value λ is zero; the nodes are gradually connected and eventually aggregate into one giant component when all nodes are connected.
+Thus, as we set the fully connected component as the target of graph evolution, the required energy consumption progressively declines with the graph evolution until all components are connected.
+In this way, because the graph filtration is produced by minimum spanning tree
+To some extent, the connected component aggregation cost is related to path lengths between the connected components, as the more loosely connected the components are, the more aggregation cost will take to transit to more tightly connected components until all components are connected.
+As we know the changes in path lengths between nodes have been proved to be very important in brain network analysis
+We argue that the connected component aggregation cost may be a useful feature for the AD network analysis research.
+
+| Integrated Persistent Feature
+We further define a novel network measure, IPF, by integrating a prior topological feature (i.e., the zeroth Betti number) and the newly defined connected component aggregation cost.
+The IPF without normalization can be defined as the product of β 0 (T, λ i ) and l(T, λ i ),
+To confine the IPF between 0 and max(λ i ), we divide it by m × (m -1) and get a normalized form of IPF,
+Definition 2: According to Equations (
+IPF corresponding to the maximal graph filtration is defined as
+In Figure
+In brain network research, the IPF is usually limited between 0 and 1 as any correlation λ i in a connectivity matrix is <1 normally.
+It enjoys an advantage that different numbers of nodes can be processed consistently.
+The following proposition provides the theoretical foundation for our proposed work.
+Proposition 1: Given λ 0 = 0, as well as a tree T with m ≥ 2 nodes and unique positive edge weights
+
+| Algorithms
+Figure
+First, we use SPM8 toolbox, Data Processing Assistant for Resting-State fMRI (DPARSF)
+Then we construct the single linkage distance matrix for each subject using SLD
+We further compute IPF plots to measure constructed multiscale RSN based on persistent homology theory (the third row).
+With the goal to discriminate various AD diagnostic stages, the difference of RSN structures is evaluated by statistical group difference using our proposed method together with five other network measures over various parcellation schemes (the fourth row).
+We explain some major steps in the following subsections.
+
+| Data acquisition and preprocessing
+High-resolution brain scans were acquired at multiple ADNI sites using 3.0 T Philips MRI scanners.
+The rs-fMRI (Figure
+DPARSF (
+restfmri.net)
+All subjects' data were preprocessed individually.
+Specifically, the first 10 acquired rs-fMRI volumes of each subject were initially removed prior to any further processing to stabilize the signal
+The remaining 130 volumes were then corrected for the staggered order of slice acquisition that was used during echo planar scanning to ensure the data on each slice correspond to the same point in time.
+The images were realigned with the image at the time point of TR/2 (slice# 47) as reference to minimize relative errors across each TR.
+After correcting acquisition time delay, the volumes of each subject were realigned to its mean image based on rigid body transformation and least squares techniques, and spatially normalized to the Montreal Neurological Institute (MNI) space.
+Subsequently, all images were spatially smoothed with a Gaussian kernel of 4 × 4 × 4 mm 3 full-width at half-maximum, then linear trend adjustments were performed.
+It has been shown that a frequency range between 0.025 and 0.06 or 0.07 is reliable for test-retest experiments
+In this regard, the functional time series data were band-pass filtered to retain frequencies between 0.01 and 0.08 Hz, which is the relevant frequency range.
+To further reduce the effects of nuisance signals
+Due to the ongoing controversy of removing the global signal in the processing of rs-fMRI data
+In addressing head motion concerns in resting-state fMRI analyses
+
+| Multiscale network reconstruction by SLD
+First, we use the Pearson correlation to construct RSN.
+We extract the time series of rs-fMRI signals (Figure
+The measurement set is denoted as X = {x 1 , x 2 , Á Á Á, x n } where x i represents a time series at ith node.
+We define the observed distance (Figure
+Here, corr(x i , x j ) is the Pearson correlation function.
+A stronger functional connectivity infers a higher Pearson correlation corr(x i , x j ), producing the shorter observed distance, that is, the lower edge weight w X (x i , x j ).
+In the graph filtration, the lower edges with stronger functional connectivity are added first to better reflect true biological connections.
+After the weighted matrix {w X (x i , x j )} of each subject is constructed as functional connectivity network, we reconstruct the multiscale network as described below.
+The filtered subnetworks on top of the weighted network should be built before computing the persistent features of the complex, according to a typical workflow of persistence in topological data analysis
+The most intuitive approach is to sort all weights of original network in ascending order and use the ranks as indices for the subnetworks
+The computation of such an approach is less efficient especially for high-resolution networks, and a common practice is to limit the size of filtrations by equally dividing maximum weights (Adams, Tausz, & Vejdemo-Johansson, 2014).
+However, it requires selecting a number of nested subgraphs empirically.
+In this study, the representative filtrations are generalized in an unbiased manner by the single linkage cluster analysis
+This SLD involves defining a single linkage distance as the model predicted distance
+Let p = {v 0 , v 1 , Á Á Á, v k } 2 P be a path between x i and x j , where P is the collection of all possible paths between x i and x j , and v 0 = x i , v k = x j .
+The single linkage distance is formally defined as below.
+It denotes the shortest distance of all maximum edges over every possible path between any specific pair of nodes.
+Given a weighted network X with edge weight matrix {w X (x i , x j )}, we can get the single linkage distance matrix {d X (x i , x j )} and sort it in the ascending order {λ 1 , λ 2 , Á Á Á}.
+The SLD method initially treats each node as a cluster and iteratively merges two closest clusters at each step.
+Two clusters will combine when at least there exists one link between them of length λ where λ i < λ < λ i + 1 .
+The dendrogram shows how clusters at level λ 1 combine at level λ 2 and so on at successive levels until all clusters combine into a single cluster at the root of the tree.
+Similar to the SLD method
+All components are initially born and more and more components are disappeared once they are connected when we gradually increase the filtration values.
+We can generate graph filtrations by the SLD method which is equivalent to building the MST
+Therefore, each level of filtered network at λ i is used as a single scale under the original weighted network, and further the corresponding persistent feature IPF at such scale can be computed (Equation (
+By summarizing the network topology of all scales, we can investigate spatial dynamics of RSN.
+It should be noticed that our multiscale framework is different from some existing MST analyses on brain network analysis
+First of all, the purposes of using MST are different.
+The goal of existing studies
+In contrast, we use MST to build a set of thresholds (filtration values) for graph filtration in an unbiased manner and the persistent features over all thresholding nested subnetworks are then quantified.
+Second, exiting MST studies usually focus on the features computed at one fixed scale of MST based on graph theory, while we investigate the spatially dynamic evolutions in different scales.
+Last, a tree without forming loops is also a much simpler structure than the nested filtered subnetworks.
+However, existing MST studies cannot reflect some properties that depend upon cycles.
+Theoretically speaking, they may be detected by our framework when we extend the persistent dimension from the zeroth Betti number, β 0 , to the first Betti number, β 1 , in future.
+
+| Statistical group difference analysis
+In this study, the brain network is constructed at macroscale where nodes represent brain regions and edges represent interregional FC at resting state.
+To define network nodes, we divide the brain into 90 ROIs according to a low-resolution automated anatomical labeling atlas (L-AAL90)
+We calculate Pearson correlation-based distance w X according to Equation (
+After producing a single linkage distance matrix per subject according to Equation (
+Here our proposed SIP is used as a univariate feature for statistically characterizing network differences.
+In contrast to previous work that produces one multiscale network per group
+For subject i in group 1, we construct a multiscale network (Figure
+For subject j in group 2, we can also generate a multiscale network and MST T j as well as IPF γ 2 (T j , λ) in the same way.
+Although we are interested in testing whether the IPF plots are different between groups, we do not intend to directly set the pointwise null hypothesis as
+because it will perform multiple comparisons of IPF at different filtration values.
+Instead, we compare the proposed network measure SIP.
+Given the ith subject's SIP in Group 1 and jth subject's SIP in Group 2 are represented as α 1 i and α 2 j , the null hypothesis is
+while the alternate hypothesis is
+where mean is the average of SIPs in a group.
+As there is no prior study on the statistical distribution of SIP, it is difficult to construct a parametric test procedure.
+Moreover, the sample is limited, so it is necessary to empirically construct the null distribution and determine the p value.
+In this study, we carry out two kinds of nonparametric statistical analyses (Figure
+First, betweengroup differences of AD versus MCI, AD versus NC, and MCI versus NC are inferred according to Equation (
+Then we execute the Kruskal-Wallis test
+
+| Reproducibility and test-retest reliability
+Graph-based brain connectome analyses are usually sensitive to the choice of brain parcellation schemes
+
+| RESULTS
+We conducted two experiments to verify our proposed network measure with some synthetic data and the ADNI rs-fMRI data.
+For replicating our results, we have provided our experimental data and MATLAB source code at
+
+| Synthetic data results
+We conducted two sets of synthetic data studies to evaluate our method performance for brain connectivity analysis and test-retest reliability studies.
+In the first synthetic data experiment, the simulated brain data of three groups were generated randomly.
+Each group has K = 40 subjects and each subject has S = 100 volumes of scanning images.
+There are M = 90 nodes representing brain ROIs defined by L-AAL90 atlas.
+The initial data of x ijk , y ijk , z ijk in three groups at node j for subject k at ith volume were simulated as independent standard normal N (0, 1)
+respectively.
+Here the normal distribution is defined as N μ, σ ð Þ¼
+2σ 2 where μ is the mean and σ is the standard deviation.
+Then we added small noise N (0, 0.01-0.1)
+into y to make x and y are not exactly the same.
+To simulate connected components in each group, we selected four nodes indexed by p = 1, 3, 5, 7 for first two groups, and eight nodes indexed by p = 1, 3, 5, … 15 for the third group.
+These eight nodes represent 8 left hemisphere brain regions defined in L-AAL90 respectively, that is, precentral gyrus, superior frontal gyrus, superior frontal gyrus (orbital part), middle frontal gyrus, middle frontal gyrus (orbital part), inferior frontal gyrus (pars opercularis), inferior frontal gyrus (pars triangularis), and inferior frontal gyrus (pars orbitalis).
+After that, extra linear dependencies were introduced into x, y, z, respectively, to increase correlations between all selected nodes.
+Specifically, the synthetic data are defined as below:
+Group 1 :
+Group 2 :
+where i 2 {1, 2, …, S}, j 2 {1, 2, …, M}\A, k 2 {1, 2, …, K}.
+Note that we also added small noise N (0, 0.01) to perturb the node values.
+In the end, correlation matrices based on the synthetic brain data were obtained by Pearson correlation (Equation (
+Following the proposed methods, we obtained 40 multiscale brain networks and corresponding SIPs in each group.
+Randomly selected examples of synthetic multiscale networks are shown in Figure
+Then permutation tests were applied according to Equation (
+As Groups 1 and 2 have the same size of connected components with high correlations, we could not detect any group difference.
+There is a significant difference between Groups 2 and 3 as they have different sizes of connected components.
+Figure
+The IPF gradually decreases and one fully connected component is constructed eventually while changing filtration value from 0 to 1.
+The SIP in group 3 is not as steep as those in Groups 1 and 2, while Groups 1 and 2 have similar steepness (Figure
+The group differences could be detected intuitively from the resulting SIPs in Figure
+The significance corresponds to the vertical gap between the SIPs.
+There is no significant group difference between Groups 1 and 2 (p = .52),
+comparing to significant differences in Group 2 versus 3 and Group 1 versus 3 (p = 1.6e -5 for both).
+In the second synthetic data experiment, for the purpose of test-retest reliability study, we changed the number of nodes from 90 to 50, 150, 250, 350, 500, 800, and 1,000 under different subject number of 20, 40, 60, 100, and 200, respectively.
+Then we testretested the synthetic multiscale brain networks according proposed methods over 100 times.
+There is still no significant difference between Groups 1 and 2 (p > .31),
+comparing to the significant differences in Group 2 versus 3 and Group 1 versus 3 (p < .0001
+for both) as expected.
+
+| Application to AD
+With rs-fMRI data, using the predefined 90 ROIs, we constructed multiscale brain networks using our proposed methods.
+Group differences were studied by the SIP with the subject-wise network.
+Finally, we evaluated our proposed method under four additional brain parcellation schemes with 112, 116, 200, and 1,024 ROIs.
+We compared the new measure with another persistent homology-based measure (BNP)
+and four widely used graph theory approaches that characterize the brain network topologic features of small-world organization, modular structure, and highly connected hubs.
+They were matched by age, gender, and education to 38 MCI and 37 NC subjects, together comprising the 106 participants selected for this study.
+These subjects had been recruited from 15 sites across the U.S. and Canada, and only their first valid rs-fMRI was selected for this study.
+In Table
+All studied images had no excessive head motion (six-parameter rigid body) defined by a displacement of <0.7 mm or an angular rotation of less than in any direction 0.8 .
+The Kruskal-Wallis tests
+Diagnostic classification was made by ADNI investigators using established criteria
+
+| Multiscale network and corresponding SIP
+We constructed weighted matrices for all subjects by Equation (
+where the observed distance w x is one minus correlation.
+Although w x is always between 0 and 2 and may have a value larger than 1, all nodes are connected before w x reaches 1 in our current dataset during the graph filtration.
+Thus, the filtration is finished when w x between 0 and 1.
+To observe the group differences among AD, MCI, and NC, we further constructed the mean RSN for each group which is an average of all involved subject's networks.
+a Data are presented as the range of minimum-maximum (meanAESD).
+The p value was obtained using the Kruskal-Wallis test
+
+| Statistical group difference analysis
+We compared our work with another persistent homology-based method of BNP
+Numerous studies
+Thus we compared our work with these three measures and network diameter (ND)
+Specifically, the characteristic path length is the average shortest path length between all pairs of nodes in the graph, indicating how easily information can be transferred across the network
+The nodal eccentricity is the greatest geodesic distance between the node and any other nodes
+It can be thought of as how far a node is from the node most distant from it in the graph.
+The network diameter is the maximum eccentricity of any node in the network, that is, the greatest distance between any pair of nodes
+Furthermore, eigenvector centrality
+The eigenvector centrality of a node is decreased if its neighbors lose connectivity with their local hubs
+We adopted the Brain Connectivity Toolbox (BCT,
+For a fair comparison, similar to a prior study
+It achieved greater statistically significant group differences compared to another persistent homology-based method of BNP
+In addition, prior research
+We evaluated it in our experimental environment and confirmed that our method requires much less computation than the previous method
+The newly added connected component aggregation cost possibly played an important role as it is related to path length between the connected components to some extent, which is very important in AD patients as their path lengths exhibit apparent changes
+
+| Reproducibility and test-retest reliability analysis
+Graph-based brain connectome analyses are sensitive to the choice of parcellation schemes
+To assess the effects of different parcellation strategies, we carried out the same set of analyses with four other commonly employed atlases, including three low-resolution atlases of L-HOA112
+The detailed statistical significances of group difference under subject-wise networks are presented in Table
+
+| DISCUSSION
+This study has three main findings.
+First, we generalize the BNP methods
+Measures: proposed SIP, slope of IPF plot; BNP, the zeroth Betti numbers plot
+The p value was obtained using 10,000 permutation test between two single groups and Kruskal-Wallis test
+
+| Subject-wise versus group-wise network
+The multiscale RSN was constructed using an ROI-based approach with 90 ROIs at all possible filtration values.
+There are two kinds of networks, that is, subject-wise network and group-wise network.
+The subject-wise network is an ROI-connectivity network produced from a single subject, while the group-wise network is an average of all involved subject-wise networks.
+In this study, we performed the statistical hypothesis testing directly over the original subject-wise network, rather than the more easily detectable group-wise network by jackknife resampling method that Chung and his coauthors applied in their seminal persistent homology-based studies
+Intuitively, the between-group differences in group-wise networks should be easier to detect than that in subject-wise networks.
+We may apply bottleneck distance to quantify the difference between two networks.
+This metric is often used in measuring the distance between two networks in the same metric space
+The bottleneck distance between two networks X and Y with the same node sets V={v
+It can detect the maximum difference between two brain networks.
+Figure
+As we see in the figure, the latter difference is indeed more obvious.
+To validate the sensitivity to subtle changes in network structure, we directly conducted statistical hypothesis testing on all measures under subject-wise networks.
+In this condition, only our proposed SIP obtained a significant difference among all three groups of AD, MCI and NC at 0.01 level (p = .002)
+under L-AAL90 atlas, whereas few other comparative measures can obtain a significance level of 0.05 even for single between-group differences (Table
+In addition, the subject-wise network improves the ease of statistic inference and computation efficiency.
+Most prior persistent homology-based research has conducted statistical inference under group-wise networks.
+Their computation costs are relatively high as all subjects in a Threshold selection: The first two measures are threshold-free, while the last four measures take the significant network edges by Bonferroni correction method with corrected p value <.05.
+Measures: SIP: the slope of IPF plot; BNP: the zeroth Betti numbers plot
+Parcellations: L-HOA112, low-resolution Harvard-Oxford atlas with 112 ROIs
+The p value was obtained using 10,000 permutation test between two single groups and Kruskal-Wallis test
+The minimum p value in each row is bold.
+a .05
+< p < .1.
+b p < .01. c .01 ≤ p ≤ .05.
+specific group have to be involved.
+For example, it was reported that the group difference analysis by permutation test with 10,000 permutations could not be implemented because it would take about 7 days of computation in their experimental environment
+By constructing subject-wise multiscale RSN, our methods are less demanding for large cohort subject numbers and, as a result, gain about 31-time efficiency in the case of permutation test with tenthousand permutations in our experiments.
+
+| Threshold-free versus threshold-dependent
+The edges in a weighted network usually reflect the measurement of correlation or coherence of activity between nodes.
+It is common to threshold an original network to obtain a sparser one according to the significance of connections
+However, such a threshold-dependent scheme may discard a great deal of potential important information from original network and may cause ineffectiveness
+In addition, it is difficult to make a principled choice of such thresholds.
+In our threshold-free framework using graph filtration, we do not need to specify any parameters to obtain thresholding matrix because all possible thresholds are exactly the edge weights of MST and thus the multiscale subnetworks are constructed automatically.
+As this framework retains most of the original network information in the resulting nested subnetworks, it may be more effective for brain network analysis.
+To compare with the threshold-free measures (SIP and BNP), we adopted two thresholding schemes for the threshold-dependent measures (CPL, ND, EC, and Mod) and the thresholding weighed networks were then examined.
+First, a general practice for the choice of threshold is the multiple comparison correction over every possible edge
+The original weighted network matrix elements whose corresponding p values passed through a statistical threshold are retained.
+The experimental results of threshold-dependent measures in Tables
+As these threshold-dependent measures could not detect significant difference under this scheme, we performed the second scheme that thresholds weighted network repeatedly over a wide range of sparsity
+We tried 80 sparsity thresholds by iteratively deleting 11%-90% of the edges with the largest weights (i.e., the weakest functional connectivity) from the original RSN over L-AAL90 atlas for threshold-dependent measures, and recorded the lowest p values of AD versus MCI versus NC from these thresholds in Table
+It should be noticed that we have not applied such thresholding schemes on the threshold-free measurers as they run the omnithresholding framework automatically.
+Even under such an unfair competitive condition, our threshold-free SIP does not lose as it may consist of comprehensive information after multiscale thresholding.
+Although there are some similar existing multi-thresholding studies on brain network research
+Moreover, they are usually used to visualize how the feature varies over different thresholds but the pattern of change is rarely quantified.
+In contrast, persistent homology-based framework
+Measures: SIP: the slope of IPF plot; BNP: the zeroth Betti numbers plot
+The p value was obtained using 10,000 permutation test between two single groups and Kruskal-Wallis test
+The minimum p value in each row is bold.
+
+| From multivariate statistics to a univariate measure
+In the graph filtration of brain networks, there are a set of persistent statistics as every subgraph has a feature at each filtration value.
+To compare the networks between disease and health, some studies have summarized these multivariate features into univariate using AUCbased methods which estimate area under the curves of persistent feature plots over all filtration values
+Others
+In our study, we deliberately designed a monotonically decreasing convergence function so that we can quantify the proposed IPF by its slope.
+All the results of the proposed IPF plots and the comparison BNPs in Section 3.2 were obtained using the slope's approach.
+In addition, we also investigated the AUC-based method in our experiments and the obtained p values are shown in Table
+In general, the proposed IPF plot detects better significance than the comparison BNP when the AUC-based method is applied.
+In addition, the experimental results are not better than those achieved by the slope-based method (Table
+As the proposed IPF plot and the comparison BNP are both monotonically decreasing convergence functions, the slope-based methods may better reflect the changes of persistent feature over all possible scales.
+
+| MCI converters vesus nonconverters
+Patients with MCI represent an important clinical group as they are at increased risk of MCI
+It is a challenging problem to study the difference between MCI converters and non-converters.
+There are only 2 out of all 38 MCI patients converting to AD within 2 years in our current dataset.
+In order to further study the conversion of MCI patients to AD, we added all other 8 MCI converters from ADNI2 dataset during a 2-year follow-up period after their baseline rs-fMRI.
+We compared the difference of SIP between MCI converters (n = 10) and non-converters (n = 36) at the baseline, and found their difference are tend to be significant by 10,000 permutation tests (p value = .088).
+The absolute mean value of SIP of MCI converters is smaller than that of MCI nonconverters, and is closer to that of AD group.
+Although further rigorous studies which involve more subjects and longitudinal imaging data analysis, for example, Cox hazard model
+
+| Relationship of SIP to biological processes
+Similar to the zeroth Betti number, the IPF is a persistent topology feature and its plot is a monotonically decreasing convergence function.
+It quantifies the topological changes of a network when the connected components are aggregating into a bigger one.
+In this way, the proposed network measure SIP can be thought as the information diffusion rate or convergence speed of arriving at a fully connected component.
+In this study, the computed group SIPs show a pattern, AD < MCI < NC, with the significance level p = .002
+based on the Kruskal-Wallis test.
+The fact that SIP curves are less steepening with AD and MCI groups than with NC may imply a slower information diffusion rate in AD and MCI groups.
+Furthermore, the SIP is directly related to the whole-brain network topology, suggesting the contribution to the observed global topological abnormalities.
+Therefore, it is reasonable to speculate that the slow convergence speed is caused by decreased functional integration throughout the brain, which may further be responsible for cognitive deficits in patients.
+This finding is consistent with previous reports of the impaired global organization and disrupted neuronal integration in AD dementia and MCI patients
+In Figure
+Progress in clinical stages from MCI to AD may result in more disruptions of long-distant components, so it may be encouraged to establish short-distant components as alternative connections to keep information transmission between two distant regions.
+Overall, our results provide some empirical evidence for disrupted network organization in AD dementia and MCI patients at the global level.
+
+| Potential future improvements
+There are at least four main caveats when applying the proposed persistent feature.
+First, we only used the zeroth Betti number β 0 in this study but it is possible to integrate higher degree Betti numbers in our framework.
+The current IPF plot shows how the disconnected subcomponents are integrated into a fully connected component when the filtration value increases, but it does not consider how the subcomponents are densely or sparsely connected.
+The sparse network tends to have more holes and the Betti number β 1 has the potential to measure the number of holes in a network.
+The higher Betti numbers are usually identified using persistent homology-based kernel
+In the specific case of the first Betti number, a study has reported that the hole in the metabolic network of AD can be detected based on persistent homology and 1-Laplacian
+To some extent, our proposed feature IPF is an integral of the persistence of the zeroth homology.
+If we also define the total persistence of the first homology in a similar way
+The minimum p value in each row is bold.
+In general, the proposed IPF plot detects better significance than the compared BNP when the AUC-based method is applied.
+our work to higher Betti numbers.
+Thus, we may quantify the integration of the whole brain regions and the sparsity of connected regions.
+Second, the longitudinal characteristics of RSN remain to be determined.
+In this study, we only investigated the brain network dynamics in cross sectional images.
+With longitudinal brain images, we may further study the evolution between longitudinal brain networks by quantifying the difference of their persistent features.
+Although there is no longitudinal study using persistent homology features, the existing integrated brain network research on BNP
+Third, additional studies are needed to clarify the ability of the proposed SIP to detect and track AD, provide diagnostic or prognostic value, or assist in the evaluation of disease-slowing treatments.
+Here we did not categorize subjects based on amyloid, tau, or other neurodegenerative biomarker criteria because not all of the subjects had biomarker data available.
+The diagnostic classification of AD, MCI, and NC was made by ADNI investigators using some established criteria
+We checked these diagnostic classifications with amyloid biomarkers for 47 available subjects and found they concur with the diagnostic statuses.
+However, for more reliable results, in future work, we intend to enrich our dataset and further study the performance of our proposed network measure in discriminating groups of cognitively unimpaired amyloid negative versus cognitively unimpaired amyloid positive, MCI amyloid negative versus MCI amyloid positive and dementia amyloid negative versus dementia amyloid positive
+Finally, our current results should be viewed as exploratory and need to be further confirmed in other independent cohorts in future
+Similar to some prior work
+We further hypothesize that the adoption of some machine learning techniques, such as nonlinear kernel machine
+Overall, this work presents our initial efforts to enrich persistent brain network analysis features.
+We hope our preliminary results could inspire new ideas and further advance persistent homologybased brain network analysis research.
+
+| CONCLUSION
+In this article, we present a novel network measure to complement the mathematical theory of BNP by integrating an additional feature of connected component aggregation cost with BNP to achieve holistic descriptions of graph evolutions and quantify brain network dynamics.
+We apply the new measure to study the RSN in AD research and release our software source code and experimental data to the public.
+Our method offers a novel insight into the whole-brain network analysis and the proposed measure SIP differentiates AD dementia and MCI patients from healthy individuals with improved performance compared to other widely used measures.
+The experimental results provide empirical evidence for disrupted network organization in AD dementia and MCI patients at a global level, and suggest that our SIP may be a potential imaging biomarker of AD.
+In the future, we will validate our method in other independent cohorts.
+We will also explore its broad applications for the preclinical AD research
+unique filtration that can be used in characterizing graphs?
+The following method helps establish its uniqueness.
+Given a weighted graph X = (V, W) with m unique positive edge weights, if we sort the m unique positive edge weights λ 1 < Á Á Á < λ m in an ascending order, the maximal graph filtration is B X,0 ð Þ&B X, λ 1 ð Þ& ÁÁÁ & B X, λ m ð Þ according to Equation (A2).
+Further, the maximum level of its graph filtration is m + 1, and the form is unique (see Theorem 2 in
+The finiteness and uniqueness of the filtration levels over finite graphs have been already applied in some software packages such as JavaPlex
+It should be noticed that a set of unique positive weights can be obtained by removing any multiplicative weights when identical edge weights exist.
+
+APPENDIX B: BETTI NUMBERS
+In a simplicial complex, a path between two nodes is a sequence of nodes such that from each of these nodes, there is an edge to the next node in the sequence.
+Two nodes are connected if there is at least one path between them.
+A connected component in the simplicial complex is a subset of nodes any two of which are connected.
+Betti numbers
+The kth Betti number is the rank of the kth homology group, which counts the number of distinct k-dimensional holes or k-cycles.
+Specifically, the zeroth Betti number, β 0 , refers to the number of connected components, and the first Betti number, β 1 , is the number of onedimensional or circular holes.
+Generally, the maximal graph filtration can be quantified by plotting the change of Betti numbers and computed by using either single linkage dendrogram (SLD)
+Pothen & Fan, 1990), or existing simplicial complex approaches
+In this study, we compute the zeroth Betti number β 0 by constructing SLD which is equivalent to building the MST
+The detailed procedure is described in Section 2.2.2.
+In the case of a tree which is a special graph without cycle, we can conclude a much stronger statement than general graph as following.
+Given λ 0 = 0, as well as a tree T with m ≥ 2 nodes and unique positive edge weights λ 1 < λ 2 < Á Á Á < λ m -1 , the zeroth Betti number β 0 corresponding to the maximal graph filtration is defined as
+Therefore, a weighted graph filtration in Equation (A2) can be converted to a sequence of nested binary trees B T, λ 0 ð Þ&B T,λ 1 ð Þ& ÁÁÁB T, λ m ð Þby SLD if we only focus on the zeroth Betti number.
+
+APPENDIX C: MONOTONICITY OF THE IPF PLOT
+Proposition 1: Given λ 0 = 0, as well as a tree T with m ≥ 2 nodes and unique positive edge weights λ 1 < λ 2 < Á Á Á < λ m -1 , the IPF plot corresponding to the maximal graph filtration determined by each edge weight, λ, is a monotonically decreasing convergence function.
+Proof: As there are totally m -1 edges in a tree T with m nodes, the maximum level of its graph filtration is m, and the maximal unique graph filtration is
+, where β 0 (T, λ i ) and l(T, λ i ) are the zeroth Betti number and connected component aggregation cost corresponding to the maximal graph filtration, respectively.
+The zeroth Betti number β 0 (T, λ i ) corresponding to the maximal graph filtration is given by the coordinates
+Obviously, the sequence of the zeroth Betti numbers is bounded and is decreased while filtration value changing from λ 0 to λ m -1 , thus β 0 (T, λ i ) is a monotonically decreasing convergence function.
+Further, the connected component aggregation cost l(T, λ i ) corresponding to the maximal graph filtration is given by the coordinates
+As all edge weights are positive, the sequence of connected component aggregation cost is bounded and is decreased while filtration value changing from λ 0 to λ m -1 , thus l(T, λ i ) is also a monotonically decreasing convergence function.
+Because both β 0 (T, λ i ) and l(T, λ i ) are non-negative and are monotonically decreasing convergence functions, γ T,λ i ð Þ¼
+Þ is also a monotonically decreasing convergence function.
+
+
+
+FIGURE 1
+FIGURE 1 An example of graph filtration.
+The left is an original weighted graph X followed by four nested binary networks B X,0 ð Þ&B X,0:1 ð Þ&B X,0:2 ð Þ&B X,0:4 ð Þat four increasing filtration values 0, 0.1, 0.2, and 0.4, respectively [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+
+Figure 1 .
+The MST T of weighted graph X is constructed first.
+Then four nested binary trees B Tand 0.4, respectively.
+According to Equations (B1), (1), (2), and (4), four topological features including the zeroth Betti number β 0 , connected component aggregation cost l, non-normalized IPF γ 0 , and IPF γ are computed.
+The network structure can be detected by plotting the change of IPF over different filtration values when the connected component is evolving to form a bigger component.
+Previous BNP study only considers the changes in the number of connected components (Choi
+
+
+eters included repetition time (TR) = 3,000 ms, echo time (TE) = 30 ms, flip angle = 80 , number of slices = 48, slice thickness = 3.3 mm, voxel size = 3 mm × 3 mm × 3 mm, voxel matrix = 64 × 64, and total volume = 140.
+
+
+
+FIGURE 2 A
+FIGURE 2 A computation example of topological features based on Figure 1.
+The top left is an MST T of weighted graph in Figure 1 left, followed by four nested trees B T,0 ð Þ&B T,0:1 ð Þ&B T,0:2 ð Þ&B T,0:4 ð Þ at four increasing filtration values 0, 0.1, 0.2, and 0.4, respectively.
+The topological features of the binary network, such as the zeroth Betti number and IPF, are varied according to the increase of filtration value λ [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+
+FIGURE 3
+FIGURE 3 Pipeline to measure and discriminate RSN structures with the proposed SIP measure.
+(a) Each participant's rs-fMRI scan is preprocessed and normalized to the Montreal Neurological Institute (MNI) space (b), and the mean time series of ROIs are extracted (c).We calculate the observed distance matrix through Pearson correlation (d) and obtain the predicted distance matrix using single linkage dendrogram (SLD) (e).
+We further construct a multiscale RSN per subject from single linkage distance matrix (f ) and plot the corresponding Integrated Persistent Feature (IPF) over different scales (g).
+We obtain all IPF plots and corresponding network measures of the slope of IPF plot (SIP), respectively, for all participants by repeating steps (a-g).
+The difference of RSN structures is evaluated by statistical group difference analysis (h) of our proposed measure together with five other network measures over various parcellation schemes (i) [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+3.2.1 | SubjectsData used in the preparation of this article were obtained from the ADNI database (adni.loni.usc.edu).
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial MRI, PET, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.At the time of downloading from ADNI database (May, 2017), there were 31 AD patients aged 60-90 years in the rs-fMRI dataset.
+
+
+
+FIGURE 5
+FIGURE 5The synthetic data results of group difference study.
+(a) The resulting Integrated Persistent Feature (IPF) plots imply group differences.
+The IPF gradually decreases and one fully connected component is constructed eventually while changing filtration value from 0 to 1.
+The SIP in group 3 is not as steep as those in group 1 and 2, while group 1 and 2 get similar steepness.
+(b) The resulting SIPs for all 40 subjects of each group showing group differences.
+The significance corresponds to the vertical gap between the SIPs.
+There is no significant group difference between group 1 and 2 (p = .52),
+comparing to significant difference in group 2 versus 3 and group 1 versus 3 (p = 1.6e -5 for both) [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+
+FIGURE 4
+FIGURE 4The synthetic multiscale brain networks at five different filtrations values 0, 0.65, 0.7, 0.75, and 0.85 for Groups 1, 2, and 3 with 4, 4, and 8 highly connected nodes, respectively.
+The color of nodes represents the node index predefined in L-AAL90 atlas.
+Specifically, the eight selected nodes indexed by p = 1, 3, 5, …, 15 represent 8 left-hemisphere brain regions defined in L-AAL90, respectively.
+They are precentral gyrus, superior frontal gyrus, superior frontal gyrus (orbital part), middle frontal gyrus, middle frontal gyrus (orbital part), inferior frontal gyrus (pars opercularis), inferior frontal gyrus (pars triangularis), and inferior frontal gyrus (pars orbitalis) [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+Figure 7.
+We calculated the corresponding IPF of three group means under the multiscale RSN at all different filtration values, and showed the relationship between filtration values and IPFs in Figure 8.
+Our proposed IPF not only considers the changes in the number of connected component, but also introduces an extra connected component aggregation cost at the same time (Equation (4)).
+The IPF gradually decreases and one fully connected component is constructed eventually when filtration values vary from 0 to 1.
+We found that the SIP of NC group mean is steeper than MCI's and much steeper than AD's.
+
+
+
+FIGURE 6
+FIGURE 6 The constructed multiscale brain networks using our proposed methods for 3 group means of (a) AD, (b) MCI, and (c) NC at 6 different filtrations values 0.1, 0.15, 0.2, …, 0.35.
+The color of nodes represents the node index predefined in L-AAL90 atlas [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+in threshold selection of weighted network, we retained the network matrix elements whose corresponding p values passed through a statistical threshold (Bonferroni corrected p < .05)
+for each correlation matrix in graph measures of CPL, ND, EC, and Mod.
+
+
+
+FIGURE 7 FIGURE 8
+FIGURE 7 The single linkage dendrograms (SLDs) for 3 group means of (a) AD, (b) MCI, and (c) NC.
+The vertical and horizontal axes represent the node index and filtration value, respectively.
+The color of lines represents the total edge weight from current connected component to the giant component.
+The total weight from the giant component is 0. When individual components evolves to a fully connected component, the total edge weight decrease [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+
+FIGURE 9
+FIGURE 9 Bottleneck distance maps of subject-wise networks (a) and group-wise networks (b).
+The group-wise networks were obtained by leave-one-out jackknife resampling method.
+In each map, the three diagonal block matrices with the size 31 × 31, 38 × 38, and 37 × 37 measure the distance between networks within a group and the off-diagonal block matrices measure the distance between groups [Color figure can be viewed at wileyonlinelibrary.com]
+
+
+. To evaluate the reproducibility and test-retest reliability, we evaluate our methods against different parcellation schemes.
+We define network nodes with five
+
+
+
+TABLE 1
+Demographical information of the subjects a
+
+
+
+TABLE 2
+Between-group differences of different network measures over L-AAL90 atlas
+
+
+, respectively.
+The minimum p value in each row is bold.
+the first time that persistent homology has been applied to analyze RSN for AD research.
+Our work offers some new insights to RSN changes related to AD progression and may provide evidence for the RSN-based noninvasive preclinical AD imaging biomarker research.
+
+
+
+TABLE 3
+Reproducibility of statistical analysis with different network measures over various parcellation schemes
+
+
+
+TABLE 4
+Most significant results of threshold-dependent measures by removing a certain percentage edges The p values are copied from Table 2 for visual comparison.
+Threshold-dependent measure: We tried 80 sparsity thresholds by iteratively deleting top 11%-90% edges of the weakest functional connectivity from original RSN.
+The four threshold-dependent measures detect the best p values of AD versus MCI versus NC if we remove top 70%, 20%, 80%, and 90% weakest functional connectivity, respectively.
+
+
+
+TABLE 5
+Statistical differences of persistent features by AUC-based method over L-AAL90 atlas

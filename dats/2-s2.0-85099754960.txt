@@ -1,0 +1,288 @@
+Shared Blood Transcriptomic Signatures between Alzheimer’s Disease and Diabetes Mellitus
+Alzheimer's disease (AD) and diabetes mellitus (DM) are known to have a shared molecular mechanism.
+We aimed to identify shared blood transcriptomic signatures between AD and DM.
+Blood expression datasets for each disease were combined and a co-expression network was used to construct modules consisting of genes with similar expression patterns.
+For each module, a gene regulatory network based on gene expression and protein-protein interactions was established to identify hub genes.
+We selected one module, where COPS4, PSMA6, GTF2B, GTF2F2, and SSB were identified as dysregulated transcription factors that were common between AD and DM.
+These five genes were also differentially co-expressed in disease-related tissues, such as the brain in AD and the pancreas in DM.
+Our study identified gene modules that were dysregulated in both AD and DM blood samples, which may contribute to reveal common pathophysiology between two diseases.
+
+Introduction
+Alzheimer's disease (AD), the most common form of dementia, has pathophysiological characteristics that include amyloid plaques, which are extracellular deposits of beta-amyloid (Aβ) in the brain parenchyma; cerebral amyloid angiopathy, which is the accumulation of Aβ in the cerebral blood vessels; and neurofibrillary tangles, which are deposits of hyper-phosphorylated tau protein inside neurons
+Recent evidence has suggested that AD is not only a brain-specific disease but also a systemic disorder associated with inflammation, obesity, and other chronic diseases
+Specifically, substantial epidemiologic studies have reported that diabetes mellitus (DM) is a crucial risk factor for AD
+Huang et al.
+Furthermore, a study analyzing the Hisayama cohort suggested that DM is a significant risk factor for all-cause dementia and AD
+Accumulating evidence indicates that AD and DM have shared molecular mechanisms, such as oxidative stress, mitochondrial dysfunction, and inflammation
+Therefore, AD is referred to as "type 3 diabetes"
+Furthermore, several studies based on whole transcriptome analysis have identified a common pathogenesis between AD and DM.
+Hokama et al.
+Caberlotto et al.
+A microarray meta-analysis of brain tissues from patients with AD and of multiple tissues (pancreas, liver, muscle, and blood) from T2D patients showed that several pathways, including the ephrin receptor, liver X receptor/retinoid X receptor, and interleukin 6, were dysregulated in both AD and T2D
+We previously performed a microarray meta-analysis of blood samples collected from AD patients participating in the Europe-based AddNeuroMed and US-based Alzheimer's Disease Neuroimaging Initiative (ADNI) cohorts
+This analysis identified the immune and inflammation-, energy-, WNT-, endoplasmic reticulum-, and cancer-related pathways as the underlying mechanisms associated with the AD status
+Moreover, RNA-sequencing data of blood samples collected from AD Japanese subjects stored at the National Center for Geriatrics and Gerontology (NCGG) Biobank also revealed several other pathways (i.e., signal-recognition particle (SRP)-dependent cotranslational protein targeting to membrane, translational initiation, and ribosome) associated with the AD status
+Grayson et al.
+Kaizer et al.
+Moreover, Lin et al.
+In the OPTIMED study, whole transcriptome of T2D blood samples further revealed that genes with altered expression after anti-diabetic treatment with metformin were involved in the improvement of energy metabolism, the modulation of inflammation, and the inhibition of cancer progression
+Although numerous pieces of evidence suggest a shared pathophysiology between AD and DM in the brain and pancreatic tissues, few studies have compared their whole blood transcriptome signatures
+Santiago et al.
+Another brain microarray meta-analysis study conducted a differential connectivity (DC) analysis, yielding TYROBP as an upstream regulator of AD
+The aim of our study was to identify shared blood transcriptomic signatures between AD and DM using both DE and DC analyses.
+As shown in Figure
+The two selected datasets were integrated into one large dataset, which was used for the construction of a co-expression network, yielding several modules.
+We selected AD-and DM-related modules based on DE and DC analyses between the disease and control groups.
+From the selected module, we identified common transcription factors for AD and DM using a gene regulatory network (GRN) construction method (GENIE3)
+
+Methods
+
+Datasets and Preprocessing
+Initially, we collected publicly available gene expression microarray data from blood samples taken from patients with AD and DM (Table
+We selected appendicitis (AP) as a control disease using disease networks (Supplementary Materials)
+The normalization and probe selection for all datasets are described in the Supplementary Materials.
+
+Selection of Representative Datasets for AD and DM
+We selected representative datasets for AD and DM using a MetaQC method that provides quantitative measures for assessing the quality and consistency of microarray data for meta-analysis in the form of six indices and one summarized rank of quality for each RNA dataset
+The six quality control (QC) measures comprised an internal QC (IQC), an external QC (EQC), two accuracy QC indices (AQCg and AQCp), and two consistency QC indices (CQCg and CQCp).
+The standardized mean rank value (SMR) is the average rank of all QC indices (Supplementary Materials).
+
+Comparison of Selected Blood Datasets with the Brain and Pancreas Datasets
+To investigate whether the expression levels of genes in blood samples, instead of those in disease-specific tissues, can be used to show the association between diseases, we compared the expression values of all genes in a selected blood sample set with those in disease-specific tissues (brain tissues for AD and pancreas tissues for T2D).
+A study by Mathys et al.
+We used the summary statistics of that study (Supplementary Table
+The pancreas dataset (GSE81608) included the whole transcriptomes of 1600 human pancreatic α, β, δ, and pancreatic polypeptide (PP) cells obtained from 6 T2D patients and 12 non-diabetic individuals
+We scaled the GSE81680 dataset using log-transformation.
+
+Differential Expression and Pathway Analyses
+We investigated differentially expressed genes (DEGs) that were common between AD and DM.
+DE analysis between each disease (AD or DM) and its matched control (CN AD or CN DM ) was conducted using the "lmFit" and "eBayes" functions in the limma package
+Results from the limma package analysis consisted of logFC values between the two conditions (disease (AD or DM) vs. healthy control (CN AD or CN DM )) and the p-values for each gene.
+We defined genes with a false discovery rate (FDR)-adjusted p-value of less than 0.05 as DEGs.
+We then selected DEGs that were common between AD and DM.
+We used the Dataset for Annotation, Visualization and Integrated Discovery program (DAVID) to identify enriched pathways of the DEGs
+We used Gene Ontology (GO)
+Using Spearman's correlation coefficient, we compared the logFC values of all genes across AD, DM, and the control disease AP.
+A significance threshold for correlation across datasets was determined using a permutation test (Supplementary Materials).
+
+Construction of Modules and Selection of Disease-Related Modules
+First, blood RNA expression datasets for AD and DM were combined into one large dataset, after the batch effect between the AD and DM datasets was removed via the "ComBat" function in the sva package
+Subsequently, modules with the combined expression profiles were constructed using the weighted gene co-expression network analysis (WGCNA) package
+Specifically, a robust version of WGCNA (rWGCNA)
+Detailed information on several hyper-parameters of the rWGCNA are described in the Supplementary Materials (Figures
+Finally, we selected co-expression modules related to both AD and DM from the set of modules constructed with rWGCNA, using three previously established approaches.
+The first approach is a regression method using disease status and gene expression as independent and dependent variables, respectively
+The second involves selecting modules consisting of a significantly high number of DEGs
+For the first approach, we used a linear mixed model (LMM), where the eigengene, which is the first principal component of the genes in a given module, and the disease status (disease or control) were used as the dependent and independent variables, respectively.
+We selected a module with a Bonferroni-corrected p-value < 0.05 for eigengene-disease associations from LMM and defined it as the disease-related module.
+For the second approach, Fisher's exact test was used to evaluate whether DEGs were significantly enriched in the modules.
+We selected modules with a Bonferroni-corrected p-value < 0.05 for the number of common genes between the module genes and the DEGs from Fisher's exact test and defined them as the DEG-enriched modules.
+For the third approach, the measurement of differential connectivity between the two conditions is described in the Supplementary Materials.
+We selected a module with a significant differential connectivity between the two conditions (Bonferroni-corrected p-value < 0.05) and defined it as the modular differential connectivity (MDC) module.
+
+Construction of GRN and Identification of Hub Genes
+For the selected module, we attempted to identify genes that were highly correlated with other genes, using the "GENIE3" function in the GENIE3 package based on the random forest algorithm with a regression tree, and constructed a GRN
+Two pieces of input data were needed to run GENIE3: One was an expression matrix (called exprMatrix) consisting of all candidate genes, and the other included lists of candidate upstream genes (regulators).
+GENIE3 generates a table with three columns: "regulatoryGene", "targetGene", and "weight".
+The "weight" is the average of variable importance measured by the degree of variance reduction of the output variable
+To construct the GRN, we selected edges between two genes (regulatoryGene and targetGene) with weight values greater than the mean plus one standard deviation (SD) of the weight values.
+Although GENIE3 is considered a reliable method for constructing GRNs
+To overcome these issues, we used the STRING database and correlation between two genes (Figure
+From the edges between genes identified using GENIE3, we selected an edge when the two genes had a relationship in the STRING database or a high correlation value from the biweight midcorrelation measurement (≥95th percentile from the correlation matrices obtained from analyzing AD and DM gene expression data).
+
+Results
+
+Comparisons of Disease-Related RNA Alterations across All Blood Dataset Pairs for Each Disease
+We examined whether blood expression values of different datasets from the same disease were correlated with each other.
+For this task, we calculated the logFC values of all genes between disease and control samples for each dataset, and then assessed their correlation between the datasets.
+For the four AD datasets, we measured the logFC between AD and CN AD for all genes using the limma package, yielding four lists of logFC values.
+Then, we compared pairs of these four lists of logFC values using Spearman's correlation.
+Among the four AD datasets, two AddNeuroMed datasets (GSE63060 and GSE63061) had the most highly correlated FC values (Figure
+Furthermore, for the four DM datasets, we measured the logFC between DM and CN DM for all genes using the limma package and then compared the logFC value of each gene for all pairs in the DM blood datasets.
+Three pairs exhibited positive correlations, and three pairs exhibited negative Spearman coefficient values (Figure
+As such, correlations among the blood datasets were not always strong, even for the same disease.
+
+Selection of a Representative Dataset for Each Disease
+Instead of using all the RNA expression datasets, as has been done in other studies
+We measured the six QC indices from three datasets iteratively selected from the four AD datasets, resulting in an AD study having three values for each QC index.
+Figure
+Based on the average values of SMR, GSE63060 and MTAB6667 had the lowest values for AD and DM, respectively.
+Therefore, we selected GSE63060 and MTAB667 as representative blood RNA expression datasets for AD and DM, respectively.
+
+Comparison of Disease-Related RNA Alterations of the Blood with Those of the Brain and Pancreas
+We compared the FC values for all genes between each disease (AD or DM) and its respective control (CN AD or CN DM ) from the selected blood dataset with those from other disease-related tissues (the brain and pancreas) affected by AD and DM.
+When we compared the FC values between AD and CN AD for all genes in the AD blood dataset with the FC values in the AD brain dataset comprising data for five cell types
+When comparing the FC values between DM and CN DM of the blood dataset (MTAB6667) with the FC values of the pancreas dataset comprising data for the four cell types
+These results indicated that gene expression in the blood reflected that in the disease-related tissues.
+
+Comparison of DEGs between AD and DM Blood Data
+The blood datasets for AD and DM consisted of 11,342 and 16,592 genes, respectively, and the number of genes shared between the two datasets was 10,172.
+We identified 3474 and 3498 DEGs between AD and CN AD and DM and CN DM , respectively (Figure
+The DEGs between AD and CN AD (AD-DEGs) significantly overlapped with the DEGs between DM and CN DM (DM-DEGs).
+The number of DEGs shared between the AD-DEGs and DM-DEGs was 1264 (p = 0.002, hypergeometric test).
+In the pathway analyses, 442 and 423 pathways were enriched by AD-and DM-DEGs, respectively (Figure
+The pathways enriched by the AD-DEGs also significantly overlapped with those enriched by the DM-DEGs.
+The number of shared pathways was 316 (p < 5.92 × 10 -310 ). Figure
+The logFC values for all genes between AD and CN AD were significantly correlated with those for all genes between DM and CN DM (Figure
+In contrast, the logFC values of the AD and DM blood datasets were not significantly related to those of the AP blood dataset (the control).
+
+Identification of the AD and DM Co-Related Module
+By applying rWGCNA to the integrated blood dataset, we constructed 11 modules consisting of genes with similar expression patterns across samples (Figure
+We examined these 11 modules using the three approaches described in the Section 2 and selected regression-based disease-related modules, DEG-enriched modules, and MDC modules (Figure
+For AD, we selected green, turquoise, and brown modules that were related to AD (had a significant association with AD status and module-eigengene), significantly overlapped with the AD-DEGs, and demonstrated a significant differential connectivity between AD and CN AD .
+For DM, we selected seven modules (green, pink, black, greenyellow, magenta, blue, and red) that were shown via the three approaches to be related to DM.
+The green module was selected for both AD and DM; therefore, we defined the green module as the co-related module between AD and DM (Figure
+The green module had 467 genes, of which 452 and 306 genes were AD-and DM-DEGs, respectively (middle Venn diagram in Figure
+The eigengene of the 467 genes in the green module had a negative relationship with the presence of AD or DM (left bar plot in Figure
+The 467 genes in the green module had lower connectivity in AD and DM (according to the biweight midcorrelation) than in CN AD and CN DM (right matrix plots in Figure
+The 467 genes in the green module were enriched in 252 KEGG and GO pathways (Table
+These pathways are known to be related to AD and DM
+
+GRN and Identification of Hub Genes
+Using GENIE3
+The green module contained 42 of the 2764 known TF-related genes
+Four GRNs for AD, CN AD , DM, and CN DM were constructed using 467 genes in the green module and 42 TF-related genes as candidate genes and regulators (input features of GENIE3), respectively.
+Among the edges obtained using GENEI3, we only selected edges when an edge had PPI evidence in the STRING database or a high biweight midcorrelation value (≥95th percentile).
+Among the 42 TF-related genes, 24 AD-GRN genes had fewer edges than the CN AD -GRN genes, while 18 AD-GRN genes had greater than or equal the number of edges of the CN AD -GRN genes.
+Among the 42 TF-related genes, 11 DM-GRN genes had fewer edges than the CN DM -GRN genes, while 31 DM-GRN genes had greater than or equal the number of edges of the CN DM -GRN genes.
+Because the genes in the green module of the AD-and DM-GRNs generally had lower connectivity or correlational values than those of the matched CN-GRNs (Figure
+The following five genes were shared between the 24 and 11 genes with fewer edges in the AD-and DM-GRNs, respectively, than in the matched CN-GRNs: COPS4, PSMA6, GTF2B, GTF2F2, and SSB (Figure
+This finding suggested that these five genes were dysregulated TFs shared by AD and DM.
+
+Validation of the Green Module and the Five Hub Genes
+To compare the differential connectivity of the green module between the disease and control blood samples with that of other tissues, we analyzed gene expression in datasets for AD and CN AD brain tissue samples (GSE5281) and DM and CN DM pancreas tissue samples (GSE20966).
+Detailed information on the pre-processing of the two datasets is presented in the Supplementary Materials.
+The brain tissue dataset (GSE5281) contained gene expression values for 420 of the 467 genes in the green module.
+Using all pairs of the 420 genes, we constructed two separate biweight midcorrelation matrices for AD and CN AD samples.
+The results showed that the 420 genes in the AD brain had lower correlation values than those in the CN AD brain (p < 2.2 × 10 -16 , t-test).
+Specifically, the five genes COPS4, PSMA6, GTF2B, GTF2F2, and SSB had lower correlation values in the AD dataset than in the CN AD dataset (Figure
+The pancreas dataset (GSE20966) contained gene expression values for 435 of the 467 green module genes.
+We also constructed two separate biweight midcorrelation matrices for DM and CN DM using all pairs of the 435 genes.
+The 435 genes had lower correlational values in the DM pancreas dataset than in the CN DM pancreas dataset (p < 2.2 × 10 -16 , t-test).
+Additionally, the five TF-related genes had lower correlation values in the DM dataset than in the CN DM dataset.
+These results confirmed that these five genes had differential connectivity in disease-related tissues.
+
+Discussion
+In this study, we identified five TF-related genes (COPS4, PSMA6, GTF2B, GTF2F2, and SSB) in the blood that were dysregulated in both AD and DM.
+These results were consistent in disease-related tissues (the brain for AD and the pancreas for DM).
+COPS4 is a component of the COP9 signalosome and removes the ubiquitin-like protein Nedd8, mediating the reduction of the misfolded protein burden, which is the crucial mechanism of AD
+Additionally, the COP9 signalosome is related to obesity, which is the major risk factor for T2D, by mediating the expression of the C/EBP homologous protein and regulating the differentiation of pre-adipocytes.
+Similarly, PSMA6 is a component of the 20S proteasome and is related to both AD and DM
+Several studies have reported that PSMA6 has a possible role in DM complications, such as myocardial infarction and nephropathy
+A text-mining study that predicted physical interactions among candidate disease genes and constructed a molecular network analysis reported GTF2B as the top AD-related gene
+Nilsson et al.
+GTF2F2, which exists in many tissues and organs, plays a role in both the initiation and elongation of transcription by controlling RNA polymerase II
+Recently, GTF2F2 was reported to be involved in neurogenesis, neuroplasticity, and synaptogenesis by mediating NRF1
+Numerous studies have focused on the autoantibody for SSB (anti-SSB), whose presence characterizes the main pathophysiology of Sjogren's syndrome and is not part of the normal function of SSB.
+SSB is known as a transcription termination factor that facilitates the termination of transcription by RNA polymerase III
+Xu et al.
+A separate study analyzing blood gene expression reported that SSB was also dysregulated in AD samples
+In this study, we selected a representative gene expression dataset for each disease instead of integrating several gene expression datasets, for the following three reasons: First, the disease-related gene expression values were variable, even across samples of the same disease.
+Among all datasets in each disease, only one pair of the AD datasets (GSE63060/GSE63061) and two pairs of the DM blood datasets had SCC > 0.15 when comparing their FC values for all genes (Figure
+Second, when we compared the logFC changes between AD and CN AD in the large AD blood dataset with the logFC changes between DM and CN DM in the large DM blood dataset, the correlation between AD and DM was insignificant (Figure
+Third, too many genes were excluded when generating a large dataset given that the platforms used (e.g., microarray) had different coverage for transcripts or genes.
+For example, we integrated seven different microarray datasets that resulted in only about 1000 genes found to be present in all datasets (Figure
+In this study, we identified the shared transcriptomic signatures between AD and DM by integrating co-expression, DE, and DC analyses.
+Numerous studies used the DE method between two statuses (disease and control) to identify genes related with a specific disease
+However, the DE-based methods cannot reveal two genes that are simultaneously upregulated or downregulated.
+Therefore, alternative analyses, such as co-expression and DC analyses, have been used to uncover coordinated and regulatory biological signatures
+This combination of DE and DC analyses allowed us identify a shared module between AD and DM containing highly correlated AD-and DM-related genes.
+The selection of upstream genes, a crucial task in numerous studies, has been performed using various methods.
+Zhang et al.
+Briefly, they implemented a Bayesian approach by allowing genes with cis-expression quantitative trait loci as the upstream or parent genes
+In turn, the Stockholm Atherosclerosis Gene Expression study used genes in TF-related GO terms as the upstream or hub genes
+Herein, we used 2765 TF-related genes, which were manually curated from previously validated studies and several databases
+Lastly, we selected the five genes (COPS4, PSMA6, GTF2B, GTF2F2, and SSB) by strict criteria (e.g., statistically significance in DC and DE analyses, the presence of interaction with other genes in the PPI network, and the high correlation with other genes).
+However, there were no previous in vitro or in vivo studies reporting associations between the five genes and AD or DM.
+This could be due to the small number of previous studies that have investigated shared transcriptome changes between AD and DM.
+However, because our study was performed based on integration of multiple datasets and unbiased analyses, we expect that the identified genes are biomarkers of AD and DM.
+
+Conclusions
+In summary, our study revealed a gene module in which genes were commonly dysregulated in both AD and DM blood samples.
+These genes belonged to AD-and DM-related pathways.
+
+Supplementary Materials:
+The following are available online at
+
+
+
+Figure 1 .
+Figure 1.
+Study design for identifying common regulators between AD and DM.
+The symbols *** and * in step 3 indicate p < 0.001 (Fisher's exact test) and p < 0.05 (t-test), respectively.
+AD, Alzheimer's disease; CN AD , AD-matched control; DM, diabetes mellitus; CN DM , DM-matched control, rWGCNA, robust weighted gene co-expression network analysis; DEG, differentially expressed gene; QC, quality control; IQC, internal quality control; EQC, external quality control; AQC, accuracy quality control; CQC, consistency quality control; and TF, transcription factor.
+
+
+
+Figure 2 .
+Figure 2. Comparison of the quality and consistency of microarray datasets using MetaQC.
+Six QC indices of the four AD (A) and four DM (B) datasets were measured, respectively.
+The QC measurements of each bar plot represents the average values.
+The QC indices of GSE63060 were measured three times as follows: (1) GSE63060, GSE63061, GSE85426; (2) GSE63060, GSE85426, ADNI; and (3) GSE63060, GSE85426, ADNI.
+The mean values of the three time measures for each QC index were calculated.
+Stars denote the first ranking dataset or the dataset with the best quality for each QC index.
+AD, Alzheimer's disease; DM, diabetes mellitus; IQC, internal quality control; EQC, external quality control; AQCg, accuracy quality control (gene); AQCp, accuracy quality control (pathway); CQCg, consistency quality control (gene); CQCp, consistency quality control (pathway); SMR, standardized mean rank; and ADNI, Alzheimer's Disease Neuroimaging Initiative.
+
+
+
+Figure 3 .
+Figure 3.
+Comparison of gene expression between blood samples and disease-related tissue samples.
+(A) the AD brain dataset (single-cell transcriptomic analysis data) consisted of five cell types.
+Spearman's correlation was used to compare the fold change values between AD and CN AD for all genes in the AD blood dataset (GSE63060) with those of the five cell types in the AD brain dataset.
+(B) the T2D pancreas dataset (single-cell transcriptomic analysis data) consisted of four cell types.
+Spearman's correlation was used to compare the fold change values between DM and CN DM for all genes in the DM blood dataset (MTAB6667) with those of the four cell types in the DM pancreas dataset.
+***, **, and one * indicate p < 0.001, p < 0.01, and p < 0.05, respectively (Spearman's correlation).
+AD, Alzheimer's disease; T2D, type 2 diabetes; PP, pancreatic polypeptide; DM, diabetes mellitus; CN AD , AD-matched control; and CN DM , DM-matched control.
+
+
+
+Figure 4 .
+Figure 4. Differentially expressed genes and pathway analyses of AD and DM blood samples.
+(A) the Venn diagram on the left consists of the number of AD-and DM-DEGs, whereas the Venn diagram on the right includes the number of pathways enriched by AD-and DM-DEGs.
+(B) the reddish and greenish rectangles indicate pathways enriched via AD-and DM-DEGs, respectively.
+Numbers within rectangles represent the numbers of AD-and DM-DEGs in each pathway.
+(C) the y-axis indicates the Spearman's correlation coefficient in the FC values for all genes between the disease and control samples in the AD, DM, and AP blood datasets.
+(***, p < 0.001; permutation test).
+AD, Alzheimer's disease; DM, diabetes mellitus; AP, appendicitis; AD-DEG, differentially expressed genes between AD and AD-matched controls; DM-DEG, differentially expressed genes between DM and DM-matched controls; and FC, fold change.
+
+
+
+Figure 5 .
+Figure5.
+Module construction using rWGCNA and selection of AD and DM co-related modules.
+(A) modules described by different colors were constructed using rWGCNA.
+FC values (logFC) between two conditions were determined using the limma package.
+Vertical bars with red and blue colors indicate genes with logFC > 0 and logFC < 0, respectively.
+(B) three criteria (described in the Section 2) were used to select modules.
+The "O" indicates that a module has a Bonferroni-corrected p-value < 0.05 for each criterion and denotes modules suitable for selection, and the "X" indicates that a module does not satisfy these criteria.
+(C) in the bar plot on the left, the y-axis indicates the beta-coefficient obtained from LMM, with eigengene and disease status as the dependent and independent variables, respectively.
+*** indicate the p-value (***, Bonferroni-corrected p-value < 0.001) from the LMM.
+In the middle Venn diagrams, the p-values between genes in the module and the DEGs were measured using Fisher's exact test.
+In the matrix plots on the right, the red and yellow colors in squares indicate high or low biweight midcorrelation values, respectively.
+*** indicate a significant difference (t-test) between the intra-modular connectivity of the control and the case.
+rWGCNA, robust weighted gene co-expression network analysis; AD, Alzheimer's disease; DM, diabetes mellitus; CN AD , AD-matched control; CN DM , DM-matched control; DEG, differentially expressed gene; and LMM, linear mixed model.
+
+
+
+Figure 6 .
+Figure 6.
+Five shared regulatory genes in GRNs.
+Four GRNs for (A) COPS4, (B) PSMA6, (C) GTF2B, (D) GTF2F2, and (E) SSB were established using the AD, CN AD , DM, and CN DM blood samples, respectively.
+GRNs were constructed by integrating GENIE3, the TF database, the PPI database, and correlation values of gene expression.
+Blue colors indicate down-regulated genes.
+A large size and black color indicate TF-related genes.
+Edges between two genes were constructed from GENIE3, the PPI database, and correlations of RNA expression data.
+Four GRNs per gene, constructed using AD, CN AD , DM, and CN DM samples, respectively, are illustrated.
+AD, Alzheimer's disease; DM, diabetes mellitus; CN AD , AD-matched control; CN DM , DM-matched control; GRN, gene regulatory network; TF, transcription factor; and PPI, protein-protein interaction.
+
+
+
+Figure 7 .
+Figure 7. Five shared regulatory genes in brain and pancreas datasets.
+We measured the differential connectivity of the green module in datasets for AD and CN AD brain tissue samples (A) and DM and CN DM pancreas tissue samples (B).
+The boxplots on the left indicate biweight midcorrelation values from all possible pairs of genes in the green module.
+The boxplots on the right indicate the correlation values (biweight midcorrelation) of each gene with other genes in the green module.
+Gray and red boxplots show the correlation values for CN AD /CN DM and AD/DM, respectively.
+AD, Alzheimer's disease; DM, diabetes mellitus; CN AD , AD-matched control; and CN DM , DM-matched control.
+***, p < 0.001 (t-test).

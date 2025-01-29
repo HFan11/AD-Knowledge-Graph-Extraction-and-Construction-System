@@ -1,0 +1,333 @@
+A Two-Stage Model for Predicting Mild Cognitive Impairment to Alzheimer’s Disease Conversion
+Early detection of Alzheimer's disease (AD), such as predicting development from mild cognitive impairment (MCI) to AD, is critical for slowing disease progression and increasing quality of life.
+Although deep learning is a promising technique for structural MRI-based diagnosis, the paucity of training samples limits its power, especially for three-dimensional (3D) models.
+To this end, we propose a two-stage model combining both transfer learning and contrastive learning that can achieve high accuracy of MRIbased early AD diagnosis even when the sample numbers are restricted.
+Specifically, a 3D CNN model was pretrained using publicly available medical image data to learn common medical features, and contrastive learning was further utilized to learn more specific features of MCI images.
+The two-stage model outperformed each benchmark method.
+Compared with the previous studies, we show that our model achieves superior performance in progressive MCI patients with an accuracy of 0.82 and AUC of 0.84.
+We further enhance the interpretability of the model by using 3D Grad-CAM, which highlights brain regions with high-predictive weights.
+Brain regions, including the hippocampus, temporal, and precuneus, are associated with the classification of MCI, which is supported by the various types of literature.
+Our model provides a novel model to avoid overfitting because of a lack of medical data and enable the early detection of AD.
+
+INTRODUCTION
+Alzheimer's disease (AD), a severe neurodegenerative disease, is the most common type of dementia
+Nowadays, at least 50 million people worldwide suffer from AD or other types of dementia, and it is expected that this number will reach 131 million in 2050
+This further increases the burden of the medical care system in aging societies.
+Mild cognitive impairment (MCI) is a stage between normal and AD, with 10-12% of people developing AD each year
+Based on the progression toward AD, it can be classified into two categories: progressive MCI (pMCI) and stable MCI (sMCI).
+Although there is no effective treatment for AD at present, its progression can be slowed by medication, memory training, exercise, and diet, which necessitates the early detection of potential patients
+Neuroimaging techniques, which can detect disease-related neuropathological changes, are valuable tools for assessing and diagnosing AD
+MRI is one of the most widely studied neuroimaging techniques because it is non-invasive, generally available, affordable, and capable of distinguishing between different soft tissues
+With the rapid development, deep learning has achieved remarkable progress in a variety of fields, especially in computer vision and medical imaging, where it outperforms traditional machine learning methods
+Deep learning approaches perform feature selection during model training and loss function optimization without the need for domain experts' prior knowledge.
+As a result, individuals with no medical expertise can use them for research and applications, especially in the field of medical image analysis
+Notably, Convolutional Neural Network (CNN) has achieved outstanding performance in the classification tasks of AD and normal control (NC)
+In general, deep neural networks require large samples for model fitting, especially 3D deep neural network models with more parameters.
+However, as compared with existing millionsample natural image datasets, neuroimaging datasets have a relatively small sample size
+At first, collecting large training sets and labeling image data are costly and time consuming
+Furthermore, technical and privacy issues also constraints obstruct medical data collection
+Therefore, preventing model overfitting due to the scarcity of medical samples has become one of the hottest topics in deep learning of neuroimaging.
+Transfer learning is a popular method for dealing with a small number of samples.
+It utilizes a pretrained model with supervised learning on a large labeled dataset (source domain, e.g., ImageNet) and then fine tunes it on the task of interest (target domain).
+Studies have shown that knowledge transferred from large-scale annotated natural images (ImageNet) to medical images can significantly improve the effectiveness of assisted diagnosis
+However, standard medical images, such as MRI, CT, and positron emission tomography (PET), are in three dimensional (3D), preventing ImageNet-based pretrained models from being directly transferred to MRI.
+Converting 3D data into twodimensional (2D) slices is a typical method, however, this ignores the rich 3D spatial anatomical information and inevitably affects the performance.
+To address this issue, several studies
+Recently, contrastive learning, a self-supervised learning method, has recently been demonstrated to perform superiorly in various vision tasks
+Momentum Contrast (MoCo)
+Based on existing research concerns, we proposed a two-stage model based on MoCo
+The main contributions of our study are as follows.
+1) Systematic evaluation of 3D ResNet models with different structures and selection of the best model for sMCI and pMCI classification.
+Provides a reference for related studies.
+2) A two-stage model is proposed to solve the problem of domain transfer between the source and target domains, which solves the problem of overfitting caused by small samples in sMCI and pMCI classification and improves the classification performance in AD diagnosis.
+To the best of our knowledge, we first introduce the MoCo in pMCI and sMCI classification.
+3) Three-dimensional Gradient-weighted Class Activation Mapping (Grad-CAM), which is widely used for model interpretability, was introduced to get the heatmap that highlights the brain regions our model focuses on and increases the interpretability of the model.
+
+MATERIALS AND METHODS
+As indicated in Figure
+In our framework, we did not directly transfer trained model on natural image sets or other medical image sets to our research such as previous studies, mainly for the following reasons: at first, the adoption of 3D CNN in this study to preserve more spatial information limits direct transfer learning from 2D natural images; second, the different components of medical image sets may harm the performance.
+For instance, the Med3D is composed of MRI and CT of brains, lungs, chests, and other organs
+The details of each step were described next.
+More information can be found at
+
+Dataset and Data Preprocessing
+As defined in this study, participants with MCI at baseline who developed or did not develop AD within 3 years were referred to as pMCI and sMCI, respectively.
+To prevent data leakage, only participants' baseline data were selected in this study.
+Finally, data from 577 MCI subjects (Means ± std age = 73.08 ± 7.25 years) were included in our study, and 297 of the MCI was classified as sMCI (51.5%) and the rest 280 were pMCI (48.5%).
+The demographics and the mini-mental state examination scores (MMSEs) information of subjects is summarized in Table
+Differences in the median age and gender between groups were tested using ANOVA and Fisher's exact test, respectively.
+
+FIGURE 1 |
+The two-stage model.
+In step 1, we used the Med3D
+In step 2, we performed contrastive learning on unlabeled sMCI and pMCI samples using the improved MoCo to update the network weights, further increasing the correlation between the target and source domains and learning the specific medical features of the sMCI/pMCI classification task.
+Finally, the network was fine-tuned using labeled sMCI/pMCI samples to achieve sMCI and pMCI classification.
+MoCo, Momentum Contrast; pMCI, progressive mild cognitive impairment; sMCI, stable mild cognitive, impairment.
+These two interactions yielded no statistically significant results (p > 0.05).
+All 1.5T and 3T structural MRI of the participant were downloaded.
+The detailed information of MRI, such as scanner protocols, can be found at
+Data are preprocessed using FSL 1 with three main steps: bias field correction using the N4 algorithm
+Figure
+
+Network Weight Initialization Using Med3D
+Many studies have demonstrated that using transfer learning parameter initialization can significantly improve the 1
+This study selected the Med3D network and its pretrained weights on eight segmented datasets
+The authors of Med3D integrated data from eight medical segmentation datasets to create the 3DSeg-8 dataset, which contains multiple modalities (MRI and CT), target organs (brain, heart, pancreas), and pathological conditions (CodaLab, 2021 Competition;
+Med3D uses a standard encode-decode partition structure, where the encoder uses the ResNet family.
+The main idea of ResNet is to introduce the residual block in the network, as illustrated in Figure
+This helps train a deeper network to achieve higher accuracy without vanishing or explosion of the gradient.
+Notably, Med3D uses a parallel format for model training, which means the same encoder is used for eight datasets, and the decoder is composed of 8 branches accordingly in parallel.
+This allows the decoder to adapt to different organizational segmentation targets, while the encoder can learn universal features.
+Figure
+Med3D pretrained models can be used for classification, detection, and segmentation.
+We used the parameters of the models pretrained by the 3DSeg-8 dataset for the initialization of our network.
+Transfer learning strategy effects were evaluated in various ResNet networks in Med3D, including,
+
+Transfer Learning Using Contrastive Learning
+We extracted general 3D medical image features by Med3D
+However, while Med3D includes MRI and CT of brains, lungs, chests, and other organs, whereas our MCI data set only include brain MRI data, there are still domain transfer concerns between the dataset of Med3D and MRI of sMCI and pMCI
+Contrastive learning, a special unsupervised learning method with a supervisory function, was introduced in this study to further increase the correlation between the target and source domains.
+The labels of contrastive learning are generated by the data itself rather than by manual labeling
+It uses unlabeled data to train models and learn embeddings of the data by maximizing the consistency between different augmented views of the same sample and minimizing the consistency between different samples through a contrast loss function
+Currently, there are various representative contrastive learning methods, such as MoCo
+Because of the sample size and computational resources constraints, we chose MoCo as our pretraining model in our study.
+Unlike the end-to-end gradient update of SimCLR, MoCo introduces a dynamic queueing dictionary, which is updated by adding new training batches to the queue while removing the oldest ones from the queue according to the first-in-first-out principle and keeping the length of the queueing dictionary unchanged.
+This approach allows MoCo to obtain good training results with small batch size.
+Given and preprocessed sample x , contrastive learning obtains two augmented samples x q and x k by data augmentation of sample x .
+x q and x k are referred to as query data and key data, respectively.
+q and k are the latent representation of x q and x k using a query encoder q=f q( x q ;θ q) and key encoder k=f k (x k ;θ k ) with weight θ q and θ k , respectively.
+If the query and the key belong to the same sample, it is marked as a positive pair k + .
+Otherwise, it is a negative sample pair k -.
+The auxiliary task in contrastive learning is: given a pair ( x q , x k ), determining whether it is a positive or negative sample pair and making the positive samples closer together and the negative samples further apart.
+Give a query q.
+MoCo applies a queue storing a set of keys k from different samples, including one k + and several k -.
+The contrastive loss can be defined as:
+Here, τ is the temperature parameter.
+The model updates the encoder weights by minimizing the contrastive loss.
+In MoCo, the key encoder is neither updated by backpropagation nor copied from the query encoder.
+Still, a running average of the key encoder is used, which is known as a momentum encoder.
+The updating of θ q and θ k can be formulated as:
+Here, m ∈ [0, 1) is the momentum coefficient.
+As in Eq. (
+It was shown that data augmentation methods such as Gaussian blur and color distortion for natural images might not be applicable in the medical image.
+For example, Gaussian blur on MRI can potentially change the label of the data.
+Therefore, we improved the data augmentation method in MoCo by using random rotation (± 10 • ), horizontal flip, and random scaling (± 10%) on 3D MRI.
+In detail, we rotated images at any angle between -10 • and +10 • along the three axes.
+Random scaling was also applied to randomly scale the image by ± 10%.
+If the image size is larger than the size of the original image, the same volume of the original image is extracted by cropping the center region of the image.
+If the volume is less than its original size, it is filled with 0 in the reduced region.
+Figure
+We performed MoCo on the full unlabeled MRI data using the Med3D pretrained ResNet as the encoder.
+In addition, as it is shown that adding a projection head helps to learn feature representation better
+We used two MLP with 128-D hidden layers and a ReLU activation function as the projection head as:
+where W 1 and W 2 represent the hidden and output layer weights, and σ is the ReLU activation function.
+
+Classification
+The last step of our model is classification, where the labeled data were divided into training, validation, and test sets to fine-tune the pretrained encoders.
+We added a linear classifier to the frozen backbone model to complete the classification of sMCI and pMCI as proposed by
+
+Model Evaluation
+We first used different ResNet, including ResNet-10, ResNet-34, ResNet-50, ResNet-101 as our two-stage model backbone network, and selected the ResNet with the best performance (ResNet-50, see in results) as our backbone in the following comparative experiment.
+
+Evaluation of Transferring Learning Strategies
+We first conducted the following comparative experiments with different transfer learning strategies.
+All the models in different transfer learning strategies used the best ResNet selected by the first experiment.
+λ Med3D, pretrained ResNet using Med3D and fine-tuned the model to complete the classification of sMCI and pMCI.
+λ MoCo, random initialization of weights, followed with the modified MoCo in the method to train the ResNet without using sMCI/pMCI labels.
+Then fine-tune the model using labeled data and do the classification.
+λ Only ResNet, random initialization of weights, and training ResNet from scratch.
+λ Med3D+MoCo, our two-stage model.
+
+Comparison With Previous Studies
+To comprehensively understand the performance of our method, we reviewed the state-of-the-art literature, which utilized deep learning to predict the conversion from MCI to Alzheimer's using MRI.
+We selected studies that achieved criteria for a fair comparison, including (1) only used MRI.
+(2) published in the last 3 years.
+(3) the data were from ADNI.
+We selected five evaluation metrics to evaluate our model accurately.
+(1) Accuracy (Acc) is used to measure the proportion of correctly classified samples.
+(2) Sensitivity (Sens), also known as the true positive rate, is the proportion of predicted positive results that are true positives.
+(3) Specificity (Spec) is the proportion of correctly identified negatives.
+(4) F1-score (F1) is the reconciled average of sensitivity and retrieval.
+(5) Area Under ROC Curve (AUC) represents how the false-positive rate increases with the true-positive rate and increases the area under the characteristic curve.
+The aforementioned evaluation metrics were calculated based on True Positive (TP), False Positive (FP), False Negative (FN), and True Negative (TN), and these four indicators form a confusion matrix.
+In our study, sMCI and pMCI were referred to as positive and negative examples, respectively.
+We can calculate accuracy, sensitivity, specificity, and F1 as follows: Finally, we used the non-parametric bootstrap to construct each evaluation metrics' CIs.
+A total of 10,000 bootstrap replicates were extracted from the test set, and the performance metrics of the model on each bootstrap replicate were calculated.
+This generated a distribution for each estimate and reported 95% bootstrap percentile intervals (2.5 and 97.5 percentile)
+
+Experimental Settings
+The model was implemented in PyTorch.
+We used Stochastic Gradient Descent (SGD) with a weight decay of 0.0001 and momentum of 0.99 as our optimizer.
+A minibatch size of 16 and a cosine annealing learning rate with an initialized value of 0.01 were used in training.
+Other hyperparameters are the same as default values in MoCo
+All unlabeled data were used to train MoCo.
+We trained the classifier with optimized cross-entropy loss and a learning rate of 0.001 in 100 epochs.
+The dataset was randomly split into training and testing data with a ratio of 8:2.
+Optimal hyperparameters were selected using fivefold cross-validation on the training set, and the optimal model was chosen for model evaluation on the test set (Figure
+All experiments were run on NVIDIA GTX 2080.
+
+RESULTS
+
+Results of Different ResNet Models Using a Two-Stage Model
+In this part, we investigated the classification performance of different Med3D pretrained CNN backbones on the test set, including ResNet-18, ResNet-34, ResNet-50, and ResNet-101.
+As highlighted in Table
+
+Results of Different Transfer Learning Strategies Using ResNet-50
+Table
+As Table
+
+Results of the Relevant Brain Region
+In this study, the 3D Grad-CAM method was used to identify brain regions associated with sMCI or pMCI and improve the interpretability of the model.
+After weight back-propagation of trained models, we obtained average relevance heatmaps of each class in the test dataset.
+For comparison, we highlighted temporal superior, temporal middle, hippocampus, thalamus, precuneus, cingulate in the automated anatomical labeling (AAL2)
+Figure
+As shown in Figure
+But precuneus is recognized as a unique feature of pMCI.
+
+Comparisons With Previous Studies
+We further used four evaluation metrics to compare our results to previous state-of-the-art deep learning studies on sMCI/pMCI classification published in the last 3 years, including accuracy, sensitivity, specificity, and AUC.
+Table
+In the classification tasks of sMCI and pMCI using deep learning, our method achieves better or comparable classification results in terms of accuracy, specificity, and AUC.
+
+DISCUSSION
+This study proposed a two-stage method that combined contrastive learning and transfer learning for predicting conversion from MCI to AD based on MRI.
+Pretrained models from sizeable medical image datasets were used to initialize the  The bold numbers denote the maximum value of each column.
+Acc, Accuracy; CI, Confidence Interval; F1, F1-score; Sens, Sensitivity; Spec, Specificity.
+model parameters and obtain general imaging features.
+Training on unlabeled target datasets using contrastive learning was used to get target imaging features.
+At last, the network was fine-tuned using the labeled target dataset to complete the classification.
+In addition, 3D Grad-CAM was used to highlight brain regions potentially associated with pMCI/sMCI classification.
+We demonstrated the validity of our model through multiple evaluation experiments.
+The experiments showed that our model The bold numbers denote the maximum value of each column.
+Acc, Accuracy; CI, Confidence Interval; F1, F1-score; MoCo, Momentum Contrast; Sens,Sensitivity; Spec, Specificity.
+outperformed both transfer learning and contrastive learning individually and achieved better or comparable results than previous state-of-the-art studies.
+Several factors improve the performance of our classification model.
+The first contribution is the proposal of a two-stage model.
+Table
+The performance of transfer learning is affected by the various factors such as the size of pretrained samples, the relevance of the source and target domains.
+Thus, not all the transfer learning can improve the model's performance
+For example,
+This observation inspired us to develop a two-stage model.
+Our two-stage model is sample efficient when compared with existing transfer learning-based models for sMCI and pMCI classification
+In each of these studies, additional AD and NC samples were collected for training.
+But our model does not require additional data collection, makes full use of each sample, and produces better or equivalent results.
+For example,
+In the source task, the model is pretrained using MRI scans of 2,084 normal samples and 1,406 AD samples.
+Then they used pMCI and sMCI samples to fine-tune the model to accomplish the target task of classifying pMCI and sMCI.
+In comparison to our results, they got the same accuracy but lower AUC.
+To the best of our knowledge, we are the first to use the MoCo pretrained model for sMCI and pMCI classification.
+Compared with the models, only pretrained by Med3D and ResNet-50 trained from scratch, our method improved accuracy by 16.4 and 10.3%, respectively, further demonstrating the importance and efficiency of including contrastive learning into our method.
+Pretraining by contrastive learning allows the model to have a feature representation with better generalization at the same domain of the target task
+Recent studies have shown that fine-tuning on a well-trained contrastive learning model can achieve comparable or even better results than fully supervised learning
+The first row is a golden standard of temporal superior, temporal middle, hippocampus, thalamus, precuneus, cingulate in automated anatomical labeling (AAL2,
+The second and third rows show brain regions that our model focuses on more on sMCI and pMCI, respectively.
+pMCI, progressive mild cognitive impairment; sMCI, stable mild cognitive impairment.
+which is consistent with our findings.
+In addition, one of the critical factors limiting the performance of contrastive learning is the slow convergence rate
+As shown in In addition, our model uses complete 3D MRI as model input.
+Unlike models using 2D slices, the 3D model makes full use of the spatial information of the brain to improve the accuracy of the model
+Furthermore, some previous studies used feature engineering or cherry-picked regions of interest as input features
+For example,
+Our model differs from the previous studies by using an end-toend model to learn from all possible features in medical images, which improves model performance.
+In Figure
+Hippocampus and amygdala in the middle temporal lobe have been considered as crucial brain regions for the diagnosis of early AD
+The hippocampus is essential for memory formation, and the recent studies have found that the hippocampus atrophy of pMCI is more pronounced than sMCI
+Similarly, the amygdala, which is primarily responsible for emotion and expression, is intimately linked to emotional changes of AD, such as anxiety and irritability
+Thalamic damage is associated with decreased body movement and coordination, attention, and awareness in AD
+In addition to the hippocampus and temporal, which have been widely studied in AD, our heatmap also reveals that pMCI is also closely related to the precuneus with high-level memory and cognitive functions, which is in line with the previous studies
+The results, as mentioned earlier, further indicate that some structural brain region abnormalities play an important role in predicting early AD.
+In summary, our discovery of important brain regions is supported by abundant literature, which helps construct a more comprehensive brain biomarker atlas to predict MCI progression.
+
+CONCLUSION
+In conclusion, our two-stage model increases both the accuracy of early AD detection as well as the transparency of the model.
+Notably, a comprehensive comparison of different 3D ResNet networks provides references for related research.
+Furthermore, the combination of transfer learning and contrastive learning solves the negative transfer problem and alleviates the model overfitting problem due to a lack of medical data.
+Notably, it also substantially improves the diagnostic performance of this tricky classification problem in neuroscience.
+Our model only uses low-invasive, low-cost, and widely available MRI data, which significantly expands the application scenarios of the model.
+However, this study also has some limitations that merit additional exploration.
+First of all, we will explore more options for the model's various modules, such as different data augmentation methods and pretrained models on model effectiveness.
+When a larger dataset becomes available, we will also continue to validate our model.
+At final, it is worth noting that a direct comparison of different methods using the same evaluation metrics is straightforward but may not be the optimal solution.
+Factors such as sample size, dataset split strategy, sMCI, and pMCI definitions, and test data selection can have an impact on model outcomes.
+A more statistically robust comparison should be proposed in our future studies.
+Despite these limitations, our model provides a new solution to avoid overfitting because of the insufficient medical data and allows early identification of AD.
+
+AUTHOR'S NOTE
+The numerical calculations in this article have been done on the supercomputing system in the Supercomputing Center of Wuhan University.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Comparison of MRI data before and after preprocessing.
+(A,B) Show the differences before and after preprocessing from the sagittal, axial, and coronal view of the brain, respectively.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Residual block.
+The ResNet's Core Modules.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Data augmentation schematic.
+Three data augmentation were used to augment the data size: random rotation, horizontal flip, and random scaling.
+
+
+shown in Figure 6A, ResNet-50 achieved the best performance with an accuracy of 0.819 and an AUC of 0.835, indicating complex models with more parameters may not always work best.
+ResNet-50, the model with the best performance, was used in our following experiments.
+The confusion maps of different ResNet are shown in Figure 6B.
+
+
+7A indicate, our method achieves better results compared to other methods in terms of accuracy (0.819), sensitivity (0.786), specificity (0.850), and F1 score (0.807).
+Similarly, Figure 7A shows ROC curves of different transfer learning strategies, where our method has the best AUC of 0.835 compared with other methods.
+The confusion maps of different transfer learning strategies are shown in Figure 7B.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Data spilt strategies.
+
+
+
+FIGURE 6 |
+FIGURE 6 | The ROC curve and confusion matrix of different ResNet using our two-stage model.
+(A) The ROC curve.
+(B) The confusion matrix.
+pMCI, progressive mild cognitive impairment; sMCI, stable mild cognitive impairment.
+
+
+
+FIGURE 7 |
+FIGURE 7 | The ROC curve and confusion matrix of different transfer learning strategies using ResNet-50.
+(A) The ROC curve.
+(B) The confusion matrix, respectively.
+All the models in this figure use ResNet-50.
+Med3D, pre-trained ResNet-50 using Med3D and fine-tune the model to complete the classification of sMCI and pMCI; MoCo, random initialization of weights, followed with the modified MoCo in the method to train the ResNet50 without using sMCI/pMCI labels.
+Then fine-tune the model using labeled data and complete the classification; Only ResNet, random initialization of weights and training ResNet from scratch; Med3D+MoCo, our two-stage transfer learning model; MoCo, Momentum Contrast; pMCI, progressive mild cognitive impairment; sMCI, stable mild cognitive impairment.
+
+
+
+TABLE 1 |
+A summary of the demographic and clinical information of participants.
+
+
+
+TABLE 2 |
+Performance of different ResNet using two-stage model.
+
+
+
+TABLE 3 |
+Performance of different transfer learning strategies using ResNet-50.
+
+
+
+TABLE 4 |
+A summarized comparison of state-of-the-art research on MRI using deep learning in sMCI and pMCI classification.
+
+
+
+Table 3 ,
+compared with MoCo trained from scratch, our method improved accuracy by 6.89%, which indicates that transfer learning can accelerate the convergence of the MoCo model and improve the model performance.
+MoCo and transfer learning can reinforce and complement one other.

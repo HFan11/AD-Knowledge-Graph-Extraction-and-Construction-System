@@ -1,0 +1,350 @@
+Diagnosis of Alzheimer's Disease via Multi-Modality 3D Convolutional Neural Network
+Alzheimer's disease (AD) is one of the most common neurodegenerative diseases.
+In the last decade, studies on AD diagnosis has attached great significance to artificial intelligence-based diagnostic algorithms.
+Among the diverse modalities of imaging data, T1-weighted MR and FDG-PET are widely used for this task.
+In this paper, we propose a convolutional neural network (CNN) to integrate all the multi-modality information included in both T1-MR and FDG-PET images of the hippocampal area, for the diagnosis of AD.
+Different from the traditional machine learning algorithms, this method does not require manually extracted features, instead, it utilizes 3D image-processing CNNs to learn features for the diagnosis or prognosis of AD.
+To test the performance of the proposed network, we trained the classifier with paired T1-MR and FDG-PET images in the ADNI datasets, including 731 cognitively unimpaired (labeled as CN) subjects, 647 subjects with AD, 441 subjects with stable mild cognitive impairment (sMCI) and 326 subjects with progressive mild cognitive impairment (pMCI).
+We obtained higher accuracies of 90.10% for CN vs. AD task, 87.46% for CN vs. pMCI task, and 76.90% for sMCI vs. pMCI task.
+The proposed framework yields a state-of-the-art performance.
+Finally, the results have demonstrated that (1) segmentation is not a prerequisite when using a CNN for the classification, (2) the combination of two modality imaging data generates better results.
+
+INTRODUCTION
+Aging of the global population results in an increasing number of people with dementia.
+Recent studies indicate that 50 million people are living with dementia
+Known as one of the most common neurodegenerative diseases, AD can result in severe cognitive impairment and behavioral issues.
+Mild cognitive impairment (MCI) is a neurological disorder, which may occur as a transitional stage between normal aging and the preclinical phase of dementia.
+MCI causes cognitive impairments with a minimal impact on instrumental activities of daily life
+MCI is a heterogeneous group and can be classified according to its various clinical outcomes
+In this work, we partitioned MCI into progressive MCI (pMCI) and stable MCI (sMCI), which are retrospective diagnostic terms based on the clinical follow-up according to the DSM-5 criteria
+The term pMCI, refers to MCI patients who develop dementia in a 36-month follow-up, while sMCI is assigned to MCI patients when they do not convert.
+Distinguishing between pMCI and sMCI plays an important role in the early diagnosis of dementia, which can assist clinicians in proposing effective therapeutic interventions for the disease process
+With the progression of MCI and AD, the structure and metabolic rate of the brain changes accordingly.
+The phenotypes include the shrinkage of cerebral cortices and hippocampi, the enlargement of ventricles, and the change of regional glucose uptake.
+These changes could be quantified with the help of medical imaging techniques such as magnetic resonance (MR) and positron-emission tomography (PET)
+For instance, T1-weighted magnetic resonance image (T1-MRI) provides high-resolution information for the brain structure, making it possible to accurately measure structural metrics like thickness, volume and shape.
+Meanwhile, 18-Fluoro-DeoxyGlucose PET ( 18 F-FDG-PET or FDG-PET) indicates the regional cerebral metabolic rate of glucose, making it possible to evaluate the metabolic activity of the tissues.
+Other tracers, such as 11 C-PiB and 18 F-THK, are also widely used in AD diagnosis
+By analyzing these medical images, one can obtain important references to assist the diagnosis and prediction of AD
+This work aims at distinguishing AD or potential AD patients from cognitively unimpaired (labeled as CN) subjects accurately and automatically using medical images of the hippocampal area and recent techniques in deep learning, as it facilitates a fast-preclinical diagnosis.
+The method is further extended for the classification between sMCI and pMCI so that an early diagnosis of dementia would be possible.
+Data of two modalities were used.
+i.e., the T1-MRI and 18 F-FDG-PET, as they provide complementary information.
+Numerous studies have been published on diagnosing AD by utilizing these two methods.
+Using T1-MRI, Sorensen et al. segmented the brains and extracted features of thickness and volumetry in the selected regions of interest (ROIs)
+A linear discriminant analysis (LDA) was used to classify AD, MCI, and CN.
+David et al. implemented the kernel metric learning method in the classification
+Another popular machine learning method is the random forest.
+Both studies used the random forest.
+As for 18 F-FDG-PET,
+In addition to the single modality classifications, taking both T1-MRI and 18 F-FDG-PET into consideration is also a major concern for research on AD diagnosis.
+Additionally,
+Moreover, other imaging modalities or PET tracers can be considered, as
+The studies mentioned above mostly follow three basic steps in the diagnosis algorithms, namely segmentation, feature extraction and classification.
+During segmentation, data are manually or automatically partitioned into multiple segments based on anatomy or physiology.
+In this way, the ROIs are well-defined, making it possible to extract features from them.
+Finally, these features will be fed to the classification step so that the classifiers are able to learn useful diagnostic information and propose predictions for given test subjects.
+Among them, segmentation plays an important role as it is used to measure the structural metrics in the feature extraction step.
+However, it is hard to obtain a segmentation automatically and accurately, which leads to a low efficiency.
+As a result, we proposed an end-to-end diagnosis without segmentation in the following work.
+What is more, though highly reliable and explainable, these steps could be integrated weakly, as different platforms are used in different steps of these algorithms.
+The above considerations lead to our attempt to use a neural network in AD diagnosis.
+Benefited by the rapid development of computer science and the accumulation of clinical data, deep learning has become a popular and useful method in the field of medical imaging recently.
+The general applications of deep learning in medical imaging are mainly feature extraction, image classification, object detection, segmentation and registration
+Among the deep learning networks, convolutional neural networks (CNNs) are common choices.
+MCI vs. CN task, while
+Previous studies showed a promising potential of AD diagnosis, and thus we propose to use a deep learning framework in our work to complete the feature extraction and classification steps simultaneously.
+In this work, we propose a multi-modality AD classifier.
+It takes both MR and PET images of the hippocampal area as the inputs, and provides predictions in the CN vs. AD task, the CN vs. pMCI task and the sMCI vs. pMCI task.
+The main contributions of our work are listed below:
+(1) We show that segmentation of the key substructures, such as hippocampi, is not a prerequisite in CNNbased classification.
+(2) We show that the high-resolution information in the hippocampal area can make up the gap between ROIs of different sizes.
+(3) We construct a 3D VGG-variant CNN to implement a single modality AD diagnosis.
+(4) We introduce a new framework to combine complementary information from multiple modalities in our proposed network, for the classification tasks of CN vs. AD, CN vs. pMCI and sMCI vs. pMCI.
+
+MATERIALS AND METHODS
+Studies of biomarkers for AD diagnosis are of great interest in the research fields.
+Among these bio markers, the shrinkage of the hippocampi is the best-established MRI biomarker to stage the progression of AD
+Therefore, the hippocampi are the most studied organs for MRI based AD diagnosis, and the hippocampal area is chosen to be the ROI of MRI in this work.
+As for PET images, published studies indicated that AD may cause the decline of [18] F-FDG uptake in both hippocampi and cortices
+Hence, when dealing with PET images, we tried different ROIs, i.e., containing only hippocampi, and containing both hippocampi and cortices.
+
+Image Acquisition
+Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database 1 .
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment (MCI) and early Alzheimer's disease (AD).
+In this work, we used the T1-MRI and the FDG-PET from the baseline and follow-up visit in ADNI, as these two modalities have the greatest number of images.
+The details about the data acquisition are interpreted on the ADNI website
+We generated two datasets in this work.
+The Segmented dataset, containing MR images and corresponding segmentation results, was chosen to verify the effect of the segmentation, and the Paired dataset, containing MR and PET images, to verify the effect of multi-modality images.
+In the Segmented dataset, we picked 2861 T1-MR images, including AD and cognitively unimpaired subjects.
+Basic information of the Segmented dataset is summarized in Table
+All images in the Segmented dataset were segmented using multi-atlas label propagation with the expectationmaximization (MALP-EM) framework 2
+MALP-EM is a framework for the fully automatic segmentation of MR brain images.
+The approach is based on multi-atlas label fusion and intensity-based label refinement, using an 1
+As for the Paired dataset, we used the following steps to generate it.
+For the same subject, we paired the MRI with the PET with (a) closest acquisition dates, (b) within 1 year since the MRI scan, and (c) at the time of the scan with the same diagnosis as the MRI.
+Among the acquired data, the MCI subjects were classified into pMCI and sMCI according to the DSM-5 criteria, that is, MCI should be defined as pMCI if it develops into AD within 3 years, or be defined as sMCI if it does not.
+Subjects without follow-up data for more than 3 years were ignored.
+Finally, we acquired 647 AD, 767 MCI (326 pMCI and 441 sMCI) and 731 cognitively unimpaired subjects over 1211 ADNI participants.
+All the information for these subjects is summarized in Table
+
+Data Processing
+The pre-processing of images was implemented by zxhtools
+In this work, MR images were reoriented and resampled to a resolution of 221 × 257 × 221 and with a 1 mm isotropic spacing using zxhreg and zxhtransform from zxhtools.
+Furthermore, in the Paired dataset, each PET image was rigid-registered to a respective MR image for the proceeding process.
+The hippocampal area was selected to be the region of interest (ROI) because of its great significance in AD diagnosis.
+In addition, due to limited computation ability, we cropped the ROI centered in the hippocampi.
+For the Segmented dataset, which includes the segmentation results, we directly calculated the center of the hippocampi as it has been shown in the segmentation results.
+For the Paired dataset, we acquired the central points of the MR images as follows.
+First, we randomly chose one MR image from the Paired dataset as a template.
+Then we registered the images from the Segmented dataset to the template image by affine-registration, thus calculating the average indices of the center in the template image.
+After that, we registered the template image to other MR images in the Paired dataset using affine-transformation and used the corresponding affine matrix to determine the center for each MR image.
+Finally, each PET image was rigid-registered to a respective MR image for the identification of the hippocampi's center.
+After the registration, PET images were transformed into a uniform isotropic spacing of 1 mm.
+After the centers of the ROIs were located, we dilated and cropped the ROIs to a region of size 96 × 96 × 48 in voxels from the center of hippocampi for MR images (see the red rectangles in Figures
+In the experiment on the Segmented dataset, we processed the cropped ROI and corresponding labels in three different ways.
+Three slightly different groups were obtained: ImageOnly, MaskedImage and Mask.
+The ImageOnly group contains MR raw images and maintains all the imaging information of the hippocampi and surrounding areas.
+The MaskedImage group is made up of MR images masked by binary labels, it considers both the original images and the segmentation results for the hippocampi as the inputs.
+The Mask group is made up of binary hippocampi segmentation labels, only indicating information about the shape and volume of the hippocampi.
+By comparing the classification performance using these three datasets, it can be judged whether the segmentation results have an important effect on AD diagnosis.
+The information for the three groups from the Segmented dataset is shown in Figures
+When it comes to the Paired dataset, we used two different methods to generate the patches of PET images.
+The group generated using the first method is called the Small Reception Field (SmallRF) group, which has the same reception field as the ROI of MR images with 1 mm isotropic spacing.
+The group generated using the second method is called the Big Reception Field (BigRF) group, which has the same orientation and ROI center but has a 2 mm isotropic spacing for each dimension, thus having a larger reception field but a lower spatial resolution.
+The information for the two groups from the Paired dataset is shown in Figures
+Finally, 70% of a dataset was used as the training set, 10% as the validation set, and 20% as the testing set by random sampling.
+Details of these subsets were shown in Supplementary Tables
+
+Methodology
+Convolutional neural network
+Unlike traditional methods which use manually extracted features of radiological images, CNNs are used to learn general features automatically.
+CNNs are trained with a back propagation algorithm while it usually consists of multiple convolutional layers, pooling layers and fully connected layers and connects to the output units through fully connected layers or other kinds of layers.
+Compared to other deep feedforward networks, CNNs have fewer connections and a smaller number of parameters, due to the sharing of the convolution kernel among pixels and are therefore easier to train and more popular.
+With CNNs prospering in the field of computer vision, a number of attempts have been made to improve the original network structure to achieve better accuracy.
+VGG
+VGGs further deepen the network based on AlexNet by adding more convolutional layers and pooling layers.
+Different from traditional CNNs, VGGs evaluate very deep convolutional networks for large-scale image classification, which come up with significantly more accurate CNN architectures and can achieve excellent performance even when used as a part of relatively simple pipelines.
+In this work, we built our network with reference to the structure of VGG.
+
+EXPERIMENTS
+In the Section "Data Type Analysis", we determined the proper types of data and ROIs through two experiments.
+In the Section "Multi-Modality AD Classifier", we constructed a set of VGG-like multi-modality AD classifiers, which considers both T1-MRI and FDG-PET data as inputs and provides predictions.
+In the Section "Classification of sMCI vs. pMCI and CN vs. pMCI Tasks", we trained and tested our networks with the pMCI and sMCI data.
+Finally, in the Section "Comparison With Other Methods" we compared our proposed method with state-of-the-art methods.
+
+Implementation Details
+All the networks mentioned above were programmed based on TensorFlow
+Training procedures of the networks were conducted on a personal computer with a Nvidia GTX1080Ti GPU.
+During the training, batch normalization
+To accelerate the training process and to avoid local minima, we used an ADAM optimizer
+The batch size was set to 16 when we trained single modality networks and to eight when we trained multi-modality networks.
+The number of epochs was set to 150, though the loss would generally converge after 30 epochs.
+Each training epoch took several minutes.
+During training, the parameters of the networks were saved every 10 epochs.
+The resulting models were tested using the validation data set.
+The accuracies and receiver operating characteristic (ROC) curves of the classification on the validation data were then calculated, and the model with the best accuracy was chosen to be the final classifier.
+
+Data Type Analysis
+In order to determine the proper data type for network training, we designed two experiments and evaluated the classification performances of models when they were fed with different data types.
+(1) Testing whether segmentation is needed in the MR images.
+We used three different groups from the Segmented Dataset, with or without segmentation, to show that segmentation is not necessary for a CNN.
+(2) Finding a proper PET ROI.
+Different spacings for PET images, i.e., the SmallRF and the BigRF groups from the Paired Dataset, were tested and we found that the classification model with the SmallRF group is similar to the model with the BigRF group in performance.
+All the models mentioned above were trained in the same network, as shown in Figure
+The output was given through a softmax layer.
+
+The Influence of Segmentation
+As mentioned above, segmentation plays an important role in traditional classification methods.
+However, segmentation is also known to be time-consuming.
+Additionally, CNN can extract useful features directly from raw images, as CNNs show a strong ability to locate key points in object detection tasks for natural images
+To verify the effect of segmentation, we segmented the AD and cognitively unimpaired subjects of T1-MR images with the MALP-EM algorithm
+In our assumption, segmentation can indicate the shapes, volumes, textures and relative locations of hippocampal areas.
+Therefore, the data obtained from the subjects formed three different groups, as shown in Figures
+The ImageOnly group contains raw MR images only; the Mask group is made up of binary hippocampal segmentation labels and the MaskedImage group is made up of MR images masked by the binary labels.
+For each model trained from these groups, accuracy and AUC were evaluated, as listed in Table
+Among all the three models, the model trained by the Mask group provided a favorable prediction, though inferior to those trained by the ImageOnly and the MaskedImage group.
+The results indicate  The Segmented dataset was used. 1 ACC, SEN, SPE, AUC denotes accuracy, sensitivity, specificity and area under curve, respectively.
+When testing, the numbers of true positive (TP), true negative (TN), false negative (FP), and false negative (FN) subjects were counted, as ACC = (TP+TN)/(TP+TN+FP+FN), SEN = TP/(TP+FN), SPE = TN/(TN+FP).
+AUC is obtained through calculating the area under the receiver operating characteristic (ROC) curve.
+For all four metrics, the values are between 0 and 100%, the higher, the better.
+that segmentation results do contain information needed for the classification, however, it is not necessary for the classification task since CNN is able to learn useful features without labeling the voxels.
+In addition, features from the region out of the hippocampi also provide further information to separate AD patients from normal ones.
+
+ROI Determination for PET Images
+Due to the limitation of GPU RAM and its computational ability, it was difficult to consider the entire image as the network input, as our proposed network only considered a region of 96 × 96 × 48 in voxels, which was still 2.91 times the input size of the original VGG (224 × 224 pixels × 3 channels).
+Hence, the selection of the ROI was of great importance, as only the features in the ROI were considered.
+As for the MR images, the selection of the ROI was of little doubt, because the hippocampal area was long enough to be the main concern of AD research
+However, the ROIs of PET images varied, as studies also attached great significance to metabolic changes in cortices, e.g., temporal lobes
+To verify the effects of cortices on the classification, we generated two groups from all PET images from the Paired dataset, the SmallRF and the BigRF groups, as shown in Figures
+The SmallRF group uses exactly the same reception field with the MRI ROI; the images in the BigRF group are eight times the volume of the images in the SmallRF group but have a lower spatial resolution.
+Two models were trained using these two groups, and their performance was evaluated by some metrics, as listed in Table
+The result showed that the two models behaved similarly.
+This is because although the SmallRF group has a higher spatial resolution, the BigRF group contains more features.
+Furthermore, in terms of multi-modality classification tasks, the SmallRF group might be better, because PET images in the SmallRF group were voxel-wisely aligned with paired MR images, which could help better locate the spatial features.
+Therefore, we chose the same ROI for both MR and PET images in the following experiments (see the red rectangles in Figures
+
+Multi-Modality AD Classifier
+The information a classifier can obtain, by using a single modality, is limited, as one medical imaging method can only profile one or several aspects of AD pathological changes, which is far from being complete.
+For example, T1-MR images provide a high-resolution brain structure but give little information about the functional information of the brain.
+Meanwhile, FDG-PET images are fuzzy but are better in revealing the metabolic activity of glucose in the brain.
+In order to take as much information of the brain as possible, we introduced a classification framework to integrate multi-modality information.
+The Paired dataset was used.
+To prepare the dataset, we first matched MR with PET images and transformed them into same world coordinates.
+After that, paired images of MR and PET were aligned by rigid registration to ensure that the voxels of the same indices in the paired images represent the same part of the brain.
+After the paired images were cropped with reference to the center point of MR images, the Paired dataset was obtained.
+To implement the multi-modality classifier, we proposed two different network architectures, as shown in Figure
+In Figure
+In these 4D images, the first three dimensions represent the three spatial dimensions, and the fourth one represents the channels.
+In Figure
+This network was trained in two strategies, denoted by B1 and B2.
+B1 was to train the model with weights shared for the convolutional layers.
+Meanwhile, B2 usedwas to update the weights of two VGG-11s separately.
+We trained five models based on the Paired dataset, that is, two single modality models (for MRI and PET respectively), and three multi-modality models (A, B1, and B2).
+The results are shown in Table
+As shown in Table
+Additionally, among the three multi-modality models, the model trained with strategy B1 had the highest accuracy and sensitivity, while the model trained with strategy B2 had the highest specificity and AUC.
+The Paired dataset was used.
+The best results were indicated in bold.
+
+Classification of sMCI vs. pMCI and vs. pMCI Tasks
+Simply classifying AD patients from normal controls is relatively easy but of little significance, as the development of AD can be observed easily by the behaviors of the patients.
+In addition, there are a lot of alternative indicators in clinical diagnosis.
+Therefore, the prediction of AD seems to be more meaningful, as one of the main concerns is telling pMCI from sMCI and normal individuals.
+As pMCI would progress to AD while the other two would not, identifying pMCI could give a prediction of the development of MCI, and thus have high reference value and clinical meaning.
+According to
+Therefore, we trained models with the CN vs. AD training set and tested the models with the CN vs. pMCI testing set and the sMCI vs. pMCI testing set, with the results shown in Table
+Though B1 performed slightly better in CN vs. AD task, B2 was superior in CN vs. pMCI and sMCI vs. pMCI tasks.
+These results indicate that features of MRI and PET tend to be more consistent when dementia is highly developed, since convolutional kernels of model B1 shared the weight, while those of B2 did not.
+
+Comparison With Other Methods
+In this part, we compared our method with those that were used in previous literature.
+We first compared our method with stateof-the-art research using 3D CNN-based multi-modality models as well
+They used the patch-based information of a whole brain to train or test their models and they integrated the information from the two modalities by concatenating the feature maps
+Table
+Note that our models used the data from multiple facilities and that our models only used the hippocampal area as the input.
+These would influence the behavior of our method.
+Moreover,
+cropping the hippocampi out as we did.
+
+DISCUSSION
+In this work, we proposed a VGG-like framework, with several instances, to implement a T1-MRI and FDG-PET based multimodality AD diagnosing system.
+The ROI of MRI was selected to be the hippocampal area, as it is the most frequently studied and is thought to be of the highest clinical value.
+Through the experiments, we proved that segmentation is not necessary for a CNN-based diagnosing system, which is different from the traditional machine learning based methods.
+However, registration is still needed, as the images we used were taken from different facilities and had different spacings and orientations.
+Although models obtained from the SmallRF and BigRF groups had similar performances, the ROI of PET was chosen to be the same as the MRI's, because the ROI of SmallRF was voxelwisely aligned with the ROI of the paired MRI.
+In short, only hippocampal areas were used as ROIs in our proposed methods, which is the main difference between our study and previous studies.
+Thus, we constructed a deeper neural network and fed it with medical images of higher resolution, as we supposed that the hippocampal area itself can serve as a favorable reference in AD diagnosis.
+"Since the ROI was selected, we introduced a multi-modality method to the classifier.
+Two networks and three types of models were proposed as listed in Table
+Among these three types of models, the model trained using strategy B1, which means that the MR and PET images were separately input for the convolutional layers, but with their convolutional kernels shared, performed the best in the CN vs. AD task.
+One possible explanation is that MR and PET images have some common features, and sharing weight helped the model to extract these features during the training process.
+Furthermore, we used proposed networks to train CN vs. pMCI and sMCI vs. pMCI classifiers, both of them indicated the potential of preclinical diagnosis using our proposed methods.
+We also followed
+The results were better than that of the model trained by sMCI and pMCI themselves, as shown in Table
+This is reasonable because the features of sMCI and pMCI are close to each other in the feature space and are difficult to differentiate, while those of CN and AD are widely spread making the classification a lot easier.
+The same conclusion can be obtained by testing the CN vs. AD model on the CN vs. pMCI dataset.
+Specifically, when the CN vs. AD model was used, the accuracy reached 76.90% for sMCI vs. pMCI and 87.46% for CN vs. pMCI, which was about 5% higher than the accuracy obtained using their own models.
+These results are also better than those of
+As for the future work, we only used two modalities (T1-MRI and FDG-PET) as inputs for this work.
+However, new modalities can easily be implemented based on the proposed networks.
+The interested new imaging modalities include T2-MRI
+Also, the features extracted by CNN are hard for human beings to comprehend, while some methods like attention mechanisms
+
+CONCLUSION
+To conclude, we have proposed a multi-modality CNN-based classifier for AD diagnosis and prognosis.
+VGG backbone, which is deeper than most similar studies, has been used and explored.
+The accuracy of models reached 90.10% for the CN vs. AD task, 87.46% for the CN vs. pMCI task and 76.90% for the sMCI vs. pMCI task.
+Our work also indicates that the hippocampal area with no segmentation can be chosen as the input.
+
+ETHICS STATEMENT
+Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.edu).
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment (MCI) and early Alzheimer's disease (AD).
+Since its launch more than a decade ago, the landmark public-private partnership has made major contributions to AD research, enabling the sharing of data between researchers around the world.
+For up-to-date information, see www.adni-info.org.
+
+
+as a sample of the original PET image is shown in Figure 1G.
+
+
+
+FIGURE 1 |
+FIGURE 1 | Demonstrations of the datasets and ROIs.
+(A-C) demonstrate the selected ROI of MR images.
+(A) is an axial slice, (B) is a sagittal slice, and (C) is a coronal slice.
+(D-F) are generated from the same MR image to demonstrate the Mask (D), MaskedImage (E), and ImageOnly (F) groups.
+(D) is a mask image of the segmentation of hippocampi.
+(E) is a image masked by hippocampal segmentation.
+(F) is a cropped image.
+(G-I) are generated from the same PET image to demonstrate the images in the SmallRF (H) and BigRF (I) groups, while (G) is the corresponding PET image.
+Among them, (H) is cropped from (G), and (I) is downsampled from (G).
+
+
+
+FIGURE 2 |
+FIGURE 2 | The architecture of the single modality classifier.
+
+
+
+FIGURE 3 |
+FIGURE 3 | The architecture of the multi-modality network (A,B).
+
+
+
+FIGURE 4 |
+FIGURE 4 | ROC curves of different models.
+(A-C) show the ROC curves for three tasks using different models.
+(A) shows the ROC curves for CN vs. AD task using model trained from protocol A, B1, and B2, while (B) shows the ROC curves for CN vs. pMCI task, (C) shows the ROC curves for sMCI vs. pMCI task, respectively.
+
+
+
+TABLE 1 |
+Summary of the studied subjects from Segmented dataset.
+
+
+
+TABLE 2 |
+Summary of the studied subjects from the Paired dataset.
+
+
+
+TABLE 3 |
+Summary of the models trained from the Mask, MaskedImage, and ImageOnly groups for CN vs. AD task.
+
+
+
+TABLE 4 |
+Summary of the models trained from the SmallRF and the BigRF groups for CN vs. AD task.
+
+
+
+TABLE 5 |
+Summary of the models trained from single modality protocols and three multi-modality protocols for CN vs. AD task.
+
+
+
+TABLE 6 |
+Summary of the models trained from three multi-modality protocols for CN vs. AD.
+
+
+
+TABLE 7 |
+Comparison of our proposed method and Liu's multi-modality method.Using B1 protocol, the CN vs. AD training set and the CN vs. AD testing set. 2 Using B2 protocol, the CN vs. pMCI training set and the CN vs. pMCI testing set.3UsingB1protocol, the CN vs. AD training but the CN vs. pMCI testing set.See Table9for reference.
+The best results were indicated in bold.
+
+
+
+TABLE 8 |
+Comparison of our proposed method and published AD diagnosis methods.Using B1 protocol, the CN vs. AD training set and the CN vs. AD testing set. 2 Using B2 protocol, the CN vs. sMCI training set and the CN vs. sMCI testing set.3UsingB2protocol, the CN vs. AD training but the CN vs. sMCI testing set.See Table9for reference.
+The best results were indicated in bold.
+
+
+
+TABLE 9 |
+Comparison of the performance of models trained from the CN vs. AD training set and the tasks' own training set.
+
+
+Li et al. (2014)used a deep learning framework to predict the missing data.Table8compares the previous multi-modality models with our proposed models.
+Among all the results listed our results are favorable in the CN vs. AD task and are the best in the sMCI vs. pMCI task.

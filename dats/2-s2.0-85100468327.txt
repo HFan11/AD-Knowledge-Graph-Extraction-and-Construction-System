@@ -1,0 +1,398 @@
+Alzheimer’s Disease Projection From Normal to Mild Dementia Reflected in Functional Network Connectivity: A Longitudinal Study
+A Longitudinal Study of dFNC in AD Progression compared with those of a healthy brain.
+We also found reorganized patterns (i.e., both increases and decreases) in the cognitive control network and default mode network connectivity by progression from normal to mild dementia.
+Similarly, we found a reorganized pattern of between-network connectivity when the brain transits from normal to mild dementia.
+However, the connectivity between visual and sensorimotor network connectivity decreases in vmAD compared with that of a healthy brain.
+Finally, we found a normal brain spends more time in a state with higher connectivity between visual and sensorimotor networks.
+Our results showed the temporal and spatial pattern of whole-brain FNC differentiates AD form healthy control and suggested substantial disruptions across multiple dynamic states.
+In more detail, our results suggested that the sensory network is affected more than other brain network, and default mode network is one of the last brain networks get affected by AD In addition, abnormal patterns of whole-brain dFNC were identified in the early stage of AD, and some abnormalities were correlated with the clinical score.
+Background: Alzheimer's disease (AD) is the most common age-related problem and progresses in different stages, including mild cognitive impairment (early stage), mild dementia (middle-stage), and severe dementia (late-stage).
+Recent studies showed changes in functional network connectivity obtained from resting-state functional magnetic resonance imaging (rs-fMRI) during the transition from healthy aging to AD.
+By assuming that the brain interaction is static during the scanning time, most prior studies are focused on static functional or functional network connectivity (sFNC).
+Dynamic functional network connectivity (dFNC) explores temporal patterns of functional connectivity and provides additional information to its static counterpart.
+Method: We used longitudinal rs-fMRI from 1385 scans (from 910 subjects) at different stages of AD (from normal to very mild AD or vmAD).
+We used group-independent component analysis (group-ICA) and extracted 53 maximally independent components (ICs) for the whole brain.
+Next, we used a sliding-window approach to estimate dFNC from the extracted 53 ICs, then group them into 3 different brain states using a clustering method.
+Then, we estimated a hidden Markov model (HMM) and the occupancy rate (OCR) for each subject.
+Finally, we investigated the link between the clinical rate of each subject with state-specific FNC, OCR, and HMM.
+Results: All states showed significant disruption during progression normal brain to vmAD one.
+Specifically, we found that subcortical network, auditory network, visual network, sensorimotor network, and cerebellar network connectivity decrease in vmAD
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common age-related dementia, typically affecting individuals over 65 years of age
+AD usually progresses slowly in several stages, including mild (early stage), moderate (middle stage), and severe (late stage)
+To date, there is no way to cure AD, but some medications can decelerate its progress
+Therefore, predicting the progression from a normal stage to mild cognitive impairment and further to AD itself is an important step toward early medical intervention.
+Resting-state functional magnetic resonance imaging (rs-fMRI) that indirectly measures neural processing in the brain based on the blood oxygenation can be used to identify spatially distributed networks in the brain.
+In recent years, functional connectivity or its network analog functional network connectivity (FNC), including dynamic (dFC/dFNC) and static (sFC/sFNC), achieved from rs-fMRI time series has uncovered a great deal of knowledge about the brain dysconnectivity in various neurological disorder including schizophrenia
+In particular for AD, previous studies reported a reduction in the default-mode network FC in AD compared with mild cognitive impairment (MCI) patients and healthy subjects
+Another study reported a difference in the FC of sensorimotor network (SMN), visual network (VSN), and default mode network of healthy control (HC) subjects and AD patients
+By assuming that FNC is invariant, or static over time, many of the AD-related studies mentioned above have focused on sFC/sFNC and ignored dFC/dFNC.
+Indeed, unlike conventional static functional network connectivity (sFNC), which is obtained from the correlation within an entire time series, dFNC refers to the connectivity between any pair of brain networks within sub-intervals of time series
+In fact, dFNC research suggests that cognitive deficits and clinical symptoms associated with many neurological disorders do not only depend on the strength of the connectivity between any pair of brain regions but also on the variation of connectivity strength of those regions over time
+In recent years, a few papers studied dFNC in AD.
+For instance, we investigated whole-brain dFNC in AD and subcortical ischemic vascular disease (SIVD)
+Another study explored the temporal properties of dFNC associated with dementia in Parkinson's disease
+However, the longitudinal dFNC changes from cognitive normal to mildly then severely cognitively impaired has not been extensively explored.
+In the current study, we explored the temporal dynamics of the whole-brain FNC from 1385 rs-fMRI scans of HC and very mild AD (vmAD).
+We used a sliding window approach followed by the k-means clustering method to identify a set of connectivity states
+Next, we calculated between-state transition probability via hidden Markov model (HMM) and the amount of the time each subject spends in a state, called occupancy rate or OCR, to model the temporal properties of dFNC.
+We investigated the correlation between HMM and OCR features with the clinical dementia rating scale sum of boxes (CDR-SOB) scores.
+In addition, we explored the link between state-specific connectivity features with CDR-SOB.
+Finally, we trained a support vector machine (SVM) to predict from HC to vmAD based on the sFNC connectivity features and dFNC features, including HMM and OCR.
+
+MATERIALS AND METHODS
+
+Participants
+In this study, the data we used are from the longitudinal Open Access Series of Imaging Studies (OASIS)-3 cohort, which was collected from several ongoing studies in the Washington University Knight Alzheimer Disease Research Center over 15 years
+This data contains 1385 rs-fMRI imaging and related clinical and demographic data at the time of scanning (from 910 subjects) with age ranging from 42 to 95 years.
+For each subject, the imaging data, demographic, and clinical dementia rating (CDR) scale were used in any stage of cognitive functionality.
+All participant must have CDR ≤ 1 at the time of the clinical core assessment and once the participant reached CDR = 2 or CDR-SOB > 9, they were no longer eligible for the study
+We evaluated the cognitive stage of the participants at the time of the scanning based on the CDR-SOB scores and organized them in 2 groups, including healthy control or HC (CDR-SOB = 0), very mild AD or vmAD (0.5 ≤ CDR-SOB ≤ 9)
+In total, we have 1028 scan of HC, 357 scans of vmAD patients.
+The demographic information is provided in Table
+
+Imaging Data Acquisition
+Two Trio 3T with a 20-channel head coil was used to collect imaging data (Siemens Medical Solutions United States, Inc).
+High resolution T2 * -weighted functional images were obtained by an echoplanar imaging or EP sequence with TE = 27 ms, TR = 2.2 s, flip angle = 90 • ;, slice thickness = 4 mm, slice gap = 4 mm, matrix size = 64, and voxel size of 1 mm × 1 mm × 1.25 mm.
+The duration of the scanning was 6 min.
+
+Data Preprocessing
+The analytic pipeline used in this study is shown in Figure
+The following subsections describe the detail of this pipeline.
+In the first step (Step 1 in Figure
+We used statistical parametric mapping (SPM12 1 ) default slice timing routines to correct differences in image acquisition time between slices.
+The 1
+Rigid body motion correction was then applied to account for subject head movement, with 3-dimensional brain translations and 3-dimensional rotations estimated.
+Next, the imaging data underwent spatial normalization to the standard Montreal Neurological Institute (MNI) space using the echoplanar imaging (EPI) template and the default bounding box provided by the SPM toolbox and was resampled to 3 × 3× 3 mm
+Finally, a Gaussian kernel with a full width at half maximum (FWHM) of 6 mm was used to smooth the fMRI images.
+In this study, a set of robust network priors were used to extracted comparable components across subjects from the OASIS dataset.
+The network priors were extracted via the NeuroMark pipeline
+This framework performed group ICA with model order as 100 on two healthy controls datasets, human connectome project (HCP
+The extracted independent components (ICs) from the two datasets were matched by comparing the corresponding grouplevel spatial maps.
+If they show a higher spatial correlation than a given threshold (=0.4), we consider that the IC pairs were reproducible.
+The reproducible ICs pairs were further evaluated by examining their spatial activations and lowfrequency fluctuations of their corresponding time-courses (TCs).
+53 pairs of ICs were identified as meaningful and reproducible, arranging into 7 functional domains based on their anatomic and functional prior knowledge.
+These ICNs included subcortical network (SCN), auditory network (ADN), sensorimotor network (SMN), visual network (VSN), cognitive control network (CCN), default-mode network (DMN), and cerebellar network (CBN).
+The less noisy ICNs captured from the GSP dataset (Note that there were 53 ICNs from HCP which had similar spatial patterns) were chosen as the spatial network priors to back-reconstruct spatial maps and TCs for each subject.
+Also, to remove the remaining noise and artifact, the following post-processing procedures were performed on the time-courses signal before calculating the dynamic functional network connectivity (dFNC) between timecourses of ICs: (1) detrending linear, quadratic, and cubic trends; (2) conducting multiple regressions of the 6 realignment parameters and their temporal derivatives; (3) despiking detected outliers; and (4) low-pass filtering with a cut-off frequency of 0.15 Hz. Figure
+Also, Table
+Step 1
+
+Functional Network Connectivity
+Step 2
+Step 2 Step 4
+Step 5 FNCs with a size of 53 × 53.
+Also, we calculated static FNC for the entire time of recording.
+Step3: After vectorizing the FNC matrixes, we have concatenated them, and then a k-means clustering with correlation as distance metrics was used to group FNCs to three distinct clusters.
+Step4: Then, based on the state vector, we calculated between-state transition probability or hidden Markov model (HMM) features and occupancy rate (OCR) for each subject.
+In total, nine HMM features and three OCR were estimated from the state vector of each subject.
+Step5: To find a link between FNC features, including sFNC and dFNC feature with clinical dementia rating scale sum of boxes (CDR-SOB), we used partial correlation by accounting for age, gender.
+each subject.
+In addition, for each subject i = 1 . . .
+N, the dynamic FNC (dFNC) of the whole brain was estimated via a sliding window approach, as shown in Figure
+A tapered window obtained by convolving a rectangle (window size = 20 TRs = 44 s) with a Gaussian (σ = 3) was used to localize the dataset at each time point.
+It is worth mentioning that previous studies suggested that a window size between 30 and 60 s is a reasonable choice for capturing the dFNC fluctuation
+Based on this past work, we used the 44 s as the window size.
+A covariance matrix, based on Pearson correlation, was calculated to measure the dFNC between ICs.
+The dFNC estimates of each window for each subject were concatenated to form a (C × C × T) array (where C = 53 denotes the number of ICNs and T = 139), which represented the changes in brain connectivity between ICNs as a function of time (Step 2 in Figure
+
+Clustering and dFNC Latent Features
+We used k-means clustering to partition dFNC window into a set of separated clusters (states).
+Based on the elbow criterion (the ratio of within to between cluster distance), we found that the optimal number of clusters (i.e., k) is 3.
+We used correlation based on Pearson correlation as a distance metric in the clustering algorithm in 1000 iterations
+The output of this step is 3 states for all subjects and subject-specific state vector.
+The state vector shows that the state of the whole-brain FNC of each subject at a specific time.
+In the next step, we calculated the between-state transition probability based on HMM.
+The transition probability, a ij , is the probability of the system to transition from state j at time t to state i at time t+1.
+In addition, we computed the OCR of dFNCs in each state (Step 4 in Figure
+In addition, for each subject, we averaged all dFNC belongs to a state as her/his state-specific FNC.
+In more detail, each subject has multiple dFNC in each state.
+Then, in each state, we used the average of dFNC (i.e., the average of 1378 connectivity features) of each subject as her/his statespecific FNC.
+
+Statistical Analysis
+To assess the link between dFNC features, including statespecific FNC, OCR, and HMM with CDR-SOB, we used partial correlation by accounting for age and gender.
+We performed statistical analysis on all 1378 whole-brain connectivity features, 9 HMM features, and 3 OCR features, separately (Step 5 in Figure
+All p values have been adjusted by the Benjamini-Hochberg correction method for multiple comparisons
+The number of null hypothesis in state-specific FNC, OCR, and HMM were 1378, 3, and 9, respectively.
+
+Dementia Progression Is Associated With Functional Network Connectivity
+In the next step, we explored whether functional network connectivity, including sFNC and dFNC features, can predict the progression of AD.
+We put subjects into two different groups.
+The first group contains those subjects who remained in HC, whom we call them unconverted HC or uc-HC stage within the next 5 years of the first scan, and the second group contains those subjects which their cognitive functionality changed from HC to vmAD (0.5 ≤ CDR-SOB ≤ 9), and we call c-HC.
+The first group contains 85 subjects (48 females and 37 males) with the mean age at 74.6478 and range between 65 and 85.
+The second group contains 40 subjects (18 females and 22 males) in which the mean age is 74.6878, and the range of the age is between 64 and 85.
+We did not observe a significant difference between the age and gender of these two groups (age: Cohen's d = 0.16, two-sample t test t(123) = -0.90,
+p = 0.36; gender: Cohen's d = 0.22, twosample t test t(123) = 1.19, p = 0.23).
+We trained a SVM based on sFNC, OCR, and HMM features from the baseline rs-fMRI (around 5 years prior to the conversion) to differentiate these two groups.
+One major problem in this classification is imbalanced datasets.
+To deal with this problem, we have used a data augmentation method called adaptive synthetic (ADASYN) sampling approach.
+In this method, we adaptively generated synthetic data for the minatory class based on the distribution of both classes.
+ADASYN generates synthetic data for the part of minority class that is harder to learn than those minority samples, which are easier to learn.
+In this study, we have a dataset with 85 samples in major class and 40 samples in minor class.
+Using ADASYN, we generated 45 samples of synthetic data for the minor class to make the dataset balanced
+We trained an SVM with polynomial kernel function, as shown in Eq. 2. to classify two classes
+where p is a positive integer value.
+There are a few advantages of using SVM.
+(1) SVM works well for high dimensional data.
+(2) SVM is effective when the number of the sample is smaller than the number of dimensions, which is a common problem for neuroimaging data.
+(3) SVM can handle nonlinearity in the data using a kernel trick.
+This provides an advantage over linear classifiers like logistic regression.
+However, choosing the appropriate kernel function is not easy.
+In addition, due to the limited number of samples, it is not advisable to use a neural network classifier.
+It is worth mentioning that an imbalanced dataset is a challenging problem in SVM classification
+Our study used ADASYN to generate synthetic data of the minatory class to elevate this problem.
+In more detail, we used the ADASYN-based sample and a subset of the major class (i.e., uc-HC, N = 45, the ADASYN sample size) and trained a model and then we tested that model on real unseen data from both uc-HC and c-HC groups.
+We iterate this 10 times.
+This number was chosen arbitrary.
+It worth mentioning that changing the number of iterations would not change the classification result.
+In each iteration, we used five-fold crossvalidation method in which we used 80% of the training data to train a model and 20% of the data to validate that.
+The hyperparameters of the SVM classifier were selected trough an optimization process.
+We calculated the classification accuracy, sensitivity, specificity, and area under the receiver operating characteristic curve (AUC) to assess the classification performance.
+Accuracy, sensitivity, and specificity were quantified by: Accurcy = TP + TN TP + FN + TN + FP
+(3)
+where TP, FN, TN, and FP denoted the number of uc-HC subjects correctly predicted, the number of c-HC subjects classified as uc-HC subject, the number of uc-HC correctly predicted, and the number of un-HC subjects classified as c-HC subject, respectively.
+
+RESULTS
+
+Dynamic Functional Connectivity States
+Figure
+In all states, we observed strong positive connectivity within SMN and VSN, ad CBN.
+The Correlation Between State-Specific FNC and CDR-SOB Figure
+The significant correlations (uncorrected p < 0.05) are shown in red (positive correlation) and blue (negative correlation).
+Also, a significant correlation that passes the multiple comparisons is marked by asterisks.
+In state 1, we observed a significant and negative correlation between within-SCN, within-SMN, within-VSN connectivity, and CDR-SOB.
+This means that this connectivity decreases by progression from normal to mild dementia states.
+In this state, we found a reorganized (i.e., both positive and negative) patterns in the correlation between within-DMN connectivity and within CCN-connectivity with CDR-SOB.
+A similar reorganized correlation pattern was observed between the between-network connection and CDR-SOB.
+Specifically, a more reorganized pattern was observed in the correlation between SCN connectivity with the rest of the brain.
+In state 2, similar to state 1, we observed a negative correlation between the connectivity of within-SCN, within-SMN, within-VSN, within-CBN connectivity with CDR-SOB.
+We also observed both positive and negative correlations between the connectivity of CCN and DMN and CDR-SOB.
+Compared with the other states, this state showed a more significant correlation of within-CCN connectivity and CDR-SOB, in which many of them were positive.
+Also, within-DMN connectivity showed more negative connectivity compared with that of other states.
+This state also showed a positive correlation between connectivity between SMN and CBN and CDR-SOB.
+Also, we observed both positive and negative correlations between CDR-SOB and between-network connectivity in state 2.
+State 3 showed a significant and negative correlation between the within-SMN, within-VSN, within-DMN, within-CCN, and within-CBN connectivity and CDR-SOB.
+The amount of significant correlation between within-SMN, within-VSN, and between SMN and VSN connectivity with CDR-SOB was more than those of the other states.
+Also, this state showed a significant positive correlation between VSN and CBN connection and CDR-SOB.
+Overall, we observed a reorganized pattern in the correlation between CDR-SOB and betweennetwork connection in this state.
+
+The Correlation Between Temporal Properties of dFNC and CDR-SOB
+We calculated the partial correlation between CDR-SOB and temporal features of dFNC (i.e., OCR and HMM) by controlling the age and gender.
+We found a positive correlation between OCR of state 1 and CDR-SOB (r = 0.07, corrected p = 0.009) and a negative correlation between OCR of state 3 and CDR-SOB (r = -0.14, corrected p = 2e -7 ).
+Also, we observed a negative correlation between CDR-SOB and a 11 , i.e., the transition from state 1 to state 1 (r = 0.07, corrected p = 0.02), and a positive correlation between CDR-SOB and a 33 , i.e., the transition within state 3 (r = -0.11,
+corrected p = 0.0001).
+
+Both Healthy and Patient Brain Follow Similar State Pattern
+Since the number of HC scan is more than the number of patient ones, we applied the clustering method to their dFNC of HC and patients, separately.
+The results are shown in Figure
+This figure shows that our approach captured a similar brain state in both groups.
+We used the Pearson correlation between states' FNC to assess the similarity between them.
+The correlation between state 1 of HC with state 1 of the patient group, between state 2 of HC with state 2 of the patient group, and between state 3 of HC with state 3 of the patient group were 0.9903 (N = 1378, p < 0.001), 0.9825 (N = 1378, p < 0.001), and 0.9921 (N = 1378, p < 0.001), respectively (Figures
+In addition, the OCR followed a similar pattern with the results when we concatenated all subjects.
+State2 shows the highest OCR among all three states in both groups.
+HC subjects have higher OCR in state 1 than  patients (p < 0.01), while patients have higher OCR in state 3 than that of HC subjects (p < 0.01) (Figures
+These results proved that the HC subject's dFNC did not dominate the state pattern.
+In addition, to reference the states easier in this paper, we put a name on each state.
+Since both healthy subjects and patients spend more than 50% of their scanning time in state 2, we called this state a baseline.
+Since vmAD patients spend more time in state1, we called this state the vmAD-related state, and finally, we call state 3, which healthy subjects spend more than in this state than state 2, as an HC-related state.
+Only in state 3, we observed a significant link between CDR-SOB and FNC after FDR correction (shown by asterisks).
+We observed a decrease in sensory network FNC by AD's progression.
+Also, we observed a reorganized pattern in the CCN FNC pattern.
+
+Changing the Number of States Does Not Change the Results
+To test whether the number of clusters (or states) would change the results or not, we applied the same clustering method for k = 5, k = 7, and k = 10.
+2(k = 5), state 1 (k = 7), and state 8 (k = 10).
+State3 (k = 3) is similar to state 3(k = 5), state 5 (k = 7), and state7 (k = 10).
+Increasing k above the optimized value of k = 3 yields states whose similarity to those in the optimized value weakens as k grows.
+However, the two states (states 1 and 3) in the optimized clustering whose OCR is significantly linked to CDR-SOB are highly replicable up to k = 7 and whose occupancy has a replicable significant relationship to CDR-SOB.
+Table
+
+Dementia Progression Associated With Functional Network Connectivity
+Using baseline FNC features, including sFNC, HMM, and OCR, from whole-brain FNC, we successfully predicted the conversion from the normal state to vmAD by classifying those subjects converted to the mildly impaired stage (i.e., c-HC) from those stayed unchanged within 5 years, i.e., uc-HC.
+The average accuracy, sensitivity, specificity, and AUC in this classification was 75, 72, 78, and 81%, respectively.
+
+DISCUSSION
+In this study, we explored the dynamic of whole-brain FNC of HC (CDR-SOB = 0) and vmAD (0.5 ≤ CDR-SOB ≤ 9) subjects from the longitudinal rs-fMRI
+Using a data-driven approach, we extracted 53 ICs for the whole brain and used a sliding window approach followed by  The bold values are the significant correlation after multiple comparisons.
+All corrected p values are in the parentheses.
+a clustering method to study dFNC of this dataset.
+We found that the connectivity between VSN and SMN is dynamic by a transition from positive connectivity in state 3 to moderate positive connectivity in state 2 and negative connectivity in state 1.
+In addition, the connectivity between SMN and VSN with the rest of the brain changes from negative connectivity in state 3 to other to state with more positive connectivity.
+Besides SMN and VSN, we found a dynamical pattern in CCN connectivity.
+Overall, we found the whole-brain FNC is highly dynamic.
+This result argues the previous AD-related literature that mainly ignored the dynamic behavior of brain connectivity.
+Although a few studies explored the dFNC recently
+This replicable platform can generate ICs and replicate that across the different datasets.
+This would help reproduce similar brain states for FNC across different datasets, which is very important when studying dynamics
+We found within-SMN FC decreased by the transition from a HC to a vmAD.
+This pattern was observed in all 3 states.
+Previous studies showed a decrease in SMN FC is shown in AD patients compared with that of HC subjects
+In more detail, we found the FC within the postcentral gyrus decrease in vmAD than the HC brain.
+Postcentral gyrus has a key role in somatic sensation, including pain and temperature
+Also, a previous study showed an impairment of pain and temperature sensation in mild dementia
+Therefore, dysconnectivity in postcentral gyrus can potentially explain the impairment of somatic sensation in the early stage of dementia and suggest a prospective study.
+In addition, we observed that the VSN FC, in the particular fusiform gyrus, decreases when the brain progress from the healthy state to mild dementia.
+As previous studies showed, the fusiform gyrus is involved in face recognition, and alteration in the connectivity between this brain region and other subregions of VSN causes impairment in face recognition
+Functional dysconnectivity between fusiform and the rest of the VSN potentially can explain the impairment of face recognition in the early stage of AD progression
+Also, results indicated reduced FC among the brain sensory networks, i.e., ADN, SMN, and VSN, by progression from HC state to vmAD.
+Information processing integration of multisensory signals is a hallmark of self-awareness.
+For instance,
+Disconnection among sensory networks in mild dementia patients than that of healthy subjects can potentially explain the underlying mechanism of self-awareness discrepancy in AD patients.
+The current findings suggest future studies for exploring a causal link between dysconnectivity in the sensory network and lack of self-awareness in AD patients.
+We also observed a disrupted temporal and spatial pattern in the connectivity between CBN and other brain networks.
+In all states, we found a decrease in the connectivity between CBN and SCN by advancement from the HC brain to vmAD.
+However, the connectivity between CBN and SMN, and between CBN and VSN are higher in vmAD than the HC subjects.
+This finding is consistent with a previous study that showed a reorganized pattern in the connectivity between cerebellar subregions and DMN, VSN, SMN
+However, we did not detect a significant pattern in the correlation between the clinical rate and the connectivity between CBN and DMN.
+In addition, we found a disrupted pattern in DMN connectivity by having reduced connectivity in state 3, and both increased and reduced connectivity in state 1 and state 2 for vmAD than the normal brain.
+Based on sFC, previous studies reported both increase
+Another study reported no significant difference in DMN connectivity between AD patients with HC
+Although a small sample size might affect the statistical power, as previously shown in a study of major depression
+Similarly, we observed a disrupted spatial and temporal pattern in CCN connectivity.
+In addition, we found a reorganized pattern in the connectivity between CCN and other networks such as SCN, ADN, SMN, VSN, DMN, and CBN.
+A recent study showed a reorganized pattern in the connectivity between inferior parietal lobule, as a part of CCN, with default mode, salience, executive control, and SMNs
+Our new finding provides new knowledge about the reorganized pattern between CNN and the rest of the brain.
+The decrease in the CCN FC might explain the loss in the functional integrity of the CCN network, and the increased FC showed that vmAD patients potentially utilize additional brain subregions to compensate for the impairment of cognitive function.
+We also found that the FC within SCN, including caudate, thalamus, and putamen, decreased in vmAD patients compared with that of normal subjects.
+This result is consistent with a previous study that showed subjects with the risk of AD showed less connectivity in caudate and thalamus
+Next, we calculated the correlation between clinical rate and OCR and HMM.
+We found HC subjects spend more time in state 3, which showed the highest positive connectivity among sensory networks, i.e., VSN, SMN, and ADN, is less in vmAD patients than the normal subjects.
+Also, we found the dwell time of state1, which showed the least connectivity among sensory networks, is higher for the patients with mild dementia.
+This finding provides further evidence of the effect of disease on the dysregulating temporal properties of FNC.
+A recent study showed that AD subjects spend more time in a sparsely connected state in which the motor network isolated from the rest of the brain
+Our result is consistent with the study mentioned above by showing that the subjects with mild severity in the early stage of AD spend more time in state 1, which shows sparse connectivity among brain networks.
+However, another part of our result that shows normal brain spend more time in state 3, in which SMN is isolated from most parts of the brain except VSN, contradicts the result of the aforementioned study.
+In addition, spending more time in a state with lower connectivity between SMN and VSN and less time in a state with stronger connectivity between SMN and VSN by subject in the early stage of AD emphasizes more on the role of this connectivity by the transition from the normal stage to the early stage of AD.
+Also, our result is consistent with another study from our group on a different dataset that showed that AD patients spend more time in the state with lower connectivity and spend less time in a state with higher connectivity
+Prior work has demonstrated the regional patterns of AD pathology and their overlap with DMN regions
+Therefore, we expected DMN to be impacted, as demonstrated in prior studies.
+However, we found that associations between primary sensory/motor networks were most correlative to symptom severity.
+Sensory and motor networks are considered relatively spared from AD pathology, at least until later stages of the disease.
+These exciting findings may suggest that although relatively preserved and potentially due to high signals in these regions, regions involved in crossmodal sensory/motor integration are damaged.
+This information provides a sensitive measure of neural damage in AD (potentially more sensitive than primary degeneration regions).
+Our result might suggest that DMN is the last brain network that is affected by AD.
+Our result might also explain the previous study's finding that motor function changes might predate the cognitive impairments and dementia onset
+However, a prospective study is needed to find which specific sensory or motor function changes sign early AD.
+Also, our new result about dysconnectivity in the somatosensory network might explain why physical exercise would prevent AD
+Neurofeedback is a form of real-time biofeedback regulating brain activity and promoting brain function and behavioral performance
+In this technique, the neural signals are recorded from the brain.
+A feedback mechanism is then used to control the neural signal features through a feedback loop in the form of audio, video, or a combination of them.
+This closed-loop therapy has been widely used for major depressive disorder
+A recent study used the amount of delta, theta, alpha, and beta activity from EEG signal as a control signal in neurofeedback to improve cognitive function in AD
+We introduced the sensory network's connectivity as a potential control marker in the neurofeedback in the current study.
+More specifically, our result suggests a possible benefit of administering the neurofeedback during the vmAD-related state and switching the brain state from vmAD-related to HCrelated state.
+Although many technical limitations of real-time implanting neurofeedback system integrated with dFNC exist
+Our results suggest a future benefit of dFNC states in neurofeedback in AD treatment.
+Finally, we show that both dFNC and sFNC can be used to predict the conversion from healthy to vmAD based on their baseline recording.
+Previous literature proposed a few models to predict conversion from MCI to AD
+For example, one study used 75 state MCI, i.e., who did not convert to AD, and 51 progressive MCI, i.e., who changed to AD within 3 years, modeled a SVM and could classify them with 79.37% accuracy based on the brain connectivity features
+Another study used structural and genetic data for prediction from converted normal subjects to mild cognitive impairment from the unconverted normal subject within 5 years and could predict the conversion from normal to mild cognitive impairment with AUC of 85%
+However, the model for the conversion from the normal brain to mild impairment state based on their baseline recording has not extensively reported.
+The current study shows a potential for FNC in predicting from healthy aging to mild impairment stage.
+
+Limitations and Future Study
+There are some limitations to this work.
+The choice of window size is an implicit assumption about the dynamic behavior in that a short window captures more rapid fluctuations, whereas a longer window does more smoothing.
+Future work can be accomplished to evaluate the range of dynamics more comprehensively
+In addition, we used SVM to compute the classification between individuals who converted to vmAD, and those did not convert.
+Other more advanced methods like neural network-based classification can potentially increase the prediction accuracy.
+However, applying neural network-based classification is almost impossible due to the limited number of samples in the longitudinal data used in this classification.
+
+CONCLUSION
+In work reported here, we extend this existing body of knowledge into the dynamic realm, investigating how timevarying properties of whole-brain FNC changes by the transition from healthy aging to vmAD.
+We found a state-specific reorganized pattern in the whole-brain FNC of vmAD patients.
+We observed a decreased connectivity among sensory networks, including SMN, VSN, and ADN, in mild dementia state.
+This provides a piece of new knowledge about the sensory network dysconnectivity in the early stage of AD with mild symptom severity.
+This potentially marked that sensory network is one of the brain networks that got affected more than the other brain network in the early stage of AD.
+In addition, we found a reorganized pattern, i.e., both increase and decrease in DMN and CCN connectivity.
+A similar changed pattern was observed in between-networks connectivity.
+We also found that mild dementia is linked to the temporal pattern on FNC by increasing the amount of the time staying in a sparsely connected state with lower functional connectivity among sensory networks.
+These results emphasized that not only the transition from the normal state to mild dementia changes the connectivity strength, but also it dysregulates the temporal properties of FNC.
+
+
+
+FIGURE 1 |
+FIGURE 1 | Analytic pipeline.
+Step1: The time-course signal of 53 ICNs have been identified using group-ICA in the Neuromak template.
+Step2: After identifying 53 ICNs, a taper sliding window was used to segment the time-course signals and then calculated the functional network connectivity (FNC).
+Each subject has 139FNCs with a size of 53 × 53.
+Also, we calculated static FNC for the entire time of recording.
+Step3: After vectorizing the FNC matrixes, we have concatenated them, and then a k-means clustering with correlation as distance metrics was used to group FNCs to three distinct clusters.
+Step4: Then, based on the state vector, we calculated between-state transition probability or hidden Markov model (HMM) features and occupancy rate (OCR) for each subject.
+In total, nine HMM features and three OCR were estimated from the state vector of each subject.
+Step5: To find a link between FNC features, including sFNC and dFNC feature with clinical dementia rating scale sum of boxes (CDR-SOB), we used partial correlation by accounting for age, gender.
+
+
+
+FIGURE 2 |
+FIGURE 2 | In this study, we adopted the NeuroMark pipeline to extract reliable intrinsic connectivity networks (ICNs, in total, 53 components) that are replicated across independent datasets.
+All 53 independent components identified by group-ICA in the Neuromark template.
+We put them in seven networks, including subcortical network (SCN), auditory network (AND), visual sensory network (VSN), sensorimotor network (SMN), cognitive control network (CCN), default mode network (DMN), and cerebellar network (CBN).
+
+
+
+FIGURE 4 |
+FIGURE 4 | Correlation between FNC of each state and clinical score.
+A significant negative correlation between within-SCN, within-SMN, within-VSN, and within-CBN connectivity and the clinical dementia rating scale sum of boxes (CDR-SOB) scores.
+A disrupted pattern (i.e., both positive and negative) correlation was found between within-CCN and within DMN with CDR-SOB.
+A similar disrupted pattern was observed between CDR-SOB and between-networks connectivity.
+However, we consistently observed negative connectivity between CDR-SOB and the connectivity among sensory networks.
+The color bar shows the strength of the connectivity.
+SCN, subcortical network; ADN, auditory network; SMN, sensorimotor network; VSN, visual network; CCN, cognitive control network; DMN, default-mode network; and CBN, cerebellar network.
+The significant correlation that passes the multiple comparisons is marked by asterisks.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Dynamic functional network connectivity in healthy control and patients.
+(A) The three identified dFNC states using the k-means clustering method in healthy control (HC).
+(B) Occupancy rate (OCR) of HC in each state.
+HCs have the highest OCR in state 2 (corrected p < 0.001).
+OCR of state 3 is higher than the OCR of state 1 in HC subjects (corrected p < 0.01).
+(C) The three identified dFNC states using the k-means clustering method in patients (vmAD).
+(D) Occupancy rate (OCR) of HC in each state.
+vmAD subjects have the highest OCR in state 2 (corrected p < 0.001).
+OCR of state 1 is higher than OCR of state 2 in patients (corrected p < 0.01).
+(E) Correlation between FNC of each state and clinical score in the only patient group.
+SCN, subcortical network; ADN, auditory network; SMN, sensorimotor network; VSN, visual network; CCN, cognitive control network; DMN, default-mode network; and CBN, cerebellar network.
+The significant correlation that passes the multiple comparisons is marked by asterisks.
+
+
+
+FIGURE 6 |
+FIGURE 6 | Dynamic functional connectivity states result with different k values.
+(A) The dFNC states identified using the k-means clustering method with k = 5. (B) The dFNC states identified using the k-means clustering method with k = 7. (C) The dFNC states identified using the k-means clustering method with k = 10.
+The color bar shows the strength of the connectivity.
+SCN, subcortical network; ADN, auditory network; SMN, sensorimotor network; VSN, visual network; CCN, cognitive control network; DMN, default-mode network; and CBN, cerebellar network.
+
+
+
+TABLE 1 |
+Demographic and clinical information.
+
+
+
+Preprocessing Neuromark Sub 1 Sub 2 Sub N State vector State1 State2 State3 State Occupancy rate and hidden Markov model Link with clinical rate sFNC Time
+
+
+
+TABLE 2 |
+Component labels.
+
+
+State 3 showed the strongest connectivity within SMN and within VSN among all states.
+In addition, this state had the highest connectivity between SMN and VSN.
+Also, this state was separated from other states by showing the lowest negative connectivity between SMN and VSN with the rest of the brain.
+State 1 showed the lowest connectivity between SMN and VSN.
+Finally, we measured the OCR of each subject in state1, state2, and state 3. OCR represents the amount of time each subject spends in each state.
+Results showed that subjects spent an average of 23.78, 52.17, and 24.05% in state 1, state 2, and state 3, respectively.
+
+
+
+State 2(% 52.17) State 1 (% 23.78) State 3 (% 24.05
+
+
+
+TABLE 3 |
+The link between occupancy rate of each state and CDR-SOB.

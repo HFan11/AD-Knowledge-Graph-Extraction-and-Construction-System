@@ -1,0 +1,268 @@
+A novel age-informed approach for genetic association analysis in Alzheimer’s disease
+Background: Many Alzheimer's disease (AD) genetic association studies disregard age or incorrectly account for it, hampering variant discovery.
+Methods: Using simulated data, we compared the statistical power of several models: logistic regression on AD diagnosis adjusted and not adjusted for age; linear regression on a score integrating case-control status and age; and multivariate Cox regression on age-at-onset.
+We applied these models to real exome-wide data of 11,127 sequenced individuals (54% cases) and replicated suggestive associations in 21,631 genotype-imputed individuals (51% cases).
+Results: Modeling variable AD risk across age results in 5-10% statistical power gain compared to logistic regression without age adjustment, while incorrect age adjustment leads to critical power loss.
+Applying our novel AD-age score and/or Cox regression, we discovered and replicated novel variants associated with AD on KIF21B, USH2A, RAB10, RIN3, and TAOK2 genes.
+Conclusion: Our AD-age score provides a simple means for statistical power gain and is recommended for future AD studies.
+
+Background
+Genetics plays an important role in the onset of Alzheimer's disease (AD) with an estimated heritability ranging from 58 to 79%
+Over the last decade, genome-wide association studies (GWAs) of AD have identified over 40 susceptibility loci
+With each updated GWA, the increasing sample sizes and improved imputation quality of low frequency variants have enabled additional discoveries.
+A complementary approach is to use next generation sequencing to directly genotype every variant, alleviating the need for imputation and enabling rare variant discoveries.
+To this aim, the Alzheimer's Disease Sequencing Project (ADSP) undertook whole-exome sequencing (WES) of 10,836 individuals (53% cases) which led to the discovery of novel AD risk genes
+The ADSP individuals were part of existing AD cohorts and were selected based on a risk score accounting for APOE ε2 and APOE ε4 alleles, sex, and age at onset (AAO) for cases and age at last exam or death for controls
+This design promoted the inclusion of controls least likely to develop AD by age 85 years and was shown to maximize statistical power compared to other approaches such as using age-matched cases/controls
+Across prior AD GWAs, the common approach to association testing was to perform case-control logistic regression analyses adjusted for age.
+Theoretically, this adjustment should account for increasing AD prevalence with age in the population, independently of genetic factors
+However, most AD cohorts include the AAO for cases and last known age without cognitive impairment for controls.
+This common design leads to the average age of cases being lower than the average age of controls.
+If one performs a case-control logistic regression with a traditional age adjustment, the model will infer that age has a negative effect on AD risk, meaning that younger individuals are more likely to develop AD.
+Since advanced age is the greatest risk factor for AD
+The latter conundrum is particularly relevant to the ADSP where, by design, the average age of controls is 10 years greater than that of cases.
+In this work, we aimed to improve on prior AD GWA studies by evaluating and implementing models that inherently, correctly account for age effects on AD.
+To this aim, we estimated the statistical power of different models on simulated data, reflecting various age differences between cases and controls as found in AD cohorts.
+These models included logistic regression on AD case-control status adjusted and not adjusted for age, linear regression on a newly designed score which weights case-control status by age, and multivariate Cox regression on AAO, which models cumulative conversion risk across the life span.
+We then applied these models to exome-wide AD data with a next generation sequenced discovery sample (5075 controls and 6052 cases) and replicated suggestive associations in an independent sample of genotype-imputed individuals (10,539 controls and 11,092 cases).
+
+Methods
+
+Power simulations
+We performed power simulation studies to evaluate the performance of different AD genetic association models (R.v3.5.1).
+We first simulated population level data that mimics population AD prevalence estimates at ages 60-100 across a range of age-related risk effect estimates (OR 1.01-1.25)
+The age effect estimate on AD status (OR 1.
+We then simulated AD case-control datasets by random sampling of cases and controls from the population level data.
+To simulate realistic AD case-control datasets
+Simulated subjects were restricted to the age range of 60-100, after which cases and controls were randomly drawn abiding by model conditions.
+To evaluate how age differences between cases and controls affect power for variant discovery, subjects were further sampled to three conditions: (1) no mean age difference between cases and controls, (2) cases' mean age is 5 years younger than in controls, and (3) cases' mean age is 10 years younger than in controls.
+These conditions, particularly condition 2, are similar to those observed for common AD GWAS cohorts
+The power was calculated based on 1000 simulation replicates, and the linear regression on the AD-age score was estimated with bootstrap-based inference (100 resamplings).
+Each replicate included either 1000 cases and 1000 controls, or 5000 cases and 5000 controls, respectively testing for a significance level of α = 0.05 or α = 5 × 10 -7 (i.e., exome-wide significance).
+These parameters respectively mimic common AD GWA cohorts and the ADSP WES study
+We evaluated power for a range of realistic effect sizes (OR 1.05, 1.10, 1.20, 1.50) and common minor allele frequency (MAF) 0.01, 0.05-0.45
+(at 0.05 increments) Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.edu).
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment (MCI) and early Alzheimer's disease (AD).
+
+Participants
+All samples were available from publicly released ADrelated cohorts, with phenotype and genotype ascertainment described elsewhere
+The European individuals in ADSP WES
+The ADSP WES selection criteria have already been introduced; the selection scheme led to a 10 years' average age difference between cases and controls
+For AMP-AD, the reported age for cases was not always AAO; thus, the average age of controls was only 2 years greater than that of cases (Fig.
+As a replication sample, we mega-analyzed 34 cohorts, each corresponding to a specific SNP array applied to an AD case/control dataset
+Some of these cohorts correspond to the same AD study but individuals were genotyped on different platforms.
+These cohorts are heterogeneous in terms of age reported and are extensively described elsewhere
+When multiple ages were available for a given subject, the order of priority for which age to use was AAO then age at examination then age at death in affected individuals, and age at death then age at last examination in control participants
+We removed any duplicated individuals across these cohorts and the discovery sample.
+
+Genetic quality control
+For each cohort included in our analysis, we first determined the ancestry of each individual with SNPWeights v2.1
+Prior to ancestry determination, variants were filtered based on genotyping rate (< 95%), MAF < 1% and Hardy-Weinberg equilibrium (HWE) in controls (p < 10 -6 ).
+By applying an ancestry percentage cut-off > 75%, the samples were stratified into five super populations: South-Asians, East-Asians, Americans, Africans and Europeans, and an admixed group composed of individuals not passing cut-off in any single ancestry.
+Since most individuals were Europeans and to avoid spurious associations, we focused on European ancestry individuals.
+Carriers of known pathogenic mutations on APP, PSEN1, PSEN2, and MAPT were excluded from our analysis.
+Discordant pathology cases, defined as any clinically diagnosed AD individual with Braak stage below III or neuritic plaques level below moderate, were excluded from our analysis.
+The joint called set of exome variants in the ADSP WES is composed of 1,524,414 SNPs
+We restricted downstream analysis to these variants, meaning that variants called only in ADSP WGS or AMP-AD were not included.
+To remove potential sequencing artifacts, we applied several quality control (QC) steps to each dataset.
+First, SNPs were checked for consistency with the Haplotype reference consortium (HRC) panel
+This check included flipping SNPs reported on incorrect strand and excluding SNPs with more than 10% MAF difference with the HRC panel.
+Second, we removed SNPs that deviated from HWE in controls (p < 10 -6 ) or that had a genotyping rate below 95%.
+Third, we removed any variants which had a flag different than PASS in gnomADv3
+For analysis, we considered 124,679 variants with minor allele count above 10, to ensure a minimum number of carriers.
+In each cohort of the replication sample, SNPs with less than 95% genotyping rate or deviating from HWE in controls (p < 10 -6 ) were excluded.
+Then, we used the gnomAD database
+The latter are defined as SNPs for which the probe may have variable affinity due to the presence of other SNP(s) within 20 bp and with MAF > 1%.
+Individuals with more than 5% genotype missingness were excluded.
+Imputation was performed on the Michigan imputation server using the TOPMed reference panel
+Per cohort, only variants with sufficient imputation quality (r 2 > 0.3) were included in the replication analysis (Table
+Identity-by-descent was run to determine the relatedness between all individuals using PLINKv1.9
+In the discovery sample, we kept only one version of duplicated individuals and removed first degree relatives keeping AD relatives over controls, and when both had a concordant diagnosis, we kept the younger case or older control.
+In the replication sample, we removed any individuals already present in the discovery, and for duplicate subjects, we kept the copy from the SNP array with the highest genome coverage.
+On the subset of remaining individuals, we computed genetic principal components to account for population Table
+Details per cohort included in the discovery and replication can be found respectively in Tables
+HC healthy controls, AD Alzheimer's disease For the third model, we defined the AD-age score as follows:
+log(1-weight (age)) -0.5 for controls -log (weight (age)) + 0.5 for cases
+The score was designed to abide by the following rules: cases and controls should be clearly separated (maximum value for controls -0.5 and minimum value for cases + 0.5, ensuring that the minimum difference between cases/controls is greater than 1), younger cases should have higher scores compared to older cases, and older controls should have lower scores than younger ones.
+This ensured that younger cases and older controls were at opposite extremes of the score spectrum and assumed these individuals influenced genetic associations the most.
+We defined two weight (age) functions: (A) corresponds to a linear effect of age between 60 and 100 and (B) accounts for the changes in AD prevalence slope in this age range
+For the analysis of exome-wide data, all models had two subversions: (1) adjusted for sex and 10 first principal components of population structure and (2) additionally adjusted for APOE ε2 and APOE ε4 alleles.
+The associations for the first three models were estimated with PLINKv2.0
+The Cox regression associations were estimated with gwasurvir
+We calculated the number of independent variants with PLINKv1.9
+Thus, the exome-wide threshold was set at p < 5 × 10 -7 (0.05/ 87034, Bonferroni correction) and the suggestive threshold at p < 1 × 10 -5 (1/87304).
+A 1 Mb region around the APOE locus was excluded from the reported results due to its well-established association with AD.
+We did not correct for the number of tested models due to their high correlation (cf.
+Results), nor for the two versions of adjustment (APOE ε2 and APOE ε4 alleles adjusted or not), as in Bis et al.
+Thirty-one variants passing the suggestive threshold in the discovery were evaluated in the replication sample.
+We disentangled spurious and true associations based on their associations in the replication dataset.
+SNVs with discordant direction of effect were considered to be spurious associations.
+Variants which had a concordant direction of effect and p < 1.6 × 10 -3 (0.05/31, Bonferroni correction) in the same regression model, allowing different covariate adjustment, were considered significant, while those with p < 0.05 were considered to replicate nominally.
+For more robust and powerful inference with the ADage score, which is not normally distributed, we performed bootstrapping (100 resamplings) consistent with what was done in power simulations.
+To limit the computational burden, we only computed the bootstrapbased inference for the set of replicated variants, which allowed us to compare the significance of the linear regression on AD-age score with the Cox regression for true associations.
+Last, we performed a fixed-effect meta-analysis using the metafor package in R
+
+Gene and variant annotations
+Each variant consequence was annotated with the Ensembl Variant Effect Predictor toolset
+Nonsynonymous variants, such as missense or frameshift variants, may lead to loss or gain of function that may affect the enzymatic activity, stability, and/or interaction properties at the protein level.
+Synonymous variants, by contrast, do not typically directly affect protein function; however, they can influence protein expression both at the transcriptional and translational level
+To disentangle the role of the synonymous common variants as potential expression quantitative trait loci (eQTL), we queried the largest brain cis-eQTL metaanalysis which included 1433 post-mortem brain samples from the AMP-AD and CommonMind Consortium
+Lastly, for mapped genes harboring significant variants, we queried the AMP-AD fixed-effect meta-analysis of gene differential expression between AD and control individuals across brain tissues
+
+Results
+
+Age-informed AD risk estimation increases power for genetic association testing
+Power outcomes for specific illustrations of simulation analyses, considering a range of age-related risk effect estimates, are presented in Fig.
+An overview of power differences between different association models for all simulations' conditions, varying the AD risk associated with age, is provided in Figure
+In simulations where the mean age of cases was younger than in controls, adjustment for age in logistic regression analyses compared to not adjusting for age led to critical power loss (Fig.
+The AD-age score model performed best overall across all four models, displaying power increases regardless of age differences between cases and controls, particularly for the estimated age effect on AD status
+Power gain of the AD-age score with regard to logistic regression not adjusted for age was on average 5%, up to 10% in some scenarios (Figure
+The Cox regression on AAO performed worse than the unadjusted logistic regression when the cases and controls were age matched and better when the age difference increased (Fig.
+Power gain of the AD-age score with regard to Cox regression was between 5 and 10% in some scenarios, notably when cases controls were age matched (Figure
+When age difference is 10 years, the AD-age score and Cox regression performs similarly with some scenarios showing 1% increased power for AD-age while others showed 0-2% power gain for the Cox regression.
+Figure
+
+Exome-wide association
+Exome-wide association with AD in the discovery sample for all four models and their subversions are shown in (Figure
+QQ plots for each exome-wide association show no inflation (λ < 1.1), except for the Cox regression adjusted for APOE ε2 and APOE ε4 allele dosages (λ = 1.19) (Table
+The logistic regression adjusted for age showed no associations above the suggestive threshold outside of the APOE region (Figure
+Across the three other models, a total of 31 variants passed suggestive significance, including 5 known AD risk loci
+The parameter estimates of these models: (i) OR (odd ratio) for logistic regression, (ii) exp(β) for the linear regression, and (iii) HR (hazard ratio) for the Cox regression were found to be highly correlated (Figure
+The known TREM2 missense single nucleotide variant (SNV) (rs75932628) was exome-wide significant in the three models.
+Other known associations included synonymous SNVs on PILRA (rs2405442), MS4A6A (rs12453), NSF (rs199533, lead SNV of a locus also encompassing MAPT and KANSL1), and a frameshift deletion on ABCA7 (rs547447016) (Fig.
+The association on PILRA was exome-wide significant in the AD-age score linear regression and suggestive in the Cox regression but did not reach the suggestive threshold in the logistic regression.
+Similarly, the association on ABCA7 was suggestive in both AD-age score and Cox regressions, but not in the logistic regression.
+On the contrary, the association on MS4A6A was suggestive in the logistic regression and in the AD-age score and just below significance in the Cox regression.
+The association on NSF/ MAPT/KANSL1 was suggestive in all three models.
+In addition to these 5 known exonic associations, associations on 26 other exonic loci were at least suggestive in one of the three models (Table
+Logistic regression (Figure
+The logistic regression model showed no novel suggestive association.
+The AD-age score linear regression, prior to bootstrap (Figure
+The Cox regression produced several exome-wide significant associations in the discovery with concordant direction of effect in the replication including NAV2 (rs11828836), RAB10 (rs149622307), and the USH2A and RIN3 associations, also found in the AD-age score linear regression.
+Among suggestive associations in the Cox regression, two significantly replicated: RAB10 synonymous SNV (rs149622307) and TAOK2 synonymous SNV (rs4077410), and three nominally replicated: KIF21B synonymous SNV (rs2297911), and the previous missenses on USH2A and RIN3.
+NAV2 synonymous SNV (rs11828836) did not reach nominal significance (p = 0.17), but it was imputed with sufficient quality in only 9235 individuals (less than 50% of imputed individuals).
+CDKL1 intronic SNV (rs61981931) did not reach nominal significance (p = 0.09).
+For the set of replicated variants (Table
+Seven out of the ten exonic variants were most significant in the linear regression on the AD-age score, while only two performed best in the Cox regression, those on KIF21B and TAOK2, and one in the logistic regression, on MS4A6A (Figure
+After meta-analysis, the variants located on RAB10, TREM2, PILRA, MS4A6A, and RIN3 were exome-wide significant (p < 5 × 10 -7 ) (Table
+
+Functional annotation
+Among the mapped genes (Table
+At the nominal significance level, TAOK2 and KIF21B synonymous variants were also associated with the expression of their respective genes.
+Among nearby genes with FDRsignificant eQTL association, PVRIG was the strongest association at the PILRA locus, KANSL1-AS1 at the NSF/MAPT/KANSL1 locus, and INO80E at the TAOK2 locus (Table
+In the meta-analysis of differential gene expression across brain tissues in AMP-AD, TREM2, KANSL1, RAB10, MS4A6A, and RIN3 were found to be significantly upregulated in AD compared to control individuals, while TAOK2 was significantly downregulated (reported associations were FDR-significant, Table
+
+Discussion
+In the AD data simulation, we showed that incorrectly adjusting for age led to critical power loss and that weighting the known effect of age on AD risk in the phenotype increased statistical power for variant discovery.
+Testing these models on real AD data confirmed our simulation observations and enabled the discovery of novel variants modulating AD risk.
+
+Previous literature
+The main prior AD WES study aimed to address the age adjustment conundrum in the ADSP WES data by implementing three different logistic regression models: the main one being unadjusted for age, while the other two were age adjusted
+However, given that cases were on average younger than controls, the age adjustment was in the opposite direction of the true age effect on AD risk.
+It is perhaps unsurprising, therefore, that there were no replicated findings from the two ageadjusted models (only associations from the main ageunadjusted model in the ADSP discovery were replicated)
+An alternative approach has been to use Cox regression on AAO for improved power compared to logistic regression that only considers case-control status.
+Cox regression has proven successful in predicting an individual's AD conversion risk by calculating a polygenic hazard score
+However, it needs to abide by several assumptions, including proportional hazards across age.
+Several studies have shown that Cox regression performs better than logistic regression on case-control data when AAO is available
+Fig.
+The age-adjusted logistic regression has no suggestive association (dashed line, p < 1 × 10 -5 ).
+The main causal variant on TREM2 is exome-wide significant (solid line, p < 5 × 10 -7 ) in the other three models.
+Among suggestive associations, (i) known AD associations are in red and (ii) novel associations which replicate (p < 0.05) in an independent dataset are in blue (cf Table
+Colored dots were bootstrapped in the AD-age score model (see the "Methods" section).
+The minimum p value from the adjustment models for each main model is displayed as in
+Effect corresponds to OR (odds ratio) for logistic regression on AD status not adjusted by age (LogReg), exp(β) for linear regression on AD-age score (LinReg), and HR (hazard ratio) for multivariate Cox regression on age-at-onset (CoxReg).
+Correlation between these measures is high for suggestive associations as shown on Figure
+P p value, m model subversion.
+Subversion codes are (1) adjusted for sex and 10 first principal components of population structure and (2) additionally adjusted for APOE ε2 and APOE ε4 alleles.
+Two types of weighted AD-age score were used with (A) corresponding to a linear effect of age between 60 and 100 and (B) accounting for the changes in AD prevalence slope in this age range
+Cox was previously applied to AD GWA, using genotype-imputed data overlapping partially with the ADSP sample used here, and led to the discovery of novel associations
+Alternative approaches have been proposed when Cox regression's assumptions are violated as in AD GWA, including age stratification
+Our proposed AD-age score offers additional flexibility without these assumptions and it can accommodate age information other than AAO such as age-at-study and age-at-death.
+Unlike Cox regression models, the AD-age score can be flexibly incorporated as a quantitative outcome into conventional tools (e.g., PLINK) for GWAS and new methods (e.g., BOLT-LMM, SAIGE) for analysis of large/biobank scale genetic data with related samples.
+Additionally, the linear and logistic regressions are faster than Cox regression and thus more advantageous for larger datasets
+Oversampling cases with early AAO and controls with late censoring time for exome sequencing is an efficient design because it directs limited study resources towards subjects that are most useful for discovering the genetic associations of AD in the original cohorts
+We proposed the AD-age score for improved power in the discovery stage and validated the findings using an independent replication sample.
+Although the hypothesis testing is appropriate in the discovery stage with extreme sampling, it is worth noting that the estimated genetic effect/odds ratio may not represent that in the whole population
+To obtain unbiased genetic effect estimations of AD risk in the whole population, it may be advisable to turn to more advanced methods that can explicitly address the biased sampling design (e.g.,
+
+Potential disease mechanisms
+The novel variants identified through our exome-wide association, with the exception of the USH2A SNV, are located on genes previously linked to AD, re-enforcing our confidence in these associations (Table
+Our main finding is a rare variant on RAB10 passing the exome-wide threshold in discovery and surviving Bonferroni correction in the replication.
+RAB proteins are key regulators of vesicular trafficking and play a major role in the endolysosomal and retromer pathways known to be linked to AD
+Another rare RAB10 SNV was shown to segregate with AD resilience in pedigrees at risk for AD and RAB10 was shown to be upregulated in AD brains
+RAB10 knockdown significantly decreased Aβ 42 and Aβ 42 /Aβ 40 ratio in neuroblastoma cells
+Silencing of RAB10 decreased β-amyloid peptides (Aβ) and increased soluble ectodomain of APP β (sAPPβ)
+Moreover, phosphorylated Rab10 was prominent in neurofibrillary tangles in the hippocampus of AD individuals but scarce in controls
+Mechanistically, the JNK-interactin protein 1 (JIP1) mediates the anterograde transport of Rab10positive cargo to axonal tips which promotes axonal growth and is critical for proper neuronal function
+JIP1 also regulates anterograde and retrograde transport of APP along axons
+These molecular mechanisms suggest that Rab10 could play a role in APP trafficking along axons.
+Additionally, our exome-wide analysis identified a missense variant on Rab interactor 3 (RIN3).
+Common variants in a locus near RIN3 and SLC24A4 were reported to be associated with AD susceptibility
+Increased RIN3 expression in APP/PS1 mouse models was shown to correlate with endosomal dysfunction and altered axonal trafficking and processing of APP
+For these reasons, the Rab-related involved in the endolysosomal and retromer pathways have been considered as promising therapeutic targets for AD
+Two common exonic variants, on TAOK2 and KIF21B, were identified as suggestive in our discovery analysis and replicated (Bonferroni corrected and nominally, respectively).
+Previous AD GWAS summary statistics show a concordant direction of effect with our analysis
+TAOK2 was shown to be phosphorylated in AD and frontotemporal lobar degeneration brains.
+Its expression was colocalized with tangles and its inhibition reduced tau phosphorylation
+Further, KIF21B is involved in neuronal and synaptic signaling and increased KIF21B expression levels were associated with more severe AD pathology
+
+Limitation
+For common synonymous variants, the regulated gene and true causal variant remain uncertain because our study focused on exomes and we cannot perform a genome-wide colocalization analysis.
+The causal variant may be intergenic and in linkage disequilibrium with a common synonymous variant identified in our analysis.
+Thus, future genome-wide studies are warranted to help disentangle which nearby genes are regulated, notably for the novel common loci encompassing KIF21B and TAOK2.
+
+Conclusion
+Correctly accounting for the risk-increasing effect of age on AD is an efficient means of increasing statistical power.
+Thus, our AD-age score should prove useful in future AD genetic association studies to enable the discovery of additional novel variants.
+
+
+
+Fig. 1
+Fig. 1 Proposed AD-age score visualization and its distribution in the discovery and replication samples.
+a Illustration of the proposed AD-age scores with a linear and a piecewise definition of the weight (age) function (see the "Methods" section).
+b, c Cases (AD) and controls (CN) age distribution in the discovery, composed of next generation sequencing data, and in the replication, composed of SNP-array imputed data, and d, e their respective AD-age score distributions
+
+
+
+Fig. 3 (
+Fig. 3 (See legend on next page.)
+
+
+AG019757, R01 AG021547, R01 AG027944, R01 AG028786, P01 NS026630, and Alzheimer's Association), the Heights-Inwood Columbia Aging Project (WHICAP) (RF1 AG054023), the University of Washington Families (VA Research Merit Grant, NIA: P50AG005136, R01AG041797, NINDS: R01NS069719), the Columbia University Hispanic Estudio Familiar de Influencia Genetica de Alzheimer (EFIGA) (RF1 AG015473), the University of Toronto (UT) (funded by Wellcome Trust, Medical Research Council, Canadian Institutes of Health Research), and Genetic Differences (GD) (R01 AG007584).
+The CHARGE cohorts are supported in part by National Heart, Lung, and Blood Institute (NHLBI) infrastructure grant HL105756 (Psaty), RC2HL102419 (Boerwinkle), and the neurology working group is supported by the National Institute on Aging (NIA) R01 grant AG033193.
+The CHARGE cohorts participating in the ADSP include the following: Austrian Stroke Prevention Study (ASPS), ASPS-Family study, and the Prospective Dementia Registry-Austria (ASPS/PRODEM-Aus), the Atherosclerosis Risk in Communities (ARIC) Study, the Cardiovascular Health Study (CHS), the Erasmus Rucphen Family Study (ERF), the Framingham Heart Study (FHS), and the Rotterdam Study (RS).
+ASPS is funded by the Austrian Science Fond (FWF) grant number P20545-P05 and P13180 and the Medical University of Graz.
+The ASPS-Fam is funded by the Austrian Science Fund (FWF) project I904), the EU Joint Programme -Neurodegenerative Disease Research (JPND) in frame of the BRIDGET project (Austria, Ministry of Science), and the Medical University of Graz and the Steiermärkische Krankenanstalten Gesellschaft.
+PRODEM-Austria is supported by the Austrian Research Promotion agency (FFG) (Project No. 827462) and by the Austrian National Bank (Anniversary Fund, project 15435).
+ARIC research is carried out as a collaborative study supported by NHLBI contracts (HHSN268201100005C, HHSN268201100006C, HHSN268201100007C, HHSN268201100008C, HHSN268201100009C, HHSN268201100010C, HHSN268201100011C, and HHSN268201100012C).Neurocognitive data in ARIC is collected by U01 2U01HL096812, 2U01HL096814, 2U01HL096899, 2U01HL096902, 2U01HL096917 from the NIH (NHLBI, NINDS, NIA and NIDCD), and with previous brain MRI examinations funded by R01-HL70825 from the NHLBI.
+CHS research was supported by contracts HHSN268201200036C, HHSN268200800007C, N01HC55222, N01HC85079, N01HC85080, N01HC85081, N01HC85082, N01HC85083, N01HC85086, and grants U01HL080295 and U01HL130114 from the NHLBI with additional contribution from the National Institute of Neurological Disorders and Stroke (NINDS).
+Additional support was provided by R01AG023629, R01AG15928, and R01AG20098 from the NIA.
+FHS research is supported by NHLBI contracts N01-HC-25195 and HHSN268201500001I.
+This study was also supported by additional grants from the NIA (R01s AG054076, AG049607, and AG033040) and NIND S (R01 NS017950).
+The ERF study as a part of EUROSPAN (European Special Populations Research Network) was supported by European Commission FP6 STRP grant number 018947 (LSHG-CT-2006-01947) and also received funding from the European Community's Seventh Framework Programme (FP7/2007-2013)/grant agreement HEALTH-F4-2007-201413 by the European Commission under the programme "Quality of Life and Management of the Living Resources" of 5th Framework Programme (no.
+QLG2-CT-2002-01254). High-throughput analysis of the ERF data was supported by a joint grant from the Netherlands Organization for Scientific Research and the Russian Foundation for Basic Research (NWO-RFBR 047.017.043).
+The Rotterdam Study is funded by Erasmus Medical Center and Erasmus University, Rotterdam; the Netherlands Organization for Health Research and Development (ZonMw); the Research Institute for Diseases in the Elderly (RIDE); the Ministry of Education, Culture and Science; the Ministry for Health, Welfare and Sports; the European Commission (DG XII); and the municipality of Rotterdam.
+Genetic data sets are also supported by the Netherlands Organization of Scientific Research NWO Investments (175.010.2005.011,
+911-03-012), the Genetic Laboratory of the Department of Internal Medicine, Erasmus MC, the Research Institute for Diseases in the Elderly (014-93-015; RIDE2), and the Netherlands Genomics Initiative (NGI)/Netherlands Organization for Scientific Research (NWO) Netherlands Consortium for Healthy Aging (NCHA), project 050-060-810.
+All studies are grateful to their participants, faculty, and staff.
+The content of these manuscripts is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health or the US Department of Health and Human Services.
+The four LSACs are the Human Genome Sequencing Center at the Baylor College of Medicine (U54 HG003273), the Broad Institute Genome Center (U54HG003067), The American Genome Center at the Uniformed Services University of the Health Sciences (U01AG057659), and the Washington University Genome Institute (U54HG003079).
+Biological samples and associated phenotypic data used in primary data analyses were stored at Study Investigators institutions, and at the National Cell Repository for Alzheimer's Disease (NCRAD, U24AG021886) at Indiana University funded by NIA.
+Associated Phenotypic Data used in primary and secondary data analyses were provided by Study Investigators, the NIAfunded Alzheimer's Disease Centers (ADCs), and the National Alzheimer's Coordinating Center (NACC, U01AG016976) and the National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site (NIAGADS, U24AG041689) at the University of Pennsylvania, funded by NIA.
+This research was supported in part by the Intramural Research Program of the National Institutes of Health, National Library of Medicine.
+Contributors to the Genetic Analysis Data included Study Investigators on projects that were individually funded by NIA, and other NIH institutes, and by private US organizations, or foreign governmental or nongovernmental organizations.
+The NACC database is funded by NIA/NIH Grant U01 AG016976.
+NACC data are contributed by the NIA-funded ADCs: P30 AG019610 (PI Eric Reiman, MD), P30 AG013846 (PI Neil Kowall, MD), P30 AG062428-01 (PI James Leverenz, MD), P50 AG008702 (PI Scott Small, MD), P50 AG025688 (PI Allan Levey, MD, PhD), P50 AG047266 (PI Todd Golde, MD, PhD), P30 AG010133 (PI Andrew Saykin, PsyD), P50 AG005146 (PI Marilyn Albert, PhD), P30 AG062421-01 (PI Bradley Hyman, MD, PhD), P30 AG062422-01 (PI Ronald Petersen, MD, PhD), P50 AG005138 (PI Mary Sano, PhD), P30 AG008051 (PI Thomas Wisniewski, MD), P30 AG013854 (PI Robert Vassar, PhD), P30 AG008017 (PI Jeffrey Kaye, MD), P30 AG010161 (PI David Bennett, MD), P50 AG047366 (PI Victor Henderson, MD, MS), P30 AG010129 (PI Charles DeCarli, MD), P50 AG016573 (PI Frank LaFerla, PhD), P30 AG062429-01 (PI James Brewer, MD, PhD), P50 AG023501 (PI Bruce Miller, MD), P30 AG035982 (PI Russell Swerdlow, MD), P30 AG028383 (PI Linda Van Eldik, PhD), P30 AG053760 (PI Henry Paulson, MD, PhD), P30 AG010124 (PI John Trojanowski, MD, PhD), P50 AG005133 (PI Oscar Lopez, MD), P50 AG005142 (PI Helena Chui, MD), P30 AG012300 (PI Roger Rosenberg, MD), P30 AG049638 (PI Suzanne Craft, PhD), P50 AG005136 (PI Thomas Grabowski, MD), P30 AG062715-01 (PI Sanjay Asthana, MD, FRCP), P50 AG005681 (PI John Morris, MD), and P50 AG047270 (PI Stephen Strittmatter, MD, PhD).
+
+
+Statistics, association models, and AD-age scoreWe considered four main models: logistic regression on AD diagnosis adjusted for age, logistic regression on AD diagnosis, linear regression on a score integrating casecontrol status and age, and multivariate Cox regression on AAO.
+When AAO was not available, the first known age with AD diagnosis was used.
+Our analyses removed individuals younger than 60 and censored maximum age at 100.
+We considered controls below 60 as uninformative and cases below 60 as early onset AD potentially due to a causal mutation.
+
+
+
+Table 3
+Sample sizes, minor allele frequency, and imputation quality for the identified variants.
+MAF minor allele frequency, R-square (Rsq) Imputation quality

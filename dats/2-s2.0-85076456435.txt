@@ -1,0 +1,115 @@
+A metabolite‐based machine learning approach to diagnose Alzheimer‐type dementia in blood: Results from the European Medical Information Framework for Alzheimer disease biomarker discovery cohort
+Introduction: Machine learning (ML) may harbor the potential to capture the metabolic complexity in Alzheimer Disease (AD).
+Here we set out to test the performance of metabolites in blood to categorize AD when compared to CSF biomarkers.
+Methods: This study analyzed samples from 242 cognitively normal (CN) people and 115 with AD-type dementia utilizing plasma metabolites (n 5 883).
+Deep Learning (DL), Extreme Gradient Boosting (XGBoost) and Random Forest (RF) were used to differentiate AD from CN.
+These models were internally validated using Nested Cross Validation (NCV).
+Results: On the test data, DL produced the AUC of 0.85 (0.80-0.89),
+XGBoost produced 0.88 (0.86-0.89) and RF produced 0.85 (0.83-0.87).
+By comparison, CSF measures of amyloid, p-tau and t-tau (together with age and gender) produced with XGBoost the AUC values of 0.78, 0.83 and 0.87, respectively.
+Discussion: This study showed that plasma metabolites have the potential to match the AUC of wellestablished AD CSF biomarkers in a relatively small cohort.
+Further studies in independent cohorts are needed to validate whether this specific panel of blood metabolites can separate AD from controls, and how specific it is for AD as compared with other neurodegenerative disorders.
+
+Introduction
+At present, the diagnosis of Alzheimer disease-type dementia (AD) is based on protein biomarkers in cerebrospinal fluid (CSF) and brain imaging together with a battery of cognition tests.
+Diagnostic tools based on CSF collection are invasive while brain-imaging tools are still costly, and therefore, there is a need to identify noninvasive tools for early detection as well as for measuring disease progression.
+In recent years, an increasing number of studies have examined blood metabolites as potential AD biomarkers
+The advantages of looking at blood metabolites are that they are easily accessible but also that they represent an essential aspect of the phenotype of an organism and hence might act as a molecular fingerprint of disease progression
+Therefore, blood AD markers could potentially aid early diagnosis and recruitment for trials.
+Here we utilized data generated as part of the European Medical Information Framework for AD Multimodal Biomarker Discovery (EMIF-AD) previously reported in full in Kim et al.
+As discussed in that paper, metabolite levels were measured using liquid chromatography-mass spectroscopy (LC-MS) to cover ca.
+Eight hundred metabolites and these metabolites related to CSF biomarkers of AD commonly used in clinical research including trials, and increasingly in clinical practice, as part of the diagnostic work up.
+Here we explore the potential of different Machine Learning (ML) algorithms to identify those individuals with AD from dataset and to compare the effectiveness of bloodbased metabolites as an indicator of clinical diagnosis to that of CSF markers.
+In this study we employed two state-of-the-art ML algorithms-Deep Learning (DL) and Extreme Gradient Boosting (XGBoost)-and compared these to the more commonly utilized Random Forest (RF) algorithm.
+
+Methods
+This study accessed data previously generated from 242 samples from cognitively normal (CN) individuals and 115 from people with AD-type dementia (AD) samples in which diagnosis was based on clinical diagnosis.
+Details on the subjects, clinical and cognitive data, as well as measurements of AD pathological markers have been described elsewhere
+The metabolomics data employed here was accessed in the EMIF-AD portal and the acquisition and processing details can be found via open access in
+In short, the EMIF-AD cohort is a collated cohort making use of existing data and samples collected in 11 different studies across Europe, with the aim to discover novel diagnostic and prognostic markers for predementia AD.
+In the current study, the main objective was to use stateof-the-art ML classification algorithms to build CN versus.
+AD predictive models using blood metabolites.
+For this purpose, we employed DL and XGBoost.
+Additionally we also employed the more popularly used RF algorithm.
+These models were compared in terms of binary classifiers with Area Under the Curve (AUC) in Receiver Operating Characteristic (ROC) curves.
+The metabolites with more than 45% missing values were discarded.
+The remaining missing values were handled with imputation methods based on the k-nearest neighbor (RF and DL), or internally by the classification algorithm (XGBoost).
+Models were built and evaluated using a Nested Cross Validation (NCV), which used 9/10 data folds for model training and optimization in an inner cross-validation, and 1/10 data folds for model testing in an outer cross-validation.
+The process was repeated 10 times, for each of the test data folds.
+The analysis was further extended by assessing the stability of the AUC performance with Monte Carlo (MC) simulations consisting of 50 repeated similar NCV experiments.
+As such, multiple models were built on multiple samples in the NCV and MC, using metabolite predictors selected on the basis of their capability to discriminate CN versus AD as measured by the Relief algorithm
+This method computes the predictors' importance defined as the standardized Relief score, according to Measuring Predictor Importance chapter of
+Part of the prediction modeling methodology in this study was adapted after
+The analysis was carried out using R software
+Pathway analysis was performed on the top 20 ranked metabolites using MetaboAnalyst 4.0
+The algorithms were run on four servers with 6-core Xeon CPUs and 336 GB RAM.
+
+Results
+In this study, we analyzed metabolite data derived from blood samples from 357 participants (CN n 5 242, AD n 5 115) previously reported in Kim et al.
+Demographic and clinical data can be found in
+On the test data, the DL model produced a Receiver Operating Characteristic (ROC) Area Under the Curve (AUC) value of 0.85 with its 95% confidence interval (CI) ranging between 0.8038 and 0.8895.
+The XGBoost model produced the AUC value of 0.88 (95% CI [0.8619, 0.8903]).
+When the classifier model RF was employed, the resulting AUC was 0.85 (95%CI [0.8323, 0.8659]).
+Fig.
+The MC simulation conducted with XGBoost, which was the superior predictive model in our analysis, led to a Gaussian distribution of the AUC values according to
+The 50 AUC values obtained in MC had a minimum of 0.8614, a maximum of 0.8923, a mean of 0.8761, a median of 0.8766 and a standard deviation of 0.0072.
+The t-test showed that the true mean of AUC for XGBoost applied on plasma metabolites was not lower than 0.87 (P value 5 1.265 ! 10 207 ).
+For comparison, we also investigated the levels of amyloid, p-tau and t-tau, to which we added also age and gender, and their prediction for clinical AD versus CN.
+XGBoost models were built in the same manner as for metabolite predictors.
+Together with age and gender, amyloid led to AUC 0.78 (95%CI [0.7626, 0.8013]); p-tau led to AUC 0.83 (95%CI [0.8188, 0.8470]); and t-tau led to AUC 0.87 (95%CI [0.8583, 0.8854]).
+From the mean AUC for metabolites and for amyloid, p-tau and t-tau calculated individually, the t-tests showed superior values for metabolites (P value,2.2
+! 10 216 , P value,2.2
+! 10 216 and P value 5 .005921,
+respectively).
+The top 20 ranked predictors out of the 347 selected by the method presented in the previous section are shown in Fig.
+Pathway analyses revealed that the Nitrogen pathway was overrepresented (q FDR 5 0.004) within the panel.
+Molecules that were captured as the 20 top ranking predictors are discussed in the next section.
+
+Discussion
+Machine Learning applied to healthcare is increasingly enabled by the advent of high-performance computing and the development of complex algorithms.
+In this study, we employed two state-of-the-art algorithms, DL and XGBoost, and a more conventional algorithm, RF, to obtain high accuracy models to predict AD versus CN with metabolites as predictors.
+Our study showed that the best model was based on XGBoost
+In our study RF and DL achieved comparable AUC.
+DL algorithms are known to often take advantage of large and/or unstructured data (such as images) to produce more accurate category discrimination/prediction. In a study using the Alzheimer's Disease Neuroimaging Initiative (ADNI) data for AD prediction, XGBoost demonstrated superior results (AUC 5 0.97 (0.01) when including imaging parameters (MRI and PET) as predictors and when compared to RF, Support Vector Machines, Gaussian Processes and Stochastic Gradient Boosting
+In another study where cognition and MRI were used as predictors, Kernel Ridge Regression was performed to R 2 5 0.87 (0.025) when cognition and MRI predictors were included
+Pathway analyses using the top 20 AD predicting metabolites derived from the Relief method showed that the nitrogen pathway was overrepresented.
+Some of the molecules selected have been reported in metabolomics studies and have been implicated in neurodegeneration: dodecanoate, which is a C12 fatty acid, was found correlated to longitudinal measures of cognition in the ADNI cohort
+Plasmalogens were also found in decreased levels in our cohort in agreement with an earlier report
+The amide form of vitamin B3, nicotinamide, has been implicated in both neuroprotection and neuronal death
+New metabolites that could be of interest and have not been previously reported as related to AD were phytanate and furoylglycine.
+The former is a known neurotoxin which impairs mitochondrial function and transcription
+Furoylglycine is a metabolite which, as lithocholic acid, is mainly synthesized by the microbiome and has been reported as a biomarker of coffee consumption
+A limitation of our study is that it does not include an external validation due to the size of the cohort.
+However, we implemented a NCV procedure repeated 50 times in a MC simulation that led to an extended internal validation with prediction accuracy of cases.
+Further studies will assess the performance of ratios/combinations of CSF markers and metabolites, life-style factors and disorders commonly found in the elderly, together with testing the specificity for this specific panel in other neurodegenerative (e.g., PD, FTD), neurological (e.g., stroke) and psychiatric (e.g., depression) disorders associated with aging.
+The intent of this paper was to compare the performance of different ML algorithms to identify people with AD from cognitively unimpaired individuals.
+Here we show first that all three approaches used demonstrate good discriminatory power, second that XGBoost is somewhat more effective in this particular dataset than RF and DL and third, that this accuracy for clinical diagnosis is broadly similar to that achieved by CSF markers of AD pathology.
+The lack of a replication and validation dataset limits the interpretation of this finding, but nonetheless, the strong prediction of diagnostic category from a blood-based metabolite biomarker set is further evidence of the potential of such approaches to complement other biomarkers in identification of people with likely AD. composed of financial 2 Interpretation: The results in here show that with state-of-the-art ML algorithms, blood metabolites have the potential to match the CSF markers of AD pathology on identifying people with AD from cognitively unimpaired individuals.
+All the ML algorithms employed showed good discriminatory power.
+3 Future directions: Results of this study should be replicated and validated using an independent dataset.
+Further studies will also aim to assess the performance of ratios/combinations of CSF markers and metabolites, life-style factors and disorders commonly found in the elderly, together with testing the specificity for this specific panel in other neurodegenerative (e.g., PD, FTD), neurological (e.g., stroke) and psychiatric (e.g., depression) disorders associated with aging.
+
+
+
+Fig. 1 .
+Fig. 1.
+Shows the AUC values for the XGBoost, RF and DL models.
+XGBoost performed best with metabolite predictors in the EMIF cohort.
+
+
+
+Fig. 2 .
+Fig.2.
+The x-axis shows the top 20 ranked predictors, and the y-axis shows the predictors' importance computed as the standardized relief score according to Measuring Predictor Importance chapter of
+
+
+contribution from the European Union's Seventh Framework Program (FP7/2007-2013) and EFPIA companies' in-kind contribution.
+The DE-SCRIPA study was funded by the European Commission within the fifth framework program (QLRT-2001-2455).
+The EDAR study was funded by the European Commission within the fifth framework program (contract no.
+37670).
+The San Sebastian GAP study is partially funded by the Department of Health of the Basque Government (allocation 17.0.1.08.12.0000.2.454.01.
+41142.001.H).
+Kristel Sleegers is supported by the Research Fund of the University of Antwerp.
+Daniel Stamate is supported by the Alzheimer's Research UK (ARUK-PRRF2017-012).
+Those which looked at blood metabolomics data were small and used clinical diagnosis as an endpoint.
+Subsequently, we explored the potential of state-of-the art ML algorithms including Deep Learning and Extreme Gradient Boosting to test the performance of blood metabolite levels to clinical diagnosis and compared to CSF biomarkers.

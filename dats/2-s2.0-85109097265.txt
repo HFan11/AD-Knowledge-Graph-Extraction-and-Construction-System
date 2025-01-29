@@ -1,0 +1,391 @@
+RETRACTED: ADVIAN: Alzheimer's Disease VGG-Inspired Attention Network Based on Convolutional Block Attention Module and Multiple Way Data Augmentation
+Aim: Alzheimer's disease is a neurodegenerative disease that causes 60-70% of all cases of dementia.
+This study is to provide a novel method that can identify AD more accurately.
+We first propose a VGG-inspired network (VIN) as the backbone network and investigate the use of attention mechanisms.
+We proposed an Alzheimer's Disease VGG-Inspired Attention Network (ADVIAN), where we integrate convolutional block attention modules on a VIN backbone.
+Also, 18-way data augmentation is proposed to avoid overfitting.
+Ten runs of 10-fold cross-validation are carried out to report the unbiased performance.
+The sensitivity and specificity reach 97.65 ± 1.36 and 97.86 ± 1.55, respectively.
+Its precision and accuracy are 97.87 ± 1.53 and 97.76 ± 1.13, respectively.
+The F1 score, MCC, and FMI are obtained as 97.75 ± 1.13, 95.53 ± 2.27, and 97.76 ± 1.13, respectively.
+The AUC is 0.9852.
+The proposed ADVIAN gives better results than 11 state-of-the-art methods.
+Besides, experimental results demonstrate the effectiveness of 18-way data augmentation.
+
+BACKGROUND
+Alzheimer's disease (AD) is a neurodegenerative disease, which affects 60%-70% of all cases of dementia
+The main symptom of AD is difficulty in short-term memory.
+As AD progressively worsens, patients exhibit symptoms such as mood and cognition
+These symptoms lead to a significant decline in quality of life and an increase in care-taker burden
+AD's etiology is damage to brain cells observable on imaging scans
+
+R E T R A C T E D
+FIGURE 1 | AI vs. ML vs. DL.
+The atrophy is caused by amyloid plaque
+Manual differential diagnosis of AD is lab-intense, onerous, and expensive due to various mental and physical tests, laboratory and neurological tests, and neuroimaging scans
+Therefore, scholars tend to use artificial intelligence (AI) approaches to create automatic models to identify AD.
+AI enables machines to mimic human behaviors.
+Machine learning (ML) is a subset of AI, which uses statistical methods to enable machines to improve.
+Deep learning (DL) is a subset of ML.
+DL makes the computation of deep neural networks feasible.
+Their relationship is displayed in Figure
+For instance,
+The authors tested three classifiers and found Bayesian classifier (BC) achieved the best performance.
+Their average accuracy of BRC-BC reached 92.00%.
+Their method's average accuracy reached 92.83 ± 0.91% over the Open Access Series of Imaging Studies (OASIS) dataset.
+The authors included CSF biomarker measures, regional MRI volumes, voxel-based FDG-PET signal intensities, and categorical genetic information.
+However, their dataset is small, with only 33 images.
+The experimental outcomes showcased that PZM with the order of 30 gave the paramount performance.
+The interclass variance criterion was employed to pick out the single slice from the 3D image.
+They extracted 256 features from each brain image and substituted SCG with a linear regression classifier (LRC).
+In traditional CNN, rectified linear unit (ReLU) is the default activation function.
+The authors replaced ReLU with a new activation function-leaky ReLU (LReLU).
+They tested three different pooling methods and found that max pooling gave the best performance.
+Their method is abbreviated as CNN-BND in this paper.
+Its amalgamation achieved an accuracy of 92.22%.
+From previous studies, we can observe DL methods can have better performance than traditional ML methods.
+As mentioned before, DL is a subfield of ML (see Figure
+To further improve the performance of DL, there are three possible ways: (i) depth, (ii) width, and (iii) cardinality of the deep neural networks.
+We try to improve the performance from the fourth way-the attention mechanism.
+In all, we propose a novel DL model termed Alzheimer's Disease VGG-Inspired Attention Network (ADVIAN).
+The contributions of our paper are listed as following four points:
+
+SUBJECTS
+The dataset we used is already reported in the work of
+
+PREPROCESSING
+The same preprocessing procedure (shown in Figure
+First, 1 ≤ n ≤ 4 multiple raw scans of the same structural protocol within a single session of the same person is carried out; we obtain n volumetric images as V R (n ).
+Second, motion correction (MC) is performed over all the n raw images.
+The motion-corrected images are symbolized as V MC (n ).
+Third, an average image V A is obtained by averaging all the n motion-corrected images, i.e.,
+Fourth, gain field (GF) correction is performed.
+The GF is intensity variations irrelated to the subject's anatomical information.
+GF may relate to movement, nearly static fields, radiofrequency turbulence, or additional nonsubject causes
+The image is now symbolized as V G .
+Fifth, atlas registration will spatially normalize the image V G to Talairach atlas
+Sixth, a masked image V M is obtained by removing all the nonbrain voxels.
+We do not do gray matter/white matter/CSF segmentation at this stage.
+Seventh, a key slice is selected I K from the masked volumetric image V M .
+There are three view angles: axial, sagittal, and coronal view angles, as shown in Figure
+In this study, we chose the 80th Eighth, data harmonization is performed via histogram stretching (HS)
+The HS is indispensable to normalize the interscan images by increasing the difference between the maximum intensity value and the minimum one in an image.
+Mathematically, HS
+where x min and x max stand for the minimum and maximum intensity values of OI, respectively.
+Traditionally, the minimum and maximum correspond to 0 and 100% of the whole grayscale range.
+In this study, 5 and 95% are employed to replace 0 and 100%, respectively.
+The motivation is the pixels with the least (0%) and the greatest (100%) values are more susceptible to noises.
+Using the 95-5% = 90% interval can make HS more dependable than using the 100% interval.
+After this step, we get harmonized image I H .
+Finally, the image I H is cropped.
+The cropped image I has the size of
+Two key slices of one AD sample and one HC sample are displayed in Figure
+
+METHODOLOGY Background of VGG-16
+Transfer learning (TL) stores knowledge gained while solving one problem and applies it to solve a different but related problem
+Most pretrained deep neural networks (PDNNs) are trained on a subset of ImageNet database.
+Those  PDNNs could classify images into 1,000 object categories.
+Hence, using PDNNs for TL is easier and faster than training networks from scratch.
+VGG stands for Visual Geometry Group, an academic group at Oxford University.
+This team presented two famous networks: VGG-16
+This study chooses VGG-16 because it is easier to implement and has less layers, while VGG-16 has similar performance of VGG-19.
+Figure
+The input of VGG-16 is 224 × 224 × 3.
+After the 1st convolution block (CB), the output is 112×112×64.
+Components of 1st CB are shown in Table
+The 1st CB can be written as "2 × (64 3 × 3) /2, " which means "2 repetitions of 64 kernels with sizes of 3 × 3 followed by a max pooling with a kernel size of 2×2."
+Note that (i) ReLU layers are skipped in the following texts as default.
+(ii) Stride and padding are not included since they can be calculated easily.
+The 2nd CB "2 × (128 3 × 3) / 2, " 3rd CB "3 ×( 256 3 × 3) / 2, " 4th CB "3 ×( 512 3 × 3) / 2, " and 5th CB "3 ×( 512 3 × 3) / 2" produce the feature maps (FMs) with sizes of 56 × 56 × 128, 28 × 28 × 256, 14 × 14 × 512, and 7 × 7 × 512, respectively.
+Afterward, FM is compressed into a column vector of 25,088 neurons and sent into three FCLs with 4,096, 4,096, and 1,000 neurons, respectively.
+
+VGG-Inspired Network
+A VIN is designed, shown in Figure
+The VIN is inspired by VGG-16.
+The VIN contains four CBs and three FCLs.
+The first CB "2 × [3 × 3, 32] / 2" contains two repetitions of 32 kernels with sizes of 3 × 3 followed by a max pooling with a kernel size of 2 × 2. After four CBs, the size of FM becomes 11 × 11 × 128.
+The flattening layer vectorizes the FM into a vector with a size of 1 × 1 × 15,488.
+After three consecutive FCLs, we output a binary code that represents either AD or HC.
+The structure of the proposed 13-layer VIN is depicted in Table
+The similarities between the proposed VIN and VGG-16 are itemized in Table
+The input of VGG-16 is 224 × 224 × 3, while the input of VIN is 176 × 176 × 1.
+The output of VGG-16 is 1,000 neurons corresponding to 1,000 categories to be classified, while the output of VIN is 2 neurons because our task is a binary-coded problem.
+Also, some structural differences exist between those two networks, which can be observed from Figure
+
+Human Visual System and Attention Mechanism
+To increase the functioning of the recent deep neural networks, numerous investigations are carried out in terms of either width, or depth, or cardinality.
+For examples, (i) the network structures reported in recent ResNet
+"Attention" is the fourth possible way to improve the network's performance.
+There are many papers using attention to improve their networks.
+Figure
+Thenceforth, the iris makes use of the photoreceptor sensitivity to control the exposure.
+Afterward, the information stream is passed to cone and rod cells in the retina.
+At long last, the neural firing is forwarded to the brain for additional handling.
+Human eyes do not endeavor to sort out the whole scenarios captured at one time.
+In contrast, human beings take the full practice of partial glimpses and fix on salient features selectively to grab a sounder pictorial structure.
+Thus, the recent attention networks
+ADVIAN
+In their paper, the core idea of CBAM is to improve the 3D FMs by being trained with channel attention and spatial attention, respectively.
+CBAM is composed of two consecutive submodules: (i) channel attention module (CAM) and (ii) spatial attention module (SAM).
+The complete relation between CBAM and its two submodules is exposed in Figure
+Suppose we have a provisional input FM of F ∈ R C×H×W .
+The CBAM applies 1D CAM N CAM ∈ R C×1×1 and a 2D SAM N SAM ∈ R 1×H×W in sequence to the input F, as illustrated in Figure
+where ⊗ means the element-wise multiplication.
+If the two operands are not with the same dimension, then the values are transmitted (copied) in such tactics that the spatial attentional values are transmitted by the channel dimension, and the channel attention values are transmitted by the spatial dimension
+Firstly, CAM is defined.
+Both max pooling (MP) f mp and average pooling (AP) f mp are applied, breeding two features S ap and S mp .
+Both are thenceforth sent on to a shared shallow neural network-multilayer perceptron (MLP)
+Normally, MLP consists of three layers of nodes: an input layer, a hidden layer, and an output layer, as shown in Figure
+The united sum is then sent to the sigmoid function β.
+Precisely,
+To decrease the parameter reserves, the number of hidden neurons of MLP is arranged to R C/e r ×1×1 , where e r is identified as the reduction ratio.
+Let W 0 ∈ R C/e r ×C and W 1 ∈ R C×C/e r mean the MLP weights, respectively, Equation (
+See W 0 and W 1 are shared by both S ap and S mp .
+Figure
+Second, SAM is defined.
+The spatial attention module N SAM is a paired phase to the preceding channel attention module N CAM .
+The AP operation f ap and MP operation f mp are harnessed to the channel-refined FM Q, and we gain
+Both T ap and T mp are two-dimensional FMs: T ap ∈ R 1×H×W ∧ T mp ∈ R 1×H×W , which are concatenated jointly along the channel dimension as
+where f cha con stands for the concatenation along channel dimension.
+The concatenated FM T is thenceforth sent into a typical convolution with a size of 7 × 7 f conv .
+The resultant FM is sent to the sigmoid function β.
+Altogether, we find:
+The yielded N SAM (Q) is subsequently element-wisely multiplied with Q, as displayed in Equation (3).
+For any FM P of each previous CB, the two uninterrupted attention modules (channel and spatial) are attached, coupled with the refined FM R which is driven to the succeeding block.
+Now CAB is made up of one CB and succeeding CBAM module.
+Comparing Figures
+As default, the softmax function f s : R K → R K is appended at the end of our model.
+Suppose the input to the softmax is
+The softmax function can be regarded as the output unit activation function.
+For classification-oriented deep neural networks, a softmax layer and a classification layer must follow the last FCL.
+Also, batch normalization
+
+Cross-Validation
+Cross-validation (CV)
+Figure
+The whole dataset is split into K folds evenly.
+Then for kth k = 1, . . .
+, K trial, the kth fold is used for test, and all the other folds 1, . . .
+, k -1, k + 1, . . .
+, K for training.
+We repeat K trials to facilitate each fold used for test only once.
+The above K-fold cross-validation will repeat R times.
+In this study, we set K = R = 10.
+
+Multiple-Way Data Augmentation
+Overfitting may occur due to the small-size dataset in this study.
+To avoid this, multiple-way data augmentation (MDA) is employed.
+MDA is a variant of the traditional data augmentation (DA) method.
+Cheng
+In their method, the number of DA is set to J 1 = 8, i.e., eightway different DA were applied to original raw image r (x) and the horizontally mirrored version r h (x ).
+In this method, we propose an 18-way DA, of which the diagram is displayed in Figure
+The difference of our 18-way  DA against 16-way DA
+the SN altered image is defined as
+where N R is uniformly distributed random noise.
+In this study, we set the mean and variance of N R to 0 and 0.05, respectively.
+First, J 1 -different DA methods as displayed in Figure
+Let H j , j = 1, . . .
+, J 1 denotes each DA operation, we have the augmented images of raw image r (x) as
+Suppose J 2 means the size of generated new images for each DA method, then,
+where || represents the number of elements in the set.
+Second, horizontally mirrored image r h (x) is generated by
+where f HM stands for horizontal mirror function.
+Third, all the J 1 different DA methods are performed on the mirror image r h (x) and generate J 1 different datasets.
+Fourth, the raw image r (x), the horizontally mirrored image r h (x), J 1 -way datasets of raw image H j [r (x)], and J 1 -way datasets of horizontally mirrored image H j r h (x) are combined.
+The final generated dataset from r (x) is defined as R (x ):
+where f fuse is the concatenation function.
+Suppose augmentation factor is J 3 , which represents the number of images in R (x), we get
+Algorithm 1 recaps the pseudocode of the 18-way DA method.
+We set J 1 = 9, J 2 = 30; thus, J 3 = 542.
+Algorithm 1 | Pseudocode of 18-way data augmentation.
+
+Input Import raw preprocessed training image r (x).
+Step A J 1 geometric/photometric/noise-injection DA transforms H j are utilized on r (x ).
+We obtain datasets H j [r (x)] , j = 1, . . .
+, J 1 .
+See Eq. (
+Each enhanced dataset comprises J 2 new images.
+See Eq. (
+Step B Horizontally mirrored image is obtained by r h (x) = f HM [r (x)].
+See Eq. (
+Step C J 1 -way DA transforms are implemented on r h (x ), we obtain datasets H j r h (x) , j = 1, • • • , J 1 .
+See Eq. (
+Step D r (x), r h (x), H j [r (x)] , j = 1, . . .
+, J 1 , and H j r h (x) , j = 1, . . .
+, J 1 are combined.
+See Eq. (
+
+Output
+Output a new dataset R (x).
+Its image number is
+
+Evaluation
+The evaluation was reported on the R runs of K-fold CV of our 98-98 image dataset.
+Suppose the image number of each class is T k k = 1, 2 .
+The perfect confusion matrix (CM) is
+
+R E T R A C T E D
+where the off-diagonal entries of ideal O ideal are all 0 s, viz., o ideal i, j = 0, ∀i = j.
+The realistic confusion matrix is
+Now, we define positive (P) and negative (N) classes.
+The meaning of TP, TN, FP, and FN are shown in Table
+Nine measures are used: sensitivity, specificity, precision, accuracy, F1 score, Matthews correlation coefficient (MCC)
+The first four measures are defined as
+and the middle three measures are defined as:
+The above measures are calculated in the mean and standard
+
+EXPERIMENTS AND RESULTS
+
+Multiple-Way Data Augmentation
+Figure
+, J 1 ) if we take Figure
+From Figure
+In the following experiments, we shall prove this robustness.
+
+Statistical Analysis
+The results of 10 runs of 10-fold cross-validation of our model ADVIAN are itemized in
+
+Effect of 18-Way DA
+To validate the importance of 18-way DA, we carry out an ablation study in which we remove 18-way DA from our model and observe the performance change.
+After another 10 runs of 10-fold CV, the performances decrease to a sensitivity of 92.45 ± 2.21, a specificity of 94.18 ± 1.99, a precision of AUC without 18-way DA is only 0.9603 (Figure
+
+Method Comparison
+To further show the proposed ADVIAN model's effectiveness, we compare it with 11 existing algorithms on the same dataset by 10 runs of 10-fold CV.
+The comparison methods include BRC-BC
+The comparison is displayed in Table
+In Figure
+We sort all algorithms in terms of MCC, and the sorted list can be observed at the bottom left corner of Figure
+The 3D bar plot clearly shows that our method achieves better results than all 11 state-of-the-art methods.
+This paper is mainly focusing on methodological improvements.
+We shall try to combine DL with individual anatomical brain regions [such as medial temporal lobe
+
+CONCLUSIONS
+This paper proposes a novel VGG-inspired network as the mainstay and combines the attention mechanism with VIN to produce a new ADVIAN deep-learning model to detect AD.
+The 18-way DA is harnessed to prevent overfitting in the training set.
+The experiments revealed the usefulness and superiority of this proposed ADVIAN method.
+Nevertheless, there are several shortcomings.
+First, this model did not go through strict clinical environment tests.
+Second, the dataset is relatively small.
+Third, the AI output is hard to understand for human experts.
+Correspondingly, we may carry out the following researches in the future.
+We shall deploy our ADVIAN to hospitals to receive feedback directly from clinical doctors.
+Meanwhile, we will try to collect more AD data.
+Finally, explainable AI will be included in our future studies.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Pipeline of preprocessing.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Slices with different views.
+(A) Axial view, (B) Sagittal view, (C) Coronal view.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Samples of our dataset.
+(A) AD, (B) HC.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Structures of three networks.
+(A) VGG-16, (B) VIN (Ours), (C) ADVIAN (Ours).
+
+
+proposed an attention recurrent neural network to estimate severity.
+Song et al. (2021) presented a coarse-to-fine dual-view attention network for click-through rate prediction.
+Arora et al. (2021)TABLE 2 | Components of 1st CB "2 × (64 3 × 3) /2" in VGG_16.
+Layer Component 1 1 convolutional layer with 64 kernels with sizes of 3 × 3 and stride [1, with 64 kernels with sizes of 3 × 3 and stride [1, layer with a kernel size of 2 × 2
+
+
+
+FIGURE 6 |
+FIGURE 6 | Illustration of a simplified HVS.
+
+
+
+FIGURE 7 |
+FIGURE 7 | Relation of CBAM and its two submodules.
+
+
+
+Figure
+8B portrays the diagram of SAM.
+The previously introduced CBAM is integrated into the proposed VIN network, which renders the proposed ADVIAN shown in Figure 5C, which has the same FM structure as VIN in Figure 5B.
+The difference between ADVIAN and VIN is that we add CBAM after each CB, and thus we called each block as "conv attention block (CAB), " as shown in Figure 9.
+
+
+
+FIGURE 8 |
+FIGURE 8 | Diagram of two submodules in CBAM.
+(A) CAM, (B) SAM.
+
+
+
+FIGURE 9 |
+FIGURE 9 | Relationship among CAB, CBAM, and CB.
+
+
+
+FIGURE 10 |
+FIGURE 10 | Illustration of K-fold CV.
+
+
+
+FIGURE 12 |
+FIGURE 12 | Results of data augmentation.
+(A) Horizontal shear, (B) Vertical shear, (C) Image rotation, (D) Gamma correction, (E) Random translation, (F) Scaling, (G) Gaussian noise, (H) Salt-and-pepper noise, (I) Speckle noise.
+
+
+
+FIGURE 14 |
+FIGURE 14 | ROC curves of the effectiveness of 18-way DA (w/ means with wo/ means without).
+(A) wo/MDA, (B) w/MDA.
+
+
+
+TABLE 1 |
+Demographics of dataset in this study.The selection criterion is to remove individuals under 60 and incomplete observations.Meanwhile, 70 AD subjects were enrolled from local hospitals.Hence, we have a balanced dataset, of which the demographics are itemized inTable 1, where SES means Socioeconomic Status, MMSE Mini-Mental State Exam, and CDR Clinical Dementia Rating.
+
+
+
+TABLE 3 |
+Arrangement of our 13-layer VIN.
+
+
+
+TABLE 4 |
+Similarity facets between proposed VIN and VGG-16.
+
+
+
+TABLE 5 |
+Meanings in measures.
+(MSD) format.
+Besides, ROC is a curve to measure a binary classifier with varying discrimination thresholds.
+The ROC curve is created by plotting the sensitivity against 1-specificity.
+The AUC is calculated based on the ROC curve.
+
+
+
+Table 6 .
+The sensitivity and specificity reach 97.65 ± 1.36 and 97.86 ± 1.55, respectively.Its precision and accuracy are 97.87 ± 1.53 and 97.76 ± 1.13, respectively.The F1 score, MCC, and FMI are obtained as 97.75 ± 1.13, 95.53 ± 2.27, and 97.76 ± 1.13, respectively.We can see that all the seven indicators of our model are above 95%.The ROC curve is displayed in Figure14B, and the AUC is 0.9852.
+
+
+
+TABLE 6 |
+Results of proposed ADVIAN model.
+.81,
+an accuracy of 93.32 ± 1.16, and an F1 score of 93.25 ± 1.20.
+The MCC and FMI decrease to 86.69 ± 2.31 and 93.27 ± 1.20, respectively.
+The result of comparison with and without 18-way DA is shown in Figure 13.
+The ROC curve comparison is shown in Figure 14, where we can observe that
+
+
+
+TABLE 7 |
+Comparison with other methods.

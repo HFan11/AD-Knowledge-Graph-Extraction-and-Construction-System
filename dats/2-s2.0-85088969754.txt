@@ -1,0 +1,379 @@
+Identification of Alzheimer's EEG With a WVG Network-Based Fuzzy Learning Approach
+A novel analytical framework combined fuzzy learning and complex network approaches is proposed for the identification of Alzheimer's disease (AD) with multichannel scalp-recorded electroencephalograph (EEG) signals.
+Weighted visibility graph (WVG) algorithm is first applied to transform each channel EEG into network and its topological parameters were further extracted.
+Statistical analysis indicates that AD and normal subjects show significant difference in the structure of WVG network and thus can be used to identify Alzheimer's disease.
+Taking network parameters as input features, a Takagi-Sugeno-Kang (TSK) fuzzy model is established to identify AD's EEG signal.
+Three feature sets-single parameter from multi-networks, multi-parameters from single network, and multi-parameters from multi-networks-are considered as input vectors.
+The number and order of input features in each set is optimized with various feature selection methods.
+Classification results demonstrate the ability of network-based TSK fuzzy classifiers and the feasibility of three input feature sets.
+The highest accuracy that can be achieved is 95.28% for single parameter from four networks, 93.41% for three parameters from single network.
+In particular, multi-parameters from the multi-networks set obtained the best result.
+The highest accuracy, 97.12%, is achieved with five features selected from four networks.
+The combination of network and fuzzy learning can highly improve the efficiency of AD's EEG identification.
+
+INTRODUCTION
+Currently, Alzheimer's disease (AD) is becoming a common and serious disease due to organic neurodegenerative and progressive lesions in the brain.
+The patients always show some typical clinical presentations, particularly in the aspect of cognitive dysfunction such as deficient episodic memory and disabled remembering
+The clinical diagnosis of AD currently adopts scale assessment, such as Mini-mental State Examination (MMSE), Montreal Cognitive Assessment (MoCA), activities of daily living (ADL), and physiological detection of cerebrospinal fluid.
+Patients with severe AD can be observed to have changes in brain structure, such as encephalatrophy, through brain functional imaging.
+Hiroshi's study has demonstrated progression of atrophy mapping upstream to Braak's stages of neurofibrillary tangle deposition in AD.
+The main cause of organic brain lesions in AD is considered to be the loss of neurons and synapses
+It has been suggested that the loss of both synapses and neural pathways leads to a decrease in brain functional connectivity and influences electrical signals of the brain, so it is feasible to diagnose neurotic disease by electroencephalogram (EEG).
+EEG, which can measure the brain's voltage fluctuations with high temporal resolution, contains plenty of physiological information, and there is growing evidence that EEG may contribute to early recognition of AD patients.
+The conventional EEG visual inspection is one of methods widely used in neurological assessment.
+Numerous previous studies have reported the disappearance of alpha EEG activities, particularly in posterior brain regions, through unaided viewing
+It has also been reported that visual EEG scores of ADs show a strong correlation with dementia severity
+In the study of
+In addition, studies have quantified the complexity of electrophysiological activities and reported declined complexity of EEG in AD patients
+The change on the AD brain is also reflected in the perturbations of EEG synchronization.
+As EEG signals are irregular and non-stationary complex signals, traditional visual inspection is not sufficient for AD EEG identification
+To address this issue, complex network theory is introduced into AD diagnosis, which aims to describe human brain from a global perspective
+Over the past few years, more and more researchers have begun to adopt the attractive idea of using complex network methods to characterize the dynamic features of complex systems
+This novel approach is the thorough combination of two frontier research fields, analysis methods of non-linear time series
+As an effective tool to get insight into the brain function, the brain network analysis has been widely applied in AD research.
+The healthy brain was found to work with network properties such as small-worldness, hubness, and rich-clubs, while the AD brain operated with less optimal network topologies
+Loss of small-world features (toward random network topology) can be observed in functional network constructed from EEG and functional magnetic resonance imaging data
+Numerous EEG studies have consistently demonstrated decreased functional connections in the higher frequency bands of AD patients compared to controls
+Compared to other approaches of constructing complex networks through time sequence, visibility graph (VG) algorithms can better integrate the basic features of time series.
+They pointed out that the irregularity of time sequence can be characterized by the network topology.
+For instance, the periodic sequence can be transformed into regular lattice, while the chaotic series corresponds to random graphs.
+Subsequent researches began to introduce VG method into the EEG study of neurological diseases, and found features extracted from VG networks can be effectively used as mathematical markers in neurodegenerative diagnosis.
+VG algorithm was first applied in related research in AD by
+They reported that complexity of EEGs computed by VGs can be used in the distinguishing between AD and control EEGs
+The VG can only express the existence of edges between different time nodes, but not the strength of the edges.
+Therefore, Supriya et al. have proposed to combine the weighted edge with the horizontal visibility graph, which are not applicable to all complex network graphs
+Addressing the limitations of above approaches, Zhu et al. have improved the weighted visibility graph (WVG) algorithm by specifying radian function as the criterion for calculating edge weights in all kinds of complex network, and obtained promising results in the detection of epilepsy
+Also, studies have shown that the visualization method can preserve the characteristics like reduction of complexity
+WVG networks retain more structural information of the time series, which is more conducive for AD identification, compared to connectivity networks.
+Therefore, we apply the WVG method on the feature extraction of Alzheimer's disease.
+A variety of different parameters are extracted from the visibility graph, and used to further investigate which parameter can be used for diagnosing AD.
+After quantitative analysis of complex WVG networks, the valuable information about the time series has been extracted.
+The machine learning generally approaches the extracted features for training the model and then applies them in signal detection.
+Traditional machine learning methods, including decision tree, random forests, k-nearest neighbor (KNN), Naive Bayes (NB), logistic regression, and so on
+However, for systems with highly non-linear characteristics, models that built based on these methods do not characterize real models and be utilized in classification well.
+With this consideration, a rule-based fuzzy model is proposed and has been widely used in many fields like computer vision, natural language processing, and enhanced learning, achieving remarkable results
+Takagi-Sugeno-Kang (TSK) method is proposed to build a model established by using fuzzy mathematics language to describe some characteristics and internal relations of fuzzy phenomena.
+Compared with traditional classifiers that lack transparency, TSK can be used in multiple features classification and shows a superior model interpretability, which is defined as the ability to better understand the decision strategies of response functions in a human-interpretable manner in order to interpret internal relationships
+In current applications of machine learning, such interpretability has received wide attention and is considered to be crucial.
+In this paper, multiple networks are constructed based on multi-channel EEG, with each EEG channel able to be transformed into one-layer network.
+Then a number of different network features are extracted from them, which is too much for input feature vectors.
+In order to explore this problem, some feature selection approaches will be utilized to choose features, and the influence of different screening methods on the final classification results will also be tried.
+The parameters will be divided into three groups-single parameter from multi-network, multi-parameter from single network, and multi-parameter from multi-network-to observe the difference between the classification results of fuzzy models trained with different types of features.
+The structure of rest paper is as follows: section Methods and materials is devoted to describing the experimental design, including data collection and subject condition.
+Meanwhile, the principle of mathematical graph methods and Takagi-Sugeno-Kang (TSK) model adopted in paper are also explained in this part.
+In section Experimental Results, we performed a statistical analysis of the results and implemented AD recognition based on the proposed framework.
+Section Conclusion and Discussion includes a discussion of the application and advantages of the proposed model, as well as future work.
+
+MATERIALS AND METHODS
+
+Subjects and EEG Recordings
+EEG recordings are collected from AD subjects and control subjects, respectively.
+The AD group included 30 confirmed AD patients who are diagnosed with mini-mental state examination (MMSE) scores are between 12 and 15.
+The diagnosis results meet the National Institute on Aging-Alzheimer's Association criteria.
+All of them have not used antipsychotic drugs, antidepressants, dopamine blockers, or excessive amounts of alcohol, and don't have other neurological or psychiatric disorders or any other serious illness.
+The AD group includes 18 females and 12 males, whose ages range from 74 to 78.
+The control group consisted of 30 healthy subjects of matched ages, ranging from 70 to 76 years old, and includes 10 females and 20 males.
+The MMSE scores of them are between 28 and 30.
+In order to avoid the impact on EEG activity, all subjects will be prohibited from using neuroactive drugs before the experiment.
+The data adopted in this paper is from our previous study
+In addition, all the subjects in this experiment gave informed consent.
+A 16-channel EEG monitoring system (Solar2000B) is adopted.
+The EEG channels have 10 M input impedance with bandwidth as 0.08-300 Hz.
+In order to obtain low-frequency signals that meet the analysis requirements, the low-pass filtering range is set to 0.08-50 Hz.
+Studies have demonstrated that the EEG amplitude across different bands tends to stabilize when the scalp-electrode impedance is <10 k , so electrode impedance in our experiments is set to 3 k .
+The international 10-20 system, which consists of 16 electrodes, is adopted as electrode distribution in the scalp (surface) EEG recordings, and the linked earlobe A1 and A2 are used as reference.
+EEGs are recorded by Symtop amplifier (model: UEA-B; frequency: 1,024 Hz; electrode impedance: 3 k).
+During the experiment, the subjects stayed in a semidark quiet room and were told to keep awake with eyes closed.
+The EEG recording process was kept to at least 30 min for each subject.
+In order to eliminate the impact of nervousness, anxiety, and head movement, a 10-min EEG is selected from each recorded EEG epoch.
+Sharp transient artifacts caused by eye movement and muscle artifacts, as well as segments with voltage exceeding 150uV, are also removed.
+Next, fifteen epochs without artifacts with an 8-s long duration for each (15 * 8 s = 120 s) were chosen for each subject's EEG, which are suitable for weighted visibility graph construction.
+
+WVG Methods
+The EEG signal is the electrical signal of the brain neurons measured on the surface of the cerebral cortex or scalp.
+It has obvious non-stationary, non-linear, and dynamic characteristics.
+The VG method provides a way to research the underlying dynamics of EEG data
+Since the VG can inherit the dynamic nature of creating time series data, this technique has the characteristics of describing time series from the perspective of graph theory.
+The VG algorithm was originally applied in the field of robot motion planning, architectural design, and topographic descriptions of geographical space
+This algorithm combined the mutual visible relationship of the point and obstacles in the two-dimensional landscape with the computational geometry framework.
+The literature study reveals that WVG can also be used in EEG data analysis to convert nonstationary, one-dimensional time series into two-dimensional viewable views for analysis.
+Different channels of EEG signals can reflect the electrophysiological information from different regions of the brain, so each single channel can obtain single complex network and multi-layer networks can be obtained through multi-channel EEG.
+The schematic diagram of constructing brain network by WVG method is shown in Figure
+In the construction of a WVG from a univariate EEG data {x i } N i = 1 with x i = x (t i ), individual observations are considered as vertices.
+Thus, the weighted adjacency matrix W can be obtained FIGURE 1 | The framework of our method for classifying the AD patients in EEG signals.
+First multichannel EEG signals of two types of subjects are acquired and a preliminary analysis was performed.
+Second, we construct the WVG network based on each EEG channel.
+Third, the features are extracted and further ranked based on feature select method.
+Finally, we combine the network theory with a fuzzy rule-based system to identify AD pattern with the selected network topological properties.
+with size of N × N. Nodes of WVG network are defined by time points {t i } , i = 1, 2, ......N and each edge in this network is defined by the connection between two time points
+Two nodes are defined as connected if the criterion
+is fulfilled for all time points t k with t i < t k < t j .
+Then the absolute value of edge weight between two nodes are determined as
+
+Feature Extraction and Select
+The topology of the network is quantified based on the multiple complex networks obtained with WVG method.
+In order to statistically analyze the characteristics of AD networks and control networks, we calculate the clustering coefficient, average weighted degree, graph index complexity, network entropy, degree distribution index, modularity, local efficiency, and average path length as eight different topological characteristics.
+
+Clustering Coefficient
+The clustering coefficient is a measure to quantify how tightly connected the neighbor is around a node
+For a network G with N nodes, the connectivity between nodes i and j is a i,j (a i,j =1 if the connection exists or a i,j =0 if not), the weight of connection are w i,j (w i,j ∈ [0, 1]).
+For a weighted network, the local clustering coefficient of node i is defined as:
+where s i , the strength of the node i, is defined as:
+And G i represents the nodes set of node i neighborhoods.
+Further define the clustering coefficient of the whole network as:
+
+Average Weighted Degree
+Average Weighted Degree is an important parameter for distinguishing networks with different topologies.
+The average weighted degree of the network can be obtained through averaging weights of the incident links on all the nodes in the network
+where s i is described above in function (4).
+
+Graph Index Complexity
+Kim et al. have introduced graph index complexity as a new feature into the diagnosis of patients with AD by quantifying the complexity of the image graph
+With the largest eigenvalue of the adjacency matrix of a graph with n nodes presented as λ max
+The graph index complexity is defined as follows:
+where
+Degree Distribution Index
+The degree distribution P deg k is often used to classify complex networks, which can be formed by counting how many nodes have each degree.
+In this paper, a probability distribution object is obtained by fitting the Poisson distribution to the degree distribution vector.
+The degree distribution P deg k is defined as
+The degree distribution index is defined as the λ values of the fitting distribution
+
+Network Entropy
+The network entropy can be computed straightforwardly based on the degree distribution as
+
+Modularity
+Modularity is a quality feature that can measure the quality of the clusters (communities), which are obtained by dividing the network partition
+The modularity Q of this weighted network is defined as:
+where m = 1 2 i,j∈G w i,j is the sum weights of all links in the network, k i = j∈G w i,j is the sum weight of the links attached to node i, C i represents the community which vertex i is assigned to, the function δ C i , C j is 1 if nodes i and j belong to the same community and 0 otherwise.
+In this paper, we used the Louvain method
+This method is divided into two steps.
+In the first step, each node is added into the neighbor communities to determine the one which can maximize the modularity gain Q.
+In second step, a new network is reconstructed whose node is defined as the small community found in the first step, and whose weights of new links are given by the sum weight of the links between nodes in the corresponding two old communities.
+Those two steps will be repeated iteratively until the maximum of modularity is accomplished and there is no more movement of nodes.
+The modularity gain Q is defined as
+where in represents the sum of all the links weights inside community C, tot is the sum of the weights of the links attached to nodes in C, k i is the sum of the weights of the links attached to node i, k i,in is the sum of the weights of the links from i to nodes in C, and m is the sum weights of all links in the network.
+
+Local Efficiency
+Local efficiency, as a node-specific measure, is defined to measure the density of the subnetwork composed of the neighborhood of the node i. Local efficiency of ith node is given as Where l i,j is the shortest distance between i and j, and N G i is the number of the neighborhood of node i. Local network efficiency is the average of the local efficiency of all nodes
+
+Average Path Length
+Average path length is a vital index to measure information transmission ability of networks.
+It can be used to evaluate the connectivity of the global functional network, including local and remote connection.
+The average path L is defined as:
+
+TSK Fuzzy Model
+Given an original input dataset X = {x 1 , x 2 , ..., x n } ∈ R d and the corresponding class label Y = y 1 , y 2 , ..., y n (y i,j = 1 when the ith sample belongs to jth class; otherwise, y i,j = 0), the kth fuzzy inference rules are often defined as
+T is input vector of each rule, K is the number of fuzzy rules, A k i are Gaussian antecedent fuzzy sets subscribed by the input variable x i of Rule k, ∧ is a fuzzy conjunction operator, f k (x) is a linear function about the inputs, and β k i are linear parameters.
+With each rule is premised on the sample vector x, the output of a TSK fuzzy system is expressed as
+where
+is the fuzzy membership function and
+is the normalized fuzzy membership function of the antecedent parameters of the kth fuzzy rule.
+While µ A k i (x i ) is Gaussian membership function for fuzzy set A k i that can be expressed as
+where c k i is kth cluster center parameters, which can be calculated with the classical fuzzy c-means (FCM) clustering algorithm
+and the width parameter δ k i can be estimated by
+where the element u jk ∈ [0, 1] denotes the fuzzy membership of nth input sample x n to the kth cluster (k = 1, 2, ..., K), h is a constant called the scale parameter.
+For an input sample x n , let
+then the output value ỹn of a TSK fuzzy classifier for sample x n can be expressed as
+Learning Algorithm
+, where C is the number of classes, the consequent parameter β g can be learned by using generalized hidden-mapping ridge regression (GHRR)
+The objective function is: min
+where is the consequent parameter vector of the jth class is represented by β g,j , λ is a regularization parameter controls the complexity of the classifier, and the tolerance of error λ can be set manually or determined by cross-validation.
+The optimal consequent parameters, β g,j , can be computed by setting the derivatives of J with regard to each β g,j is 0 and the solution is
+
+EXPERIMENTAL RESULTS
+The EEG of AD patients implies a large amount of information that cannot be visually expressed from the waveform.
+Research shows that the visualization algorithm can express the hidden information in the form of images.
+In order to verify whether the AD brain's electrical features can be represented by WVG, we first select the same channel EEG from an AD patient and a control subject.
+Two episodes with a length of 500 data points (as shown in Figures
+The result is shown in Figures
+Studies have reported that it's easy to detect a diffuse slowing in the EEG of AD patients with the naked eye
+This diffuse slowing feature is well-preserved in WVG, and WVG of AD patients can be clearly observed in more communities, indicating the feasibility of WVG method for AD detection.
+For further observation of the topological feature of the WVG network, the two adjacency matrixes are represented as network structure diagrams that shown in Figures
+The dots in figure represent all network nodes and the network edges are represented by curves, and the shade of the curve color can directly reflect the weighted value of the edges.
+It can be observed that the different communities in the WVG network of normal people are generally similar in size and the distributions of connections are uniform.
+The community structure of the networks obtained by the WVG method is more irregular for AD patients.
+Most nodes are concentrated in a small part of communities, and the connection between communities is also closer.
+The result indicates that the electrophysiological signals of AD brains are more unstable, with fluctuations that are stronger.
+Research on single channel reveals that the WVG network of AD and normal people are significantly difference.
+Next, we will transform all 16 channels into multi-networks ({y n }(1 ≤ n ≤ 16)) and each layer of network can be obtained from each channel.
+We further considered which parameters are selected to quantify this difference.
+To reduce the computing time and to retain as much information as possible, the EEG signal is divided into many episodes through sliding windows with lengths of 500 data points.
+Since the size of the converted WVG network is consistent with the length of EEG series, a series of adjacency matrixes of size 500 × 500 are finally obtained.
+Next, we calculate clustering coefficient (x 1 ), graph index complexity (x 2 ), average weighted degree (x 3 ), network entropy (x 4 ), degree distribution index (x 5 ), modularity (x 6 ), local efficiency (x 7 ), and average path length (x 8 ) of each WVG network of both AD and control.
+Above parameters can be obtained from each different network layers, which can be considered as different features.
+Since there is a considerable difference in the magnitude of the values of different parameters, the calculated result is normalized to 0∼1.
+All windows of each person were further averaged, and then a statistical analysis was performed based on each person.
+As shown in Figure
+The values of clustering coefficient, local efficiency, and shortest path length of the AD group are significantly lower than that of controls with p < 0.01.
+Meanwhile, the degree distribution entropy of AD group is higher than that of controls with p < 0.05 while the degree distribution lambda of AD group is lower than that of controls with p < 0.05.The obtained results demonstrate that network topological parameters can be used to detect AD.
+Through statistical analysis, it's obvious that some of the above parameters can clearly distinguish AD from the control group.
+In order to further verify the effect of these parameters on AD recognition, these parameters will be used as input features of the training fuzzy classifier.
+In each training process, we randomly select 80% of the original data to form training datasets which can be used for ten-fold cross-validation (10-CV), with 90% (90% × 80%) utilized for model training and 10% (10% × 80%) for constructing a validation set.
+The above procedure is repeated 10 times to cover the entire training set and finally determine the optimal hyperparameters of the TSK model.
+The remaining 20% of all data is tested as the testing data with determined hyperparameters.
+For each different input feature or feature vector, the classification results (accuracy, sensitivity, specificity) are averaged after training for 50 times.
+The construction of each WVG network is based on a single time series, so 16 WVGs are obtained from 16-channel EEG used in this paper.
+These WVG networks contain different electrophysiological information of neurons in different brain regions.
+However, in the existing studies, the parameters extracted from WVG networks constructed by different brain regions' EEG were usually regarded as the same class of features, so the differences between brain regions were ignored.
+Therefore, we consider the 16 WVG networks as different networks and combine them into a multi-layer network.
+In order to verify whether the underlying dynamic information of these network layers are different, the classification is first performed with a single feature as input.
+Each parameter extracted from each single network layer transformed from different channels is used as the single input feature for model training, and the classification results are shown in Table
+It can be observed that for the same network parameter extracted from different network layers, the classification results are significantly different.
+The difference in classification accuracy of the same parameter from different network can even reach 28.39% for average weighted degree ( x 3 , y k , k = 1, ..., 16), indicating that the dynamic information that contained in EEG of different brain regions does have significant differences and parameters of different layers maybe independent from each other.
+This finding shows that the network characteristics of the multi-network composed of WVG network layers can be used as independent input features for the classifier.
+The input feature vector consisting of multiple parameters is used for fuzzy system training.
+The classification will be performed based on the following three feature sets [as shown in Figure
+(2) Multi-parameters from single network: In the case of one single network layer, different parameters are extracted and selected for combination as a classifier input.
+(3) Multi-parameters from multi-network: All parameters extracted from all network layers are used as different input features to the classifier.
+Then for each set, various feature select methods including Correlation-based Feature Selection (CFS)
+According to the obtained feature sequence, select the different number of features in order (i.e., the first one feature, the first two features, the first three features...) to component the input vectors for the TSK model training process.
+In the feature select process (as shown in Figure
+All the algorithms are implemented with MATLAB 2016b.
+First, case 1 is described as an example, and the structure of TSK is also described in details in following.
+As the clustering coefficient ( x 1 , y 13 ) reached a highest accuracy of 79.96% in Table
+The orders of the features are obtained by various sorting feature selection algorithms.
+After the ranking of network parameters, we choose input feature vectors with different lengths as inputs of TSK model and calculate classification results (accuracy, sensitivity, and specificity), respectively.
+The optimal length of input vectors and classification results are shown in Table
+It can be observed that with different feature select methods, the length of the feature vectors with the optimal classification result is different.
+Besides, the sensitivity is higher than the specificity for the feature vectors filtrated by CFS and DGUFS methods, while the others are opposite.
+It shows that the change of the feature used for training will affect the properties of the trained model.
+As for the parameter set of clustering coefficients extracted from multiple networks, the Fisher method can be used to achieve the optimal classification result.
+The classification process with Fisher method are further explored.
+With the applying of Fisher algorithm, the order of the parameters is obtained as x 1 , y 13 , x 1 , y 9 , x 1 , y 12 , x 1 , y 3 , x 1 , y 1 , x 1 , y 2 , x 1 , y 1 , x 1 , y 6 , x 1 , y 10 , x 1 , y 8 , x 1 , y 5 , x 1 , y 15 , x 1 , y 7 , x 1 , y 4 , x 1 , y 14 , x 1 , y 6 .
+The joint distribution of the first two channels under the ranking is illustrated to verify the effectiveness of the same network parameter of WVG network transformed from different channels as the multi-input for classification.
+The result is shown in Figure
+It's obviously that AD subjects display significant differences from controls, which also demonstrate that local efficiencies, respectively, of channel 9 and channel 13 are effective to classify AD and controls.
+These two parameters can also get the best classification results when multi-network clustering coefficient is taken as single parameter input.
+However, the optimal parameters obtained by feature selection are not completely consistent with those that are optimal for the classification result when a single parameter is used as input.
+This indicates that the information of a single brain region cannot be used as a direct feature to distinguish patients with AD, but the implicit information of different brain regions can complement each other.
+In the above ranking order, five rules TSK classifiers are used with the number of classifier inputs is from 1 to 16 in order, and the final classification results under cross-validation are listed in Figure
+As the length of input feature vector increases, the accuracy reaches a maximum of 95.28% at four inputs and then begins to decrease.
+In this part, the framework of the TSK is also described in details based on the selected optimal combination feature.
+The input vector x consists of the clustering coefficients of channel 13( x 1 , y 13 ), channel 9( x 1 , y 9 ), channel 12( x 1 , y 12 ), and channel 3( x 1 , y 3 ).
+Membership functions can be linguistically expressed using a fuzzy linguistic description including "very low," "low," "medium," "high," and "very high."
+Each membership function of different features corresponds to different description in ascending order of the values of centers.
+To provide further explanation, the clustering coefficient of channel 13 is interpreted as an example.
+We define the gaussian model as a membership function, and each rule will get a set of antecedent parameter (centers, standard variance), respectively, which are (0.3990 0.0031) for Rule 1, (0.3956 0.0030) for Rule 2, (0.4165 0.0032) for Rule 3, (0.4052 0.0031) for Rule 4, and (0.4040 0.0030) for Rule 5.
+By the permutation of these five centers of each rule, membership functions can be described with fuzzy linguistic description: Rule 1 is "very low," Rule 2 is "very high," Rule 3 is "low," Rule 4 is "medium," and Rule 5 is "high."
+The other four features can also be fuzzy and described similarly.
+Therefore, with the linguistic expressions and the corresponding linear function the fuzzy rule can be given as follows:
+R 1 : IFy 13 is very low ∧ y 9 is very low ∧ y 12 is medium ∧ y 3 is very low, THEN f 1 (x) = 0.4975 -0.1872y 13 + 0.1615y 9 + 0.1515y 12 + 0.2134y 3 -0.1385
+-0.0959y 13 -0.0738y 9 -0.0514y 12 -0.1147y 3 , R 2 : IFy 13 is very high ∧ y 9 is very high ∧ y 12 is very low ∧ y 3 is very high, THEN f 2 (x) = -1.99e-4
++ 1.59e-5y 13 -9.79e-5y 9 -2.13e-5y 12 + 2.03e-4y 3 0.0013 + 3.34e-4y 13 + 4.12e-4y 9 + 2.65e-4y 12 + 1.15e-4y 3 , R 3 : IF y 13 is low ∧ y 9 is low ∧ y 12 is high ∧ y 3 is low, THEN f 3 (x) = 0.2508 -0.0485y 13 + 0.0555y 9 + 0.0167y 12 + 0.1049y 3 -0.0039
+-0.0195y 13 -0.0095y 9 -0.0572y 12 -0.0341y 3 , R 4 : IF y 13 is medium ∧ y 9 is high ∧ y 12 is very high ∧ y 3 is medium, THEN f 4 (x) = -0.0536
+-0.0429y 13 -0.0341y 9 -0.0765y 12 -2.05e-4y 3 0.2071 + 0.0872y 13 + 0.0759y 9 + 0.1244y 12 + 0.0450y 3 , R 5 : IF y 13 is high ∧ y 9 is medium ∧ y 12 is low ∧ y 3 is high, THEN f 5 (x) = 0.0130 + 0.0016y 13 -0.0020y 9 + 0.0025y 12 + 0.0041y 3 2.47e-4 + 0.0026y 13 + 0.0017y 9 + 0.0011y 12 + 4.33e-5y 3 .
+The fuzzy system that has been learned based on these five rules above, the example with an input of [0.2098 0.2106 0.3585 0.2264] is given to further explain the mechanism of testing process.
+Inputs of the identification process based on the trained fuzzy system are the network features of an AD patient, and the decision output is the prediction of label vector.
+The sum of the five calculated rulebased outputs is f = [0.8940
+0.00956] T , then the maximal element in f is set to 1 while others to 0 for handling the decision output.
+Finally, AD patient can be identified based on the final value of the output y = 1 0 T .
+Next, multi-parameters from single network are also used as input set for the classifier together.
+The classification results obtained by various feature select methods and the optimal lengths of input feature vectors are shown in Table
+The parameters selected by FSV method can be used to form the vector to obtain the optimal classification result, and the sorted parameters are further analyzed in detail.
+The features in order obtained through the FSV algorithm is x 7 , y 13 , x 1 , y 13 , x 2 , y 13 , x 3 , y 13 , x 8 , y 13 , x 5 , y 13 , x 6 , y 13 , x 4 , y 13 .
+Clustering coefficients ( x 7 , y 13 ) and local efficiencies ( x 1 , y 13 ) are chosen to verify the feasibility of the classification, and the image is shown in Figure
+It is clear that there is a significant difference between the AD and the control group.
+The TSK classification is applied to all feature input groups.
+As shown in Figure
+The optimal combination obtained by the feature sorting method is local efficiency (x 7 ), clustering coefficient (x 1 ), and graph complexity index (x 2 ).
+The graph complexity index has a low discrimination between AD and the control group, and the TSK models trained with graph complexity index extracted from each network layer as single input have low classification accuracy.
+However, the image complexity index can supplement the clustering coefficient and local efficiency, indicating that the redundancy between some parameters from same network layer is small, which is of great significance as a feature of model training.
+Through the above classification results, multiparameters, and multi-networks can both be applied to the TSK classification, and they are not the same type as input sets for model training.
+Finally, the multi-parameters from multi-networks are used for training.
+We further applied different feature select methods on this input set, and find the best feature input vectors, respectively.
+Figure
+The brain area enclosed by the red line is the frontal lobe, the blue is the temporal lobe, the green is the parietal lobe, and the orange is the occipital lobe.
+It can be observed that the parameters that are filtered by different methods are more common to be extracted from the network layers of the frontal EEG.
+This suggests that information in the frontal lobe is more effective in identifying AD patients.
+Damage to the frontal lobe of the brain, which plays a prominent role in thinking and behavior, can lead to forgetfulness, delayed behavior, and distraction.
+Meanwhile, signals from other brain regions also play an important role in AD recognition, indicating that AD disease has a global impact on the brain.
+The best result of multi-parameters from multi-networks set are selected through FSV method, which up to 97.28%.
+The combination is x 7 , y 3 , x 3 , y 13 , x 1 , y 13 , x 3 , y 12 , x 4 , y 4 .
+The accuracy rate with set 3 is improved compared with set 1 and set 2, indicating that it is of certain significance to take multiple parameters extracted from multiple networks as different features.
+
+CONCLUSION AND DISCUSSION
+This paper proposes a multi-input machine learning method that combines fuzzy classifier and WVG to identify AD patient's EEG.
+In order to improve the interpretability and recognition accuracy of the model, complex network theory and TSK fuzzy system model is adopted.
+A WVG network layer is constructed using a single channel EEG.
+The multi-parameters obtained from multiple networks can be used as independent input features for model training, and the TSK model based on fuzzy rules is used to classify AD EEG with better interpretability.
+We considered three types of classification input sets: multiparameters from single network, single parameter from multinetworks, and multi-parameters from multi-networks.
+These three types of inputs are, respectively, applied as the training set of the learning of the TSK model.
+The experimental results show that the fuzzy model-based system model can achieve optimal performance with multi-parameters from multi-networks as classification input set, and the accuracy is up to 97.83%.
+Meanwhile, the optimal input numbers are different for the three types of input sets proposed in this paper.
+The best input combination is 5 input features in the input set of multiparameters from multi-networks.
+The current clinical techniques of AD identification, mainly including the scale assessing, cerebrospinal fluid examination, and the observation of atrophy of gray matter through the brain functional imaging, are difficult to obtain reliable diagnostic markers.
+It is also difficult to find obvious organic changes in the early stage of AD.
+We propose an AD diagnostic model that combines the TSK fuzzy model with complex network obtained by WVG method and propose three different kinds of training input sets, which provides a new method for the search of AD EEG biomarkers.
+Compared with traditional methods, the AD identification approach proposed in this paper, has lower implementation difficulty and higher accuracy.
+EEG, which is commonly considered to have significant chaotic characteristics, cannot be well-evaluated with linear analysis.
+The WVG method used in this paper can transform the one-dimensional time series into images and extract the underlying information contained in electrophysiological activities of different brain regions.
+In contrast with other network construction methods like synchronous network, the WVG networks obtained by each EEG channel are independent of each other.
+Thus, more network features can be found and effective biomarkers can be obtained from kinds of feature sets with WVG
+The classification results show that this WVG method is very effective for feature extraction of AD recognition.
+In future works it will be combined with multi-layer network theory, further discussing the correlation between different channels with constructing multi-layer network.
+In past research we confirmed the feasibility of the multi-layer network scheme, and extracted the multiplex clustering coefficient and multiplex participation coefficient
+Future work will consider both the implicit characteristics of single channels and the information integration between multiple channels.
+We propose three different kinds of feature sets and prove that the optimal parameter vectors can be obtained from the set multi-parameters from multi-networks.
+This finding indicates that simultaneously considering different networks and different parameters as disparate features has obvious help for the acquisition of AD biomarkers.
+At the same time, the classification results show that the excessive features as input is not conducive to the optimization of the classification model, so it is necessary to reduce the feature dimension.
+Too much feature increase may lead to the overfitting of the learning model, and even the increase of invalid features may lead to the decrease of the accuracy based on test set
+Therefore, the application of feature selection plays an important role in improving the accuracy of fuzzy learning models.
+In this paper, we combined the identification model combining feature selection approaches with machine learning.
+Researchers can effectively reduce the number of EEG channels, and the difficulty of data collection will be significantly reduced.
+Meanwhile, with the reduction of the parameters, it can be easier to improve the efficiency of the AD recognition process.
+Compared with traditional manual diagnosis, machine learning methods have higher reliability, and improved recognition accuracy.
+Especially, the TSK method has higher interpretability and robustness by integrating the advantages of fuzzy rules and membership functions.
+There are still some limitations in our research.
+We used a variety of feature selection methods, but a feature selection method suitable for the highly interpretable TSK model is necessary to be considered.
+Future work may focus on how to select features more efficiently and accurately to achieve higher classification accuracy.
+
+
+
+FIGURE 2 |
+FIGURE 2 | An example of converting EEG signal from an AD subject and a control subject into a WVG.
+EEG signals of FP1 channel from AD (A) subject and control (B) subject with 5s length.
+The adjacency matrixes of the converted WVGs respectively for AD (C) subject and control (D) subject.
+Schematic diagram of complex networks corresponding to WVGs of AD (E) subject and control (F) subject.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Network parameters (averaged across subjects) of both AD networks and control networks.
+Error bars represent standard error across subjects.
+The degree of significant difference is calculated by Analysis of Variance (ANOVA) across all subjects.
+**A significant correlation (p c ≤ 0.01 corrected for multiple comparisons across tiles).
+*A trend (p c ≤ 0.05).
+
+
+ỹ
+
+
+
+FIGURE 4 |
+FIGURE 4 | (A) Joint distribution of clustering coefficient obtained from WVG network transformed from Channel 13 and Channel 9. (B) Classification results when the number of input features is from 1 to 16, which is obtained under single parameter (clustering coefficient) from multi-networks set and ordered through feature selection method.
+
+
+
+FIGURE 5 |
+FIGURE 5 | (A) Joint distribution of clustering coefficient and local efficiency obtained from WVG network obtained from Channel 13. (B) Classification results when the number of input features is from 1 to 8, which is obtained under multi-parameters from single network (y 13 ) set and ordered through feature selection method.
+
+
+
+FIGURE 6 |
+FIGURE 6 |The schematic diagram of channel position with the frontal lobe is marked within red lines, the temporal lobe in blue, the parietal lobe in green, and the occipital lobe in orange.
+The optimal parameters and corresponding classification results under different feature select methods.
+
+
+
+TABLE 1 |
+Classification results with each single parameter from single network layer is taken as input feature.
+
+
+
+TABLE 2 |
+Classification results with the set of single parameter from multiple networks is taken as input feature vector.
+
+
+
+TABLE 3 |
+Classification results with the set of multiple parameters from single network is taken as input feature vector.

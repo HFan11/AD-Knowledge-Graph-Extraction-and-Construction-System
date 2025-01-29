@@ -1,0 +1,395 @@
+Multi-task exclusive relationship learning for alzheimer’s disease progression prediction with longitudinal data
+Alzheimer's disease (AD) is a neurodegenerative disorder characterized by progressive impairment of memory and other cognitive functions.
+Currently, many multi-task learning approaches have been proposed to predict the disease progression at the early stage using longitudinal data, with each task corresponding to a particular time point.
+However, the underlying association among different time points in disease progression is still under-explored in previous studies.
+To this end, we propose a multi-task exclusive relationship learning model to automatically capture the intrinsic relationship among tasks at different time points for estimating clinical measures based on longitudinal imaging data.
+The proposed method can select the most discriminative features for different tasks and also model the intrinsic relatedness among different time points, by utilizing an exclusive lasso regularization and a relationship induced regularization.
+Specifically, the exclusive lasso regularization enables partial group structure feature selection among the longitudinal data, while the relationship induced regularization efficiently introduces the relationship information from data to guide knowledge transfer.
+We further develop an efficient optimization algorithm to solve the proposed objective function.
+Extensive experiments on both synthetic and real datasets demonstrate the effectiveness of our proposed method.
+In comparison with several state-of-the-art methods, our proposed method can achieve promising performance for cognitive status prediction and also can help discover disease-related biomarkers.
+
+Introduction
+Alzheimer's disease (AD), characterized by progressive impairment of memory and cognitive functions, is the most common type of dementia in elderly people.
+As life expectancy increases, the number of AD patients will also increase correspondingly, resulting in a heavy socio-economic burden
+It was reported that there are 26.6 million AD cases in the world in 2006, and about 56% of the cases are at the early stage (called mild cognitive impairment, MCI).
+In 2050, the AD population will increase to over 100 million
+With the need for markers that can track the progress of the disease becomes increasingly urgent, many research groups have devoted their efforts to improve the understanding and monitoring of AD progression
+Neuroimaging has proven to be a powerful tool for characterizing the neurodegenerative process of AD
+In recent decades, neuroimaging-based longitudinal studies have been widely investigated to predict cognitive status, using data at multiple time points.
+Many cognitive measures have been designed to evaluate the cognitive decline, e.g., the Mini Mental State Examination (MMSE) and the Alzheimer's Disease Assessment Scale Cognitive subscale (ADAS-Cog), which can be used to partially reveal AD progression.
+It has been reported that MMSE is correlated with the underlying AD pathology and neurodegenerative mechanism
+However, to accurately predict the progression of AD/MCI remains a challenging task, since it is difficult to model the association between imaging features and a specific cognitive measure at multiple time points.
+To address the above challenges, there already exist several feature selection efforts dedicated to AD disease progression modeling, which have been demonstrated as a useful way to reflect the association among prediction tasks at multiple time points.
+These efforts generally fall into two categories:1) single-task learning, and 2) multi-task learning.
+In the first category, the disease progression at different time points is estimated separately.
+That is, neither the association between imaging features and a specific task nor the correlation among tasks is explored in single-task learning.
+For instance, Duchesne et al.
+Since single-task learning treats each task as a stand-alone task (i.e., without considering the intrinsic association among different tasks), the performance of these approaches could be suboptimal in progression predicting of brain diseases.
+As another line of e orts, the multi-task learning (MTL) paradigm
+For instance, Zhou et al.
+Jie et al.
+Most of the existing multi-task learning methods focus on learning multiple related tasks (e.g., estimating multiple types of cognitive scores) simultaneously, and introducing particular regularization terms to model the prior knowledge of the longitudinal data (e.g., different tasks share a common subset of features).
+For instance, in predicting cognitive scores, we usually expect to discover the commonality across different time points, thereby a group lasso regularizer is widely used to impose the structured sparsity on a parameter matrix in the longitudinal analysis
+The underlying assumption for group lasso regularizer is that these tasks are equally related to each other.
+That is, when one feature is important for several tasks, it is also expected to be important for the remaining tasks
+We argue that such an assumption is too strong, because the true correlation among tasks for different clinical score predictions is actually unknown in practice.
+Also, if a specific feature is only discriminant to a particular task, conventional group lasso regularizer is prone to ignore this feature, because the group lasso regularizer mainly focuses on shared features among all tasks.
+Thus, more properly designed structured sparsity induced norms are desired in the longitudinal analysis for AD progression prediction.
+In this paper, we propose a multi-task exclusive relationship learning (MTERL) approach to select predictive markers for disease progression prediction.
+In particular, our method can learn the intrinsic relatedness among multiple cognitive measures from data automatically, without assuming them to be known in advance.
+Specifically, we define a novel objective function to utilize the relationship information from adjacent time points.
+We first learn a least square regression model by using data from each time points, and further introduce the new mixed structured sparsity norms to overcome the above drawback in the existing sparse learning based feature selection models.
+For accurate identification of effective imaging markers, we utilize the exclusive lasso regularization which can select a specific set of biomarkers at different time points for disease progression prediction.
+different from the group lasso regularization, if one feature in a group is given a large weight, the other features in the same group will tend to be assigned with small weights or even zero.
+In addition, to reflect the intrinsic relatedness from adjacent time points, we introduce the relationship induced regularization that can automatically learn the relatedness among the tasks from data.
+Unlike most previous multi-task based regression models (e.g.,
+To evaluate the efficiency of our proposed method, we perform experiments on both synthetic and real datasets.
+For real dataset, we conduct experiments on 445 subjects from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database with MRI data.
+Specifically, each subject has baseline MRI data and two types of clinical scores (i.e., MMSE and ADAS-Cog) at 4 different time points (i.e., baseline, 6-month, 12-month and 24month).
+The experimental results show that the proposed method yields clearly improved prediction performance, compared with methods in previous studies.
+The remainder of the paper is structured as follows.
+In Section 2, we describe the image preprocessing method and our proposed multi-task exclusive relationship learning approach.
+The experimental settings and experimental results are then described in Section 3 and Section 4, respectively.
+In Section 5, we investigate the influence of parameters, the significance of selected biomarkers, as well as the limitations of our method.
+Finally, a conclusion of this paper is presented in Section 6.
+
+Materials and Method
+
+Subjects
+Data used in the preparation of this study were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+ADNI is funded $60 million by the National Institute on Aging (NIA), the National Institute of Biomedical Imaging and Bioengineering (NIBIB), the Food and Drug Administration (FDA), private pharmaceutical companies, and non-profit organizations in 2003.
+One goal of ADNI is to verify whether the serial MRI and positron emission tomography (PET), along with other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.
+In this study, a total of 445 ADNI subjects with all corresponding MRI data as well as two types of cognitive scores (i.e., MMSE and ADAS-Cog) at 4 different time points (i.e., baseline, 6-month, 12-month and 24-month) are used.
+Specifically, there are 91 AD, 152 NC, and 202 MCI subjects used in this study.
+Also, among 202 MCI subjects, there are 104 MCI converters (MCI-C) who progressed to AD in 36 months after the baseline time, and 98 MCI non-converters (MCI-NC) who did not progress to AD.
+In Table
+More details on acquiring MRI data from ADNI can be found at
+Briefly, the structural MR scan was obtained from each subject by using 1.5T scanners.
+We download the Raw Digital Imaging and Communications in Medicine (DICOM) MRI data from the public ADNI website (
+reviewed for quality, and automatically corrected for spatial distortion caused by gradient nonlinearity and B1 field inhomogeneity.
+
+Image Pre-processing
+In this study, image pre-processing is performed following the same procedures as in
+Specifically, the anterior commissure (AC) -posterior commissure (PC) correction was first performed for all images, followed by the N3 algorithm
+Subsequently, skull stripping was performed on structural MR images, after which the cerebellum was removed from the skull-stripping image.
+Then, the FAST method
+After segmentation, all images were registered by HAMMER registration method
+Finally, the brain image of each subject was partitioned into 93 ROIs by atlas warping, and the total GM volume of each ROI was computed as the feature representation.
+In this study, we only use GM for feature extraction, because GM is the most affected tissue by AD and also widely used in the neuroimagingbased analysis
+Similar to previous studies
+
+Multi-Task Exclusive Relationship Learning
+In this paper, we focus on the problem of predicting longitudinal cognitive trajectories through time by using neuroimaging data.
+Since the cognitive scores from different time points can provide complementary perspectives on neuropsychological assessments, we aim to seek a jointly multi-task linear regression model to reveal the longitudinal associations between the phenotypic markers and the cognitive trajectories.
+In the following, we will elaborate the multi-task exclusive relationship learning (MTERL) model in detail.
+For AD progression prediction using longitudinal phenotypic markers, we assume that the number of training subjects is N, and each subject has its corresponding imaging data at T different time points, represented as
+, 1 ; y t, 2 ; ⋯; y t, N ∈ ℛ N × 1 as the disease status at the t-th time point for all training subjects.
+We denote f t (x) = X t w t as the linear predictive function to estimate the clinical score from imaging data at the t-th time point, where w T ∈ ℛ d × 1 is the feature weight vector.
+Let W = w 1 , w 2 , ⋯, w T ∈ ℛ d × T denote the weight matrix we aim to learn for all T time points, with column vector corresponding to one specific task.
+We thus have the following standard exclusive lasso model:
+where the first term is a square loss function that measures the loss on the training data for all tasks.
+Let h(W)
+2 be the exclusive lasso term
+That is, if a feature is assigned a very large weight in one task, the weights for the same feature in the other tasks are expected to be small or even zero.
+As a result, it can capture the consecutive changes in the brain between adjacent time points, helping to reveal the unique information conveyed in MRI at a particular time point.
+So far, the standard exclusive lasso model has been able to capture the partial group structures across all the cognitive scores, i.e., each imaging marker has either small score or large score for each specific cognitive measure.
+Besides, to automatically learn the relationship of different prediction tasks, we propose to use the relationship induced term
+with Ω ≥ 0 and tr(Ω) = 1.
+Here, tr(•) denotes the trace of a square matrix, Ω -1 denotes the inverse of the matrix Ω, and Ω is defined as a task covariance matrix that will benefit learning on weight matrix by inducing the correct relationship in longitudinal analysis.
+The relatedness among multiple clinical scores helps reflect the smooth changes between data derived from adjacent time points.
+The constraint term Ω ≥ 0 is used to restrict Ω as positive semi-definite matrix, and tr(Ω) = 1 is used to penalize the complexity of Ω.
+By incorporating the relationship induced term defined in Eq. (2) into Eq.
+(
+where λ and γ are the regularization parameters to control the balance between the exclusive lasso regularization and the relationship induced regularization.
+It is easy to know that when γ = 0, our method will degenerate to the standard exclusive lasso method
+In the following section, we will develop an efficient optimization algorithm to solve the objective function defined in Eq. (3).
+
+Optimization
+The objective function in Eq. (
+Specifically, we first optimize W with a fixed Ω, and then optimize Ω when W is fixed.
+2.4.1.
+Optimizing w.r.t.
+W when Ω is fixed-When Ω is given and fixed, the objective function of Eq. (
+Fortunately, according to
+where
+2 and μ is the positive smoothness parameter.
+The V i (W i ) is the unique minimizer of q μ (W i ), for a fixed W i , it can be denoted as
+Moreover, according to
+Hence, the i-th column gradient of Eq. (
+2.4.2.
+Optimizing w.r.t.
+Ω when W is fixed-When W is given and fixed, the optimization problem for finding Ω can be stated as:
+According to
+. (
+Algorithm 1:
+Alternating optimization for solving the proposed MTERL model
+Input: X,Y, λ, γ, μ;
+Output: w t , Ω;
+1 Initialize Calculate L μ , set w 0 , v 0 and let α 0 = 1, t = 0;
+2 repeat 3 Given Ω, optimization of w t :
+5 Compute the ∇h(u t ) according to Eq. (
+9 Given w t , optimization of Ω:
+Calculate the analytical solution for Ω, according to Eq. (
+
+Validation
+To evaluate the efficacy of the proposed disease progression model, we perform experiments on 445 ADNI MRI data with the corresponding cognitive scores (i.e., MMSE and ADAS-Cog), tracked over four different time points (i.e., baseline, 6-month, 12-month and 24month).
+In the experiments, we use a 10-fold cross-validation strategy to evaluate the performance of our proposed method and those compared methods.
+Specifically, the whole set of subjects are randomly partitioned into 10 subsets (with roughly equal size), and the subjects within one subset are selected as the test data each time, while all other subjects in the remaining nine subsets are used to train the regression models.
+The support vector regressor (SVR) and support vector classifier (SVC) with a linear kernel with a default parameter (i.e., C = 1)
+We perform another 5-fold cross-validation to choose the parameters using a line search strategy in the range [10 -4 , 10 -3 , ⋯, 10
+After cross-validation, we choose the parameters with the best performance on the training data.
+To avoid randomness during dataset partitioning, we repeat the process ten times.
+We report the final performance after averaging the results of the repeated cross-validations.
+Also, to examine that the selected compact set of imaging markers by the proposed method are closely related to cognitive trajectories, we compare the following methods in disease progression domain for evaluation.
+
+1.
+Lasso
+Lasso, being regularized by ℓ 1 -norm, performs variable selection to enhance the prediction/regression performance.
+So it has been one of the most widely used methods to estimate the future disease status by modeling the cognitive measures at different time points separately.
+
+2.
+Multi-task Feature Learning (MTFL)
+MTFL is considered to be the ℓ 2,1 -norm regularized regression model for joint feature selection from multiple tasks.
+One appealing feature of this method is that it encourages multiple predictors to share similar sparsity patterns.
+
+3.
+Multi-task Exclusive Lasso (MTEL)
+Essentially, the proposed method is an extension of MTEL work without considering the intrinsic relatedness across multiple time points.
+different from the ℓ 2,1 -norm regularization, the exclusive lasso regularization models the scenario when variables in the same group compete with each other.
+
+4.
+Multi-task Relationship Learning (MTRL)
+MTRL learns task relationship matrix under a regularization framework.
+This model can be viewed as a novel generalization of the regularization framework for singletask learning.
+The task relationship matrix and model parameters (i.e., ρ and η which control the model complexity and relationship measure separately), can be learned iteratively.
+Both methods are implemented with a least squared loss function.
+For Lasso, MTFL and MTEL the trade-off parameter is chosen from the set [10 -4 , 10 -3 , ⋯, 10 2 ].
+The candidate set for both trade-off parameters in MTRL (i.e., ρ and η) and MTERL (i.e., λ and γ) is [10 -4 , 10 -3 , ⋯, 10 2 ].
+Note that unless otherwise specified, all the regularization parameters are tuned via another 5-fold cross-validation on the training data.
+We evaluate the performance of different methods via three criteria, i.e., normalized mean squared error (nMSE), root mean square error (rMSE) and Pearson's correlation coefficient (Corr).
+More specifically, the nMSE is commonly used in multi-task learning literature
+The rMSE and Corr are widely used in measuring performances of regression and association analysis between the predicted and the actual clinical scores
+It is worth noting that, for the nMSE and rMSE criteria, the smaller the value, the better performance.
+For the Corr criteria, the greater the value, the better performance.
+
+Experiment
+In this section, we first show results on the simulation data, and then present the disease prediction results on the ADNI database with longitudinal brain MRI data.
+
+Results on Simulation Data
+In this subsection, we use a toy example to show that our MTERL method would infer a correct relationship before we do experiments on real datasets.
+Specifically, we first generate the toy dataset as follows.
+There are three regression tasks defined as y = 4x + 13, y = -4x -6 and y = 1, respectively.
+For each task, we randomly generate 15 points from a uniform distribution in [0, 10].
+The corresponding function outputs are corrupted by a Gaussian noise process with zero mean and variance equal to 0.1.
+One example of the toy data is plotted in Fig.
+Based on the coefficients of three regression functions, we expect the correlation between the first two tasks to be -1, and the correlation among other tasks to approach 0. For the proposed MTERL model, we empirically set λ 1 to 0.01 and λ 2 to 0.005.
+The correlation matrix (i.e., Ω) learned by MTERL is shown in Fig.
+-9.2830 and y = 0.0622x + 0.0114.
+These results demonstrate that the relationship among three tasks learned by our proposed MTERL method is consistent with our expectation.
+Besides, we show the change of the objective function values on simulation data in Fig.
+
+Results on Real-world Longitudinal Data
+In this section, to validate the effectiveness of our proposed MTERL method, we conduct experiments on the real ADNI dataset to study how the changes in the brain are associated with different clinical dementia scores (i.e., ADAS-Cog, and MMSE) at four time points (i.e., baseline, 6-month, 12-month and 24-month).
+Specifically, we treat the prediction of the cognitive scores at each time point as a learning task, so we have 4 regression tasks.
+We first partition the brain image of each subject into 93 ROIs with pre-defined template and compute the total GM volume of corresponding region as the feature.
+Thus, we obtained a 93 dimensional feature vector for representing each subject.
+We then use the 93 dimensional representation data of 445 subjects and the corresponding cognitive scores to jointly learn the linear predictive models as formulated in Eq. (3).
+
+Learned Relationship among
+Tasks-On the real-world ADNI dataset, we show the learned relationship (i.e., Ω in Eq. (
+The experimental results are shown in Fig.
+From Fig.
+Also, compared with the learned relationship by MTERL, the relationship learned by MTRL is lower at four time points with respect to both ADASCog and MMSE, which is a bit counter-intuitive that multiple time points tend to play similar roles.
+Hence, exploiting the real relationships among multiple tasks, as we do via the regularization term in Eq. (
+
+Regression
+Results-In Fig.
+From the results of longitudinal cognitive scores prediction in Fig.
+First, the joint learning methods considering the cognitive progression information from multiple time points generally achieve significantly better performance, compared with the single task learning method (i.e., Lasso).
+This demonstrates that, the relation information among multiple time points is beneficial to the predicting of disease progression.
+Second, our proposed MTERL method, which models the intrinsic relation from adjacent time points automatically, consistently outperforms four competing methods regarding nMSE, rMSE and Corr.
+Specifically, MTERL achieves the average (i.e., across four time points) nMSE of 0.56 and 0.61 for estimating ADAS-Cog and MMSE scores, respectively.
+Also, MTERL achieves the average rMSE of 0.76 and 0.79 for estimating ADAS-Cog and MMSE scores, respectively.
+These results validate the efficacy of our proposed method, which not only considers the partial group structures within phenotypic markers but also models the correlations among cognitive measures in jointly estimating the clinical scores based on the longitudinal analysis.
+Finally, it is worth noting that, Fig.
+The possible reason for high performance at the late time point is that the relationship between imaging features and clinical scores becomes much stronger with the progress of disease or brain aging (e.g., atrophy in the brain is more obvious in advanced disease), and thus the related features are more distinctive and correlated to the clinical scores.
+The McNemar test
+We report the p-values in Fig.
+We also show the scatter plots for the predicted values versus the actual values for ADAS-Cog and MMSE on the testing data in Fig.
+Specifically, for each time point, we learn a linear SVR on training subjects and estimate ADAS-Cog and MMSE scores for testing subjects, respectively.
+From Fig.
+Also, Fig.
+These results further validate the effectiveness of the proposed MTERL method in estimating clinical scores using longitudinal data.
+
+Results of MCI Conversion Prediction using Informative Biomarkers-
+In this set of experiments, we conduct the classification task of predicting the future conversion of MCI patients based on only the baseline MRI data, where the informative biomarkers discovered in the regression experiments are fed into a particular classifier.
+Specifically, for each competing method, we first build a prediction model using longitudinal training MRI data at four time points to select the important brain regions (with respect to ADAS-Cog/MMSE scores).
+Then, we choose the top cumulative absolute weight across different time points as the important brain regions for the multi-task-based classification methods.
+It is worth noting that, for the Lasso method that learns at four time points separately, we select only the brain regions with higher absolute weights at the baseline for subsequent classification.
+Finally, we train the corresponding support vector machine (SVM) classifiers with different numbers of above-selected features (w.r.t., brain regions) from the baseline training MRI data, respectively.
+In Figs.
+9-10, we show the classification accuracy using different numbers of selected features on the baseline MRI data.
+From Figs. 9-10, we can clearly see that the prediction results of our MTERL method consistently outperform the competing methods in nearly all the test cases.
+Also, MTERL can achieve the best performance with a smaller number (i.e., 15) of selected features, in comparison to other methods.
+The underlying reason for the superiority of our MTERL method over four competing methods could be listed as follows.
+Lasso independently estimates the cognitive measures at different time points, which neglects the correlations across different time points.
+Although the MTFL method can learn the underlying relationship among the prediction tasks at different time points, it simply assumes that these tasks are closed to each other by using the l 2 , 1 -norm, while such assumption is too strong and may not hold true in practice.
+Also, unlike MTRL and MTEL which consider one of the partial group structures within longitudinal phenotypic markers or the correlations shared among different tasks, the proposed MTERL method captures all the valuable information (i.e., partial group structures and correlation shared among different tasks) for AD progression prediction.
+We also summarize the performance of different methods in Table
+We further use the McNemar's test
+For instance, the ACC value obtained by our method is 71.98% in the conversion of MCI classification, which is better than the second-best result 69.28% yielded by MTFL method with guidance from ADAS-Cog.
+Also, our method achieves a classification accuracy of 73.04%, a sensitivity of 78.29%, and a specificity of 68.89% with the guidance from MMSE.
+These results are consistently better than other methods on each performance measure.
+In addition, Table
+
+Informative Brain
+Regions-It is meaningful to identify a subset of biomarkers which are highly correlated to the AD progression.
+Therefore, we investigate the top ten brain regions identified by our proposed method in this section.
+It is worth noting that, because the selected brain regions are different in each 10-fold cross-validation, we choose the cumulative absolute weight
+Fig.
+From Table
+In previous studies
+Meanwhile, the hippocampus plays an important role in identifying brain conditions through AD modeling and measuring the cognitive outcomes such as ADAS-Cog and MMSE, which has been confirmed by existing works
+In addition, the selected brain regions such as uncus and middle temporal regions are also sensitive to AD diagnosis, which also has been observed in previous studies
+To sum up, the identified imaging markers are highly suggestive and effective for tracking the progression of AD, since it strongly agrees with the existing research findings.
+
+Comparison with
+State-of-the-Art Methods-Furthermore, we compare the results achieved by our method with several recent state-of-the-art results reported in the literature studying the relationship between cognitive scores and imaging markers (i.e., clinical score regression based on MRI data).
+We list the details of each method and the corresponding results in Table
+Specifically, our method achieves the average correlation coefficient of longitudinal analysis with respect to ADAS-Cog and MMSE scores are 0.664 and 0.625, respectively.
+It is worth noting that, although a previous study in
+
+Discussion
+In this section, we first investigate the influence of parameters.
+Then we analyze the effectiveness of the biomarkers identified by the proposed method.
+Finally, we further discuss the limitations of the proposed method.
+
+Influence of Parameters
+There are two important parameters (i.e., λ and γ) in our proposed method, which is used to balance the relative contribution of two regularization terms.
+Now we investigate the influence of these two parameters on the performances of our method in the regression tasks with respect to ADAS-Cog and MMSE scores.
+Specifically, we vary the value of λ and γ from the range {10 -4 , 10 -3 , ⋯, 10 2 }, and record results achieved by our method in both tasks of ADAS-Cog and MMSE score regression in Fig.
+From Fig.
+
+effectiveness of MRI Biomarkers
+The correlation analysis between biomarkers and the clinical scores reveals the effective for tacking the progression of AD, which has been widely used in medical imaging analysis
+In Fig.
+Specifically, the values of MRI imaging in the region of corpus callosum have a significant negative correlation with MMSE scores, while the values of hippocampal formation left show a positive correlation with MMSE scores.
+This correlation indicates that these biomarkers are sensitive to the clinical status of AD, and have the potential to be used as a diagnostic indicator.
+
+Limitations
+There are still several limitations to be considered in this study.
+First, the current study requires each subject has complete data, (i.e., subjects with MRI data and clinical scores at each time point), which limits the size of subjects that can be used the auditory verbal learning test (AVLT).
+Since the clinical variables are helpful to reflect the status of AD progression, using more continuous clinical values may help discover more robust disease-relevant markers, which will also be one of our future works.
+
+Conclusion
+In this paper, we proposed a novel multi-task exclusive relationship learning model, aiming to reveal the relationship among prediction tasks for cognitive measures at different time points based on longitudinal neuroimaging markers.
+Specifically, an exclusive lasso regularization and a relationship induced regularization are used to encourage the partial group structure feature selection among the longitudinal data and to capture the relationship among tasks, respectively.
+To efficiently solve the proposed objective function, we develop an iterative algorithm with a closed form solution in each iteration.
+We have proved the convergence of our algorithm on simulation data.
+Also, experimental results on the real ADNI dataset with MRI data demonstrate that our method outperforms those state-of-the-art approaches in both tasks of estimating clinical scores and brain disease classification.
+The learned task correlation matrix.
+The correlation matrix learned by our MTRL method among four regression tasks for estimating (a) ADAS-Cog and (b) MMSE, respectively.
+Note that each regression task is corresponding to a particular time point.
+BL: baseline; M06: 6 months after baseline; M12: 12 months after baseline; M24: 24 months after baseline.
+The correlation matrix learned by our MTERL method among four regression tasks for estimating (a) ADAS-Cog and (b) MMSE, respectively.
+Note that each regression task is corresponding to a particular time point.
+BL: baseline; M06: 6 months after baseline; M12: 12 months after baseline; M24: 24 months after baseline.
+Classification results achieved by different methods using features selected from the corresponding regression model for ADAS-Cog estimation.
+
+
+
+Figure 1 :
+Figure 1:Illustration of the simulation data, with each color denoting data points in a specific task.
+
+
+Figure 2:
+
+
+
+Figure 3 :
+Figure 3: Convergence of the objective function on simulation data.
+
+
+Figure 4:
+
+
+Figure 5:
+
+
+
+Figure 6 :
+Figure 6: Comparison of different methods on longitudinal ADAS-Cog and MMSE prediction in terms of (a) normalized mean square error (nMSE), (b) root mean square error (rMSE) and (c) Pearson's correlation coefficient (Corr).
+BL: baseline; M06: 6 months after baseline; M12: 12 months after baseline; M24: 24 months after baseline.
+
+
+
+Figure 7 :
+Figure 7: Scatter plots of actual ADAS-Cog scores versus predicted values on testing data achieved by our proposed method based on MRI features at different time points.
+(a) Baseline (BL), (b) 6 months (M06), (c) 12 months (M12) and (d) 24 months (M24).
+Corr: Correlation coefficient between estimated scores and actual scores.
+
+
+
+Figure 8 :
+Figure 8: Scatter plots of actual MMSE scores versus predicted values on testing data achieved by our proposed method based on MRI features at different time points.
+(a) Baseline (BL), (b) 6 months (M06), (c) 12 months (M12) and (d) 24 months (M24).
+Corr: Correlation coefficient between estimated scores and actual scores.
+
+
+Figure 9:
+
+
+
+Figure 10 :
+Figure 10:Classification results achieved by different methods using features selected from the corresponding regression model for MMSE estimation.
+
+
+
+Figure 11 :
+Figure 11: The important brain regions identified by the proposed method when estimating clinical scores.
+(a) ADAS-Cog score, (b) MMSE score.
+
+
+
+Figure 12 :
+Figure 12: Regression performance achieved by our method when estimating ADAS-Cog score with different criterias.
+(a) nMSE, (b) rMSE and (c) Corr.
+
+
+
+Figure 13 :
+Figure 13: Regression performance achieved by our method when estimating MMSE score with different criterias.
+(a) nMSE, (b) rMSE and (c) Corr.
+
+
+
+Figure 14 :
+Figure 14: Correlation between selected biomarker (i.e., corpus callosum) and MMSE score at different time points.
+(a) Baseline (BL), (b) 6 months (M06), (c) 12 months (M12) and (d) 24 months (M24).
+
+
+
+Figure 15 :
+Figure 15: Correlation between selected biomarker (i.e., hippocampal formation left) and MMSE score at different time points.
+(a) Baseline (BL), (b) 6 months (M06), (c) 12 months (M12) and (d) 24 months (M24).
+
+
+. For example, while there are more than 400 MCI subjects in the ADNI dataset, there are only 202 MCI subjects having complete MRI data and the corresponding ADAS-Cog and MMSE scores at four time points (i.e., BL, M06, M12, and M24).
+Second, in the current study, we performed experiments to estimate the clinical scores based on only MRI data.
+Actually, there exist many other data modalities (e.g., PET and CSF) for subjects in ADNI.
+It is interesting to apply our method to disease progression prediction using multimodality data for further performance improvement.
+Third, in the practical prediction of AD progression, besides ADAS-Cog and MMSE scores, the sub-scores of clinical variables or other clinical variables are generally acquired, e.g., the clinical dementia rating scale sum of boxes (CDR-SOB) and
+
+
+
+Table 1 :
+Demographic information of the studied subjects at different time points.
+The values are denoted as Mean ±Stand Deviation (SD).
+BL: Baseline; M06: 6 month after baseline; M12: 12 month after baseline; M24: 24 month after baseline.
+
+
+
+Table 2 :
+The average performance of different methods in predicting the conversion of MCI patients at their best dimensions.
+ACC=Accuracy; SEN=Sensitivity; SPE=Specificity; AUC= Area Under Curve.

@@ -1,0 +1,394 @@
+Alzheimer's Disease Detection Through Whole-Brain 3D-CNN MRI
+The projected burden of dementia by Alzheimer's disease (AD) represents a looming healthcare crisis as the population of most countries grows older.
+Although there is currently no cure, it is possible to treat symptoms of dementia.
+Early diagnosis is paramount to the development and success of interventions, and neuroimaging represents one of the most promising areas for early detection of AD.
+We aimed to deploy advanced deep learning methods to determine whether they can extract useful AD biomarkers from structural magnetic resonance imaging (sMRI) and classify brain images into AD, mild cognitive impairment (MCI), and cognitively normal (CN) groups.
+We tailored and trained Convolutional Neural Networks (CNNs) on sMRIs of the brain from datasets available in online databases.
+Our proposed method, ADNet, was evaluated on the CADDementia challenge and outperformed several approaches in the prior art.
+The method's configuration with machine-learning domain adaptation, ADNet-DA, reached 52.3% accuracy.
+Contributions of our study include devising a deep learning system that is entirely automatic and comparatively fast, presenting competitive results without using any patient's domain-specific knowledge about the disease.
+We were able to implement an end-to-end CNN system to classify subjects into AD, MCI, or CN groups, reflecting the identification of distinctive elements in brain images.
+In this context, our system represents a promising tool in finding biomarkers to help with the diagnosis of AD and, eventually, many other diseases.
+
+INTRODUCTION
+Dementia by Alzheimer's disease (AD) is characterized by multiple cognitive problems, including difficulties in memory, executive functions, language, and visuospatial skills.
+The most significant risk for AD is aging-there is almost a 15-fold increase in the prevalence of dementia between the ages of 60 and 85 years
+The projected burden of the disease represents a looming healthcare crisis as the population of most industrialized countries continues to grow older.
+Although there is still no cure, it is possible to treat both cognitive and behavioral symptoms of AD.
+The early diagnosis of the disease is paramount for interventions, and clinical trials in AD tend to enroll subjects at earlier time-points before neuronal degeneration has achieved a particular stage and treatment is often more effective.
+In this context, neuroimaging is one of the most promising areas of research for early detection of AD, as the progressive degeneration of brain structures can be seen as a dramatic cerebral shrinkage in structural magnetic resonance imaging (sMRI).
+Thus far, works in this area have recurrently considered only a small number of subjects and images, often with curated data (i.e., reviewed, prepared, and organized by experts), such as ADNI's Standardized MRI Data Sets
+Additionally, with the lack of a standard evaluation protocol, each study employed its criteria, with its own random data split.
+The lack of standardization limits the comparison between different methods and usually overestimates performance in a real-world scenario.
+When data is not readily preprocessed and comes from different sources, this situation is even more problematic.
+A recent and extensive review
+Data leakage possibilities only emphasize the need for an independent set of images for evaluation.
+In addition to this review,
+For fair comparisons between different methods, a few challenges with standard protocols and hidden test labels were launched, such as the CADDementia challenge
+Although presenting a good classifier-63.0%
+accuracy in classifying MRI images into cognitively normal (CN), mild cognitive impairment (MCI), and AD patients-, the winning method
+Additionally, their pipeline failed to process three scans from the CADDementia test set, requiring manual intervention.
+The analysis of each subject took 19 h of computation time.
+The second-best team
+The analysis of each subject took 17.4 h of computation time.
+Among the available machine learning methods, CNNs have been increasingly used in the Alzheimer's biomarker identification task, given its power to learn discriminative representations hierarchically in an automated fashion.
+Most studies employing CNNs in the context of AD used 2D inputs, whereas studies that used 3D inputs focused basically on binary classifications.
+The few works that trained a 3D CNN for the multiclass CN/MCI/AD classification evaluated their performances with cross-validation on ADNI data and considered only networks comparable to our smallest proposed architecture.
+All of this context highlights the novelty in our research, as we optimized very deep 3D CNNs, with up to 22 layers, for the multiclass diagnosis task, and evaluated our performance on the CADDementia challenge, with unknown labels, making our results much more reliably applicable in a real-world setting.
+A previous work that employed the deep learning approach in the context of AD
+However, only binary classification tasks were considered, which were evaluated using cross-validation on ADNI.
+The first group to successfully propose a deep-learning approach to the CADDementia challenge
+These values were used to greedily layer-wise train a stacked auto-encoder with three hidden layers, achieving competitive results.
+Using the whole brain as input, Hosseini-Asl et al. (
+One of the works more closely related to ours
+However, the performance was measured using ADNI cross-validation, hindering better comparisons with our method.
+It is worth noting that they reported a classification accuracy of 61.1%, but observed overfitting in training data.
+In more recent work,
+They used the ADNI data to create a training set, used for cross-validation, and a small test set.
+Even though their results were promising, no further comparisons with different datasets or standardized evaluation frameworks were made.
+Interestingly, their experiments also presented overfitting in training data.
+Also recently,
+They evaluated their model using training and test split in the OASIS dataset, presenting compelling results.
+However, given their proposed data flow chart, it is possible that their data augmentation technique also introduced data leakage.
+In our research, we relied upon a 3D CNN with data primarily provided by ADNI
+Our solution also includes an accountable mechanism to allow us to understand its decisions.
+Our experiments were conducted in a scenario similar to real-world conditions, in which a CAD system is used on a dataset that is different from the one used for training.
+The main challenges and contributions of our research included devising a deep-learning solution completely automatic and comparatively fast, while also presenting competitive results without using any domain-specific knowledge.
+Our method, named ADNet, yields considerable gains in accuracy, outperforming several other systems in the prior art, all of which require prior knowledge of the disease, such as specific regions of interest from input images.
+Alternatively, our system does not require any manual intervention, clinical information, or a priori selected brain regions.
+The main reason for not using any information from the disease is to empower the system to automatically learn and extract relevant patterns from regions of the brain, and eventually enable it to support current diagnosis standards for known or new diseases.
+In addition, it runs 80 times faster than the state of the art
+Our generated ADNet and ADNet-DA models, as well as supporting code, are publicly available
+With this work, we are releasing one of the first models ready to use, encouraging open science and reproducible research, while also setting a starting point for researchers working with 3D MRIs.
+
+METHODOLOGY
+In this work, we propose an end-to-end deep 3D CNN for the multiclass AD biomarker identification task, using the whole image volume as input.
+Our pipeline, displayed in Figure
+This section provides details of our pipeline, including image preprocessing, CNN architectures, and optimization techniques.
+
+Brain Extraction and Normalization
+Optimizing deep-learning systems using sMRIs in their original space requires the systems to learn discriminative patterns invariant to several transformations, demanding larger models and an even larger number of samples, with all expected variations.
+By registering our images to a standard template, we can expect similar structures to be roughly in the same spatial location, allowing us to handle the entire image at once and automatically determine the most important regions of interest.
+We used the Advanced Normalization Tools (ANTs;
+Our Our main challenge was putting together a registration pipeline, including the adopted atlas, that provided useful and meaningful results in a reasonable time, while maintaining high resolution images.
+
+Convolutional Neural Network
+We describe here the convolutional neural network architectures we adopted and the modifications we performed to each.
+These networks were initially designed for 2D color images, and we are dealing with 3D grayscale MRIs.
+Thus, the most natural adaptation was to convert all 2D operations, such as convolution or pooling, to 3D.
+Given these adaptations, we were unable to employ a transfer learning approach
+A common attribute to all considered architectures is that spatial dimension is reduced as information flows to deeper layers.
+Spatial dimensionality reduction is usually achieved with max-pooling layers, or with more substantial strides in convolutional layers.
+To accommodate different data shapes that were not necessarily divisible by two, we adopted an adhoc approach by zero-padding each layer as needed, so no information was lost.
+We also added batch normalization
+All activation functions were rectified linear units (ReLU;
+Finally, the number of layers varied according to the adopted network standard.
+Table
+We started with a small network, based on the LeNet-5 architecture
+Because this network is significantly older than the others, it required the largest modifications.
+This network was composed of the following layers: convolution, subsampling, convolution, subsampling, fully connected (originally implemented as convolutional), fully connected, and output.
+As subsampling layers had learnable parameters, we converted them to convolutions, with filter (kernel) size and stride equal to 2×2×2, thus keeping the subsampling behavior.
+The main difference was in the connection between the first subsampling and second convolutional layers, for which the particular arrangement in the original work was converted to a dropout layer with a probability of 40%.
+Similar to the original architecture, if we had adapted the last convolutional layer to match the previous layer's output size, it would have had 120 feature maps with a kernel size of 34 × 43 × 36, seriously increasing the number of parameters.
+To mitigate these issues, we adapted those kernels to 5 × 5 × 5 and added a global average pooling layer immediately following, similar to GoogLeNet
+Naturally, the last layer contained three units (one for each class), with a softmax function activation.
+The Visual Geometry Group (VGG) proposed deep CNN architectures, achieving second place in the classification task at ImageNet Large Scale Visual Recognition Challenge (ILSVRC) 2014
+They designed very uniform architectures ranging from 11 (configuration A) to 19 (configuration E) weight layers, i.e., considering only convolutional and fully-connected layers.
+Due to its uniformity, mostly with filters of size 3 × 3, the VGG architecture is considerably large.
+The first layers, with the original input dimensions, consumed a large GPU memory, while the last layers, with dense connections, generated several parameters.
+Since our input data were already quite large when compared to traditional 2D images, we adapted the VGG network configuration A by halving all numbers of filters in convolutional layers, and all numbers of units in fully-connected layers, while keeping filters sizes of 3 × 3 × 3 and dropout rate at 50%.
+Even after reducing the network size, the first fully-connected layer of our adapted VGG-A, with 2,048 units, accounted for 78, 643, 200 (88%) parameters.
+For comparison, Table
+While VGG achieved second place in ILSVRC-2014, GoogLeNet secured first place in the classification task
+The basic idea was to increase both depth and width while keeping computational requirements constrained.
+This approach led to a deeper model with fewer parameters and better performance.
+We adapted directly from their GoogLeNet architecture, i.e., only discarding the local response normalization
+We also adjusted the last average pooling layer, following the output shape of the previous layer, and kept the dropout rate at 40%.
+In this architecture, the number of layers came from depth, where single convolutional or fully-connected layers counted as one, while inception modules counted as two.
+However, each inception module had six individual internal convolutional layers.
+In ILSVRC-2015, Residual Network
+These researchers wanted to understand whether learning better networks meant simply stacking more layers.
+With this study, they found the degradation problem, where traditional models similar to VGG stopped improving performance after a certain number of layers, and even started getting worse afterwards.
+To overcome this problem, they proposed the residual function, which is the basic building block of a Residual Network (ResNet).
+We adapted ResNet directly from the non-bottleneck 18-layer architecture, in which shortcuts with increasing dimensions were either (A) identity shortcuts, i.e., padding with zero, or (B) projection shortcuts, i.e., convolutions with 1 × 1 × 1 filter (kernel) size.
+Similarly to VGG, the number of layers came from convolutional and fully-connected layers, with projection convolutions not considered in the layer count.
+In summary, we adopted four CNN architecture designs, namely, LeNet-5, VGG, GoogLeNet, and ResNet.
+LeNet-5 is considerably older and smaller, so it shall have a lower probability of overfitting.
+The VGG network is known for its uniformity, which makes it relatively simple to adapt, inspect, and use for many different tasks; however, this characteristic also makes it significant in the number of parameters and in hardware requirements.
+These drawbacks were addressed in both GoogLeNet and ResNet architectures, which also adopted very specific building blocks, making it possible to extract more complex patterns from data, while also increasing the number of layers and reducing the number of parameters.
+The idea was to explore different architectures and understand how they would behave in the AD task.
+To avoid overfitting, we adopted regularization with L1 and L2 norms.
+In L1, this effect is achieved by minimizing the absolute values of the weights, while in L2 this is done with their squared values.
+In principle, L2 norm tends to produce diffuse and small numbers, while L1 tends to produce sparse numbers.
+This property makes L1 particularly well-suited to handle noisy data, acting as a feature selection algorithm, which could help us better visualize and explain what the CNN has learned.
+However, in general, L2 can be expected to provide superior results over L1.
+All network architectures and their optimization were implemented using upstream (i.e., the latest version from the code repository) Lasagne
+At the time this research was carried out, we used a development version of Lasagne 0.2, and a development version of Theano 0.9.0, with Python 2.7.6,
+CUDA 7.5, and CuDNN 5. Additionally, we used SciKit-learn 0.18.1
+
+Domain Adaptation
+In addition to brain processing and CNN pipelines, we considered a domain adaptation approach.
+In our method, we trained a system using one dataset and evaluated it on a different dataset (i.e., CADDementia).
+Even though they are related, such differences mean that the source data distribution could be different from the target data distribution.
+Thus, it should be possible to further improve the results by adapting the previously-trained system to the new dataset, even if using only a small number of samples from this target domain.
+This scenario, also known as cross dataset validation, is more closely related to a real-world scenario, in which data sources will most likely be different between training and actual usage.
+Additionally, this is a more reliable way of assessing generalization capabilities of a machine learning algorithm.
+In our domain adaptation approach, we started by using our previously-optimized CNN to extract features from the complete target dataset (i.e., CADDementia), in one of the last CNN layers.
+After, we normalized these features to zero mean and unit variance, using only the target training set to compute the parameters.
+With the normalized data, we optimized a one-vs.rest
+logistic regression
+In order to find the best parameters for this classifier, we used grid search with leave-one-out cross-validation.
+Then, we finally had a system that was enhanced for the target domain, making it possible to output improved classification probabilities for each sample in the target domain.
+This pipeline is similar to a transfer-learning approach (Sharif Razavian et al., 2014).
+
+EXPERIMENTAL SETUP
+Given that training a CNN from scratch usually requires massive amounts of data, we gathered as many different imaging sources as possible.
+We collected an AD sMRI dataset comprising 23,165 images.
+Below, we describe our optimization approach, including associated parameters.
+
+Data
+In our data collection process, we considered the datasets indicated in Table
+Starting in ADNIGO, the MCI stage was split into early MCI (eMCI) and late MCI (lMCI).
+Later, in ADNI2, a subjective memory complaint (SMC) group was added
+Similarly to ADNI1, both AIBL and CADDementia sets were composed of CN, MCI, and AD stages, whereas both MIRIAD and OASIS sets contained only CN and AD.
+Since one of our main goals for this research was achieving a good result in the CADDementia challenge, we adopted only equivalent diagnoses.
+As such, eMCI and lMCI stages were grouped along with MCI, and SMC was not considered.
+From these datasets, we downloaded all available raw T 1 -weighted sMRI scans associated with Alzheimer's, i.e., we did not consider any pre-or post-processed image.
+To isolate possible confounding factors, we made a distinction between MP-RAGE and IR-SPGR/IR-FSPGR sequences
+While all ADNI sets had both MP-RAGE and IR-SPGR/IR-FSPGR, AIBL and OASIS had only MP-RAGE, and MIRIAD had only IR-FSPGR.
+The resulting datasets are described in  validation, and 20% for testing.
+In each subsequent dataset, we first assigned images from previous subjects to the respective set, then we proceeded with the stratified random split considering only new subjects.
+
+Metrics and Optimization
+The primary evaluation measure we considered herein was classification accuracy, which is the number of correctly classified samples divided by the number of all samples.
+Even though this performance value does not take into account class priors, the challenge organization deemed class sizes insignificantly different, therefore regarding this metric as a better approach for overall classification accuracy.
+Additionally, the receiver operating characteristic (ROC) curve and the respective area under the curve (AUC) were also considered, as they provide metrics that are independent of the threshold chosen for classification.
+Also, since AUC does not traditionally depend on class sizes, we adopted an AUC measure that does not rely on class priors.
+Finally, the true positive fraction (TPF), the number of correctly classified samples of a given class divided by the number of all samples from that class, was calculated for each class.
+According to the authors, TPFs for diseases (AD and MCI) can be interpreted as the two-class sensitivity, while TPF for CN corresponds to the two-class specificity.
+As we optimized and trained our networks, we compared them and selected the best ones using the average of TPFs, since it more closely relates to the accuracy and does not depend on class priors.
+To perform the training process, we used Adam optimizer
+With a small sample of images, we empirically decided to begin with a learning rate of α = 10 -4 , and settled to a batch size of three (for VGG architectures) or nine (for all the others), mainly due to GPU memory limitations, even though we only used GPUs with 12 GB of dedicated memory.
+Finally, we adopted Glorot uniform initialization
+
+RESULTS AND DISCUSSIONS
+Fairness, accountability, and transparency (FAT) have become increasingly essential aspects of machine learning
+For example, laudable efforts include explaining algorithmic decisions, making an effort to understand sources of error and uncertainty, and creating auditable systems
+Given the expectations described above, we will now discuss further details of our study.
+We better describe our optimization process, specifying the steps to handle overfitting problems.
+Then, we report performance results, including previously described metrics, along with efficiency measurements.
+Finally, we discuss our best CNN model, providing further insights into its functionality, and how it processes data to make predictions.
+
+Optimization
+As stated earlier, we determined the initial learning rate of α = 10 -4 , and varied some configurations in each architecture to achieve the best accuracy in the CADDementia training set.
+These options included regularization with L1 and L2 norms, regularization strength λ, number of units in fully-connected layers, dropout rates, batch size, and multi-class hinge loss (instead of the traditional categorical cross-entropy loss).
+The parameters for regularization strength, number of units, and dropout rates were also used for regularization, acting as trade-offs between model complexity and bias, thus managing the probability to overfit.
+Overfitting was a significant concern for us due to the large size of our networks and a relatively small amount of data.
+The different batch size was an experiment to compare the behavior of all networks with the same batch size of three.
+Given that support vector machine (SVM;
+In general, we varied regularization strength λ in powers of 10, between 10 -5 and 10 2 , number of units in fully-connected layers in powers of 2, between 32 and 2, 048, and dropout rate with steps of 10 percentage points, between 40 and 90%, including 95, 99, and 99.9%.
+Note that some networks had specific parameters, i.e., these variations did not apply to all evaluated architectures.
+We followed a greedy approach, by first tuning regularization strength with L2 norm, followed by several units, and then dropout rates.
+Next, we evaluated batches of size three for all networks, L1 norm, multi-class hinge loss, and, finally, larger datasets.
+To form a balanced batch, the same number of samples was consistently selected from each class.
+In each epoch, we randomly sampled each class, limited by the class with fewer images.
+We worked with a total batch size of either three or nine samples, depending on the network architecture.
+We observed that, at some point, most networks underfit or overfit, presenting erratic metrics, with high variations between epochs.
+To overcome this issue, we applied the early stopping to interrupt the optimization before the model began to overfit.
+After 50 epochs without further improvement in average TPF over the validation set, the training was stopped.
+The model was optimized for up to 200 epochs.
+
+Performance
+We first analyzed the efficiency of our processing pipeline, divided into brain image, CNN, and domain adaptation stages.
+Figure
+for Dataset 4, which is our largest, containing 23,165 volumes.
+Interestingly, only 151 images (0.7%) took longer than 25 min to process.
+Each process used two cores in a shared cluster of commodity hardware, such as Intel R Xeon R CPU E5645 at 2.40 GHz, and around 2 GB of RAM.
+To train our CNNs, we used three different models of NVIDIA GPUs: GeForce GTX TITAN X (Maxwell microarchitecture), Tesla K40c, and Tesla K80.
+Training usually lasted for about 100 epochs, taking around 4 days to complete.
+We performed a total of 121 experiments.
+Inference time for our best network (VGG 512) was <1 s.
+The grid search for domain adaptation was completed in under one minute, and the classification of all 354 samples from CADDementia test set was accomplished in about 1 ms.
+In summary, our method is expected to provide a response in <15 min, with extreme cases taking a little longer than 2 h.
+This processing time contrasts with the current best method in CADDementia challenge, which requires 19 h of computation
+In other words, our method is nearly 10× faster, considering the worst-case scenario, or almost 80× faster, on average.
+Regarding performance metrics in terms of results, we present our best configuration for each network architecture in Table
+The best VGG had 512 units in each fully-connected layer, and the best ResNet used the projection shortcut (B).
+We also included our main optimization metric-average TPF (avgTPF)-for the training set of CADDementia, in which the top value was 75.9%, translating to 76.7% in accuracy.
+All of these results were found while optimizing the networks with Dataset 1.
+As initially expected, L2 norm provided the best results for almost all architectures.
+The best GoogLeNet using L2 achieved 57.4% average TPF, close to the one using L1 (58.3%), while the L1 norm performed considerably worse for the other networks.
+ResNet with identity shortcuts (A) achieved 57.4%, which is slightly inferior to the projection shortcut (B), with 60.2%, a similar difference found in the original work
+We hypothesize that deeper architectures did not achieve the highest scores because they tend to do better in more massive datasets, which we did not have.
+A batch size of three (instead of nine) only produced significantly worse results, indicating that our best VGG model could potentially achieve even better results if we used GPUs with larger memory or a multi-GPU framework implementation.
+Similarly, multi-class hinge loss did not improve our results.
+Most surprisingly, Dataset 1, our smallest, presented the best performances, and Dataset 2 achieved an average TPF as high as 72.2%.
+We hypothesize that this happened due to the higher diversity of data sources and conditions in more massive sets, indicating that a smaller but more cohesive dataset should be sufficient for optimization.
+VGG 512 was our best network model, and the respective performance metrics are shown in Table
+We named our CNN approach ADNet (Alzheimer's Disease Network), with the domain adaptation method ADNet-DA, and submitted our prediction scores to the CADDementia challenge.
+Currently, there are 48 different submissions, ours included
+Similar to previous results
+However, the performance differences in Dataset 1 between validation and test sets were small, indicating that we appropriately mitigated this problem.
+In general, ADNet presented promising results in the CADDementia training set.
+The low TPF in the MCI group was expected, since classifying MCI subjects solely on their sMRI represents a challenge
+However, the decrease in MCI and AD TPFs between training and test sets was higher than expected.
+As such, this method achieved an interesting two-class specificity, with a modest twoclass sensitivity, meaning it is better suited for determining healthy patients.
+Regarding accuracy in the test set, ADNet ranked 25th, tied with two other systems, outperforming 22 submissions.
+Besides, this result was only statistically different, with a 95% confidence interval from the first and the last three systems.
+Considering that we were the first group that did not use any domain-specific information for this task, we can claim that our CNN method was able to learn meaningful patterns automatically.
+As for the domain adaptation approach, we extracted 512 features from the second-to-last layer of ADNet, and then we performed a grid search on the parameters of a logistic regression classifier.
+Using the best parameters found (most importantly, C = 0.001), we optimized this classifier on the complete training set and applied it to output classification probabilities for each sample from the challenge.
+We also submitted these predictions to CADDementia, naming it ADNet-DA (ADNet with domain adaption).
+The corresponding results are also indicated in Table
+This method ranked 21st, outperforming 27 submissions, with a statistical difference from the first and the last four systems.
+Considering this approach, we reported the leave-one-out cross-validation results in the training set while performing a grid search, and also the results in this same set after the last optimization with all training samples.
+As expected, developing and evaluating a system on the same data overestimated its generalization performance; however, even our cross-validation attempt did not significantly improve our estimations for the test set.
+In comparison with ADNet, ADNet-DA improved both MCI and AD TPFs, while decreasing CN TPF, with an overall improvement of almost one percentage point in accuracy.
+These results indicate that domain adaptation was indeed an important technique.
+The corresponding ROC for CADDementia test set is displayed in Figure
+Though
+One of their systems ranked 7th, with 56.8% accuracy, while the other ranked 25th, tied with ADNet on 51.4%.
+Our ADNet-DA method was able to outperform a deep-learning system that uses domain-specific information, which demonstrates the effectiveness of the approach proposed in this work.
+
+Accountability
+Understanding the decision-making process of a machinelearning algorithm has become crucial lately, especially in medicine.
+For practical application, an algorithm must present good performance results and also demonstrate how predictions are generated.
+The explicability requirement has become even more critical in recent years with rules such as the General Data Protection Regulation (GDPR), which also brought explainable artificial intelligence (XAI) to the spotlight
+Explaining what and how a neural network has learned is an open problem, with a rapidly evolving research field.
+In order to better understand what our model is analyzing in brain images and how it is done, we experimented with a number of visualization approaches, considering the most used techniques in accountable machine learning for neural networks.
+Some of these approaches were also recently explored by
+Similarly to
+While their kernels were of size 11 × 11 × 3, presenting some interesting smooth and colorful patterns, our kernels are 3 × 3 × 3 in grayscale, producing less than ideal images for visualization.
+Another traditional approach for visualization is to show outputs of activation functions from the network, after processing an input.
+Activation is simply the result of a mathematical function.
+These outputs represent some of the initial patterns that the network learned to be the most relevant for this task.
+These outputs are then non-linearly combined with additional and more complex patterns before the final classification.
+Occlusion is a technique to visualize how and where the input image affects the result of the network.
+The basic idea is to systematically hide (occlude) some regions of the input image, preventing the network from becoming activated in these specific regions, and then storing the probabilities output.
+Given a class of interest, for instance AD, it is possible to create a heatmap with the corresponding prediction for each occluded region, where most important regions will present highest impact (with low probability), due to the occlusion.
+This technique was initially proposed by
+There are different ways to hide a region of the input image and avoid activations in a network.
+The most straightforward and most direct would be to set input values to their respective averages, which, in our case, is zero.
+Considering images in a range from zero to 255, it is possible to occlude with the average value (gray), with zero (black), with 255 (white), and even more sophisticated approaches, such as different forms of noise.
+Finally, we investigated an approach that more closely related to the actual output decision of the network.
+For that, we calculated the gradient of the network concerning the input, which is used to update the network's internal parameters.
+These gradients may also be plotted and interpreted as how much the output is affected by changes in input values; however, this simple approach produces rather noisy visualizations.
+An improvement to this technique, called deconvolution, was proposed
+Even though this is an interesting approach, the guided backpropagation method
+Interestingly, guided backpropagation combines calculations from both backpropagation and deconvolution, resulting in more detailed images.
+Figure
+For the CN group, we can see activations distributed in a diffuse pattern, but mainly restricted to the cortex in the right temporal lobe (predominantly in the medial temporal gyrus and the parahippocampal gyrus), the central portion of the occipital lobe, the posterior cingulum, and the posterior parietal cortex.
+For MCI, activations occurred mainly in the left posterior parietal cortex, the right anterior cingulum, and the right dorsolateral prefrontal cortex.
+For AD, more significant activations were detected in the left posterior parietal cortex, right temporal pole, cerebellum, and more diffusively in the spherical surface of the brain.
+The diffuse pattern of activations in all groups (mainly in temporal and posterior regions of the brain) can be interpreted in the context of neuroimaging findings in the field of AD.
+Although no single structure can differentiate AD patients from CN subjects, atrophy in temporal regions seems to be an inevitable process in the disease.
+The medial temporal lobe regions might be the first affected in the course of the disease, presenting very early signs of neurodegeneration
+As in pathophysiological aspects, the temporal regions mainly present intracellular aggregates of hyperphosphorylated tau protein, which are associated with reduced gray matter density
+Another signature of AD, extracellular amyloid β-protein (Aβ) deposition in the form of plaques, is mainly observed in the midline regions (posterior cingulate and medial prefrontal cortices), and parietal areas.
+Longitudinal studies have shown that these areas not only atrophy at the mild stage of AD
+Thus, we were not surprised to find larger activations in those regions classically affected by the disease.
+For our last visualization technique, our motivation was to understand how our data samples were spatially distributed within internal feature representations of our network, in order to determine whether these representations were really helpful to discriminate between each class.
+To plot our data from this highdimensional space, we first projected them into two dimensions using the t-distributed stochastic neighbor embedding (t-SNE;
+Considering the outputs from a specific layer of our network, we generated an embedding with all training and test data in CADDementia, and then colored training samples according to each respective class.
+It is important to remark that this projection did not use label information from training data, which was used solely to color our plots.
+First, we extracted features from the second-to-last layer of our network, traditionally used to transfer learning and domain adaptation, with 512 dimensions.
+Then, we considered the final layer from ADNet that outputs classification probabilities, with 3 dimensions, and the probability outputs from ADNet-DA.
+Resulting embeddings are present in Figure
+From these plots, we can also see that probabilities from ADNet-DA are better distributed in comparison with ADNet, especially for the AD group, while there was a smaller confusion for MCI.
+
+CONCLUSIONS
+Using data from ADNI, we optimized a 3D CNN with the whole brain image as input and achieved the best accuracy with a network architecture based on VGG
+Our method, named ADNet, outperformed several other systems in the prior art.
+Additionally, our method with domain adaptation, called ADNet-DA, reached 52.3% in accuracy on the CADDementia challenge test set, outperforming most of the submissions to this challenge.
+Our approach is completely automatic (i.e., does not require additional information input and manual intervention), and is considerably fast (around 80 times faster than CADDementia winning methods).
+Importantly, whereas all other submissions used prior information from the disease (e.g., hippocampal volume, demographic information), our method did not use any domainspecific knowledge from AD.
+For that reason, we believe it could be applied to other disorders that could benefit from the CAD system using sMRI as input data.
+We understand that our approach can be used to find meaningful patterns within data, corroborate previous findings by specialists, assist in diagnosis scenarios, and eventually help identify patterns for diseases other than AD.
+Our conclusions are supported by our explainable artificial intelligence (XAI) techniques, including accountability visualizations.
+Future work could investigate XAI techniques to understand brain regions involved in the decision-making process, and crossmatch highlighted regions with specialists knowledge, to see how  one can complement the other in refining the technique.
+Finally, it would be interesting to incorporate patients' history data to enrich the information present in MRIs, to drive the decision process and to tie it with patients' backgrounds.
+
+
+
+FIGURE 1 |
+FIGURE 1 | Overview of our proposed pipeline, with brain extraction and normalization (A), 3D CNN processing (B), and domain adaptation (C) steps, in this order.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Histogram and kernel density estimation plots of brain extraction and normalization times for Dataset 4, in minutes.
+Dataset 4 is our largest, composed of ADNI1, ADNIGO, ADNI2, AIBL, MIRIAD, and OASIS datasets, with a total of 23,165 volumes.
+These plots show that the processing times ranged mostly between 7 and 15 min, with an average of about 12 min, indicating that our method is fast.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Receiver operating characteristic (ROC) curve for ADNet-DA, provided by CADDementia.
+AD, Alzheimer's disease; AUC, area under the receiver operating characteristic curve; CN, cognitively normal; MCI, mild cognitive impairment.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Activated regions from the guided backpropagation method for each group.
+Activations are displayed in hot colormap overlaid onto the MNI template.
+Hotter regions mean a more significant effect on the prediction output.
+Colors only represent the relative importance of each voxel, having no direct meaning associated to their absolute values.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Features and probabilities visualizations with 2D t-SNE projections.
+AD, Alzheimer's disease; CN, cognitively normal; MCI, mild cognitive impairment; Unk, unknown.
+(A) Visualization with 2D t-SNE projections using 512-dimensional features extracted from the second-to-last layer.
+(B) Visualization with 2D t-SNE projections using the 3-dimensional ADNet probabilities.
+(C) Visualization with 2D t-SNE projections using the 3-dimensional ADNet-DA probabilities.
+
+
+
+TABLE 1 |
+CNN architectures evaluated in this study.
+
+
+
+TABLE 2 |
+Datasets considered in this study.
+
+
+
+Table 3 ,
+and detailed in
+
+
+
+Table 4 .
+For each dataset, we created training, validation, and test splits.
+In Dataset 1, we randomly split the corresponding subjects, trying to keep the original age, sex, and diagnostic stratification across each set, with 70% of subjects for training, 10% for
+
+
+
+TABLE 3 |
+Datasets assembled in this study.
+
+
+
+TABLE 4 |
+Datasets summaries: number of subjects, number of images, descriptive age statistics, image-wise percentage of females (vs.
+males) and image-wise percentage of 1.5 T field strength (vs.
+3.0 T).
+
+
+
+TABLE 5 |
+Performance results (average true positive fraction, labeled avgTPF) of our best CNN architectures and respective configurations found in optimization experiments.
+
+
+
+TABLE 6 |
+Multiple performance results of our best CNN, in percentage.
+
+
+
+TABLE 7 |
+Confusion matrix (in percentage) for ADNet-DA, provided by CADDementia.Values are adjusted relative to the actual class, i.e., divided by the row sum.
+This way, the main diagonal represents the true positive fraction (TPF) for each class.
+AD, Alzheimer's disease; CN, cognitively normal; MCI, mild cognitive impairment.

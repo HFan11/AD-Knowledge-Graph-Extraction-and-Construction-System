@@ -1,0 +1,281 @@
+Bayesian Modeling of Multiple Structural Connectivity Networks During the Progression of Alzheimer's Disease
+Alzheimer's disease is the most common neurodegenerative disease.
+The aim of this study is to infer structural changes in brain connectivity resulting from disease progression using cortical thickness measurements from a cohort of participants who were either healthy control, or with mild cognitive impairment, or Alzheimer's disease patients.
+For this purpose, we develop a novel approach for inference of multiple networks with related edge values across groups.
+Specifically, we infer a Gaussian graphical model for each group within a joint framework, where we rely on Bayesian hierarchical priors to link the precision matrix entries across groups.
+Our proposal differs from existing approaches in that it flexibly learns which groups have the most similar edge values, and accounts for the strength of connection (rather than only edge presence or absence) when sharing information across groups.
+Our results identify key alterations in structural connectivity which may reflect disruptions to the healthy brain, such as decreased connectivity within the occipital lobe with increasing disease severity.
+We also illustrate the proposed method through simulations, where we demonstrate its performance in structure learning and precision matrix estimation with respect to alternative approaches.
+
+Introduction
+Dementia is a leading cause of death, disability, and health expenditure in the elderly, with Alzheimer's disease (AD) accounting for the majority of cases.
+Much research in AD aims at understanding how the disease mechanisms affect the brain, in an effort to aid in the diagnosis and treatment of those with AD.
+Here we are interested in exploring the changes in structural connectivity for different brain regions through the progression of the disease.
+Traditional approaches to structural neuroimaging studies have focused on investigating cortical thickness, volume, and the rate of tissue loss as specific neurodegenerative biomarkers that relate to changes in the aging brain.
+More recently, attention has been given to the estimation of networks that capture the connectivity between cortical regions of interest and to the changes in connectivity that result from the progression of the neurological disease.
+It is widely known that correlated regions of interest are more likely to be part of a network and that networks are related to specific cognitive functions
+During the progression of neurodegenerative disease, a person has a varying amount of cortical tissue loss, depending on their disease stage.
+As such, "connections" assessed throughout the disease trajectory represent coordinated changes in brain tissue, which are reflected in cortical thickness measures.
+Statistical methods for network inference are a powerful tool to gain insight into the complex interactions that govern brain connectivity networks.
+When all samples are collected under similar conditions or reflect a single type of disease, methods such as the graphical lasso
+These have been successfully used for the estimation of structural brain connectivity networks.
+In studies where samples are obtained for different groups or subtypes of a disease, like the Australian Imaging, Biomarkers and Lifestyle (AIBL) study of ageing described below, sepa-rate estimation for each subgroup reduces statistical power by ignoring potential similarities across groups, while applying standard graphical model inference approaches to the pooled data across conditions leads to spurious findings.
+Recently, estimation methods for multiple graphical models have been proposed in the statistical literature, including penalizationbased approaches that encourage either common edge selection or precision matrix similarity
+In particular,
+More recent proposals encourage network similarity in a more tailored manner, assuming that the networks for each sample group are related within a tree structure
+These methods assume that the relationships across groups are either known a priori or learned via hierarchical clustering.
+More flexible approaches that employ a Bayesian framework to simultaneously learn the networks for each group and the extent to which these networks are similar have been proposed in
+More specifically,
+However,
+For the analyses of this paper, we propose a Bayesian Gaussian graphical modeling approach which retains the advantages of the approaches by
+Our framework allows us to not only learn the precision matrices within each group, but also to characterize the extent of shared edge values across the groups.
+Empirically, we demonstrate that this key feature results in a more accurate inference of the precision matrices.
+Unlike related approaches in the frequentist framework
+Furthermore, even though penalization approaches are more scalable, they provide only point estimates of large networks, which are often unstable given limited sample sizes.
+Within our Bayesian approach, we can better quantify uncertainty in the estimates.
+When applied to the data from the AIBL study, our method demonstrates that the majority of structural connections are preserved across all groups, but participants with AD have structural connectivity that is most unique compared to the other groups.
+In comparison to separate Bayesian estimation methods, the proposed method is able to identify a larger number of connections, reflecting the benefit of borrowing strength across groups.
+The fused graphical lasso, on the other hand, selects very dense graphs, that likely include a larger proportion of false positives edges, as also suggested by simulation studies in our current work and in previous investigations
+This issue was noted by
+
+The AIBL study
+Here, we focus on cortical thickness measurements from participants in the AIBL cohort who were either HC (healthy control), MCI (mild cognitive impairment) or had AD (Alzheimer's disease).
+As a marker for neurodegeneration, cortical thickness is used to assess the atrophy of the cortical grey matter (GM) using MR images, and has been proposed as a more stable parameter for AD diagnosis than volume/density measures, because it is a more direct measure of GM atrophy
+Investigation into GM atrophy allows the approximate measurement of neuronal loss, which is one of the underlying hallmarks of neurodegenerative diseases.
+Analyses using cortical thickness have been shown to successfully separate AD from MCI and healthy control
+Our aim is to examine how the progression of AD affects the structural networks of the brain.
+The rest of the paper is organized as follows: In Section 2 we describe the proposed Bayesian joint graphical modeling approach and the posterior inference.
+We return to the case study in Section 3 and apply our method to estimate structural connectivity networks in subjects from cognitively normal to AD.
+In Section 4 we perform a simulation study and compare performance with alternative approaches.
+We conclude with a discussion in Section 5.
+
+Proposed model
+Let K represent the number of sample groups (e.g., HC, MCI and AD) and let X k be the n k ×p data matrix (e.g., cortical thickness on p brain regions) for the kth group, with k = 1, . . .
+, K.
+We assume that the observed values within each group arise from a multivariate normal distribution, where each row of X k corresponds to an independent observation following the distribution N (µ k , Σ k ).
+Since we are interested in the covariance structure, rather than the means, we assume that the data are centered by group, so that µ k = 0 k for k = 1, . . .
+, K.
+The group-specific covariance matrix Σ k has inverse
+).
+The multivariate normal distribution has the special property that ω ij = 0 if and only if variables i and j are conditionally independent given the remaining variables
+Non-zero entries in the precision matrix Ω k therefore correspond to edges in the group-specific conditional dependence graph G k , which can be represented as a symmetric binary matrix with elements The specification of such a prior requires some care as all precision matrices are constrained to be positive semidefinite.
+
+Prior formulation
+Our goal is to construct a prior on the precision matrices Ω 1 . . .
+, Ω K that enables inference of a graphical model for each group, encourages similar edge values when appropriate, and allows for computationally tractable posterior inference.
+There have been a number of prior distributions proposed for the precision matrix Ω in a Gaussian graphical model.
+Early approaches required restrictive assumptions on the graph structure (in particular, decomposibility) to allow tractable sampling
+Later methods included shrinkage priors
+Here, we build on the stochastic search structure learning (SSSL) model of
+To achieve this, we define a joint prior distribution on the precision matrices Ω 1 , . . .
+, Ω K that encourages similarity across groups in terms of the offdiagonal elements of the precision matrices.
+Specifically, we consider the continuous shrinkage prior
+where
+) is the vector of precision matrix entries corresponding to edge (i, j) across the K groups, λ > 0 is a fixed hyperparameter, and M + denotes the space of p × p positive definite symmetric matrices.
+The first term in the joint prior specifies a multivariate normal prior with covariance matrix Θ ij on the vector of precision matrix entries ω ij corresponding to edge (i, j) across groups.
+To define a prior on Θ ij , we work with the decomposition
+, where ν ij is a K × 1 vector of standard deviations specific to edge (i, j), and Φ is a K × K matrix shared across all (i, j) pairs with 1s along the diagonal.
+To ensure that Θ ij is positive definite, the only requirements are that the standard deviations ν k,ij must be positive and Φ must be a valid correlation matrix.
+Given these constraints, we can then define a mixture prior on the edge-specific elements of ν ij that enables the selection of edges in each graph, and a prior on the off-diagonal entries of Φ that allows us to model the relatedness of edge values across the sample groups.
+Following
+otherwise.
+The hyperparameters v 1 > 0 and v 0 > 0 are fixed to large and small values, respectively.
+Small values of v 0 will shrink the value of ω k,ij for edges which are not included in the graph towards 0. This prior indirectly encourages the selection of similar graphs in related networks.
+Specifically, a small value of ω k,ij will encourage small values of ω l,ij for any other group l and in turn the exclusion of edge (i, j) in both groups k and l.
+Similarly, a large value of ω k,ij will encourage large values of ω l,ij and the inclusion of edge (i, j) in groups k and l.
+Networks k and l are considered related if the posterior distribution of the (k, l) element of Φ is concentrated on relatively larger values.
+For the prior on the graphs G 1 , . .
+., G K , we assume an independent Bernoulli distribution
+This prior is analytically defined only up to a normalizing constant.
+As discussed in
+Consequently, the parameter π is not exactly the prior probability of edge inclusion; however, as shown by
+Recall that Φ is a correlation matrix, and must therefore have all diagonal entries fixed to 1 and be positive definite.
+To specify the prior on Φ, we rely on the joint uniform prior:
+where R K denotes the space of valid K × K correlation matrices i.e. positive definite symmetric matrices Φ such that φ jk = 1 for all j = k and |φ jk | < 1 for all j = k.
+When Φ = I, the precision matrices for each group are independent, and the proposed model reduces to that of
+Alternative priors could be defined on the precision matrices Ω 1 , . . .
+, Ω K that ensure the support to be constrained to the space of symmetric positive semidefinite matrices M + .
+However, our proposed prior has the key advantage of computational tractability.
+In the next section we show how we can define a sampler that is automatically restricted to the targeted support M + .
+In our model cross-group similarity is defined by Φ, which links the elements of the precision matrices, whereas previous approaches
+, G K .
+
+MCMC algorithm for posterior inference
+We rely on Markov chain Monte Carlo (MCMC) to generate a sample from the joint posterior.
+At a high level, the sampling steps are as follows (see also Supplementary Material):
+•
+Step 1 : For each sample group k = 1, . . .
+, K, we first update the precision matrix Ω k using a block Gibbs sampler with closed-form conditional distributions for each column, as in
+•
+Step 2 : We sample the entire correlation matrix Φ at once using a Metropolis-within-Gibbs step following the parameter expansion method of
+After discarding the results from the burn-in period, we take the median model
+Specifically, we select edges g k,ij with marginal posterior probability of inclusion 0.5, as in
+To obtain a posterior estimate of the precision matrix consistent with the selected graph, we resample Ω k conditional on the posterior estimate of Φ and the selected value of G k .
+
+Structural connectivity patterns in the AIBL cohort
+
+Subjects and MRI data processing
+We
+
+Application of the proposed method
+The application of our model requires the specification of a few hyperparameters.
+Here we provide details on the specification we used to obtain the results reported below and refer readers to the sensitivity analysis found in the Supplementary Material for more insights on parameter selection.
+In particular, priors (1) and (
+These were set to ν 0 = 0.01, ν 1 = 15, and π = 2 (100-1) .
+The parameters ν 0 and ν 1 were chosen so that the network structure results were sparse, while the selection of π was based on the default setting recommended in
+As a guideline, increasing ν 0 while holding the ratio between ν 0 and ν 1 fixed will result in sparser graphs, as shown in the sensitivity analysis, which agrees with the sensitivity analysis provided in
+Increasing the ratio between ν 0 and ν 1 while holding ν 0 fixed will likewise increase the sparsity of the inferred graphs.
+The results we report below were obtained by running two MCMC chains with 20,000 iterations, after a burn-in of 5,000 iterations.
+Posterior probabilities of inclusion (PPI) for each edge were compared for the two chains to check for convergence.
+A correlation of 0.997 was found between these two posterior samples.
+We also used the Gelman and Rubin's convergence diagnostic
+Those statistics were all below 1.1, clearly indicating that the MCMC chains were run for a sufficient number of iterations.
+The results reported here were obtained by pooling together the outputs from the two chains to give a total of 20,000 MCMC samples.
+
+Results
+Figure The pattern of strong correlations between contralateral homologous regions of the cortex in structural imaging has been previously observed, for example by
+Our findings are quantified in Table
+Finally, the numbers of edges which are unique to a specific group is reported as values in parenthesis along the diagonals.
+From this, we see that the healthy control groups have slightly more edges than the cognitively impaired groups.
+We can also see that there is a decrease in connections in the occipital lobe as AD progresses.
+Additional ROI-specific patterns can be derived from Table
+Material, which shows total number of edges for each ROI pair in each group.
+[Figure
+These values, which reflect the similarity in edge strength across groups, provide a complementary look at the patterns of structural connectivity.
+In particular, values of Φ show that hpHC and AD are the least similar.
+They also show that HC and AD are related, which is supplemented by Table
+The similarity of HC and AD may be caused by the way hpHC and HC were separated, as HC may have a higher propensity to develop AD.
+Our results also support similarity of the hpHC and MCI groups.
+Although these findings suggest there may be an underlying classification other than AD that influences the structural connectivity, the values we observe are generally large, supporting high degree of network similarity across groups.
+We conclude our analysis by summarizing the network structure of the estimated graphs via some graph metrics commonly used in neuroimaging
+Specifically, we calculated the clustering coefficient γ, the absolute path length λ, and the small world coefficient σ = γ/λ.
+See
+From a quantitative perspective, if both λ ≈ 1 and γ > 1, and consequently σ > 1, a network is said to exhibit small-world characteristics, which means in a qualitative sense that any node can be reached from any other node in a small number of steps.
+Disconnected nodes were removed when calculating the characteristic path length.
+Based on the estimated values of λ and γ, we obtain small world coefficients σ of 1.717, 1.635, 1.627, and 1.475 for hpHC, HC, MCI, and AD, respectively.
+We observe that σ is greater than 1 for all the groups, but steadily decreases during the progression of AD.
+Small-world characteristics in the brain network of AD have also observed by other authors
+Our conclusions on the differences in structural connectivity across groups are descriptive in nature, as our findings generally support a high degree of overlap in the structural connectivity networks.
+
+Results from alternative approaches
+For additional perspective, we compare our results to those of the fused graphical lasso
+For the fused graphical lasso, λ 1 and λ 2 were selected by performing a grid search to find the combination of values minimizing the AIC, as recommended in
+Separate Bayesian inference was applied with the same settings for ν 0 , ν 1 , λ, π as in the linked method.
+For each of the brain regions, Table
+Although the ground truth is not known, these results suggest that the proposed linked precision matrix method generally improves power over separate estimation: a large majority of the edges selected using separate estimation are also discovered under the proposed method, while separate estimation results in a slight increase in the number of edges across stages.
+We see a similarly large overlap of selected edges with the joint Bayesian estimation, though the joint Bayesian method leads to models that are more dense, due, in part, to the larger number of parameters of that model that control the sparsity.
+The fused graphical lasso tends to select models which are even denser.
+This is because the AIC is not optimal for variable selection, tending to result in models which are not sufficiently sparse.
+[Table
+
+Simulation study
+We present here a simulation study to compare performance across methods in learning graphs with related structure.
+The simulation is designed to mimic the real data application in terms of the number of variables, number of subjects per group, and graph structures.
+We consider a setting with K = 3 groups, p = 100 variables, and n = 150 observations per group, where the underlying graph and precision matrix for each group are constructed as follows.
+G 1 , the graph for the first group, consists of 5 communities, each with 20 variables.
+Within each community, the nodes are connected via a scale-free network.
+There are no connections across communities in G 1 .
+The precision matrix entries in Ω 1 for edges are sampled independently from the uniform distribution on [-0.6, -0.4]∪[0.4,
+0.6], while entries for missing edges are set to 0. To obtain G 2 , five edges are removed from G 1 and five new edges added at random, so that now there are some cross-community connections.
+The entries in Ω 2 for the new edges are generated in a similar fashion as for Ω 1 , while the entries for the edges removed are set to zero.
+To ensure positive definiteness, Ω 1 and Ω 2 are each adjusted following the approach in
+To obtain G 3 , 20 edges are removed from the graph for group 2, and the corresponding 20 entries in Ω 2 are set to zero to obtain Ω 3 .
+These steps result in graphs G 1 and G 2 that share 180 of 185 edges (97.3%), graphs G 2 and G 3 that share 165 of 185 edges (89.2%), and graphs G 1 and G 3 that share 162 of the 185 edges in G 1 (87.6%).
+The correlations between the off-diagonal elements of the precision matrices are 0.98 between Ω 1 and Ω 2 , 0.94 between Ω 2 and Ω 3 , and 0.93 between Ω 1 and Ω 3 .
+To simulate the data, we generate n samples per group from the multivariate normal N (0, Ω -1 k ), for k = 1, 2, 3. Below we report results obtained over 25 simulated data sets.
+
+Performance comparison
+We compare the following methods: fused graphical lasso
+For the lasso methods, the within-group penalty λ 1 and cross-group penalty λ 2 were selected using a grid search to identify the combination that minimize the AIC.
+Both separate Bayesian inference and the proposed linked precision matrix approach were applied using the parameter setting ν 0 = 0.01, ν 1 = 0.1, λ = 1, and π = 2/(p -1).
+All Bayesian methods were run with 10,000 iterations as burn-in and 20,000 iterations for posterior inference.
+For the Bayesian methods, we take the posterior selected graph as the median model, and compute the posterior estimate of the precision matrices Ω k as the MCMC average when the precision matrices are resampled conditional on the graphs and the posterior estimate of Φ from the initial run (for our method), or conditional on the graph using separate mixture priors (for separate and joint estimation approaches).
+The performance across methods in terms of edge selection and differential edge selection is compared on the basis of true positive rate (TPR), false positive rate (FPR), Matthews correlation coefficient (MCC), and area under the curve (AUC).
+A detailed description of how these performance metrics were computed is provided in the Supplementary Material.
+The performance results for graph and precision matrix learning are given in Table
+In general, the Bayesian methods tend to favor sparser graphs, and achieve quite low false positive rates.
+The lasso methods tend to select somewhat denser graphs, and have correspondingly higher TPRs and FPRs.
+The proposed linked precision matrix method achieves the best overall performance, as demonstrated by its high MCC value.
+The AUC, which is computed across a range of model sizes, shows that the lasso methods and the proposed linked precision matrix approach have very good accuracy.
+For the lasso methods, the AUC was computed for multiple values of the cross-group penalty parameter while varying the within-group penalty, and the best was included here.
+Thus, the reported AUCs for these methods are likely to err on the optimistic side.
+Finally, the Frobenius loss is minimized under the proposed method.
+[Table
+Based on the results in Table
+The proposed method achieves both the highest MCC and AUC across methods compared.
+The high false positive rate of the lasso methods in selecting differential edges is partly due to the fact that they select a larger number of false positive edges overall, and may also reflect that they use a single penalty parameter to control cross-group similarity, which is not optimal when some groups have more similar dependence structure than others.
+Finally, the proposed linked precision matrix approach provides a posterior summary of cross-group similarity.
+Specifically, the posterior estimated value of Φ under the proposed linked precision matrix method is
+1.0 0.65 0.63 1.0 0.64
+.
+Although the entries are fairly similar across groups, we can see that groups 1 and 2, which are the most similar to each other, have a higher value in the Φ matrix.
+Additional simulated scenarios with varying degrees of shared structure and edge values are included in the Supplementary Material.
+Results demonstrate that although the proposed method has the largest performance advantage when edge values across groups are in fact similar, it is robust to deviations from this setting, and performs similarly to separate Bayesian inference when there is no more overlap across groups than by random chance.
+
+Discussion
+We have introduced a novel method for the joint analysis of multiple brain networks.
+The proposed approach allows flexible modeling of the cross-group relationships, resulting in relative measures of precision matrix similarity which fall in the (0, 1) interval.
+With respect to other methods for joint estimation, the proposed method not only shares information about the presence or absence of edges between groups, but also about the strength of those connections.
+Building on the sampling framework of
+The proposed method was proven to be suitable for the analysis of multiple brain networks based on ROI measurements; in case interest is in larger networks, such as networks of voxels, more scalable approaches focused on point estimation, such as lasso or EM algorithms
+We have applied our method to the analysis of structural data from the AIBL study on Alzheimer's disease, with the purpose of exploring the changes in structural connectivity for different brain regions through the progression of the disease.
+Our method has demonstrated that the majority of structural connections are preserved across all groups.
+Some of our findings are consistent with the literature on structural connectivity networks in Alzheimer patients: networks are fairly sparse and a number of edges are shared across groups.
+In theory, structural connectivity networks in Alzheimer's patients do not change dramatically with disease progression.
+Our findings confirm this theory, and support our assumption that all networks are similar to some extent, i.e. all elements of the Φ matrix are non-zero.
+However, from a statistical modeling perspective, it might be of interest to replace the prior given in equation (
+hpHC q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q 2 4 6 HC q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q 2 4 6
+
+MCI
+q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q 2 4 6 AD q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q 2 4 6 hpHC q q q q q q q q q q q q q q q q 74 76 78
+
+HC
+q q q q q q q q q q q q q q q q 74 76 78
+
+MCI
+q q q q q q q q q q q q q q q q 74 76 78
+
+AD
+q q q q q q q q q q q q q q q q 74 76 78 hpHC q q q q q q q q q q q q 90 92 94 96 98 100 99 97 95 93 91 89 HC q q q q q q q q q q q q 90 92 94 96 98 100 99 97 95 93 91 89 MCI q q q q q q q q q q q q 90 92 94 96 98 100 99 97 95 93 91 89 AD q q q q q q q q q q q q 90 92 94  Table
+For each group and brain region, diagonal values represent the total number of edges using the specified method, and off diagonal values represent the number of edges the two methods have in common.
+Fused is the fused graphical lasso of
+
+
+have disease stage information and measurements of cortical thickness across 100 regions of interest in the brain from a total of 584 subjects.
+Here we focus on imaging data and cognitive assessments from the last follow up time point available.
+The subjects were divided into four groups: high performing HC (hpHC, n=143), HC (n=145), MCI (n=148), and AD (n=148).
+To obtain this classification, subjects were first evaluated by a clinician for current diagnosis and categorized as HC, MCI, or AD.
+HC subjects were further divided into hpHC and HC using eight different cognitive composite scores representing different cognitive domains.
+Magnetic resonance imaging (MRI) was performed on each subject, and the resulting images were parcellated into 100 regions of interest (ROIs).
+Mean cortical thickness was computed in each ROI, and used in subsequent analysis.
+This gave us data on p = 100 brain regions for the K = 4 groups of subjects.
+Within each group, data were centered.
+Additional details on the cognitive scoring and MRI data processing, along with a list of ROIs grouped by lobe of the brain, are provided in the Supplementary Material.
+
+
+Figure1shows histograms of the PPIs for each group and scatter plots of the PPIs across
+
+
+
+Figure 2 .
+Figure 2. Case study results discussed in Section 3.3.
+Plot of the PPIs across the 4 groups of subjects.
+In each plot, ROIs are grouped within individual brain lobes.
+
+
+
+Figure 3 .
+Figure 3. Case study results discussed in Section 3.3.
+Subnetworks corresponding to the frontal, temporal, parietal, occipital, and limbic lobes (from top to bottom), for the 4 groups of subjects, where the edges shown are those selected in the median model.
+The left side of each circular array represents the left brain hemisphere, and the right side represents the right brain hemisphere.
+Blue lines indicate edges shared by all 4 groups, red lines indicate edges unique to an individual group, and black lines those shared by 2 or more groups.
+
+
+j) is included in graph k, and equal to zero otherwise.
+
+
+
+Table 1
+Case study results discussed in Section 3.3.Number of edges included per group and shared across groups in the networks for all ROIs of Supplementary FigureS2and the lobe-specific networks of Figure3.
+Diagonal values represent the number of edges selected in each group, with values in parenthesis representing the number of edges that are unique to that group.
+Off-diagonal values indicate the numbers of shared edges between pairs of groups.

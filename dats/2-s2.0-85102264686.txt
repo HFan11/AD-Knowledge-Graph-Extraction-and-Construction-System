@@ -1,0 +1,362 @@
+Alzheimer's disease detection using depthwise separable convolutional neural networks
+To diagnose Alzheimer's disease (AD), neuroimaging methods such as magnetic resonance imaging have been employed.
+Recent progress in computer vision with deep learning (DL) has further inspired research focused on machine learning algorithms.
+However, a few limitations of these algorithms, such as the requirement for large number of training images and the necessity for powerful computers, still hinder the extensive usage of AD diagnosis based on machine learning.
+In addition, large number of training parameters and heavy computation make the DL systems difficult in integrating with mobile embedded devices, for example the mobile phones.
+For AD detection using DL, most of the current research solely focused on improving the classification performance, while few studies have been done to obtain a more compact model with less complexity and relatively high recognition accuracy.
+In order to solve this problem and improve the efficiency of the DL algorithm, a deep separable convolutional neural network model is proposed for AD classification in this paper.
+The depthwise separable convolution (DSC) is used in this work to replace the conventional convolution.
+Compared to the traditional neural networks, the parameters and computing cost of the proposed neural network are found greatly reduced.
+The parameters and computational costs of the proposed neural network are found to be significantly reduced compared with conventional neural networks.
+With its low power consumption, the proposed model is particularly suitable for embedding mobile devices.
+Experimental findings show that the DSC algorithm, based on the OASIS magnetic resonance imaging dataset, is very successful for AD detection.
+Moreover, transfer learning is employed in this work to improve model performance.
+Two trained models with complex networks, namely AlexNet and GoogLeNet, are used for transfer learning, with average classification rates of 91.40%, 93.02% and a less power consumption.
+
+Introduction
+Alzheimer's disease (AD) is a neurodegenerative disease that can cause mental disorders and even dementia in humans
+AD patients are usually elderly, and a common symptom is the gradual loss of memory and understanding
+It is estimated that AD will suffer one in every 85 persons by 2050
+So far, the exact cause of AD is still not quite clear.
+It has been reported that there are no effective medications or treatments that can prevent or reverse the progression of AD
+Therefore, it is critical to early diagnose the AD and design a treatment plan to slow the progression of AD.
+In recent years, the diagnosis of AD, especially its transitional phase, that is, mild cognitive impairment (MCI), has received growing attention
+Every year roughly 10 percent -15 percent of MCI patients are transitioned to AD
+It is found the converting from MCI to AD is often accompanied by the loss of the grey matter
+Based on these potential visual evidences of AD, the research approach should be developed that not only enhances the understanding of the pathophysiological processes of AD, but also contributes to the clinical study of AD.
+Many neuroimaging techniques have been developed for exploiting the brain functions and structures, such as diffusion tensor imaging
+Recently, MRI has become increasingly popular in studying the brain nerve connections.
+MRI has shown tremendous promise as one type of well-developed brain imaging technology in providing detailed information for the diagnosis of high-level neurological disorders, such as depression and schizophrenia
+Rapid developments of neuroscience
+Recent studies have shown that in certain circumstances, ML algorithms can predict AD even better than clinicians
+Although statistical ML method such as support vector machine (SVM)
+The convolutional neural network (CNN) is popular in DL community thanks to its great success in image classification
+These achievements have attracted researchers to develop improved CNN-based systems for AD detection.
+However, despite great efforts have been made to improve the accuracy of classification, few works were done to optimize of the architecture of CNN for practical AD detection.
+In this paper, MRI-based feature is developed for AD classification using a depthwise separable convolution (DSC)based CNN, and decent recognition accuracy rate is achieved.
+The research approach of this work is divided in three-fold sequentially:
+1) A CNN is designed to train and identify a small number of MRI with an obtained high classification accuracy.
+2) The CNN is further optimized to improve portability, which is a depthwise separable convolutional neural network.
+It decreases the number of parameters and the cost of computation, while the classification accuracy rate is maintained.
+3) Two well-trained networks are used for transfer learning and good classification accuracies are achieved, which evidenced the effectiveness of the proposed depthwise separable convolutional neural network.
+The remainder of the paper is structured as follows: similar works are summarized in Section II.
+Section III discusses the research methodology, and Section IV contains the experimental results and interpretation.
+Section V provides the conclusion and future work.
+
+Related Works
+The ML technique is commonly used in the automated pattern recognition based on images.
+Classical ML algorithms, such as SVM algorithm
+Recently, a feed-forward neural network
+Detailed discussion and its comparisons with other popular methods were also addressed in
+A study on four-class classification was proposed in
+Multi-core SVM
+The detailed recognition accuracy rates from these works are shown in Table
+Methods EMCI versus LMCI LMCI versus AD
+In the area of AD recognition, DL is often considered advantageous because it does not require complex feature engineering and generalization beforehand.
+Recently, DL methods have become increasingly popular, and arguably surpass the traditional methods.
+In
+The results indicate that the dropout has a good effect in the diagnosis of AD with its final average classification rate reached 74.10%, improving the classification accuracy by 5.90% on average, compared to the classical DL methods.
+As one of DL's most used architectures, CNN has gained a great deal of interest in the area of image classification
+An AD detection system based on CNN, AD patches and HC being used to train a CNN to recognize deep learning characteristics of MCI subjects, was introduced in
+A popular method
+Another method
+Considering the relationship between these features, tree-guided sparse coding methods and resampling schemes using elastic nets have been proposed in
+The approach of
+PCANet can learn the filters in CNN through traditional unsupervised machine learning algorithms.
+PCANet performs hash coding on the feature map obtained by the convolutional layer, and then uses histogram block coding, and finally outputs the extracted features.
+Although these DL algorithms provided good accuracy rates, the model structures are complex for deployments on the embedded devices with limited computing resources
+To address this challenge, this work aims to replace the standard convolution architecture of CNN by DSC to reduce the number of parameters and training time of the neural net model.
+The fine-tuning of the networks based on transfer learning have also been explored using medical image data.
+Studies using medical images in
+Therefore, in this work the AlexNet and GoogLeNet models are separately used as the base for transfer learning to further classify AD.
+The results indicate the positive effectiveness of DSC for diagnosing AD.
+
+Methodology
+This section presents the methodology of the related methods proposed in this work, including CNN, DSC and transfer learning, as well as the pipeline of training and optimizing the neural network.
+
+CNN model
+As a multi-layer neural network, CNN is particularly effective when dealing with scenes involving a large number of images.
+The basic structure of a classical CNN consists of a convolutional layer, a pooling layer, and a fully connected layer.
+A classical CNN's basic structure consists of a convolutional layer, a pooling layer, and a totally fully layer.
+In detail, the convolutional layer is designed to extract different features of the image.
+The pooling layer further abstracts the original features, which greatly reduces the training parameters and eases the over-fitting of the model.
+In summary, CNN allows a collection of features through the convolution kernel's filtering mechanism, which decreases the amount of network parameters through convolutional weight sharing and pooling activity.
+The soft-max classifier is inserted into the fully connected layer, after extracting the features, to classify the samples.
+where (  = |  ) is the forecasted likelihood for sample  to be class l.
+To avoid over-fitting of the network, the popular dropout regularization is used for each pooling layer of the CNN model
+In this work, 10% of the neurons are randomly removed.
+The network weight w and the cost function of the network need to be optimized during the process of CNN training.
+Regularized cross-entropy is used as cost-function in this analysis.
+The cost-function can be translated as
+where   is 0 if the   ground truth label is the lth dot, or if it is 1 otherwise.
+The  2 regularization with its coefficientγ controls the weight w while training the model, also detects the limitation of the model space so that over-fitting may be avoided.
+Figure
+A standard convolution layer takes a  ×   ×  feature map I as input and generates a   ×   ×  feature map output O, where   is the spatial width and height of the square input feature map, M is the number of input feature map channels, and N is the number of output feature map channels.
+Extracts function from the size   ×   convolution kernel from the standard convolution layer.
+is convolution kernel spatial width and height.
+The standard convolution calculation process formula of the feature map I to the feature map O is given by
+where I represent the input features maps, O represents the output features maps, and k represents the convolution kernels.
+i and j specify the Convolution kernel element location.
+k and l decide the location of the element in the input feature map and the output feature map, m represents the input feature map channel and n represents the output feature channel.
+The parameters of standard convolution are computed as
+The computing cost of standard convolution is shown by
+where G represents the total number of parameters of the model, F represents the computational cost, M represents the number of channels of the input feature map, N represents the number of channels of the output feature map,  represents the spatial width and height squared input features of the object map, and   represents the convolution the spatial width and height of the convolution kernel.
+
+DSC operation
+The traditional convolution process uses weight sharing and pooling operations.
+Such techniques can significantly reduce the number of network parameters employed and the cost of computation, but still cannot satisfy the criteria of installing models on many embedded devices.
+In this work, A new approach for further reduce the number of parameters and the computational burden of a CNN is provided.
+The standard convolutional layer considers the input image data from the channel and space aspects simultaneously.
+DSC decomposes the traditional convolution into two sequential steps in order to reduce the potential redundancy of the standard convolution due to ignorance of information types: depthwise convolution followed by pointwise convolution (1×1 convolution kernels).
+In detail, DSC divides the standard convolutional layer into two layers, one for filtering and the other for extracting features with multiple 1×1 convolution kernel.
+Depthwise convolution first applies the convolution kernel to a channel of the image, and then the point-wise convolution is used to integrate the channel convolution output.
+The DSC uses a 1×1 convolution kernel instead of a 3×3 convolution kernel to process the input image data.
+It is found in such design the DSC greatly reduced model parameters and the computational complexity compared with standard convolution, and the experimental results will be analysed in detail.
+The DSC structure is expressed in Figure
+For each input channel, Depthwise convolution applies a single filter with the stride of one and zero padding.
+Pointwise convolution is then used to construct a linear combination of the depthwise convolution output with a convolution kernel of size 1×1.
+Pointwise convolution achieves the effect of down-sampling by adjusting the stride.
+This work uses BN
+The feature map for the output of the depthwise convolution is expressed as
+where I represent the input feature maps,  ̅ represents the output feature maps, and K represents the convolution kernels.
+i and j determine the element position of the convolution kernel.
+k and l decide the location of the input feature map element and the output feature map, m represents the input feature map channel.
+The parameter calculation and cost function for the depthwise convolution can be denoted by
+and
+The number of parameters is related only to the number of input feature mapping channels and the convolution kernels.
+The computational cost is proportional to the number of input feature mapping sources, the convolution kernel and the square input feature mapping function.
+The parameters and computing costs of depthwise convolution do not need to consider the output feature mapping N. Compare to formulas (4) and (
+However, unlike the conventional convolution layer, DSC only filters input channels without combining them into new features.
+Therefore, this paper attempts to merge the performance features of the depthwise convolution layer with the pointwise convolution in order to produce new features.
+The parameter formula for DSC is calculated by
+The calculation cost formula for DSC is given by
+DSC based on 3×3 convolution kernel is used in this work, which computes eight to nine times faster than the standard convolution, achieved a comparable accuracy (shown in Section V).
+The parameter reduction is described by
+The calculation cost reduction is given by
+When training a neural network, BN function, ReLU function and pooling layer are used after each standard convolution layer.
+In DSC, BN and ReLU function are used.
+Their structure is shown in Figure
+Table
+This architecture is an optimization of the previous standard convolution architecture, replacing the two standard convolutional layers of the standard convolutional architecture with two DSC layers.
+The pooling module in the standard convolutional layer performs a size 2×2 down sampling operation on the input feature map.
+In pointwise convolution of DSC, the stride is set to two, which can effectively achieve the down-sampling operation, s1 means the stride of convolution is one, and s2 means the stride of convolution is two.
+
+Transfer learning
+For small data sets, the classification accuracy rate would be relatively low if CNN are trained from the scratch by back propagation.
+In order to leverage multiple pretrained networks, it is possible to obtain a higher classification accuracy rate through transfer learning.
+In transfer learning, the network model uses pre-trained network.
+Its weights are pre-set, and only the last fully connected layer is retrained.
+In this work, two popular architectures are used including: 1).
+AlexNet: AlexNet was proposed in
+The top5 error rate was 16.4%, the second-best contest entry was 26.2% error rate.
+AlexNet's network structure contains eight neural networks, including five convolutional layers and three fully connected layers, containing 630 million links, 650,000 neurons and 60 million parameters.
+2).
+GoogLeNet: GoogLeNet, a new DL structure, was proposed in
+GoogLeNet uses 22 layers of neural networks, but the parameters are only half that of AlexNet.
+Google LeNet points out that the best way to achieve high-quality models is to increase the model depth, but wider networks are vulnerable to overfitting and computational complexity.
+GoogLeNet converts some convolution and fully connection into a sparse connection, and propose for this reason a modular system called Inception.
+
+Results
+The dataset used in this work is first presented in this section, then the results of CNN, DSC and transfer learning algorithms on AD detection are analysed.
+A series of comparisons are presented: the results of CNN are compared with other relevant algorithms.
+The results of DSC are further compared with the standard CNN algorithm.
+Finally, the results of transfer learning are analysed.
+
+Dataset
+In this paper the Open Access Sequence of Image Studies (OASIS) structural MRI data is used.
+OASIS is a project that is intended to provide the scientific community free access to brain neuroimaging datasets.
+The examples from HC, MCI and AD groups are shown in Figure
+Because the purpose of this paper is to classify data sets into two and three categories, cross-sectional data meets the requirements.
+The data collection contains a cross-sectional sample of 416 subjects aged 18 to 96. 3 to 4 separate T1-weighted MRI scans are obtained from a single scan for each subject.
+The subjects are right-handed, including men and women.
+Clinically, 100 subjects over the age of 60 had been diagnosed with very mild to moderate AD, among them.
+Among them, 100 subjects over 60 years old had been clinically diagnosed with very mild to moderate AD.
+In addition, the reliability dataset, which contains 20 non-dementia subjects, was tested again 90 days after their initial meeting.
+Whether the subjects in the dataset were ill was determined by the clinical dementia rating (CDR) variable, ranging from zero to two.
+Hypothesis zero represents HC, two represents AD, and the rest are MCI.
+The dataset includes 332 HC, 68 MCI and 30 patients with severe AD.
+Data of patients with MCI and AD are over-sampled, which can expand the amount of data and avoid the impact of data imbalance.
+At the same time, HC data is under sampled.
+After resampling, the final dataset includes 266 HC images, 136 MCI images and 90 images of patients with severe AD.
+Finally, data enhancement processing (clipping, flipping, increase contrast, rotate etc.) are performed on the OASIS dataset.
+After data enhancement, 532 HC images, 408 MCI images and 450 images of patients with severe AD were obtained.
+During training, data enhancement is also performed on the model, e.g.
+dropout
+The OASIS dataset is randomly broken down into five sections, where cross-validation is used five times during training.
+The experiments in this paper secured that the patient-wise division is taken into account.
+In this paper, the Alzheimer's Disease Neuroimaging Initiative (ADNI) dataset is used as a test set to test the performance of the model.
+The ADNI is a longitudinal multiple centers study aimed at the development of clinical, imaging, genetic and biochemical biomarkers, as well as early detection and tracking of AD.
+At each stage of the ADNI dataset, new participants were recruited across North America and agreed to complete various imaging and clinical evaluations.
+This has made a significant contribution to AD the research.
+
+Experimental results for CNN algorithm
+The CNN model is trained for two classification scenarios in order to test the efficiency of the CNN model developed in this paper: binary and three-class classifications.
+The training for binary classification is conducted for two cases, i.e.
+HC versus MCI, and MCI versus AD.
+The demonstrate proposed in this paper is compared to other models, and a better performance is achieved.
+The classification accuracy rate of health control and mild cognitive impairment reach 84.65%, and the classification accuracy rate of mild cognitive impairment and AD is 72.96%.
+A comparison with other methods is shown in Table
+When classifying HC and MCI, training 100 epochs, the training loss and verification loss can converge quickly, the final training loss can reach 0.3919, and the verification loss can reach 0.4048.
+Their convergences are shown in Figure
+When classifying MCI and HC, training 100 epochs, the training loss and verification loss can converge quickly, the final training loss can reach 0.4062, and the verification loss can reach 0.4243.
+Their convergences are shown in Figure
+The training loss of HC and MCI is 0.0143 which is lower than MCI and AD, and the verification loss of HC and MCI is 0.0195 which is lower than MCI and AD.
+It can be seen from the experiment that because the number of samples of HC is larger, the training loss and verification loss of HC and MCI are lower.
+In Table
+EMCI describes a mild cognitive disability at an early stage and LMCI is a mild late cognitive impairment.
+Among all these methods, the classification accuracy rate obtained from the proposed method appears to be outstanding.
+The sample sizes of the different classes of dataset used in this work are quite different compared to the datasets used in other methods.
+Among patients with MCI and AD, the number of samples is small.
+In particular, the sample size of HC and AD differs greatly, which is the main reason for the low classification accuracy rate between them.
+In 266 HC samples and 136 MCI samples, the classification accuracy rate is 84.65%.
+In addition, HC, MCI and AD are also classified into three classes, and the classification accuracy rate is 78.02%.
+Compared with other advanced methods, the proposed CNN method has better classification performance.
+For the proposed method, the sensitivity is 83.21%, the specificity is 82.15%, and the AUC is 85.23%.
+Compared with other methods, the proposed method achieves a similar detection performance.
+There are some minor differences under several specific metrics which is mainly due to that the datasets used in the approaches and the number of samples are different.
+However the main advantages of the proposed method are efficient network design and significantly reduced parameters and more details will be provided in next subsection.
+In particular, this work uses the ADNI dataset to test the generalization of the model.
+353 MCI and 99 AD images are selected by ADNI dataset.
+ACC reaches 75.32%,
+SEN reaches 80.13%, SPC reaches 65.32%, and AUC reaches 85.23%.
+It can be seen from the test results of ADNI data that there is a difference in SPC, which may be due to the differences between OASIS and ADNI.
+In Table
+The conventional convolutions are replaced by deep separable convolutions with less computing cost and model parameters, and very close classification accuracy and AUC.
+In particular, when all three standard convolution layers of the complete standard convolution model are replaced by DSC, the classification accuracy rate only decreases by 0.23% and the ACC rate decreases by 1.50%, whereas the advantage of the proposed neural network reduces the number of million mult-adds by 84.25% and the thousand parameters by 87.94%.
+In the meantime, the advantage of the proposed model is that the number of million mult-adds is significantly reduced by 84.25%, and the thousand parameters is reduced by 87.94%.
+Figure
+After a standard convolution layer is replaced by the DSC layer, it is found that the test accuracy rate is reduced by 0.11%, but the computing cost is reduced by 40.07%.
+After two standard convolution layers is replaced with DSC layers, it is found that the test accuracy rate is reduced by 0.17%, but the computing cost is reduced by 81.65%.
+When all three standard convolution layers of the complete standard convolution model are replaced by DSC layers, the classification accuracy rate only decreases by 0.23%.
+In the meantime, the advantage of the proposed model is that computing cost is reduced by 84.25%.
+Therefore, as more convolutional layers are replaced, the computing cost decreases, and the model proposed achieves a reasonable trade-off between accuracy and the computational cost.
+Figure
+After a standard convolution layer is replaced by the DSC layer, it is found that the test accuracy rate is reduced by 0.11%, but the model parameter is reduced by 16.99%.
+After two standard convolution layers is replaced with DSC layers, it is found that the test accuracy rate is reduced by 0.17%, but the model parameter is reduced by 87.68%.
+When all three standard convolution layers of the complete standard convolution model are replaced by DSC layers, the classification accuracy rate only decreases by 0.23%.
+In the meantime, the advantage of the proposed model is that model parameter is reduced by 87.94%.
+Therefore, as more convolutional layers are replaced, the model parameter decreases, and the model proposed achieves a reasonable trade-off between model parameter and accuracy.
+Comparative experiments show that the DSC layer is used to replace more conventional convolution layers in the CNN model, and this achieves a lower computational cost and parameters of the model while maintaining the test accuracy.
+Therefore, the AD classification system using the DSC model is very beneficial for embedded devices with limited computing resources.
+The proposed method in this work has low computational cost and low number of parameters, but the generalization performance can be further investigated.
+This can be addressed by optimizing the proposed model in the future work.
+
+Results of transfer learning algorithm
+In the case of small dataset, this may lead to over-fitting or under-fitting, and the classification accuracy of training a neural network model from scratch is generally not high.
+The pre-trained model is used for transfer learning, and the rate of accuracy is substantially increased.
+The models AlexNet and GoogLeNet are pre-trained on the ImageNet dataset, and are then used for transfer learning in this work.
+Table V shows the accuracy rate results for the four models, all of which are trained using the OASIS MRI dataset.
+It can be seen from Table V that due to insufficient training data, the classification accuracy of CNN and DSC models trained from scratch is low.
+The pre-trained AlexNet and GoogLeNet models are fine-tuned using the OASIS MRI data, and the classification accuracy rates are significantly improved.
+The pretraining models of AlexNet and GoogLeNet are based on ImageNet data which includes a large amount of data, so they have very good generalization ability and can achieve a good performance when applied to OASIS MRI data.
+The AlexNet and GoogLeNet models obtain classification accuracy rates of 91.40% and 93.02%, respectively.
+GoogLeNet uses more convolutions and deeper layers than AlexNet, so classification accuracy is higher.
+Note that both the AlexNet model and the GoogLeNet model use 5fold cross-validation and 500 iterations of training during transfer learning.
+In Table
+Moreover, their frameworks also contain many standard convolution modules which can be replaced by the proposed DSC module to reduce the network complexity.
+This is one option for future research work.
+
+Conclusion
+A novel DSC network-based method for detection of AD is proposed in this paper.
+The conventional CNN method is first used to detect AD, and the classification accuracy rate reached 78.02% in a three-way classification scenario (AD, MCI and normal).
+Then, an AD detection method combining DSC and CNN is proposed.
+Compared with the CNN, the model parameters of the proposed method are reduced by 87.94% and the computing cost is reduced by 84.25%, where the classification accuracy rate remains moderately the same.
+It is quite promising in implementing the functionality of AD detection on mobile embedded devices with limited computing resources.
+Experiments on OASIS MRI dataset show that DSC method has great potential for AD recognition.
+The common training models of AlexNet and GoogLeNet are used for transfer learning to improve the classification accuracy rate of AD detection, and a good result is obtained in this paper.
+Consequently, one potential future work will consider combining DSC with AlexNet or GoogleNet to further increase the AD classification accuracy rate and to obtain a more compact model.
+At the same time, using the proposed method in other application areas can also be investigated in the future.
+
+
+
+Figure 1
+Figure 1 displays the overall CNN layout configuration and can be split into the module for extraction of functionality and the module for classification.
+'Conv.' and 'Pool.' denote convolution operations and pooling operations, respectively.
+For the feature extraction of this work, there are N gray-scale images   ,  ∈ [1, ] after the data pre-processing, and their pixels are scaled to a size of 56×56 and normalized to the interval [0, 1].
+Moreover, the standard convolutional layer of the convolution kernel of size 3×3 is then fed for feature extraction.
+For each convolution operation, batch normalization (BN) [44] function and rectified liner unit (ReLU) activation function is implemented.
+Thereafter, each convolutional layer is accompanied by a maximum pooling of size 2×2, which samples down by half the previous feature map.
+Three such standard convolutional layers are applied to this model.
+The CNN model framework is used as a benchmark in this work, as shown in Figure 1.
+
+
+
+Figure 1 .
+Figure 1.
+The overall design of the architecture CNN from this work.
+'Conv.' and 'Pool.' denote the convolution and pooling processes, respectively.
+A 7×7×128 feature matrix is fed to the classification module after the previous feature extraction.
+Firstly, the feature map is flattened to 6,272 feature vectors, and then the feature vectors are densified by using two fully connected layers, each layer is set to contain 1024 neurons.
+C is the number of classifications in AD dataset.
+Then, the Cdimensional score vector S([ 1 … ,   , …   ]) is expressed by the predictive probability with the soft-max function, and the value of each fraction is between [0, 1].
+The softmax function is given by
+
+
+
+Figure 2 .
+Figure 2. The structure of a standard convolution layer includes convolution module and pooling module.
+This framework is based on the case where the training step size is one and the input feature map is zero-padding.
+
+
+
+Figure 3 .
+Figure 3.
+The structure of a DSC includes depthwise convolution module and pointwise convolution module.
+The stride is one and zero padding applies to depthwise convolution module.
+
+
+
+Figure 4 .
+Figure 4.Standard convolution with BN, ReLU and pooling layer (Left), and DSC with depthwise and pointwise layers followed by BN and ReLU (Right).
+
+
+
+Figure 5 .
+Figure 5. Images from the OASIS MRI dataset (a) HC.
+(b) MCI.
+(c) AD.
+
+
+
+Figure 6 .
+Figure 6.
+Training loss and validation loss for classifying HC and MCI.
+
+
+
+Figure 7 .
+Figure 7. Training loss and validation loss for classifying MCI and AD.
+
+
+
+Figure 8 .
+Figure 8.
+When testing with the OASIS dataset, there is a trade-off between the computational cost of the model and the accuracy of the test.
+
+
+
+Figure 9 .
+Figure 9.
+When testing with the OASIS dataset, there is a trade-off between the parameter of the model and the accuracy of the test.
+
+
+
+Table I .
+Performance comparison of previous ML methods.
+
+
+
+Table II .
+DSC network Architecture
+
+
+
+Table III .
+Performance comparison with other methods.The DSC is used to optimize the CNN model.The CNN model in this paper uses three standard convolutions and they are replaced by DSCs.Comparing to the optimized depthwise separable models with the standard CNN model, the results are shown in TableIV.
+Table IV.
+Depthwise separation convolution VS standard convolution.
+
+
+
+Table V .
+Test models and corresponding average accuracy rates.

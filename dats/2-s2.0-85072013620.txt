@@ -1,0 +1,426 @@
+Aberrant MEG multi-frequency phase temporal synchronization predicts conversion from mild cognitive impairment-to-Alzheimer's disease
+Many neuroimaging studies focus on a frequency-specific or a multi-frequency network analysis showing that functional brain networks are disrupted in patients with Alzheimer's disease (AD).
+Although those studies enriched our knowledge of the impact of AD in brain's functionality, our goal is to test the effectiveness of combining neuroimaging with network neuroscience to predict with high accuracy subjects with mild cognitive impairment (MCI) that will convert to AD.
+In this study, eyes-closed resting-state magnetoencephalography (MEG) recordings from 27 stable MCI (sMCI) and 27 progressive MCI (pMCI) from two scan sessions (baseline and follow-up after approximately 3 years) were projected via beamforming onto an atlas-based set of regions of interest (ROIs).
+Dynamic functional connectivity networks were constructed independently for the five classical frequency bands while a multivariate phase-based coupling metric was adopted.
+Thus, computing the distance between the fluctuation of functional strength of every pair of ROIs between the two conditions with dynamic time wrapping (DTW), a large set of features was extracted.
+A machine learning algorithm revealed 30 DTW-based features in the five frequency bands that can distinguish the sMCI from pMCI with absolute accuracy (100%).
+Further analysis of the selected links revealed that most of the connected ROIs were part of the default mode network (DMN), the cingulo-opercular (CO), the fronto-parietal and the sensorimotor network.
+Overall, our dynamic network multi-frequency analysis approach provides an effective framework of constructing a sensitive MEG-based connectome biomarker for the prediction of conversion from MCI to Alzheimer's disease.
+
+Introduction
+Alzheimer's disease (AD) is a neurodegenerative disease, currently considered the most common type of dementia corresponding to 60-70% of the cases in the world population
+This disease is clinically defined by a progressive loss of episodic memory and other cognitive and functional abilities, such as executive functions
+Histologically, AD is characterized by the presence of amyloid plaques, neurofibrillary tangles and brain atrophy
+Therefore, establish an early diagnosis is of great significance to initiate pharmacological or cognitive treatments that may slow down the progression of the disorder.
+One of the most studied phases in the prognosis of AD is Mild Cognitive Impairment (MCI), since it entails a higher risk of developing Alzheimer-type dementia
+In fact, several longitudinal studies have found that the conversion rate from MCI to AD is 10-15%/year
+However, the progression of this transitional stage between normal aging and dementia has usually been quite variable due to its heterogeneous nature.
+The inclusion of more precise clinical criteria and biomarker's characteristics is very important to get an increasingly accurate diagnosis and prognosis.
+In recent years, different neuroimaging modalities have studied AD progression
+In particular, the magnetoencephalography (MEG), which provides an effective and non-invasive way to capture human brain's functional connectivity (FC) patterns
+In this way, the multivariate phase coupling estimation (PCE) provides a new approach to reveal the functional coupling based on multivariate phase statistics between nodes in a large network
+MEG FC networks are thus a promising approach to characterize brain organization under both healthy and pathological conditions.
+Recently, graph analysis has been used to classify subjects from different populations
+A common problem of this approach is that most of the studies that used network properties established an arbitrary threshold from the original weighted network as the sorting variable.
+In order to solve these limitations, new techniques such as the Orthogonal Minimal Spanning Tree
+In this line, we have recently published an extensive work of the different choices during the preprocessing steps of MEG resting-state activity tailored to the design of a reliable connectomic biomarker for MCI
+Complementary, we have also explored the reliability of both static and dynamic network metrics of source-reconstructed neuromagnetic activity at resting-state, obtaining that static network metrics are less reliable than dynamic's
+In our previous analysis, we adopted two commonly used bivariate connectivity estimators, the imaginary part of phase locking value (iPLV:
+Many prospective studies have focused on the progression from MCI to AD
+For instance, in a recent MEG study of our group found that the increase in phase synchronization between the right anterior cingulate and temporo-occipital areas together with the immediate recall score in MCI patients predicted the conversion to AD with an accuracy of 89.9%
+Nevertheless, there is a scarcity of longitudinal investigations that have used repeated MEG measurements of these subjects over time.
+In the present study, we used a multivariate connectivity estimator focused on the multivariate phase of the multi-source activity called phase coupling estimation (PCE)
+And moved one further step by adopting well-known graph signal processing operators called Laplacian transformations
+A previous study analyzed the structural connectivity matrices from healthy controls, early/late MCI and AD
+These authors explored the network's algebraic connectivity via graph Laplacian spectrum and the Fiedler value, which is the second smallest eigenvalue of the Laplacian matrix.
+By using this approach, they found reduced structural network robustness in AD.
+Focusing on a Laplacian matrix derived from the functional brain network, they defined a biomarker based on the Laplacian graph operator
+Thus, in the present work, we studied a sample of MCIs that were followed-up during an approximate 3-year period.
+The first MEG scan was done when all participants were MCI (first condition or session); the second one (second condition or session) when some of them had progressed to AD (progressive MCI, pMCI) while others had remained as MCI in the same period (stable MCI, sMCI).
+We first used a multivariate phase coupling estimator applied to frequency dependent source-reconstructed brain activity to quantify dynamic whole-brain functional connectivity brain graphs in both conditions.
+Dynamic Time Wrapping (DTE) was adopted as a distance metric to estimate the (dis)similarity of fluctuations of functional coupling strength between the two conditions and for every pair of ROIs across frequencies.
+A classification framework extracted the most informative multi-frequency topological features supporting an appropriate classifier that succeeded to predict subjects that converted from MCI to AD.
+Section 1 is devoted to describing the dataset, the demographics, and the analytic pathway.
+Section 2 demonstrates the novel results dedicated to the current protocol with follow-up.
+Finally, Section 3 is devoted to the discussion of current findings linked to the current literature and proposing complementary research directions.
+
+Materials and methods
+
+Subjects
+MEG recordings were obtained from 54 MCI patients recruited from the Hospital Universitario San Carlos (Madrid, Spain).
+All of them were right-handed
+In Table
+MCI diagnosis was made according to the National Institute on Aging-Alzheimer Association (NIA-AA) clinical criteria
+Besides meeting the clinical criteria, MCI participants had signs of neuronal injury (hippocampal volume measured by magnetic resonance imaging (MRI).
+Thus, they might be considered as "MCI due to AD" with an intermediate likelihood
+Besides, they were cognitively and clinically followed-up for approximately three years (every six months) and were then split into two groups according to their clinical outcome: 1) the "progressive" MCI group (pMCI; n = 27) was composed of those subjects that met the criteria for probable AD
+None of the participants had a history of psychiatric or neurological disorders (other than MCI or AD).
+General inclusion criteria were: age between 65 and 80, a modified Hachinski score ≤ 4, a short-form LHV 0,0024 ± 0,0003 0,0020 ± 0,0003 97,773 0,003* RHV 0,0025 ± 0,0003 0,0022 ± 0,0003 55,714 0,023* p-values for between-groups differences were introduced, and *p < .05.
+Age differences were assessed with a Mann-Whitney Test.
+An ANCOVA test, with age as a co-variable, was used for continuous variables and Fisher's exact test for gender and APOE differences.
+Geriatric Depression Scale score ≤ 5, and T1 magnetic resonance imaging (MRI) within 12 months and 2 weeks before the two MEG recordings without indication of infection, infarction, or focal lesions (rated by two independent experienced radiologists;
+Patients were off those medications that could affect MEG activity, such as cholinesterase inhibitors, 48 h before recordings.
+The study was approved by the Hospital Universitario San Carlos Ethics Committee (Madrid), and all participants signed a written informed consent prior to participation.
+
+MRI and medial temporal lobe volumes
+3D T1 weighted anatomical brain magnetic resonance imaging (MRI) scans were collected with a General Electric 1.5 T MRI scanner, using a high-resolution antenna and a homogenization PURE filter (Fast Spoiled Gradient Echo (FSPGR) sequence with parameters: TR/TE/ TI = 11.2/4.2/
+450 ms; flip angle 12°; 1 mm slice thickness, a 256 × 256 matrix and FOV 25 cm).
+We employed Freesurfer software (version 5.1.0.21) to obtain the medial temporal lobe volumes, which were normalized to the overall intracranial volume to account for differences in head volume over subjects.
+
+MEG recordings
+MEG recordings were acquired with a 306-channel Vectorview system (Elekta-Neuromag) at the Center for Biomedical Technology (Madrid, Spain).
+Data were collected at a sampling frequency of 1000 Hz and band-pass filtered online between 0.1 and 330 Hz (Fig.
+MEG signals were recorded at the same time of the day in two different moments: 1) at baseline (first MEG), and 2) 24 ± 6 months (second MEG).
+Patients were in an awake, resting state with their eyes closed.
+For each subject, 5 min task-free data were recorded.
+Maxfilter software (v 2.2, correlation threshold = 0.9, time window = 10 s) was used to remove external noise of the raw MEG data with the temporal extension of the signal space separation method with movement compensation
+MEG data were automatically scanned for ocular, muscle, and jump artifacts using the Fieldtrip software
+Subsequently, artifacts were visually confirmed by a MEG expert.
+The remaining artifact-free data were segmented in 4 s segments (epochs).
+An independent component analysis-based procedure was used to remove the heart magnetic field artifact.
+Previously to source data calculation, MEG time series were filtered into delta δ (2-4 Hz), theta θ (4-8 Hz), alpha α (8-12 Hz), beta β (12-30 Hz), and gamma γ (30-55 Hz) frequency bands with a 1500 order finite impulse response filter with Hamming window and a twopass filtering procedure.
+
+Source reconstruction and connectivity analysis
+A regular grid with 10 mm spacing was created in the template MNI.
+This set of nodes was transformed to each participant's space using a non-linear normalization between the native T1 image (whose coordinate system was previously converted to match the MEG coordinate system) and a standard T1 in MNI space.
+The forward model was solved with a single-shell method
+We carried out the source reconstruction independently for each subject and frequency band, using a linearly constrained minimum variance (LCMV) beamformer
+Beamforming filters were estimated with normalized leadfields, regularized covariance matrices averaged over trials, and a 1% regularization factor.
+These neural MEG sources were anatomically parcellated by dividing the cortex into 90 regions of interest (ROIs) according to the AAL atlas
+We selected a centroid (CENT) and principal component analysis (PCA) the representative time series for each brain area (Fig.
+Finally, the functional connectivity (FC) was assessed using the multivariate phase coupling estimation (PCE), that evaluates the distribution of phase differences extracted between the whole set of 90 ROIs
+We constructed a dynamic functional connectivity graph (dFCG) separately for every subject, and for the first and second MEG and frequency bands by analyzing the first 19 epochs of 4 s from the restingstate
+The outcome of this procedure is a full-weighted dFCG of size 19 × 90 × 90 (Fig.
+The weights of the produced FCG were normalized within the range [0,1] with the maximum observed functional coupling strength.
+At a second level, we estimated the temporal distance between the two time series expressing the fluctuation of functional strength of a pair of ROIs in the first and second (follow-up) MEG sessions.
+As a proper temporal distance metric, we adopted a dynamic time wrapping (DTW) employing Symmetric Kullback-Leibler metric.
+DTW has been mainly used in biomedical research to classify signals into different categories by comparing the signals with standard templates
+Another study introduced DTW as a taskbased functional similarity between MEG sensor time series
+Here, we employed DTW to quantify the similarity of the fluctuation of dynamic coupling strength of a pair of brain areas between 1st and 2nd MEG session.
+In Fig.
+Finally, we computed the DTW temporal functional strength distance for every pair of ROIs (4005 possible pairs of the 90 ROIs) between the first and second MEG leading to a matrix 90 × 90 per frequency band and subject (Fig.
+Fig.
+
+Feature selection and classification problem
+We estimated the temporal distance between the functional strength time series representing the first and second MEG (Fig.
+The whole analysis was repeated for every subject and frequency bands leading to a high number of potential candidate features.
+The pair-wise DTW associations of every possible pair of ROIs (n = 90*(90-1)/2 = 4005 DTW features) were tabulated in the upper triangular of a matrix with dimensions 90 (ROIs) ×90 (ROIs) (Fig.
+The total number of features is 5 (frequency bands) ×4005 DTW features = 20.025
+features per subject.
+This pool of features entered in the machine learning scheme adopted here as a binary classification performance of sMCI vs pMCI subjects.
+The feature pool was normalized within every fold and independently for every training/test set of features by subtracting the mean and dividing by the standard deviation of every feature estimated from the training set.
+We ran 5-fold cross-validation (CV) scheme where at every fold, 80% of the subjects (training set) entered the 5-fold CV scheme where we adopted a multi-cluster feature selection (MCFS) algorithm to rank our features and select the set that maximizes the classification performance.
+Then, we picked up the set of features consistently selected across the 5-folds to train the classifier based on the 80% of subjects and tested in the rest of 20% (test set).
+The whole procedure was repeated 100 times and independently for every frequency band (Fig.
+Finally, we aggregated the selected features across the frequencies to design a multiplex biomarker that can potentially predict the converted subjects.
+Here, we employed a Support Vector Machine (SVM) classifier with Radial Basis Function (RBF) kernel.
+Το further validate the machine learning part of our study, we applied an unsupervised feature selection out of the cross-validation scheme.
+This scenario is a complementary approach to our main  approach
+
+Correlate functional connectivity features with MMSE
+Canonical Correlation Analysis was introduced by
+The two datasets can be represented as matrices X 1 and X 2 , with dimensions n × p 1 and n × p 2 respectively, where n denotes the number of subjects and p 1 and p 2 are the number of variables (e.g., DTW features and MMSE estimates) in set X 1 and X 2 , respectively.
+CCA searches to find the linear transformations of X 1 and X 2 that are maximally correlated with each other: = max q u X X vsubject to u v and P u c P v c 1, 1 ( ) , ( )
+CCA assumes that the columns of X 1 and X 2 are normalized having a mean of zero and standard deviation of one.
+The vectors u and v, with dimensions p 1 × 1 and p 2 × 1, respectively, are the canonical vectors (or weights); the vectors X 1 u and X 2 v, with dimensions n × 1, are the canonical variables; and q is called the canonical correlation.
+CCA analysis will be applied to multi-frequency DTW features (30 features) and the delta difference between MMSE of 1st and 2nd session (dMMSE -1 feature).
+
+Comparison of PCE's classification performance with bi-variate phase coupling estimators
+A basic issue in functional connectivity analysis because of signal spread is the signal leakage in MEG and EEG source reconstructed activity.
+In both EEG and MEG, a spatially widely group of sensors detects the brain activity derived from a single neuronal source.
+Any correlation between signals estimated at two spatially distance sensors do not necessarily reflect the interaction of two distinct cortical sources.
+On the contrary, at the sensor level, the same sensor can collect signal from multiple neuronal sources.
+Therefore, two instantaneously interacting sources at i.e. zero-phase lag are difficult to be distinguished from a single source whose activity recorded by the same sensors
+In recent years, novel innovative measures have been introduced to avoid false positive observations of coupling that can be attributed to signal spread.
+These are: Orthogonalized correlation coefficient (oCC)
+While these methods can be very useful, they have an important limitation.
+Ignoring near-zero-lag interaction components makes the interaction estimate insensitive to leakage; and also true near-zerophase-lag interactions will remain undetected.
+The estimated interactions can be driven either by (a) true, (b) artificial or (c) spurious interactions among the reconstructed signals
+True interactions refer to real interactions between neuronal sources at specific spatial locations.
+Artificial interactions reflect false positives interactions that are caused by real interactions between neuronal sources.
+'Significant' coupling is caused by signal mixing and cross-talk from dominant sources at distant locations reflecting residual effects of the signal spread at the source level.
+Spurious interactions reflect estimated interactions that are false positives and also result from cross-talk
+Spurious or ghost interactions occur when signal spread results in pairs of sources in the vicinity of the actual interacting sources to also display significant coupling.
+For instance,
+In the present study, we reported the results of classification performance employing also PLV, iPLV and PLI (see section 1 in the Supplementary material).
+
+Reproducibility of PCE over repeat scan cohorts
+To further introduce PCE as a proper multivariate phase coupling estimator in functional neuroimaging, we estimated PCE in a previously published repeat scan MEG cohort (see section 2 in the Supplementary material).
+We estimated functional connectivity graphs (FCG) with PCE over different widths of temporal windows employing cosine similarity as a proper index to quantify the similarity of FCG between the two cohorts.
+
+Quantifying the effect of ghost interactions via a high-order FCG (HO-FCG)
+We introduced here a way of quantifying the potential leakage of dynamic functional connectivity analysis via a HO-FCG analysis.
+Specifically, for every subject, condition and frequency band, we estimated a dynamic functional connectivity graph (dFCG) with size equals to {ROIs × ROIs × epochs}.
+This dFCG is a low-order graph that tabulates the N = (ROIs × (ROIs -1))/2 and for ROIs = 90, N = 4005 possible pair-wise connectivity estimator over experimental time
+By estimating the cosine similarity between every possible pair of 4005 pairs across the epoch size, we constructed a HO-FCG with size equals to 4005 × 4005.
+Finally, we estimated the mean cosine similarity of the resulted HO-FCG as an index of how similar the functional strength across the ROIs for each connectivity estimator is (see section 3 in the Supplementary material).
+
+Sensitivity of PCE to zero-lag synchronizations
+We explored the sensitivity of PCE to zero-lag synchronization using a Rossler -Lorenz system and different scenarios of volume conduction effect.
+We compared PCE's performance over PLV and iPLV bivariate phase estimators.
+Our experiments showed that with the increment of volume conduction effect, PCE demonstrated lower values compared to PLV and higher compared to iPLV.
+So, PCE encountered both the real and imaginary part of the complex signal.
+In seems that PCE is less sensitive to volume conduction issues especially to the volume conduction of 0.5 (for further details see section 5.C in the Supplementary material).
+
+Correlation between functional strength and signal power
+We estimated the relative signal power for every temporal segment across ROIs, epochs, conditions and frequency bands using fast fourier transform.
+Complementary, we estimated the functional strength per ROI, condition and frequency band by summing the functional pairwise strengths between every ROI and the rest of 90-1 = 89 ROIs.
+Practically, we summed the functional strength of every row in the matrix layout of a FCG.
+Finally, we estimated the absolute correlation between relative signal power and functional strength for every ROI, frequency band and condition across the dimension of epochs.
+Then, the absolute correlation values were subgroup averaged across ROIs first and secondly across subjects for every condition and frequency band (see section 4 in the supplementary material).
+We assessed statistical group and condition-based statistically significant differences between group-averaged absolute correlation values by adopting Wilcoxon Rank-Sum Test (p < .05,
+Bonferroni corrected, p′ < p/6 across frequency bands).
+
+Results
+
+Classification performance
+Table
+The highest classification performance (CP) was succeeded in γ frequency while in the multiplexity scenario; an absolute accuracy (100%) was observed for CENT.
+All the frequencies performed well in the prediction of sMCI versus pMCI.
+Employing the unsupervised feature selection approach, we succeeded to absolute discriminate the two groups.
+
+The topology of the selected features
+We demonstrated the selected features-connections derived from the proposed methodology.
+Fig.
+Demonstration of the 54 subjects in a 3D plot is given in Fig.
+It is clear the tendency of a clear discrimination of the two groups.
+Fig.
+One can see the mixture of higher -lower mean DTW values for pMCI compared to sMCI.
+However, in α and also in θ frequency band there is a consistent pattern of significant lower DTW values in pMCI compared to sMCI.
+Figure
+Fig.
+The analysis revealed most of the selected connections are located between ROIs between DMN-CO, within the DMN, within CO and between DMN-SM (24 out of 49 features).
+
+Modeling MMSE changes with the selected DTW features
+In an attempt to link differences of MMSE between the first and the second MEG with DTW features, we adopted canonical correlation analysis (CCA)
+We first estimated the delta difference of MMSE 1stMEG -MMSE 2ndMEG while the whole analysis was repeated twice independently for each group.
+CCA analysis was performed on 22 pMCI and 27 sMCI subjects.
+Fig.
+Fig.
+The model in both groups comprises 4 vectors:
+• U 1 , a {22 for pMCI, 27 for sMCI} × 1 vector of individual subject weights derived from the multi-frequency DTW set of features (in which each value describes the extent to which a given subject is positively or negatively correlated with this mode of population variation with respect to DTW values)
+• V 1 , a {22 for pMCI, 27 for sMCI} × 1 vector, of individual subject weights, derived from the delta difference of MMSE scores between pre and post condition (and which is highly correlated with U 1 , r = 0.87)
+• A 1 , a 1 value of CCA mode weight relating to the 1 component re- lated to delta difference of MMSE scores between pre and post condition fed into the CCA (i.e., the extent to which combinations of delta difference of MMSE scores between pre and post condition relate to mode weights-vector U 1 )
+• B 1 , a {30 multi-frequency DTW set of features} × 1 vector describing the extent to which each DTW value relates to mode weights-vector V 1 .
+The p-value of the Chi-Square test for both CCA was p = .00014
+(r = 0.987) and p = .00031
+(r = 0.968) for pMCI and sMCI, correspondingly.
+For the pMCI group, the analytic equations of the two canonical variables are: For the sMCI group, the analytic equations of the two canonical variables are: CCA revealed characteristic sub-groups within both groups.
+In Fig.
+Fig.
+One can clearly see that the contribution of α and β frequency in CCA for the pMCI group is negligible compared to sMCI.
+
+PCE outperformed bivariate phase estimators
+PCE overcame the three adopted bivariate phase connectivity estimators based on classification performance (see section 1 and STable 1 in the Supplementary material).
+A consistent observation is that definition of representative virtual time series per ROI plays a key role in the classification performance where CENT overcame PCA across the four connectivity estimators.
+C. 9 features for α.
+D. 10 features for β.
+E. 12 features for γ.
+F.30 features for the multiplex integrated approach.
+
+High reproducibility of PCE in a repeat scan scenario
+S1 illustrates the group-averaged cosine similarity of PCE between FCGs derived from the two scan sessions over the studying of the frequency bands.
+Our results revealed a high reproducibility of functional connectivity patterns based on PCE supported by low cosine similarity index (< 0.1; see section 2 in the Supplementary material).
+
+Quantify a potential effect of ghost interactions via a HO-FCG approach
+S3 demonstrates the group-averaged mean cosine similarity index derived from a HO-FCG for every connectivity estimator, frequency band and for both PCA-CENT methods (see section 3 in the Supplementary material).
+Following a statistical analysis, we revealed that PCE demonstrated the lowest mean cosine similarity value across frequency bands and in both PCA-CENT.
+Interestingly, the mean cosine values were consistent across frequency bands and in both PCA-CENT methods for every connectivity estimator.
+
+Sensitivity of PCE to zero-lag synchronizations
+We explored the sensitivity of PCE to zero-lag synchronization using a Rossler -Lorenz system and different scenarios of volume conduction effect.
+We compared PCE's performance over PLV and iPLV bivariate phase estimators over various coupling strength and volume conduction/spurious level effects.
+Under this assumption, volume conduction/source leakage occurs with zero-lag propagation.
+In other words, the phase difference of the part of the signals related to such spurious connectivity must be zero.
+(For further details see section 5 in the Supplementary material).
+
+Correlation of functional strength and signal power
+S4 illustrates the subgroup-averaged absolute correlation values for each condition and frequency band (see section 4 in in the Supplementary material).
+The subgroup-averaged absolute correlation values were below 0.3 with high variability where we didn't reveal any interesting pattern or any group-difference across the frequency bands.
+
+Discussion
+In the current work, we presented a multivariate functional connectivity approach to investigate its ability to predict the progressing from MCI to AD using a CV and SVM classifiers.
+First, we computed the PCE to study the distribution of phase differences from the 90 ROIs.
+Then, we built a dFCG for each subject and frequency band with the aim to estimate the temporal distance between the two times series and to observe the FC changes over time of each pair of ROIs between the first and second MEG session by means of the DTW.
+Finally, based on the DTW matrices, we obtained a pool of features for each frequency band that entered in a 5-fold CV classifier, where a MCFS algorithm helped to rank and select the set of features for classification.
+Additionally, a SVM with RBF kernel was used under a multi-layer, multi-frequency scenario to design a multiplex biomarker in order to predict the conversion from MCI to AD.
+Our results revealed a better performance for CENT compared to PCA approach while PCE outperformed highly used bivariate phase connectivity estimators (see Supplementary material).
+Thus, we found that all frequency bands on its own succeeded and had a good and strong performance in classifying the two groups, being the gamma band (γ) the frequency with the highest accuracy in the classification (94%).
+Importantly, when we integrated in a multi-layer scenario, the multi-frequency DTW features, we obtained a classification performance of 100% to discriminate between sMCI and pMCI.
+We obtained an absolute accuracy with the CENT method compared to the PCA.
+Although it is known that such a perfect accuracy is not necessary related to the predictive power of the model (Valverde-Albacete and Peláez-Moreno, 2014), this result clearly suggest that in our sample there are salient differences in the multivariate PS patterns across the whole frequency spectrum between MCI patients who convert to AD after 3 years and those who not.
+The SVM technique is able to reveal such differences and use them to separate very efficiently converters from non-converters, which opens the way to its application in the clinical neurology.
+A recent study reported an impairment of hippocampus and posterior brain areas in AD using MEG source-reconstructed activity
+They followed a multi-layer approach constructed via the integration of different functional brain networks layers each one represented a frequency-dependent network layer.
+Here, we showed that following a proper feature selection from the pool of DTW features across the multi-frequency network layers could lead to a better performance compared to single network layers.
+Additionally, the integration of single-layer features across the frequency bands produced lower classification accuracies which further supported our strategy.
+However, we will attempt in future studies to integrate both intra and cross-frequency coupling estimates in a single network layer under the framework of dominant intrinsic coupling model (DICM)
+It is important to study all possible interactions simultaneously and not isolated as it is highly used till now from the neuroscience community.
+Nowadays, there is growing evidence that the first stages of AD are associated with profound functional alterations of brain networks that seem to be structurally largely intact.
+For example, hippocampal hyperactivity and the disruption of the DMN have been demonstrated in people at genetic risk for AD
+Recently, the analysis of animals models of AD revealed that an Aß-induced change of the E/I balance caused hyperactivity in cortical and hippocampal neurons, a breakdown of slow-wave oscillations, as well as network hypersynchrony
+Later in the disease this hyperactivity, mainly observed in earlier stages of AD, is followed by a hypoactivity
+Thus, AD has been considered as a "disconnection syndrome", not only due to the death of neurons and connections, but also to the disruption of functional and structural brain networks
+Regarding the topology of the features that exhibited the highest classification performance, we found that most of the regions belonged to a small set of brain networks: the DMN, CO, FP and also, frontotemporal networks, whose alteration is related to the loss of neurons and synapses that causes major atrophy and malfunctioning of those brain areas that are usually affected in AD, such as temporal gyrus, parietal lobe, and parts of the frontal cortex and cingulate gyrus
+As a result of this brain degeneration, AD has been considered as a disconnection syndrome
+Additionally, we found the engagement of the frontoparietal and cingulo-opercular networks in the classification between sMCI and pMCI.
+These networks are responsible for coordinating and controlling the executive functions in the brain, which are typically impaired in AD and MCI patients
+Lastly, the frontotemporal network resulted in a feature from the classification analysis is usually affected by the course of the disease and related to the common memory impairments found in AD
+Additionally, several studies reported that the interaction between these executive networks and the DMN is essential for performing complex cognitive tasks, being considered as a marker of cognitive health
+There is a significant growing interest in detecting early markers of AD pathology linked with alterations of brain functionality in the very early stages of the disorder.
+Previous studies explored static connectivity analysis on the source level in subjective cognitive decline (SCD) subjects
+They revealed aberrant functional connections in both SCD and MCI compared to healthy controls validating the sensitivity of MEG source connectivity to detect the preclinical pathology of human brain dynamics.
+Here, we analyzed dynamic source functional connectivity networks in pre and post condition aiming to define a connectomic biomarker that can differentiate the stable from progressive MCI patients.
+We adopted DTW as a proper distance measure between two time-series here that represent the fluctuations of functional connectivity strength between two ROIs in pre and post condition.
+Higher values of DTW can be interpreted as a temporally decoupled index while lower values as a temporal coupled index.
+Here, in the single-frequency (layer) approach, we revealed higher DTW values for pMCI compared to sMCI in theta and alpha frequencies while the rest of frequencies demonstrating a mixed behaviour (Fig.
+The topology of these selected DTW-based features is shown in Fig.
+Here, we additionally revealed a temporally asynchronous behaviour of dynamic functional connectivity in theta and alpha, two frequency bands related to cognitive and memory performance
+The topology of the multi-frequency (layer) DTW features showed in Fig.
+Particularly, most of the connections involve the frontal brain areas, parietal, thalamus, (para) hippocampal and supplementary motor brain areas.
+From the 30 features, only 3 included interhemispheric links and the rest were equally classified as intrahemispheric in both hemispheres.
+A recent fMRI study observed connectivity differences between late MCI and early MCI in regions including the frontal lobe regions (medial frontal gyrus, precentral gyrus, postcentral gyrus), temporal lobe regions (superior temporal gyrus, middle temporal gyrus, frontal gyrus, hippocampus), and thalamus
+We revealed an interesting subset of DTW-features in pairs of ROIs between the thalamus and other parts of the brain.
+These thalamo-related networks include thalamo-frontal, thalamo-parietal, thalamotemporal and thalamo-DMN subnetworks.
+The decreased temporally decoupled functional connectivity expressed with higher DTW values for pMCI compared to sMCI between the thalamus and the aforementioned brain areas might suggest reduced functional integrity of thalamo-related networks and increased temporally coupled functional connectivity (lower DTW values) indicated that pMCI patients could use additional brain resources to compensate for the loss of cognitive function (Fig.
+The olfactory system is a well-defined network that has been implicated in early stages of the AD, marked by impairment in olfaction and the presence of pathological hallmarks of the AD.
+There are outputs from the olfactory system that reach the parahippocampal region of the brain, including the perirhinal, parahippocampal, and entorhinal cortices
+The primary olfactory cortex has connections to brain regions, such as the hippocampus
+Overall, the olfactory system has substantial connections to areas of the brain that are related to memory and display AD pathology
+Here, we revealed higher DTW values between olfactory and parahippocampal brain areas in pMCI compared to sMCI.
+Functional brain connectivity can be quantified with a large number of techniques that can be separated into model-based and data-driven techniques.
+A famous technique that has been used widely in the literature is the PLV
+Here, for the first time in MEG and especially in the study of MCI, we adopted a multivariate extension of PLV, the socalled PCE
+There is a big interest in extending bivariate functional connectivity estimators that quantify the interdependence between two time series to its multivariate extension
+Pair-wise connectivity analysis is more sensitive to spurious correlations, particularly in those cases where one driver lead two responses.
+In that scenario, both responses may have a common driver even when seem to be completely independent
+The advantage of PCE estimator is that it is datadriven and does not depend on the reliability of the fitted MVAR (Multivariate Vector Auto-Regressive) model.
+We reported in a second repeat-scan dataset, the high reproducibility of PCE across experimental time at resting-state.
+Additionally, PCE outperformed the frequent used bivariate phase connectivity estimators of PLV, PLI and iPLV (see Section 1 in the Supplementary material).
+Neuroscience community that works under the umbrella of functional connectivity searched to identify connectivity estimators and techniques to remove zero-phase lag interactions that are spread from the same neuronal sources, which are referred to as primary signal leakage in source reconstructed EEG/MEG data.
+Moreover, the primary signal leakage may contribute in spurious estimates of functional connectivity between brain areas surrounding two genuinely connected brain regions
+Widely used connectivity estimators like oCC
+A recent study
+We will consider this new method in future studies under the framework of designing robust connectomic biomarkers for MCI.
+Here, we showed that the adopted multivariate connectivity estimator PCE outperformed bivariate phase estimators in terms of  classification performance while it was proved high reproducible.
+Additionally, it behaves well in zero-lag effects and the adopted HO approach showed lower values of cosine similarity values compared to bivariate phase estimators (see Supplementary material).
+Following, a volume conduction scenario, we showed that PCE is also insensitive to zero-lag synchronization while it is more sensitive to the real part of the complex signal compared to iPLV.
+Intrinsic coupling is a characteristic feature of ongoing brain activity with rich spatiotemporal patterns.
+There are two intrinsic coupling types: the phase coupling and the correlation of the envelope of the band-limited oscillatory brain signals
+There is a general hypothesis that phase coupling has a loose relationship with structural connectivity while the correlation of the envelope a tighter one.
+Additionally, phase coupling seems to be more sensitive to aberrant functional connectivity in various brain disorders even in the absence of structural changes
+However, more neurophysiological explorations of both correlation of the envelope and phase coupling need to be estimated between virtual source space time series
+Another novelty of our study is the adaptation of DTW as a proper distance metric to quantify the similarity of the fluctuated dynamic functional phase coupling strength of a pair of brain areas between 1st and 2 nd MEG session.
+In biomedical research, DTW has been mainly used to classify signals into different sub-groups by comparing each one with standard templates
+Another study first employed DTW as a novel task-based functional connectivity estimator between MEG sensor time series tailored to ERP multichannel recordings
+We adopted a well-designed cross-validated machine learning approach that succeeded to extract meaningful DTW features related to (dis)similarity of the temporal fluctuation of the functional coupling between the first and the second MEG recording.
+Our analysis untangled informative DTW features across the brain areas and the frequency bands studied.
+We believe that our results are very interesting succeeding to place MEG on the top of the hierarchy of neuroimaging modalities which are sensitive to prodromal stages of AD.
+Current analysis has basic advantages over previous analytic attempts.
+First of all, we adopted a multivariate phase coupling estimator instead of a bivariate connectivity estimator.
+Secondly, a time-varying approach has been followed leading to the construction of time series describing the fluctuation of coupling strength across experimental time and at every frequency band.
+Finally, machine learning supported the effectiveness of the current strategic analytic pathway.
+CCA analysis between the delta difference of MMSE 1stMEG -MMSE 2ndMEG and the selected DTW values revealed a stronger multifrequency contribution of DTW values to the MMSE 1stMEG -MMSE 2ndMEG for sMCI in comparison with pMCI.
+Especially, the contribution of α and β frequency bands to the CCA for the pMCI group is negligible compared to sMCI one.
+This result is supported by recent evidence that α disruption starts from subjective cognitive decline stage
+Moreover, α and β network disruption has been observed in AD
+Our study presents a data-driven analytic pathway combining source-reconstructed template-oriented brain activity at resting-state, network neuroscience, and machine learning techniques.
+Our results are very informative in the understanding of the brain alterations occurred in subjects that will progress from MCI to AD. MEG is a neuroimaging modality that the last few years has demonstrated its potentiality to reveal novel and complementary information to functional (fMRI) related to prodromal stages of AD
+We strongly believe that MEG can play a pivotal role in the application of such methodologies in a daily clinical routine practice supported also by its lower cost compared to fMRI.
+
+Data availability
+The data that support the findings of this study are available from
+
+Table 3
+Brain connections (pair of regions) described in Fig.
+
+
+
+Fig. 1 .
+Fig. 1. Outline of the proposed analytic scheme.
+A. From MEG space to source-reconstructed virtual anatomical space.
+B. Virtual representative frequency-dependent time series per ROI.
+C. dFCG of the first and second MEG across the 19 temporal segments of 4 s.
+D. DTW temporal distance metric between two time series representing the fluctuation of functional strength of left and right precentral gyrus in the first and second MEG sessions.
+An example from the δ frequency of the 1st healthy control subjects.
+E. DTW-based matrix tabulates the 4005 DTW distances between every possible pair of ROIs by comparing the functional strength time series in the first and second MEG sessions.
+An example from the δ frequency of the 1st healthy control subjects.
+
+
+
+Fig. 2 .
+Fig. 2. Schematic illustration of the adopted CV scheme.
+
+
+
+Fig. 3 .
+Fig. 3.A visualization of the selected frequency-dependent connections using a circular representation of the 90 anatomical ROIs.
+The left semi-circle represents the 45 ROIs of the left hemisphere while the right semi-circle the homolog ROIs of the right hemisphere.
+We colored differently the ROIs that belong to a sub-network.
+Topological layouts of the selected DTW features for each frequency band and in the multiplex scenario.
+A. 8 features for δ.
+B. 10 features for θ. C. 9 features for α.
+D. 10 features for β.
+E. 12 features for γ.
+F.30 features for the multiplex integrated approach.
+
+
+
+Fig. 4 .
+Fig. 4. Illustration of both groups in a 3D plot using the three most discriminative features.
+Every colored dot corresponds to a single subject.
+One can clearly see the tendency of a clear linear discrimination of both groups.
+X-axis: Right precentral -Right Heschl's gyrus from δ. Y-axis: Right Caudate Nucleus -Right Putamen from θ. Z-axis: Left Left midcingulate -Right Cuneus from α.
+
+
+Fig. 5. Group-averaged DTW values for the selected features demonstrated topologically in Fig. 3 in both groups and every frequency band. A. δ frequency band.
+B. θ frequency band.
+C. α frequency band.
+D. β frequency band.
+E. γ frequency band.
+F. multi-frequency/multiple scenario.
+Vetical lines separate the subset of frequency dependent DTW features.
+
+
+
+Fig. 6 .
+Fig.6.
+Summarization of the selected features within and between well-known brain networks.
+A-E) From δ to γ, a representative 2D mapping of the selected features within and between five brain networks.
+F) We aggregated the selected features across the five frequency bands shown in A-E).
+(DMN: default mode network, FP: fronto-parietal, O: Occipital, CO: Cingulo-opercular, SM: sensorimotor).
+
+
+
+Fig. 7 .
+Fig. 7. Delta difference of MMSE 1stMEG -MMSE 2ndMEG in: A) pMCI group and B) sMCI group.
+
+
+
+Fig. 8 .
+Fig. 8. CCA analysis of DTW selected features with delta difference of MMSE 1stMEG -MMSE 2ndMEG in: A) pMCI group and B) sMCI group.
+
+
+
+Fig. 9 .
+Fig. 9. Beta values derived from CCA between delta differences of MMSE versus DTW features.
+Red vertical lines dissociate the beta values related to frequency-dependent features in: A) pMCI group and B) sMCI group.
+
+
+. A-E. (*) indicates interhemispheric links.
+
+
+. https://doi.org/10.1016/j.nicl.2019.101972
+Received 7 May 2019; Received in revised form 19 July 2019; Accepted 3 August 2019
+
+
+
+Table 1
+Mean ± SD values of the demographic characteristics of the sMCI and pMCI patients at baseline.
+MMSE: Mini-Mental State Examination; Apolipoprotein E (APOE) carrier: There is at least 1 ε4 allele; LHV: Left hippocampal volume; RHV: Right hippocampal volume.
+
+
+
+Table 2
+Evaluation of classification performance using DTW values in every frequency band and in the multiplexity scenario in both PCA and CENT methods.

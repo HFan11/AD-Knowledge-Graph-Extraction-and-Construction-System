@@ -1,0 +1,346 @@
+Resting-State Co-activation Patterns as Promising Candidates for Prediction of Alzheimer’s Disease in Aged Mice
+Alzheimer's disease (AD), a neurodegenerative disorder marked by accumulation of extracellular amyloid-β (Aβ) plaques leads to progressive loss of memory and cognitive function.
+Resting-state fMRI (RS-fMRI) studies have provided links between these two observations in terms of disruption of default mode and task-positive resting-state networks (RSNs).
+Important insights underlying these disruptions were recently obtained by investigating dynamic fluctuations in RS-fMRI signals in old TG2576 mice (a mouse model of amyloidosis) using a set of quasi-periodic patterns (QPP).
+QPPs represent repeating spatiotemporal patterns of neural activity of predefined temporal length.
+In this article, we used an alternative methodology of co-activation patterns (CAPs) that represent instantaneous and transient brain configurations that are likely contributors to the emergence of commonly observed RSNs and QPPs.
+We followed a recently published approach for obtaining CAPs that divided all time frames, instead of those corresponding to supra-threshold activations of a seed region as done traditionally, to extract CAPs from RS-fMRI recordings in 10 TG2576 female mice and eight wild type littermates at 18 months of age.
+Subsequently, we matched the CAPs from the two groups using the Hungarian method and compared the temporal (duration, occurrence rate) and the spatial (lateralization of significantly co-activated and co-deactivated voxels) properties of matched CAPs.
+We found robust differences in the spatial components of matched CAPs.
+Finally, we used supervised learning to train a classifier using either the temporal or the spatial component of CAPs to distinguish the transgenic mice from the WT.
+We found that while duration and occurrence rates of all CAPs performed the classification with significantly higher accuracy than the chance-level, blood oxygen level-dependent (BOLD) signals of significantly activated voxels from individual CAPs turned out to be a significantly better predictive feature demonstrating a near-perfect classification accuracy.
+Our results demonstrate resting-state co-activation patterns are a promising candidate in the development of a diagnostic, and potentially, prognostic RS-fMRI biomarker of AD.
+
+INTRODUCTION
+Alzheimer's disease (AD) is a neurodegenerative disorder that causes progressive loss of learning abilities, memory, and overall cognitive function.
+The characteristic features of the disease are the accumulation of extracellular amyloid-β (Aβ) plaques and intracellular neurofibrillary tangles.
+To understand how the accumulation of plaques could contribute to the development of AD symptoms, it is important to investigate changes in neural activities especially at the network or whole-brain level.
+Resting-state functional magnetic resonance imaging (RS-fMRI) has been instrumental in uncovering such global network-level changes across the whole-brain in several neurological and neuropsychiatric disorders such as stroke
+In the case of AD, the disruption of the default mode and task-positive networks have been identified as promising markers of the disease.
+Specifically, alterations in the default-mode network (DMN) functional connectivity (FC) have been correlated with increases in amyloid-β levels
+Traditional analyses of RS-fMRI signals have involved the calculation of static (seed-based or pairwise between regions of interest) FC.
+FC estimates correlations of BOLD signals of regions from the entire scanning period disregarding the variations in FC during the scan.
+However, recent studies
+Several methods have been proposed to extract this dynamic information in the resting-state FC.
+The most-straightforward one uses a sliding window approach.
+Here, whole-brain FC is calculated in a time window of fixed duration that is then moved over the entire scan to obtain a series of FC values over the whole scan
+Test-statistics are then calculated using this FC time series and compared against the null hypothesis of stationarity
+Another approach consists of a point-process analysis
+Voxel-wise activation pattern averaged across these selected frames (typically only 15% of the total) matches very closely with the seed-based correlation maps obtained using all frames.
+CAPs represent transient brain states that are believed to contribute to the emergence of RSNs found in the static FC estimation
+Recently, Gutierrez-Barragan et al. (
+In this article, we used the methodology of Gutierrez-Barragan et al., to identify CAPs in a cohort of old (18months) TG2576 (mouse-model of amyloidosis) mice and their age-matched control.
+In this cohort,
+We compared the spatial and temporal components of CAPs between the two groups.
+Subsequently, we hypothesized that the CAP properties will accurately distinguish the transgenic animals from healthy controls and argue that it could be effective in the development of a biomarker for Alzheimer's disease.
+
+MATERIALS AND METHODS
+All the data analyzed in this manuscript were originally acquired and published in an earlier manuscript
+The acquisition and processing steps are included here for completeness.
+
+Ethical Statement
+All procedures were performed in strict accordance with the European Directive 2010/63/EU on the protection of animals used for scientific purposes.
+The protocols were approved by the Committee on Animal Care and Use at the University of Antwerp, Belgium (permit number 2014-04), and all efforts were made to minimize animal suffering.
+
+Animals
+The TG2576 mouse model of amyloidosis overexpresses the human mutant form of amyloid precursor protein (APP), which carries the Swedish mutation (KM670/671NL), controlled by the hamster prion protein promoter
+Aβ plaque development starts at the age of 9-11 months
+The cohort used in this study consisted of 10 female TG2576 (henceforth referred to as TG) mice at the age of 18 months and eight age-matched wild-types (WT) littermates.
+RS-fMRI data were collected while the animals were under an anesthesia protocol comprising 0.4% isoflurane, a bolus injection of medetomidine (0.3 mg/kg), and a subcutaneous infusion of medetomidine (0.6 mg/kg/h).
+
+MRI Procedures and Functional Scan
+Pre-processing MRI scans were acquired on a 9.4 T Biospec system, with a four-element receive-only phase array coil and a volume resonator for transmission.
+Structural images were acquired in three orthogonal directions, using Turbo Rapid Imaging with Refocused echoes (RARE), for reproducible slice positioning (repetition time 3,000 ms, effective echo time 33 ms, 16 slices of 0.4 mm).
+B0 field maps were acquired, followed by local shimming.
+RS-fMRI scans were acquired with a gradient-echo echo-planar imaging (EPI) sequence [field of view (20 × 20) mm 2 , matrix dimensions (128 × 64), three slices of 0.4 mm, flip angle 55 • , bandwidth 400 kHz, repetition time 500 ms, echo time 16 ms, 2,400 repetitions].
+High temporal resolution was required to investigate temporal fluctuations in the data.
+Due to resultant technical limitations, the number of slices was restricted to three.
+Slices were positioned 0.1 mm caudally of bregma, according to the Paxinos and Franklin stereotaxic mouse brain atlas
+Motion parameters for each functional scan were obtained using six rigid body parameters.
+Images were realigned and normalized to a user-defined reference subject, followed by smoothing (σ = 2 pixels).
+During image normalization, intensities of outer slices are partially lost.
+Analyses were thus restricted to the single-center slice (MATLAB2017b).
+Motion vectors were then regressed out of the image-series.
+These procedures were performed using Statistical Parametric Mapping (SPM12) software (Wellcome Department of Cognitive Neurology, London, UK).
+Images were then filtered using a 0.01-0.2
+Hz FIR band-pass filter, quadratic detrended and normalized to unit variance.
+Transient time points at the start and end of the image-series were removed before and after filtering.
+For the detection of CAPs, a brain mask was employed to exclude the contribution of the ventricles.
+Global signal regression was not carried out.
+
+Extraction of CAPs
+As mentioned in the introduction, we followed the approach by
+Thus, we first concatenated the filtered images from each animal in the group to form a group-level image-series.
+We then transformed this image-series into N, m-dimensional vectors where N is the total number of frames and m is the total number of voxels.
+We then clustered all time-frames using the K-means++ algorithm by assessing their spatial dissimilarity with each other in terms of correlation distance (1 -Pearson's correlation) between every pair of m-dimensional vectors.
+The algorithm partitions the vector set into k clusters such that the sum of within clusterdistance, D = k k = 1 j∈k d 2 z j , c k , is minimized.
+Here, K is the number of clusters and d denotes the correlation distance between the centroid c k of the kth cluster and the jth time frame belonging to the kth cluster.
+The k-means++ algorithm provides an optimal choice of initial cluster centroids as seeds so that distant centroids have a greater chance of getting selected as initial centroids.
+We varied K from 2 to 20 clusters and in each case, we calculated the across-subject variance explained by the clustering solution as follows
+where N is the total number of observations (time frames); K is the number of clusters and d denotes the correlation distance between the centroid c k of the kth cluster and jth observation belonging to the kth cluster.
+where d is the correlation distance between the global centroid c and the cluster centroid c k and n k is the number of observations (time frames) in the kth cluster.
+• Explained variance = V B V W +V B .
+We then plotted the explained variance as a function of partitions of the image-series with an increasing number of clusters (in the range from 2 to 20) and identified the minimum number at which the variance reached a saturation level (elbow point) as the optimal number of clusters.
+We confirmed the elbow point by making sure that the fractional gain in the explained variance for this partition with k clusters when compared to the partition with k-1 clusters was less than 10%
+Voxel-wise BOLD signal intensities were averaged across all time frames within each cluster to produce group-level CAPs.
+We then performed a one-sample two-tailed T-test to test the mean activation, across the occurrences of each CAP, of each voxel against a null hypothesis of zero activation and corrected for multiple comparisons using the Bonferroni correction (p < 0.01).
+The voxels that showed significant activation or deactivation constituted the one-sample T-statistic maps for each CAP.
+We then calculated the temporal and spatial properties of CAPs for each subject within each group:
+1. Occurrence fraction: the ratio, for each CAP, of the number of time frames labeled with its id to the total number of frames within a subject.
+This is a subject-level measure.
+The laterality index varies between -1 (completely rightlateralized pattern) and 1 (completely left-lateralized pattern) with 0 indicating a bilateral pattern with no preference for any hemisphere.
+We calculated two separate values of laterality for co-activation (T > 0) and co-deactivations (T < 0), respectively.
+CAPs extracted from the image-series of both groups were spatially matched using the Hungarian method
+The strength of spatial similarity between every pair of matched CAPs was compared against a null hypothesis that it arises by chance.
+Thus, we shuffled randomly the CAP labels of all frames (thereby preserving the cluster size) from each group's imageseries and then obtained random surrogate CAPs by averaging across frames with the same CAP label.
+We then calculated the Pearson's correlation between surrogate CAPs from each group while maintaining the matching found in the original datasets.
+We repeated this procedure 10,000 times and built a surrogate distribution of correlation values and identified a threshold correlation value with p = 10E-5.
+All matched CAP pairs with canonical correlations falling below this value were not considered for further analyses/comparisons.
+
+Statistical Comparisons
+We compared for every pair of matched CAPs the medians, across subjects, of the properties mentioned above using a two-sample rank-sum test, corrected for the number of comparisons using the
+At first, we made these comparisons for every pair of matched CAPs (with Pearson's correlation higher than the threshold from a null distribution of correlation values arising by chance) extracted from a specific partition of image-series with a fixed number of clusters.
+Subsequently, we compared the matched CAPs from all partitions with the number of clusters ranging between 2 and 20.
+
+Extraction of CAPs From a Combined Image-Series
+We also performed the CAP analysis on a combined imageseries formed from a concatenation of both group-level imageseries to avoid the necessity of matching.
+We compared the mean temporal and spatial properties between the groups for each combined CAP.
+
+Classification
+Temporal and spatial components of CAPs were used as features in a supervised learning approach to distinguish TG animals from WT.
+We used a multinomial logistic regression (MLR) as a classifier and trained it on CAP features from 80% of the subjects (n = 14) and tested its accuracy on the remaining 20% (n = 4).
+The regularization parameter in the MLR classifier was set to 10 to control for over-fitting.
+We repeated the accuracy calculation on 100 trials of the randomly sampled train and validation sets and compared the mean accuracy with chance-level accuracy, averaged across 100 surrogate trials in each of which the identities of the subjects were shuffled while maintaining the size of each group (eight WT and 10 TG animals).
+Mean chance-level accuracy was expected to be ∼45% which is the ratio of the size of the smallest class (WT) to the total number of subjects.
+We also computed the confusion matrices that give the true and false-positive rates for each class and hence inform about the sensitivity and specificity of the classifier.
+The confusion matrices were obtained using the true and predicted labels pooled from validation sets of all 100 trials.
+We used the features of only those CAPs that showed a Pearson's correlation of 0.5 and above between the two groups for training the MLR classifier.
+From all such CAPs within every partition, we pooled their: (a) duration and occurrence rate; and (b) BOLD intensities of voxels whose activations were found to be significantly different from zero in either the WT or the TG CAP.
+Each feature was z-scored across subjects so that their relative rankings were used for classification.
+As CAPs were obtained using all subjects, information on validation set subjects could bias the classifier to predict them more accurately than otherwise possible.
+To avoid this bias, we extracted the group-level WT and TG CAPs only from the training set and then spatially correlated them with the image-series for every subject.
+Local peaks of the correlation time series were identified and voxel-wise averaged to use as initial centroids for the K-means clustering of all frames in the scan.
+The frames belonging to the same cluster were voxel-wise averaged to construct either a WT-like CAP or a TG-like CAP for every subject.
+Thus for each subject, we obtained, for every group-level WT and TG CAP, two sets of features belonging to a WT-like CAP and a TG-like CAP.
+This was necessary to mimic actual situations in which the identity of a new test subject would not be known.
+We then trained the classifier using the WT-like and TG-like CAPs' spatial and temporal features of the training set and tested its accuracy on the validation set.
+The whole procedure was repeated for 50 trials and a comparison of mean accuracy, across trials, with chance-level accuracy and calculation of confusion matrices were done as described in the paragraph above.
+
+RESULTS
+
+Identification of Group-Level CAPs
+We began by partitioning the concatenated image-series of each group with the number of clusters ranging between 2 and 20.
+Following Gutierrez-Barragan et al. (
+As Figure
+We then took voxel-wise averages of BOLD signal intensities across all time frames belonging to each of the seven clusters to obtain the group-level WT and TG CAPs. Figure
+CAPs were ordered in the descending order of spatial correlation between WT and TG groups.
+CAP 1 was characterized by co-deactivations of cingulate (CG) and motor (MT) cortices and activations of dorsal and ventral caudate-putamen (Cpu) of the striatum.
+CAP 2 on the other hand was characterized by co-activations of mainly the CG and MT cortices along with co-deactivations of somatosensory (SS) cortices.
+Pearson's correlation between CAP 1 and 2 was -0.36.
+CAPs 3 and 4 were similarly an anti-correlated pair of patterns (r = -0.4)
+characterized by simultaneous co-activations and co-deactivations, respectively, of CG, MT as well as the CPu that were anti-correlated with activations of somatosensory cortex.
+CAPs 5-7 displayed less commonly observed physiological configurations.
+Thus these CAPs (CAPs 1 and 2, in particular) featured characteristic regions-the CG and SS, respectively, that typically constitute the mouse DM-like and lateral-cortical RSNs
+
+Comparisons of Properties of Matched CAPs
+One-sample T-maps of CAPs in Figure
+Therefore, we used lateralization of co-activation and co-deactivation of voxels as a quantifiable metric to assess the spatial dissimilarity of CAPs between groups.
+Figure
+Only the first CAP displayed a higher median occurrence in the TG as compared to WT while the duration and occurrence rates of all other CAPs did not show any significant difference.
+CAPs 2, 3, 5, and 6 showed a significantly altered lateralization of average positive activation per voxel between the groups.
+Next, we wondered whether specific CAPs occur during the occurrences of QPPs which were identified in the earlier manuscript on this dataset
+QPPs represent recurring neural activity patterns of a fixed temporal length.
+They showed that these highest occurring, short (3-s) QPPs extracted from the WT and TG groups' image-series were not identical and occurred significantly less frequently when projected onto the image-series of the other group.
+Therefore, we calculated, in each subject, the overlap between the time-frames corresponding to the occurrences of these group-specific QPPs and those corresponding to each of the seven CAPs and normalized it by the total number of QPP frames.
+This yielded a measure of the relative incidence of each CAP, limited to the QPP occurrences, in each subject.
+While the TG-specific QPP saw a dominant representation of CAP 1 in its occurrences in both WT and TG group image-series (Figures
+As both the group-specific QPPs occurred less frequently in the other group's image-series, overall occurrence percentages of the CAPs with the highest overlap, normalized by the total time frames in each subject, replicated this finding (
+Next, we compared the properties of matched CAPs between the two groups in all partitions with the number of clusters ranging between 2 and 20. Figure
+While very few CAPs, across partitions, showed a significant difference in either the duration or the occurrence, 57 and 52 CAPs across multiple partitions showed a significant between-group difference in the lateralization of the average positive and negative activation ) and corresponds to the case when all hypotheses are independent across models.
+Here, since the same image-series is partitioned into different numbers of clusters, spatially similar CAPs can be found, and hence the hypotheses are not necessarily independent, across partitions.
+Therefore, we corrected for the # of comparisons within each partition in selecting CAPs for which WT-TG difference of median values was statistically significant (all black markers close to or below green circles) and then grouped them, based on spatial similarity, into prototypical patterns (Figure
+per voxel respectively (p < 0.05, FDR corrected for the number of comparisons within each partition).
+We corrected for multiple comparisons within each partition but not across all partitions because the hypotheses tested across partitions are not independent.
+Hence, we looked for spatially similar prototypical patterns across different partitions that showed significant intergroup differences in hemispheric lateralizations.
+We identified two prototype patterns with spatially similar representations in seven different partitions that showed significantly higher right-hemisphere lateralization of positively activated voxels in the TG group (Figure
+CAP 3 of 7 (Figure
+Similarly, two prototype patterns with spatially similar representations in six different partitions displayed significantly higher righthemisphere lateralization of co-deactivated (T < 0) voxels in the TG animals in comparison with WT (Figure
+The first prototype pattern (Figure
+Finally, we tested an alternative strategy to extract CAPs.
+Instead of extracting CAPs separately for each group's image-series, we concatenated both group-level image-series into a single one and applied the clustering algorithm to it.
+The rationale behind this data-driven approach was to identify CAPs without specification of group identity.
+This approach didn't require any matching as each CAP would have representations in each group.
+After extracting the CAPs in this manner we compared their properties between groups as before and found that both the temporal and the spatial properties of most CAPs didn't show any significant difference (Figure
+The failure of this approach to identify any inter-group differences can be attributed to the low statistical power in our dataset and to the fact that the clustering puts relatively more emphasis on capturing the inter-group variance than the within-group variance.
+
+Classification Using CAP Metrics
+Finally, we turned our attention to investigating the predictive power of CAP metrics to distinguish TG animals from WT.
+As mentioned in the methods, at first, we considered the properties of training subjects' CAPs, extracted from the image-series of all subjects, as features to train the classifier.
+Figures
+Occurrence rates and durations of strongly (r > 0.5) spatially matched CAPs performed better than the chance-level only in a few partitions.
+On the other hand, the spatial component performed significantly better than the chance level for all partitions with an average accuracy of 90% in all cases barring two partitions.
+Figures
+We find that the significantly greater than the chance-level accuracy observed with the temporal features of matched CAPs in eight partitions can be attributed to primarily the WT class being better predicted.
+In these partitions, the prediction scores for the transgenic animals is typically lower than that for WT.
+On the other hand, the high classification accuracy of the spatial component of matched CAPs is due to excellent predictions of both classes, albeit, it is the TG that is predicted perfectly while some of the WT subjects are incorrectly predicted as TG.
+This observation could be explained by the fact that these animals are very old and hence, the some of WT animals could show patterns that are spatially very similar to the TG subjects.
+The fact that spatial features of CAPs predicted the class identity of test-set subjects well made us wonder whether it could be attributed to non-dynamic characteristics of the disease.
+Therefore, we tested whether the voxel-wise variance of BOLD signals could perform an accurate classification.
+The images from each subject that we used for CAP analysis were z-scored voxelwise (see ''Materials and Methods'' section); hence each voxel had unit variance.
+Therefore, we included, as features, the variance of all voxels after motion correction, smoothing, and filtering of subject images but without doing the z-score normalization.
+As Supplementary Figure
+Another possible confound could be anatomical changes due to the disease.
+Unfortunately, we did not have appropriate structural images to identify anatomical features for this dataset which could be a potential confound in the observation that spatial features of CAPs predict the classidentify well and whose predictive power should be investigated in future studies.
+As described in the ''Materials and Methods'' section, the fact that all subjects' image-series were used in the extraction of the CAPs could influence the classifier to predict the validation set subjects more accurately than in the case when only training set subjects' images were concatenated to extract the CAPs.
+Therefore, we extracted the WT and TG group-level CAPs from the image-series of only the training set subjects and then, for every group-level CAP, obtained the WT-like and TG-like CAP for each subject (see ''Materials and Methods'' for details).
+Taking the spatial and temporal components of WT-like and TG-like CAPs as features we trained the classifier and tested it on the validation set.
+As Figure
+Only in six partitions, the mean accuracy was significantly higher than the chance-level while never crossing a 60% mark.
+In contrast, the prediction accuracy of spatial features was near 100% in the case of all partitions except the first two (Figure
+
+DISCUSSION
+In this article, we investigated the spatial and temporal properties of resting-state co-activation patterns extracted in a mouse model of Alzheimer's disease at a very old age.
+We found very few inter-group differences in the temporal component of CAPs.
+More robust differences were found in the hemispheric lateralization of co-activations and co-deactivations of brain regions in multiple CAPs.
+Typically, both the co-activations and co-deactivations were significantly more right-lateralized in the diseased animals as compared to the healthy ones.
+These differences, especially in the spatial features of CAPs, suggested that they could serve as accurate predictors of the disease.
+We, therefore, tested the predictive ability of both the spatial and temporal features of CAPs using a supervised learning approach.
+The prediction accuracy of temporal features was near the chance level while the spatial features distinguished the diseased animals from healthy control with near perfection.
+
+Methodological Considerations
+CAPs were obtained using a recently developed approach (Gutierrez-
+In our case, the identification of elbow point in the plot of explained variance vs. the number of clusters was sub-optimal as the variance increased monotonically with the number of clusters and the fraction of variance gain did not drop significantly after a specific partition as was the case in the article by
+This could be due to lower statistical power in our cohort (eight WT and 10 TG animals).
+We, therefore, continued identification of CAPs for all partitions with several clusters ranging between 2 and 20 and compared the properties of only those CAPs that showed significantly higher spatial similarity between the WT and the TG group than that arising by chance.
+We also extracted CAPs in the same range of partitions from a combined image-series formed by concatenating images from animals of both groups.
+Here, we did not find significant differences in either the temporal or spatial features of CAPs.
+This finding could be attributed mainly to the nature of the clustering algorithm; K-means appears to identify clusters that are similar across both groups thereby putting more emphasis on explaining across-group-variance than a withingroup variance.
+Low statistical power in each group could also explain this observation as insufficient variability within-group would mean the clustering would fail to find a groupspecific pattern as a separate cluster and combine it instead with a larger cluster of similar observations across groups.
+It would be interesting to test, in a cohort of sufficiently large datasets, if both group-level and combined approaches yield similar results.
+To do the classification we used, as a classifier, MLR with regularization.
+MLR is an efficient classifier for categorical variables as was the case in this study
+At first, we performed the classification by using just the representations of group-level CAPs, obtained by analyzing data from all subjects, in each subject.
+However, to mimic a more clinical setting in which only the training data would be available to identify group-level CAPs and the purpose of the marker would be to diagnose a new participant, we used only the training set animals' data to extract the group-level WT and TG CAPs.
+Subsequently, we obtained the subject-level CAPs in training as well as the test-set subjects by seeding the clustering algorithm with initial centroids formed by averaging over local peaks of correlation of group-level CAPs in the subject's image-series.
+
+CAPs Topology
+Out of the seven CAPs, we found two pairs of spatially anti-correlated CAPs.
+The first pair showed co-activation and co-deactivation of cingulate and motor cortices that were anti-correlated with activations and deactivations of the striatum and somatosensory cortices.
+Both these pairs of CAPs were similar to the first four CAPs obtained by
+This observation could be attributed to the lower statistical power in our cohort.
+The cingulate cortex is a prominent region in the mouse DM-like network while somatosensory cortices belong to the LCN
+The explanation for co-activation of motor cortices with DM-like network, also found in the QPPs extracted in this cohort
+
+Resting-State Markers of Alzheimer's Disease
+Human studies of the resting-state in patients with Alzheimer's disease have mostly focused on static FC analyses
+Altered DMN FC has been the most consistent finding in these studies
+Since regions constituting the DMN (posterior cingulate cortex, in particular) are also the targets of AD in terms of deposits of amyloid-beta plaques, alterations in RSN-FC have been shown to correlate with these deposits especially in patients with a high amyloid burden
+These changes in the DMN-FC of the animal cohort used in our study were observed and confirmed in the previous work by
+Going beyond the static FC,
+They also found that group-specific QPPs occurred less frequently in the other group's image-series and that the dominant QPPs from each group were anti-correlated to each other.
+We investigated the overlap between occurrences of the seven CAPs, found to explain a saturation-level acrosssubject variance, and those of group-specific QPPs.
+We showed that the WT-specific QPP had dominant representation from two CAPs with one of them (CAP 2) showing co-activation of DM-like network (Figures
+On the other hand, only CAP 1, displaying co-deactivation of the DM-like network constituted the TG-specific QPP (Figures
+When limited to the occurrences of these group-specific QPPs, the occurrences of their constituent CAPs showed reduced occurrence in the other group's image-series thereby replicating the results from the study by Belloy et al.
+However, QPPs are transient brain states of fixed temporal length whereas there is no apriori restriction on the duration of a CAP.
+Therefore, while its incidence in specific transient brain states like the QPPs may, a CAP's overall occurrence may not show a significant inter-group difference.
+A recent study
+Further, this study considered a combined image-series with concatenated data from subjects belonging to all three groups they consider.
+In contrast, we used the approach of Gutierrez-Barragan et al. and performed separate analyses at the level of each group for the most part.
+We found robust differences in the spatial, rather than temporal, component of CAPs in terms of hemispheric lateralization of co-activation and co-deactivation.
+We found significantly higher right-lateralization in the TG animals for both co-activated as well as co-deactivated voxels.
+In humans, several restingstate networks show lateralizations that depend on age and gender
+Significant reduction in the lateralization of the DMN has recently been reported for groups of amyloid-beta positive patients of MCI or dementia when compared with a group of amyloid-beta negative participants with no cognitive impairment
+In mice, a strong bilateral organization of resting-state networks, found using independent component analysis, has been reported
+Our finding in WT mice that shows mostly bilateral CAPs is in line with this observation.
+On the other hand, in mouse models of autism spectrum disorder, brain lateralization, especially in the striatum, has been reported using MRI and immunohistochemistry
+Therefore, the right-lateralization of prominent CAPs in TG mice is an interesting finding that needs to be further investigated.
+
+Potential of CAPs in the Development of an RS-fMRI Biomarker
+Spatial features of CAPs, although similar at a group-level, were sufficiently different at the subject-level as evidenced by intergroup differences in the hemispheric lateralization of activations.
+These differences were robust enough to make CAPs distinguish the transgenic mice at this late manifest stage from the wild-type mice with a high degree of accuracy.
+As mentioned before, we used two strategies with the latter being more appropriate for a clinical setting in which the classifier could be trained using CAPs extracted out of only the training dataset to diagnose new ''un-seen'' participants.
+We found that the spatial features of CAPs predicted the identity of test-set subjects perfectly with above 99% accuracy.
+However, we underscore two important limitations of our study that limit the interpretative value as well as the significance of this finding.
+First, our study was limited to the analysis of resting-state fMRI data.
+To establish CAPs as robust biomarkers of AD, measures of behavioral symptoms as well as histopathological changes will need to be correlated with CAP-based changes as well as predicted by CAPs.
+Second, this was a cross-sectional study at a late stage of the disease.
+Both pathological, as well as diagnostic relevance of these RS-fMRI markers, would be more impactful if they were found to be predictive at an early stage of the disease before the diffuse deposition of amyloid-beta plaques.
+A longitudinal investigation would therefore be an important next step to understand both the changes in the topology and the temporal features of CAPs with the progression of the disease as well as to assess their suitability in the development of a biomarker.
+Notwithstanding these important limitations, the high levels of classification accuracy we obtained suggest that CAPs could also predict more complex scenarios such as behavioral deficits of patients at different stages or outcomes of treatments.
+Therefore, our findings indicate resting-state CAPs to be promising candidates in the development of an fMRI-based biomarker for Alzheimer's disease as well as other neurodegenerative diseases.
+
+
+
+FIGURE 1 |
+FIGURE 1 | (A) Across-subject variance explained as a function of the number of clusters in the partition of group-level image-series without global signal regression.
+The elbow point here beyond which the explained variance saturates is found to be at the partition with seven clusters.
+(B) The fraction of gain in the explained variance as the number of clusters in the partition increase from k to k + 1, as a function of partitions.
+The elbow point of seven clusters is the first instance for both groups at which the fractional gain in explained variance falls below 10%.
+
+
+
+FIGURE 2 |
+FIGURE 2 | One-sample T-test maps showing significantly (p < 1E-5; Bonferroni corrected) co-activated (T > 0) and co-deactivated (T < 0) voxels for seven WT co-activation patterns (CAPs) and their corresponding matched patterns in the TG.
+CAPs are ordered in the descending order of spatial similarity between matched CAPs expressed in terms of Pearson's correlation mentioned in the title of each pattern.
+CG, Cingulate cortex; CPu, Caudate Putamen; VP, Ventral Pallidum; SS, Somatosensory cortex; MC, Motor cortex.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Comparison of median occurrence rate (A) duration (B) hemispheric lateralization of average positive activation per voxel (C) and hemispheric lateralization of average negative activation per voxel (D) between WT and TG for each of the seven CAPs extracted from group-level image-series.
+The black asterisk indicates a significant difference [p < 0.05, two-sample rank-sum test; False Discovery Rate (FDR) corrected for multiple comparisons with Benjamini-Hochberg correction].
+Most significant differences are found for the lateralization of co-activation (T > 0) in the case of four out of seven CAPs.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Subject-level occurrence percentage of each of the seven WT CAPs (A,C) and seven TG CAPs (B,D) during the occurrences of representative (highest occurring) WT-specific and TG-specific QPPs in their image-series (A,B, respectively) and when projected to the other group image-series (C,D, respectively).
+In panels (A-D), the objective is to identify the most representative CAP(s) for each QPP, hence the occurrences of each CAP during QPP occurrences are normalized by the total number of time frames corresponding to the QPP occurrence in each subject.
+Thus the percentages for all seven CAPs in (A-D) add up to 100%.
+While CAP 1 is represented significantly more than other CAPs in the occurrences of TG-specific QPP in both groups' image-series, WT-specific QPP has prominent representation from CAPs 2 and 3 in both groups.
+(E,F) The comparison of overall occurrences (normalized by the total number of frames in each subject), of the most frequent CAP in the occurrence of WT and TG QPPs in the WT image-series (E) and in the TG image-series.
+(F) Here, the occurrences are normalized by the total number of frames in the scan of each subject since the objective is to compare the overall frequency of occurrence and not the relative representation, vis-à-vis other CAPs, of the representative CAP.
+In the case of (E), we averaged the occurrence of CAPs 2 and 3 for each subject.
+As QPP WT (TG) occurs significantly more often than QPP TG (WT) in the WT (TG) image-series, the corresponding CAP occurrence, limited to the QPP occurrences, also demonstrates a significant difference (p < 0.05; unpaired T-test, marked by a black asterisk).
+
+
+
+FIGURE 5 |
+FIGURE 5 | P-values of comparison of median duration (A) occurrence rate (B) laterality of average positive activation per voxel (C) and, laterality of average negative activation per voxel (D) between WT and TG groups for each CAP in each partition with the number of clusters ranging from 2 to 20.
+Here, CAPs are extracted from the group-level image-series.
+Each black marker represents a CAP.
+The red dashed line represents a p-value of 0.05, uncorrected.
+The green marker represents Bonferroni corrected threshold p-value for each partition (0.05/# of clusters within the partition).
+The blue dashed line represents the Bonferroni corrected threshold p-value across partitions (0.05/# of clusters across all partitions) and corresponds to the case when all hypotheses are independent across models.
+Here, since the same image-series is partitioned into different numbers of clusters, spatially similar CAPs can be found, and hence the hypotheses are not necessarily independent, across partitions.
+Therefore, we corrected for the # of comparisons within each partition in selecting CAPs for which WT-TG difference of median values was statistically significant (all black markers close to or below green circles) and then grouped them, based on spatial similarity, into prototypical patterns (Figure6) that show robust WT-TG difference across multiple partitions.
+
+
+
+FIGURE 6 |
+FIGURE 6 | One-sample T-test map of an example CAP for two patterns (A,C, respectively) with representations in seven different partitions that show significantly higher right-lateralization (B,D, respectively) of significantly (p < 1E-5; Bonferroni corrected; marked by a black asterisk) co-activated (T > 0) voxels.
+
+
+
+FIGURE 7 |
+FIGURE 7 | One-sample T-test map of an example CAP for two patterns (A,C, respectively) with representations in seven different partitions that show significantly higher right-lateralization (B,D, respectively) of significantly (p < 1E-5; Bonferroni corrected; marked by a black asterisk) co deactivated (T < 0) voxels.
+
+
+
+FIGURE 8 |
+FIGURE 8 | Each panel shows the p-values of comparison of median duration (A) occurrence rate (B) laterality of average positive activation per voxel (C) and, laterality of average negative activation per voxel (D) between WT and TG groups for each CAP in each partition with the number of clusters ranging from 2 to 20.
+Thus each black marker represents a CAP.
+The red dashed line represents a p-value of 0.05, uncorrected.
+The green marker represents Bonferroni corrected threshold p-value for each partition.
+The blue dashed line represents the Bonferroni corrected threshold p-value across partitions.
+Here, CAPs are extracted from a single image-series formed by concatenating both group-level image-series.
+Unlike Figure 5, here very few CAPs showed significant WT-TG difference after correcting for multiple comparisons within the partition.
+
+
+
+FIGURE 9 |
+FIGURE 9 | (A,B) Mean accuracy of classification (blue) and mean chance-level accuracy (gray) as a function of partitions with the number of clusters ranging between 2 and 20.
+Multinomial Logistic Regression (MLR) classifier is trained using duration and occurrence rates of matched CAPs (with Pearson's correlation higher than 0.5; A), and, blood oxygen level-dependent (BOLD) signal intensities of voxels with activations significantly different from zero found in the group-level WT or TG CAP (B).
+The red asterisk indicates significantly higher mean accuracy than the chance level, FDR corrected for 19 comparisons using Benjamini-Hochberg correction.
+(C,D) Confusion matrices showing the scores of prediction of validation set labels of each group, pooled across 100 validations sets, for each of the 19 partitions with temporal (C) and spatial (D) aspects of CAPs.

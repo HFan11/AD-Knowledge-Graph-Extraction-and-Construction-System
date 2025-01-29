@@ -1,0 +1,147 @@
+3D Convolutional Neural Networks for Diagnosis of Alzheimer's Disease via structural MRI
+Alzheimer's Disease (AD) is a widespread neurodegenerative disease caused by structural changes in the brain and leads to deterioration of cognitive functions.
+Patients usually experience diagnostic symptoms at later stages after irreversible neural damage occurs.
+Therefore, early detection of AD is crucial to start treatments to decelerate the progress of the disease and to maximize patients' quality of life.
+With the rapid advances in machine learning and scanning, early detection of AD may be possible via computer-assisted systems using neuroimaging data.
+Among all, deep learning utilizing magnetic resonance imaging (MRI) has become a prominent tool due to its capability to extract high-level features through local connectivity, weight sharing, and spatial invariance.
+This paper describes our investigation of the classification accuracy based on two publicly available data sets, namely, ADNI and OASIS, by building a 3D VGG variant convolutional network (CNN).
+We used 3D models to avoid information loss, which occurs during the process of slicing 3D MRI into 2D images and analyzing them by 2D convolutional filters.
+We also conducted a pre-processing of the data to enhance the effectiveness and classification performance of the model.
+The proposed model achieved 73.4% classification accuracy on ADNI and 69.9% on OASIS dataset with 5-fold cross-validation (CV), outperforming 2D network models.
+
+I. INTRODUCTION
+Alzheimer's Disease (AD) is the most common type of dementia, which is caused by the deterioration of cognitive and memory functions
+Pathologically, AD is characterized by the accumulation of extracellular β-amyloid (Aβ) plaques and cytoplasmic neurofibrillary tangles (NFTs) which have a microtubule-associated protein called tau
+In healthy neurons, tau protein normally stabilizes the microtubules
+However, abnormal changes in brain chemistry cause tau protein molecules to detach from microtubules and form neurofibrillary tangles destroying the brain cells' ability to communicate with other cells
+Some recent studies reveal that AD may begin 20 years or more before any symptoms appear and the disease is clinically diagnosed
+Only after a certain stage, patients may experience diagnostic symptoms such as deterioration in *Data used in preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.edu).
+As such, the investigators within the ADNI contributed to the design and implementation of ADNI and/or provided data but did not participate in analysis or writing of this report.
+A complete listing of ADNI investigators can be found at:
+ADNIAcknowledgementList.pdf memory and decline in cognitive abilities when the irreversible neurological damage already occurs.
+Therefore, early and accurate diagnosis of AD is crucial and may be possible via computer-assisted analytical techniques.
+Receiving an early diagnosis of AD will enable patients to benefit from various treatments, plan their future, and maximize their life quality.
+As AD progresses, the structure of the brain undergoes some changes, such as the shrinkage of the cerebral cortex and hippocampus and the expansion of ventricles
+Through numerous medical imaging techniques like magnetic resonance imaging (MRI), positron emission tomography (PET) and computed tomography (CT), some of these changes can be detected earlier.
+Notably, a T 1 -weighted MRI scan of the brain reveals high-resolution structural information of the brain and can be used to identify atrophic changes in the temporal lobes
+Throughout the last decade, multiple studies have been focusing on the automatic diagnosis of AD using different methods
+Among those, deep learning (DL) has come to the fore as one of the most promising tools to address AD diagnosis and prognosis.
+In DL models, discriminative features may be extracted automatically from the raw data resulting in end-to-end learning design.
+In this work, we propose an end-to-end AD classifier, which takes T 1 weighted MRI as input.
+We implemented a 3D VGG (a deep neural network model implemented by Oxford Visual Geometry Group (VGG)) variant convolutional neural network (CNN) to overcome the limitations regarding the feature extraction from brain MRI and preserve spatial relations.
+Figure
+The paper is organized as follows: after this introduction, a brief of related work is given in Section II.
+Section III provides the details of the proposed model, including the dataset and classification algorithm of CNN.
+Experimental results are presented in Section IV.
+Finally, Section V concludes the paper with some final remarks.
+
+II. RELATED WORK
+DL has become a popular and powerful technique with the advance of the computational power of GPU clusters and big data analytics, and as a result, rapidly expanded into various fields.
+In medical image analysis, several neuroimaging studies have utilized DL models for diagnosis of AD
+However, in most of these studies, it is not clear if data division was done at the subject-level, calling into question the validity of the results due to potential data leakage
+Another possible problem in the 2D approach is the loss of information from 3D MRI when sliced and analyzed by 2D convolutional filters.
+Some studies addressed 3D networks to solve the issue of insufficient information in the 2D slice-level approach
+Even though these models are computationally more expensive, they have a higher capability to extract discriminative features from three-dimensional MRI data.
+Korolev et al.
+In 2018, Hosseini-Asl et al.
+However, the details regarding CV methodology and classification decisions are not presented in this study.
+Wang et al.
+The studies also differ in terms of the pre-processing stages, hyperparameter selection, cross-validation (CV) procedure, and evaluation metrics.
+
+III. METHODS
+In this section, the main components of our framework are presented.
+We briefly describe the datasets used in the experiments in Subsection III-A, explain the preprocessing steps of T 1 -weighted MRI data in III-B and finally show architectures of the model in III-C.
+
+A. Datasets
+In this study, we use two primary publicly available datasets on AD and Related Dementia: the Alzheimer's Disease Neuroimaging Initiative (ADNI) dataset
+These datasets are described in detail below.
+The characteristics of the subjects included in this study are given in Table
+ADNI is formed in 2004 and launched three different phases so far, namely ADNI 1, ADNI GO/2, and now ADNI 3. In addition to the first phase, ADNI 2 contains information from 150 elderly controls, 100 EMCI subjects, 150 late mild cognitive impairment (LMCI) subjects, and 150 mild AD patients.
+In this work, we used a subset of ADNI 2 dataset with 200 structural T 1 -weighted MRI scans.
+From ADNI 2 dataset, we randomly picked 200 subjects, 100 of whom were chosen from the AD group (44 women and 56 men, age 74.28 ± 7.96 years, mean ± SD), while the other 100 from the HC group (52 women and 48 men, age 75.04 ± 7.11 years, mean ± SD).
+Only the first scan of each patient has been added to the dataset.
+Patients with a clinical dementia rating (CDR) score of 0 are labeled as HC subjects, whereas the ones whose CDR rating higher than 0 are considered as AD subjects.
+MPRAGE T 1weighted MRI images have been acquired using 3 T scanners, and consisted of 176 × 240 × 256 (Siemens) and 170 × 256 × 256 (Philips) voxels with a size of approximately 1 mm × 1 mm × 1.2 mm.
+2) OASIS: OASIS
+The project released data in three different phases: OASIS 1-Cross-sectional, OASIS 2-Longitudinal, and OASIS-3-Longitudinal. OASIS 1 includes overall 416 subjects (316 HC and 100 AD) aged 18 to 96.
+For our experiments, T 1 -weighted MRI scans of 100 healthy subjects [73 women and 27 men, age 75.5 ± 9.1 years, mean ± standard deviation (SD)] and 100 AD patients (59 women and 41 men, age 76.7 ± 7.1 years, mean ± SD) have been selected to create a subset of OASIS-1 dataset.
+Again, the CDR score was 0 for the HC subjects, 0.5 (very mild), 1 (mild), 2 (moderate), and 3 (severe) were for the AD subjects.
+MPRAGE T 1 -weighted MRI images have been acquired using a 1.5 T Siemens scanner.
+They are in the size of 256 × 256 × 128 with voxel size 1 mm × 1 mm × 1.25 mm.
+
+B. Data pre-processing
+Even though CNN models do not require any preprocessing beforehand, an accurate image preprocessing stage could be key to increase the effectiveness of learning and help to
+achieve a good classification performance, particularly in the domain of MRI
+We transformed all the data into a standardized structure by performing co-registration with a standard template and skull stripping.
+For ADNI, each T 1 -weighted image has been co-registered with the SyN method using standard T 1 -weighted template MNI152 at 1 mm
+After co-registration, the brain mask of the standard space has been applied to each volume to remove extracranial tissues.
+The final size of the ADNI T 1 -weighted MRI volumes is 182 x 218 x 182 with 1mm x 1mm x 1mm voxel size.
+When it comes to the OASIS dataset, we used the data which was already gain-field corrected.
+An additional brain masking and re-sampling operations are performed.
+The final dimension of the 3D volume is 176 x 208 x 176 with 1mm x 1mm x 1mm voxel size
+The sample MRI slices from ADNI and OASIS datasets after the pre-processing stage can be seen in Figure
+
+C. CNN Models: 3D Convolutional Networks
+We created a 3D CNN model inspired by VGG-16 architecture.
+The model has four convolutional blocks, among which the first two contain two convolutional layers each, and the latter two have three convolutional layers followed by a pooling layer with filter size 2x2x2.
+The overview of the 3D CNN architecture is shown in Figure
+A convolutional and a pooling layer has several feature maps, and in most cases, the number of feature maps increases as layers grow.
+The calculation of the j th feature map is given by:
+where y j be the 3D array of the j th feature map in a hidden layer, x be the 3D array of the input, b j be the scalar bias and W j be the 3D filter with a size of w×h×d.
+f corresponds to an activation function, and * stands for the convolution operation.
+The convolution operation [W j * x](m, p, q), is represented as follows:
+After the convolutional blocks, a dropout layer with a probability of 0.5 is applied to avoid overfitting.
+It is followed by three fully connected layers with 128, 64, and 2 neurons, respectively.
+The last fully-connected layer with softmax activation provides the output label.
+The model has been trained with categorical cross-entropy loss and the Adam optimizer with a learning rate of 0.0001 and a batch size of 2 for 200 epochs.
+Binary cross-entropy loss is computed as:
+where y is the actual label and p is the predicted label.
+Training and validation of our proposed models were performed on a NVidia RTX2080 GPU.
+
+IV. EXPERIMENTAL RESULTS
+The model has been evaluated using five-fold CV.
+The average accuracy is obtained by repeating 5 times the full 5-fold cross-validation starting from five different splits of the data into folds.
+The architecture was built using Keras with TensorFlow backend
+The model was tested on two different test sets, each of which contains 40 subjects.
+Using 5-fold CV, the model achieves 73.4%± 0.04 (mean, standard deviation) on ADNI dataset and 69.9%± 0.06 (mean, standard deviation) classification accuracy on the OASIS dataset.
+The results are comparable to other studies that use different convolutional models for AD vs. HC classification.
+In addition, the dataset is divided by subjects, and only one screening of a patient is included in the dataset in order to prevent possible data leakage.
+For instance, Rieke et al.
+Following such procedure may cause the scans of the same subject to be in both testing and training set, which could affect the model performance.
+
+V. CONCLUSION
+In this work, we presented a deep 3D CNN model for the classification of AD patients using structural brain MRI.
+We demonstrated the model performance on two primary AD datasets, namely ADNI and OASIS.
+Without any feature extraction stage, the model managed to achieve 73.4%± 0.04 (mean, standard deviation) and 69.9%± 0.06 accuracy for classification of AD subjects from HC on ADNI and OASIS datasets respectively.
+In our future work, we would like to expand this study and archive better classification accuracy through optimizing the network shape and hyperparameters.
+Moreover, we will use explainable AI techniques to investigate which brain regions or patterns are most important to the model and shed light on the rationale behind the model's predictions.
+
+
+
+Fig. 1 :
+Fig. 1: Overview of the 3D convolutional neural network (CNN) architecture.
+3D boxes show input and feature maps.
+
+
+diagnosis.
+In their model, MRI scans of the same patients that are over three years apart are employed as different samples, incorporating information of test data into the learning process.
+Rieke et al.
+At the end of their visualization efforts, they showed that the model focuses on the medial temporal lobe.
+Yang et al.
+They utilized 3D-VGGNet together with 3D-ResNet.
+Finally, in 2019, Oh et al.
+
+
+
+Fig. 2 :
+Fig. 2: Example of six Magnetic resonance imaging (MRI) slices of two Alzheimer's Disease (AD) subjects from ADNI and OASIS databases
+
+
+
+Fig. 3 :
+Fig. 3: The architecture of the convolutional neural network (CNN) model used in our AD classification tasks.
+
+
+
+TABLE I :
+Demographic information of subjects from ADNI and OASIS datasets

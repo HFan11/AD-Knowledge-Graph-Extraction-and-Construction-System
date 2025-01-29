@@ -1,0 +1,365 @@
+Predicting progression and cognitive decline in amyloid-positive patients with Alzheimer’s disease
+Background: In Alzheimer's disease, amyloid-β (Aβ) peptides aggregate in the lowering CSF amyloid levels -a key pathological hallmark of the disease.
+However, lowered CSF amyloid levels may also be present in cognitively unimpaired elderly individuals.
+Therefore, it is of great value to explain the variance in disease progression among patients with Aβ pathology.
+Methods: A cohort of n=2293 participants, of whom n=749 were Aβ positive, was selected from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database to study heterogeneity in disease progression for individuals with Aβ pathology.
+The analysis used baseline clinical variables including demographics, genetic markers, and neuropsychological data to predict how the cognitive ability and AD diagnosis of subjects progressed using statistical models and machine learning.
+Due to the relatively low prevalence of Aβ pathology, models fit only to Aβ-positive subjects were compared to models fit to an extended cohort including subjects without established Aβ pathology, adjusting for covariate differences between the cohorts.
+Results: Aβ pathology status was determined based on the Aβ 42 /Aβ 40 ratio.
+The best predictive model of change in cognitive test scores for Aβ-positive subjects at the 2-year follow-up achieved an R 2 score of 0.388 while the best model predicting adverse changes in diagnosis achieved a weighted F 1 score of 0.791.
+Aβ-positive subjects declined faster on average than those without Aβ pathology, but the specific level of CSF Aβ was not predictive of progression rate.
+When predicting cognitive score change 4 years after baseline, the best model achieved an R 2 score of 0.325 and it was found that fitting models to the extended cohort improved performance.
+Moreover, using all clinical variables outperformed the best model based only on a suite of cognitive test scores which achieved an R 2 score of 0.228.
+
+Background
+About 50 million people worldwide suffer from some form of dementia, and 60-80% of all cases have Alzheimer's disease (AD)
+Patients who already suffer from mild cognitive impairment (MCI) are at higher risk of developing AD
+Studies have shown that the conversion rate from MCI to AD is between 10 and 15% per year with 80% of these MCI patients progressing to AD after approximately 6 years of follow-up
+Identifying those who are at greatest risk of progression to AD is a central problem.
+A key pathological hallmark, required for an AD diagnosis, is the accumulation of Aβ peptides into plaques, located extracellularly, and in intracellular tangles, consisting of phosphorylated tau (p-tau) protein
+The precipitation of Aβ in the brain appears decades before the patient shows symptoms during the so-called preclinical stage of AD
+Lower levels of the aggregationprone peptide Aβ 42 (or Aβ 42 /Aβ 40 ratio) together with increased levels of p-tau and total-tau (t-tau) are a core cerebrospinal fluid (CSF) signature of AD
+However, despite strong evidence for association between these biomarkers and AD, individuals with significantly lowered Aβ ratio do not necessarily exhibit any cognitive impairment
+Therefore, Aβ pathology alone is not sufficient as a predictor of disease progression
+Although AD predictors and pathological hallmarks have been researched for many years, today there is still no drug available that cures AD or drastically changes its course.
+New drug candidates that have potential diseasemodifying effects
+The FDA concluded that the benefits of Aduhelm for patients with Alzheimer's disease outweigh the risks of the therapy.
+If a successful treatment is developed, it is of utmost importance that a prognostic tool is available to identify the patients most likely to decline towards AD, to implement preventive treatments and interventions.
+This leaves the challenge of predicting how patients with Aβ pathology will progress, explaining the variation in cognitive function of such subjects.
+As a result, a recent focus area in applied statistical and computational research is predicting a change in diagnosis for patients progressing from cognitively normal (CN) to MCI and from MCI to AD
+Most predictive models of neurodegenerative diseases are based on recent advances in machine learning (ML) models by obtaining data sets with measurements of cognition and neuropathology from large cohorts
+In this context, classification methods such as random forest
+Classification approaches are dependent on the availability of clinical labels and do not focus on capturing patient-specific disease trajectories.
+To overcome this limitation, disease progression has also been studied with respect to continuous measures of the disease severity
+Previous works employed an elastic net linear regression model
+The most common targets when predicting cognitive decline are the Mini Mental Status Test (MMSE)
+In prediction modeling, the question arises as to which of the considered input variables are particularly predictive.
+In addition to predictors of AD diagnosis, relationships between CSF biomarkers (CSF p-tau/Aβ42 ratio and several other biomarkers) and prediction of cognitive decline have been explored
+However, even though Aβ-positivity has been identified as a strong predictor of disease status, little is known about what determines the disease progression of Aβ-positive subjects
+This study aims to predict the future severity of dementia for subjects with established presence of low Aβ levels in CSF.
+We propose and demonstrate several predictive models of disease progression for three different cohorts, studying two primary aspects of progression: cognitive decline and change in diagnosis.
+For the former, we predict the change in the MMSE cognitive test score both 2 and 4 years after baseline (the first visit of each patient).
+For the latter, we use a classification approach to predict whether subjects will have a worse diagnosis 2 years after baseline.
+Both tasks are addressed using linear and nonlinear prediction models, the parameters of which were selected using ML methodology.
+A predictive approach could be used to assist healthcare professionals in evaluating and prioritizing patients for treatment.
+Given that our model builds on only a small set of biomarkers and demographic data, available for most patients, the methodology is widely applicable.
+
+Methods
+
+Subjects and ADNI
+The data used in this study were obtained from the publicly available Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+ADNI collects clinical data, neuroimaging data, genetic data, biological markers, and clinical and neuropsychological assessments from participants at different sites in the USA and Canada to study MCI and AD.
+Since its inception in 2003, several releases have been made; the cohorts used in this work were assembled from ADNI 1,2,3 and GO.
+The compiled data set used in this project includes 2293 subjects that were further filtered by eligibility criteria, such as availability of diagnostic labels and on Aβ ratios.
+Among the 2293 subjects, there were 749 Aβ-positive subjects.
+The exclusion flowchart (see Fig.
+For baseline statistics of the processed Aβ cohort, see Table
+Tables
+
+Determination of amyloid-positive status
+The presence of Aβ plaques can be detected at a preclinical stage years before the patient shows any symptoms
+While Aβ plaques (and tau-levels) may not be the root cause of disease development
+However, even among subjects with Aβ pathology, there is significant variability in symptoms, such as cognitive function.
+For this reason, our work is focused on predicting progression for subjects with lowered CSF levels of Aβ indicating plaque formations in the brain.
+Subjects were evaluated for Aβ pathology based on their Aβ 42 /Aβ 40 ratio (hereinafter simply Aβ ratio) as measured in CSF at baseline.
+The full cohort was split into three groups: those who had a baseline Aβ ratio lower than 0.13 (Aβ-positive), those who had a higher ratio (Aβ-negative), and those with unknown status.
+The threshold used in this work is slightly higher than in some other works.
+For example, a threshold of 0.0975 proposed in
+However, as diagnosing AD was not our primary concern, we let the distribution of ratios themselves decide the threshold, see Fig.
+
+Progression outcomes
+We studied the progression of Aβ-positive subjects with respect to two principal outcomes: change in cognitive function relative to baseline and change in clinical dementia diagnosis.
+Cognitive function was assessed using the widely adopted MMSE scale
+The MMSE score is commonly used as a target variable in clinical trials analyzing
+The specific targets of prediction were the changes in MMSE score measured at follow-up visits 2 years after baseline and 4 years, relative to baseline.
+Changes in dementia diagnoses were determined by comparing the disease status (CN/MCI/AD) recorded in ADNI at follow-up visits to the status at baseline.
+For the corresponding prediction task, a binary variable was created, indicating whether or not a subject's diagnosis had worsened in 2 years.
+Due to the low number of available subjects after 4 years, changes in diagnosis were evaluated only 2 years after baseline.
+The models were used to predict whether Aβ-positive subjects would transfer from the CN group at baseline to either MCI or AD or convert from MCI at baseline to AD at a follow-up visit after 2 years.
+
+Potential predictors
+The covariates available at baseline (enrolment in ADNI) contain analyzed biofluid samples from CSF, plasma, and serum including different biochemical-markers such as proteins, hormones, and lipids.
+Additionally, features extracted from brain imaging biomarkers, such as positron emission tomography (PET) scan and magnetic resonance imaging (MRI) were included.
+Demographic data such as age and gender were also considered.
+The CSF samples include measurements of both Aβ 42 and Aβ 40 , which are Aβ peptides ending at positions 42 and 40 respectively.
+Their ratio in CSF measurements has been proposed to better reflect brain amyloid production than their individual measures
+Therefore, the ratio Aβ ratio in CSF is calculated and added as a new feature for all subjects with both measurements available.
+Predictive models were built on two different sets of features.
+The first set of features (all features) was preselected following
+This resulted in a set of 37 features including biomarkers tau, p-tau, and Aβ 42 in CSF, the PET measures of AV45 and FDG, seven different size measurements of brain regions, and 15 different cognitive tests.
+Moreover, the FDG-PET data has been measured by a research group of UC Berkeley.
+The MPRAGEs (Magnetization Prepared Rapid Acquisition Gradient Echo) for each subject is segmented and parcellated with Freesurfer (version 5.3.0) to define a variety of regions of interest in each subject's native space.
+The second feature set (cognitive tests only) consists only of the 15 cognitive tests also present in the all feature set.
+A full list and descriptions of the features are given in Tables
+When building models for predicting the change in MMSE score, the MMSE measures at baseline were not included in the predictions since the target output itself was calculated from the change in its baseline value.
+
+Statistical analyses
+We used machine learning methods to train predictive models of cognitive decline within 2 (task A1) and 4 years (task A2) from baseline, as well as a model for predicting worsened diagnosis status (task B) after 2 years.
+The full procedure, described further below, involved cohort sample splitting and weighting, model selection and fitting, and evaluation.
+
+Derivation and evaluation cohorts
+Due to the small number of Aβ-positive subjects available for each task (500/230/398 for tasks A1/A2/B, respectively), see the exclusion flowchart in Fig.
+All models were evaluated only on Aβ-positive subjects, as they are the primary target of this work.
+The first derivation setting (Aβ only) used only Aβpositive subjects for model derivation.
+This ensures that model parameters are unbiased with respect to the Aβpositive cohort but may suffer from high variance due to a small sample size.
+The second setting (all subjects) combined Aβ-positive and Aβ-negative subjects and those without Aβ measurements into one derivation set.
+Consequently, the derivation sample size has been increased substantially, at the cost of introducing bias into the sample, while the evaluation cohort remains the same.
+In the third setting (all subjects, weighted), we applied sample weighting to the all subjects cohort to mimic a larger sample of Aβ-positive subjects.
+Each subject i was assigned a weight w i > 0 based on the probability that their individual Aβ-ratio r i would be observed for an average hypothetical Aβ-positive subject, as estimated using a two-component Gaussian mixture model (GMM)
+We let the latent state C ∈ {0, 1} of a GMM, fit to the Aβ-ratios of the all subjects cohort, represent Aβpositivity.
+The weight w i was computed as
+This is the ratio of the estimated probability to observe the Aβ-ratio r i for an average Aβ-positive subject and the overall probability of observing that ratio.
+This procedure is described further in the supplementary material.
+The weighting scheme assigns a higher weight to subjects with Aβ-ratio more like that of Aβ-positive subjects and lower to those with higher or unobserved ratios.
+The weight was clamped between 0.2 and 1.0 so that subjects with unmeasured or very high ratios were given small but non-negligible influence and so that decidedly Aβ-positive subjects would be given the weight 1.0.
+Each prediction model was then fit to the weighted full sample but evaluated only on held-out (unweighted) Aβ-positive subjects.
+
+Prediction models and learning objectives
+First, we predicted the change in MMSE score relative to baseline at the 2-year follow-up (task A1) and 4-year follow-up (task A2) visits using two separate regressions.
+Second, prediction of change in diagnosis after 2 years (task B) was treated as a binary classification problem (worse diagnosis/not worse diagnosis).
+For each task, we considered both linear and non-linear estimators.
+The first model type used for the MMSE prediction was ordinary least squares linear regression.
+Similarly, for the classification task, a logistic regression model was used.
+The second model type used both for regression and classification was tree-based gradient boosting
+Gradient boosting is an ensemble method where many weak learners, in our case decision and regression trees, are combined in an iterative fashion to create a strong one.
+The trees are fit to the negative gradient of the loss function (mean squared error and logistic loss): iteratively, the remaining residual error from the current tree model is the target of the next model.
+The trained trees are then combined together to form the final model.
+Our estimates were made using the scikit-learn
+
+Model selection and evaluation
+In this work, we are primarily interested in evaluating how well machine learning models perform for previously unseen subjects.
+To this end, sample splitting was used to produce an unbiased estimate of the out-of-sample performance of our models.
+We used k-fold cross-validation to divide the Aβ-positive subjects into training and test sets.
+Selection of hyperparameters for the gradient boosting models then used a nested k-fold cross-validation scheme, i.e., cross validation was further performed only on the training samples to select hyperparameters from a grid of possibilities to give a good trade-off between bias and variance.
+Cross-validation was used to divide the sample into k outer folds of approximately the same size, k -1 of which were used for model derivation and 1 for validation.
+The out-of-sample performance was measured by the average across each combination of k derivation and validation folds.
+In this work, 5-fold cross-validation (k = 5) was used, training the model on 80% of the data and testing it on the other 20%.
+This was repeated so that each subset is used exactly once as a validation set and therefore giving a better indication of how well the model performs on unseen data.
+The overall performance can then be estimated by averaging over the k folds
+Hyperparameter search was performed within each of the k folds; each derivation set was further split again into k inner folds k -1 of which were used to select a set of model hyperparameters and 1 fold used to validate these.
+Once the best set was identified, according to the average of the inner held-out folds, the model was retrained on the entire outer derivation fold and tested on the held-out data.
+To get a robust and consistent evaluation, this procedure was repeated 10 times for different fivefold crossvalidation splits and the average test score given as the final performance, i.e., 50 held-out test score measures from models with (possibly) different hyperparameters are behind the average score and standard deviation reported.
+As such, it is indicative of the average quality we can expect from a model trained on a new similarly-sized sample and evaluated on a held-out similarly sized sample.
+The classification models were evaluated using the weighted F 1 score while the regression models used the coefficient of determination-the R 2 score-as a criterion.
+The F 1 score contained the weighted average of precision and recall.
+Consequently, this score took both false positives and false negatives into account.
+The F 1 was chosen since it is usually more useful than accuracy, especially if the data show an uneven class distribution
+The R 2 measures how well the independent variables are capable of explaining the variance of the dependent variable and is defined by R 2 = 1 -S res /S tot where S res = n i=1 (y i -ŷi ) is the residual sum of squares and S tot = n i=1 (y iy) is the total sum of squares.
+An R 2 value of 0 indicates that performance is as good as predicting the mean of the variable; higher values are better.
+This definition of R 2 takes values in [-∞, 1] where negative values represent predictions worse than the mean
+
+Results
+We first report the results of the data preprocessing steps, present cohort statistics, and describe the imputation approach of variables in the ADNI data set.
+Second, we present the average rates of cognitive decline over time for the CN, MCI, and AD groups, including both Aβ-positive and Aβ-negative subjects.
+We then inspect the results for models predicting change in MMSE relative to baseline (A1, A2) and change in diagnosis (B).
+Finally, we study the relationship between predictions in tasks A1 and B with respect to the 2-year follow-ups.
+
+Preprocessing
+Preprocessing of the data started with zero-mean normalization of continuous variables and one-hot encoding (dichotomization) of categorical variables to reduce variation in the variables' scales.
+A simple imputation scheme was used to address missingness in the covariate set.
+For continuous features, missing values were imputed using mean-imputation while categorical, onehot encoded features were zero-imputed.
+These preprocessing steps are performed to maximize the size of the available data and have all features on a similar scale.
+Since the available cohort for each task was fairly small, and our focus was on held-out prediction risk, which can be estimated in an unbiased way irrespective of the imputation method, model-based imputation was not used.
+Subjects with missing outcomes were excluded from each corresponding prediction task.
+As our main focus is to study the progression of subjects with Aβ pathology, we identified an Aβ-positive cohort by examining the recorded ratio of Aβ 40 and Aβ 42 at baseline.
+To avoid introducing bias in the analysis, the ratio was not imputed.
+For 1279 subjects, measurements of both Aβ 40 and Aβ 42 were available which resulted in an Aβ-positive cohort of n = 749 subjects (see Fig.
+It should be noted that, over time, some participants left the study.
+Consequently, different numbers of subjects were available at follow-ups 2 and 4 years after baseline.
+The number of Aβ-positive subjects with an MMSE test score available 2 years after baseline was 500 and 230 after 4 years.
+A total of 398 subjects remained for the diagnosis change prediction task.
+The subgroup of Aβ-positive subjects had a mean age of 73.7 years (std. of 7.2) over all the diagnosis groups.
+The gender distribution over all groups was 55.4% male and 44.6% female.
+The MMSE score was available for all subjects at baseline: the CN group had a mean value of 29.0 (1.2), the MCI subgroup a mean of 27.4 (1.9), and AD subjects 23.3 (2.0).
+Another important feature was the tau variable, where measurements were available nearly for all (99%) of the Aβ-positive subjects.
+Additionally, the main genetic risk factor for AD, the APOE4 gene, of which a person can have zero, one or two copies, was included for almost all of the Aβ-positive cohort (only 39 were missing)
+FDG, measured by positron emission tomography and shown to be a strong marker for AD
+The statistics of key features used in the three prediction tasks are presented in Table
+
+Average rates of cognitive decline
+For each visit at t = 1/2, 1, 2 and 4 years after baseline, the average MMSE score was calculated for observations of different groups divided based on baseline diagnosis (CN, MCI, AD) and Aβ-cohorts (Aβ-positives and Aβnegatives).
+The results are shown in Fig.
+While we observe a noticeable difference in the rate of cognitive decline between the Aβ-positive and negative groups for the MCI subjects, the two CN groups differ only slightly in their trajectories.
+For the group of AD-positive participants, the mean MMSE score increases again after 2 years.
+However, it is likely that this change is due to the dropout of a significant number of study participants around this time, resulting in a cohort with different characteristics than at baseline.
+The average MMSE score for the Aβ-positive MCI group was 23.79 4 years after the baseline visit, while it was initially 27.40-a decrease on average by 3.61.
+In contrast, the average score of the MCI Aβ-negative group started at 28.27 and averaging 28.20 score points after 4 years, showing an average decrease of only 0.07.
+The analysis shows for the CN Aβ-positive and negative groups a decrease in the average score of 0.70 and an increase of 0.08 respectively.
+As expected, Aβ-positivity was strongly correlated with faster progression.
+Although there were remarkable differences in the average deterioration of the MMSE score between the Aβ groups, it should be noted that there was a significant number of missing observations for each group and time point after the baseline visit, due to subjects not undergoing a certain inspection or dropping out of the study.
+For reference, there were fewer Aβ-positive subjects involved in the study in total (n = 230) after 4 years than at the beginning of the study (n = 749) (Fig.
+The number of participants in the CN Aβ-positive (and negative) groups decreased from 115 and (237) at the beginning of the study to 69 and (143) after 4 years, respectively, while the number of subjects in the MCI Aβpositive (and negative) groups started at 356 and (226), and declined to 168 and (149) after 4 years.
+The AD group has a massive drop from 179 at baseline to only 10 subjects after 4 years.
+In Table
+The standard deviation was computed across the held-out validation sets corresponding to different cross-validation folds.
+We compare models fit using only cognitive test scores measured at baseline as predictors, to models fit using a preselected feature set described previously.
+The best 2-year MMSE prediction model achieved an R 2 of 0.388 (std.
+0.073) using all features and a linear regression model utilizing all subjects but weighted during training.
+This model scored marginally higher than restricting the training data to only Aβ subjects with a R 2 of 0.372 (std.
+0.081).
+The gradient boosting models performed worse across the three cohort selections compared with their linear regression counterparts.
+These results do not indicate any immediate benefit from using nonlinear estimators to model cognitive score change in this sample.
+The best prediction for the 2-year follow-up using only cognitive tests resulted in an R 2 of 0.350 (std.
+0.079) which is only slightly lower than the best model using all features.
+The best cross-validated R 2 score for predicting change in MMSE after 4 years was 0.325 (std.
+0.134), using all features and a linear regression model using the equally weighted cohort in the training.
+Using only cognitive tests for this task gives a lower score indicating that other biomarkers offer more than in the 2-year case.
+Using only the Aβ subjects for this task results in quite poor predictions with high variability compared to utilizing the weighted sample cohort or the weighted equally cohort while training, indicating that more data can significantly improve the training of these models.
+Similarly to the 2-year setting, the gradient boosting models showed lower performance than the linear models.
+Across both tasks A1 and A2, linear models using the larger feature selection and utilizing more subjects than just the cohort containing only Aβ positive subjects performed considerably better in predicting the change of the MMSE score.
+Figure
+Calibration was good for smaller declines but worse for faster-declining subjects, for which the predictions underestimated the change.
+This trend was consistent across the two follow-up lengths; there are a few subjects whose change in the MMSE score is significantly larger than others and therefore are more difficult to predict.
+These outliers may potentially also have decreased the quality of predictions of other data points.
+In Table
+For predicting change in the MMSE score, the most important features were baseline cognitive scores, with ADAS13, TRABSCORE, and ADAS11 being the most predictive.
+The linear models additionally selected the mPAACCtrailsB, LDELTOTAL and ADASQ4 while other cognitive tests such as FAQ and RAVLT_immediate were chosen by the gradient boosting models as part of the most predictive features.
+This is expected since subjects with early disease status (e.g., with high baseline MMSE score) tend to change less rapidly than already progressing subjects
+For this reason, we included also the results of estimators predicting change in MMSE based only on baseline cognitive scores in Table
+However, we see that across all models and tasks, the performance improved slightly by using additional predictors.
+Several features were only identified as important by one or two models across the cohorts.
+For instance, the volume measurement of WholeBrain was selected by two gradient boosting models including all subjects equally weighted and the Aβ only cohort.
+Moreover, the FDG feature, obtained by PET and known to be a strong marker for AD
+The estimated levels of Aβ measured through Aβ 42 in CSF and AV45 PET scans showed low predictive power in the context of other features across all cohorts and models.
+For example, the Aβ 42 measurements were only included with a coefficient of 0.30 in the linear regression model using all subjects equally weighted and -0.01 when training with only Aβ subjects and the AV45 is rated even less predictive.
+For the 4-year predictions, the features that are rated most important in the linear regression models are a dementia diagnosis, TAU and PTAU proteins in CSF followed by the mPACCtrailsB and ADASQ cognitive tests.
+The gradient boosting models however deem FDG along with the cognitive scores ADAS13, FAQ, and mPACC-trailsB to be of most importance for making predictions.
+Comparing to the 2-year predictions, it is interesting to see the increased value in using biomarkers other than cognitive tests.
+The 4-year predictions also indicate low predictability by Aβ-related features when predicting the rate of decline in Aβ-positive individuals.
+
+Task B: Predicting diagnosis change
+In Table
+Gradient boosting using all features and an equally weighted cohort during training resulted in the best performance, achieving a cross-validated weighted F 1 score of 0.791 with a standard deviation of 0.042.
+However, the gradient boosting model with weighted subjects in the cohort reaches only a slightly lower weighted F 1 score of 0.782 with a standard deviation of 0.040.
+The logistic regression models consistently perform worse than the gradient boosting ones on the diagnosis prediction for the 2-year follow-up.
+When using only the cognitive tests, the best performing model also uses gradient boosting and a cohort including all subjects weighted equally achieving a weighted F 1 score of 0.787 with a standard deviation of 0.043.
+This is very close to the previous result using all features.
+Similarly, the models using only cognitive tests performed marginally worse than their counterparts using all features.
+In summary, additional features lead to only a slight improvement in the performance for both logistic regression and gradient boosting.
+The most important features for the diagnosis models over all three training cohorts are LDELTOTAL and mPACCtrailsB.
+This result demonstrates that the two most important features in progression prediction belong to the group of cognitive assessment.
+The logistic regression models also selected as important: TAU, PTau, two APOE4 genes, and DX_NUM_1.0
+which represents the MCI diagnosis at baseline.
+However, the gradient boosting We can conclude that the logistic regression models and the gradient boosting models rely on similar features.
+There are bigger differences between important features in logistic regression models than those using gradient boosting.
+
+Relating predicted cognitive decline & diagnosis change
+In Fig.
+Overall, we see a strong correlation between predicted cognitive decline (negative change in MMSE) and predicted change from MCI to AD status.
+The variance in predicted MMSE change is larger for AD-transitioning subjects than for MCI-stable subjects.
+
+Discussion
+Formation of amyloid-beta plaques in the brain is a hallmark of Alzheimer's disease.
+Only recently, the first drug which may mitigate or slow down the formation of these plaques was approved by the FDA
+To best Machine learning approaches, including classification
+The results show that subjects who already have cognitively declined are most likely to deteriorate more rapidly.
+However, although such studies have shown that Aβ levels among others are strong predictors of the transition from MCI to an AD diagnosis
+In this work, we studied prediction of cognitive decline in an Aβ-positive cohort using machine learning methods.
+We applied multivariate statistical analyses to explain the variation in changes in cognitive scores and diagnoses, between subjects in the ADNI dataset, as a function of commonly available clinical variables.
+We found that the predictability of changes in cognitive test scores was low, leaving a large portion of variance unexplained.
+Our results complement previous works which show good discrimination of progressing and nonprogressing subjects
+In particular, we show that discriminating between subjects who are potential candidates for drugs designed to reverse or slow down Aβ plaque formation presents a harder prediction task.
+
+Predictors of progression in amyloid-positive subjects
+Confirming previous results, we found that the ratio of Aβ 42 and Aβ 40 CSF level is a good first-line predictor of decline in the MMSE score
+However, when limiting the cohort to only the Aβ-positive subjects, the predictive power of the levels of Aβ 42 and Aβ 40 was substantially reduced.
+In other words, the Aβ biomarkers served predominantly to produce a binary grouping of subjects.
+The most important features for predicting disease progression in all considered tasks were baseline cognitive test scores.
+Although related work has not focused specifically on the Aβ-positive cohort, these results are consistent with previous results in selecting cognitive tests such as the MMSE and ADAS13 tests as important predictive features
+Our analysis demonstrated that cognitive test results indicate well how the individual will progress and that those who were already cognitively impaired would likely deteriorate more.
+Since most of the cognitive test scores are highly correlated, several cognitive scores could perhaps be combined and summarized in a joint variable rather than using all of them separately.
+Apart from cognitive scores, some of the CSF biomarkers, brain scans and other biomarkers showed lower average importance as predictors for progression when including all subjects.
+This can partially be explained due to the higher missingness of these features when viewing all subjects.
+
+Increasing training cohort
+Increasing the number of subjects by adding those that were not in the Aβ-positive cohort to the training set consistently increased the predictions performance for that group.
+Therefore, it seems the Aβ-negative subjects have fairly similar characteristics that determine their cognitive decline.
+A weighting procedure allowing us to include more subjects in the training gave a better performance than using only the subjects we were interested in predicting.
+The increased performance from the addition of out-of-cohort samples also indicates that more data would increase the quality of the prediction tasks even further.
+In the case of predicting MMSE change after 4 years, using a small cohort of only Aβ-positive subjects gave a drastically worse performance.
+
+MMSE as target variable
+The MMSE score has been used frequently in dementia research for grading the cognitive state of patients
+For this reason, the change in MMSE score was used in this work as a target variable and thus as a proxy for a person's cognitive change.
+The test benefits from high practicability as the typical administration time is only 8 min for cognitively unimpaired individuals and increases to 15 min for individuals with dementia.
+Internal consistency appears to be moderate and test-retest reliability good
+The MMSE is neither the most accurate nor the most efficient instrument for assessing cognitive impairment, nor is it designed specifically for AD.
+Despite its frequent use, the MMSE lacks sensitivity in patients with high levels of premorbid education and suspected early impairment
+Especially for studies that screen cognitively normal populations for evidence of cognitive impairment, the Montreal Cognitive Assessment (MOCA) may be better able to detect age-related cognitive decline in adults since it eliminates the ceiling effects of MMSE
+The ADAS13 cognitive test which we used in the primitive studies could also function as a target variable.
+The ADAS13 test is also commonly used in clinical trials to thoroughly identify incremental improvements or deteriorations in cognitive performance.
+Although the ADAS is genuinely accurate in distinguishing individuals with normal cognition from those with impaired cognition, some research studies indicate that the ADAS test may not be difficult enough to consistently detect only mild cognitive impairment
+Alternatively, for future work, the outcome variable could be a combination of several cognitive tests, which outweighs the individual characteristics of a single cognitive test.
+
+Clinical implications
+Prediction of cognitive decline among Aβ-positive subjects could have clinical implications in a scenario where a disease-modifying drug becomes available on the market.
+In this case, our approach could be used to assess how an Aβ-positive person, either unimpaired or already in cognitive decline, might develop in the near future.
+With a further developed predictive approach, physicians could be supported in the prioritization and evaluation of patients for treatment.
+In particular, models with interpretability aspects may encourage clinicians to use machine learning-based decision-making methods in a clinical context.
+Further, our approach benefits from relying only on a small number of biomarkers and demographic data that are widely available for many patients and therefore provides high practical relevance.
+In order to be able to generalize results even better, more accessible patient data will be needed in the future.
+For an efficient, timely, and practical approach to predicting disease development in Alzheimer's patients, the approach of precision medicine could be important.
+With the goal of improving the health of well-defined patient populations, precision medicine will affect all stakeholders in the healthcare system at multiple levels, from the individual perspective to the societal perspective
+
+Limitations
+Our study should be viewed in light of the following limitations.
+First, there was significant missingness in the target outcome variables, MMSE and diagnosis status, for all prediction tasks.
+Since these are the targets of prediction, they were not imputed and only subjects with the available output variables were included.
+Consequently, the cohorts for tasks A1, A2, and B were all different and potentially biased subsets of the initial cohort.
+For example, the cohort sizes for the regression tasks differ based on whether the MMSE test score variable was available after 2 years (A1, n = 500) or after 4 years (A2, n = 230).
+The missingness of outcome variables at follow-up time is partly explained by subjects leaving the study before follow-up.
+The reason for subjects to end their participation in the study is not known but may be related to disease progression
+This phenomenon can bias the trend of the Aβ positive subjects decreasing their MMSE score (Fig.
+However, the dropout rate of people was around 40% in both CN groups and the MCI Aβ-negative one while there was more dropout in the MCI Aβ-positive group where it was 55% and a staggering 94% for the AD group.
+Consequently, if more people with lower cognitive function would have been included, the average MMSE score would be lower, and therefore, the slope of the graph would be slightly steeper and result in an even lower average MMSE score.
+As a consequence of the prohibitively small and imbalanced cohorts, we performed a grouped analysis.
+The use of non-Aβ-positive subjects in deriving progression prediction models reduces variance by increasing the sample size of cohorts that had small numbers of subjects.
+However, this risks bias in terms of the best model for Aβpositive subjects.
+Note that Aβ-positive-negative subjects were used in the derivation of predictive models, but not in evaluation.
+
+Conclusions
+We studied the problem predicting disease progression and cognitive decline of potential AD patients with established Aβ pathology in the ADNI database.
+The best performing model achieved a performance of R 2 = 0.388 predicting the change in MMSE scores 2 years after baseline using a linear regression model based on a cohort with weighted samples in the training cohort using all features at baseline.
+Similarly, a gradient boosting model with all subjects weighted equally predicted the change in diagnosis with high accuracy (F 1 = 0.791) when using all features.
+For the most accurate predictions, our models combine variables measured at the baseline such as cognitive tests, CSF biomarkers, proteins and genetic markers.
+Among these, baseline cognitive tests scores were found to be the strongest predictors, accounting for most of the variance explained by all features, across models.
+Finally, we identified that even though the Aβ 42 /Aβ 40 ratio is a good predictor for AD in the preclinical phase, the respective levels of Aβ are less useful in predicting progression among only Aβ-positive subjects.
+
+
+
+Fig. 2
+Fig. 2 Exclusion flowchart showing the Aβ-positive (left) and all subjects (right) cohort.
+The graphs present the cohorts used for predicting the change in MMSE (A1 and A2) and for the change in diagnosis after 2 years (B)
+
+
+
+Fig. 3
+Fig. 3 Graph showing the MMSE score development for CN, MCI, and AD subjects split by Aβ-status.
+The shaded areas represent 95% confidence intervals for the mean values.
+The number of subjects decreases over time, hence the growing uncertainty bands
+
+
+
+Fig. 4 A
+Fig. 4 A calibration plot (true vs predicted values) for a linear regression model that predicts the change in MMSE score 2 years from baseline
+
+
+
+Fig. 5
+Fig. 5 Predicted change in MMSE score and the predicted probability of a change in diagnosis after 2 years in the baseline-MCI group.
+Points are color-labeled based on their observed change in diagnosis
+
+
+
+Table 1 Baseline demographic and clinical characteristics of the ADNI cohort for Aβ-positive subjects and all subjects Overall Aβ-positive Missing CN MCI AD All subjects All missing
+
+
+
+Table 2
+Performance of the linear and gradient boosting regressions, predicting change in MMSE 2 and 4 years after baseline for three different cohort selections.
+We compare models trained on features a) the all features set from baseline and b) from baseline cognitive scores only
+
+
+
+Table 3
+Performance of the classification models in predicting change in diagnosis 2 years after baseline for three different cohort selections

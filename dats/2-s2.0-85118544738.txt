@@ -1,0 +1,190 @@
+3D convolutional neural networks-based multiclass classification of Alzheimer’s and Parkinson’s diseases using PET and SPECT neuroimaging modalities
+Background: Alzheimer's disease (AD) is a neurodegenerative brain pathology formed due to piling up of amyloid proteins, development of plaques and disappearance of neurons.
+Another common subtype of dementia like AD, Parkinson's disease (PD) is determined by the disappearance of dopaminergic neurons in the region known as substantia nigra pars compacta located in the midbrain.
+Both AD and PD target aged population worldwide forming a major chunk of healthcare costs.
+Hence, there is a need for methods that help in the early diagnosis of these diseases.
+PD subjects especially those who have confirmed postmortem plaque are a strong candidate for a second AD diagnosis.
+Modalities such as positron emission tomography (PET) and single photon emission computed tomography (SPECT) can be combined with deep learning methods to diagnose these two diseases for the benefit of clinicians.
+In this work, we deployed a 3D Convolutional Neural Network (CNN) to extract features for multiclass classification of both AD and PD in the frequency and spatial domains using PET and SPECT neuroimaging modalities to differentiate between AD, PD and Normal Control (NC) classes.
+Discrete Cosine Transform has been deployed as a frequency domain learning method along with random weak Gaussian blurring and random zooming in/out augmentation methods in both frequency and spatial domains.
+To select the hyperparameters of the 3D-CNN model, we deployed both 5-and 10-fold cross-validation (CV) approaches.
+The best performing model was found to be AD/ NC(SPECT)/PD classification with random weak Gaussian blurred augmentation in the spatial domain using fivefold CV approach while the worst performing model happens to be AD/NC(PET)/PD classification without augmentation in the frequency domain using tenfold CV approach.
+We also found that spatial domain methods tend to perform better than their frequency domain counterparts.
+The proposed model provides a good performance in discriminating AD and PD subjects due to minimal correlation between these two dementia types on the clinicopathological continuum between AD and PD subjects from a neuroimaging perspective.
+
+Introduction
+Alzheimer's disease (AD) is a widely spread subtype of dementia and a major target for healthcare applications.
+It is an irremediable and progressive disease with millions of cases worldwide.
+Staggering costs are associated
+
+Open Access
+Brain Informatics *Correspondence: yk_ma@hit.edu.cn 1 School of Electronics and Information Engineering, Harbin Institute of Technology, Harbin 150001, China Full list of author information is available at the end of the article with the management of AD due to which this disease remains a focal point of healthcare authorities worldwide.
+The brain parts that are normally affected during the course of progression of AD are hippocampus, lateral ventricle, insula, putamen, entorhinal cortex, lingual gyrus, amygdala, thalamus, supramarginal gyrus, caudate nucleus, uncus, etc.
+Parkinson's disease (PD) is another brain disorder that is affecting millions of people worldwide and has variable prevalence rates with aged individuals getting affected substantially in comparison to younger counterparts just like AD.
+This disease is defined by neuronal loss in the region known as substantia nigra pars compacta located in the midbrain and formation of neuromelanin.
+PD is prevalent in both males and females with higher prevalence in males.
+It affects speech resulting in dysarthria, hypophonia, tachyphemia, etc., affecting the voice of an individual
+Both AD and PD are incurable diseases, but medication is available to keep the symptoms under control
+Coexistence of both these subtypes of dementia is possible in the presence of visual hallucinations, sleep behavior disorder, fluctuations in attention or cognition, tau phosphorylation, inflammation, and synaptic degeneration
+Deep learning methods are widely deployed in the literature for classification, action recognition, speech recognition as well as other tasks, etc.
+These methods are extremely good at learning features that optimally represent data for the problem at hand.
+They tend to act like black boxes where information is processed by keeping the operator of the loop.
+Features learned by Convolutional Neural Networks (CNNs) are known to possess invariance, equivariance and equivalence properties.
+Architectures such as 3D-CNNs can extract both spectral and spatial domain features simultaneously from the input volume.
+The building blocks of these architectures are convolutional layer, pooling layer, batch normalization, dropout regularization as well as fully connected layer, etc.
+In the literature, studies have been proposed for the classification tasks such as AD vs Normal Control (NC), progressive mild cognitive impairment (pMCI) vs static mild cognitive impairment (sMCI), pMCI vs NC using a combination of modalities such as magnetic resonance imaging (MRI), positron emission tomography (PET), functional MRI as well as other modalities and non-imaging data such as ApoE genotype, cerebrospinal fluid (CSF) concentration of Aβ
+Similarly for PD diagnosis, research has been conducted using voice datasets
+While learning features in the spatial domain using CNNs has its own advantages, learning in the frequency domain might offer advantages that spatial domain methods are unable to provide.
+In the CNN models, low-frequency domain components are better learned than the higher ones offering advantages such as better preservation of image information in the pre-processing stage as well as other advantages
+Discrete Cosine Transform (DCT) is a frequency domain method often used to define a sequence of data points using cosine functions offering advantages in terms of compactness of information.
+Data augmentation methods such as adversarial techniques improve the performance of models expanding limited datasets so as to enable them to expand their generalization power.
+There is a growing body of works available in the literature to study correlation between different types of dementia.
+David Irwin et al.
+As a matter of fact, co-morbid AD is also strongly associated with the changes in PD suggesting a potential clinicopathological continuum between AD and PD.
+To add to the growing body of works available in the literature for understanding the clinicopathological continuum between co-morbid AD and PD cases from a neuroimaging perspective, this research effort is aimed at studying correlation between these two dementia subtypes using PET and SPECT neuroimaging modalities and deep learning methods for joint multiclass classification task.
+In this work, we utilized both spatial and frequency (DCT) domain methods to learn features extracted from whole-brain images of PET scans and single photon emission computed tomography (SPECT) scans of AD and PD subjects using a 3D-CNN architecture.
+We deployed random weak Gaussian blurring and random zoomed in-out as data augmentation methods individually and in combination.
+Different from other studies in the literature where focus is on the binary or multiclass classification of AD or PD subjects, we focused on the joint multiclass classification of both AD and PD subjects and extracted features from whole-brain image scans using 3D-CNN architectures.
+Rest of the paper is organized as follows.
+A description of the datasets is given in Sect.
+2, methodology in Sect.
+3, experiments in Sect.
+4, results and their discussion in Sect.
+5, and finally, conclusion in Sect.
+6.
+
+Datasets description
+We used PPMI
+We utilized 3D-SPECT scans from the PPMI database and 3D-PET scans from the ADNI database.
+Demographics of the subjects considered for this study are given in Table
+
+Methodology
+To carry out the experiments for the joint multiclass (3-classes) classification between AD, PD and NC classes, we deployed a 3D-CNN architecture for all the experiments as shown in Fig.
+An input layer accepts a volume of size 79 × 95 × 69 normalized through zero-center procedure.
+It works by dividing each channel with its standard deviation, subtracting the mean in the process to center the volume towards the origin.
+Then, a convolutional layer extracts the features from this volume.
+The tensor of convolutional filter weights is dependent on the number of channels, temporal depth, width and height of the filter.
+Mathematically, this process can be defined as: where P i , Q i , R i are the kernel sizes along the three dimensions, respectively.
+v abc ij is the value of the (a, b, c) th element of the jth feature map in the ith layer, w pqr ijm denotes the value of (p, q, r)th element of the 3D convolution kernel connected to the mth feature map.
+Stride of the layer is another important parameter that represents the number of pixels skipped during (1)   the convolution operation.
+Setting its value to one convolves every input pixel with the kernel.
+Another important parameter is L2 regularization also known as weight decay that is used to drive the weights towards the origin without making them exactly zero.
+We add L2 regularization to convolutional and fully connected layers to help the network in avoiding over-fitting.
+Batch normalization technique is then used on the mini-batches to effectively avoid over-fitting and for speeding up the learning process.
+We then used Exponential Linear Unit (ELU) as activation function for nonlinear mapping of inputs.
+Mathematically, it can be defined as:
+We deployed max pooling to learn effective fast representations of inputs by reducing the dimensions.
+After that, we deployed dense or fully connected layers and a dropout layer with a probability of 10%.
+Finally, a combination of softmax and classification layers classify the input into one of the three classes: AD, PD and NC.
+Table
+In the model design, to mitigate the internal covariance shift between the batch normalization and dropout techniques, we added only one dropout layer right before the softmax layer to reduce over-fitting since there are no following batch normalization layers.
+We add five maxpooling layers to our model with kernel and stride size 2 × 2 × 2 in order to scale down the output feature map size by a factor of 2 5 compared with the original input.
+We used small spatial receptive field of size 3 × 3 × 3 to increase the performance of our convolutional layers (2) ELU :
+x, x ≥ 0 α e x -1 , x < 0 .
+and we add padding in these layers.
+The softmax layer is a 1 × 1 convolutional layer followed by softmax activation.
+Our model is designed efficiently to get maximum performance while offering less number of computations.
+
+Experiments
+We performed splitting at the subject level for the experiments for the multiclass classification task.
+We deployed two data augmentation methods: (1) random weak Gaussian blurring and (2) random zooming in/out.
+We set the σ value to 1.5 for the random weak Gaussian blurring, and scale value to 0.99 and 1.03 for the random zooming in/out augmentations to decrease as well as increase the size of the input volumes at random.
+We performed experiments in the spatial and frequency (DCT) domain without augmentation and in the presence of single and combined augmentation methods.
+Here combined augmentations are methods that used samples of both random weak Gaussian blurred augmentation and random zoomed in/out augmentation in the training set.
+We used augmented samples for training purposes and non-augmented samples for validation and test purposes.
+We deployed fivefold and tenfold CV procedures for the experiments on balanced datasets.
+We also created a test subset, and in this subset, we placed 4 samples of NC(SPECT) class, 9 samples of PD class, 4 samples of AD class, and 12 samples of NC(PET) class.
+Other settings are as follows.
+Mini-batch is set to a size of 2, initial learning rate is set to 0.001, maximum number of epochs are set to 30, and optimizer is set to Adam.
+We run a total of 170 experiments and completed all of our simulations in approximately 3242 min or 54.03 h.
+
+Results and discussion
+The methods and results of the experiments are presented in Tables
+We used Relative Classifier Information (RCI), Confusion Entropy (CEN), Index of Balanced Accuracy (IBA), Geometric Mean (GM), and Matthew's Correlation Coefficient (MCC) as our performance assessment metrics.
+A description of methods employed in the study is given in Table
+The Serial # column in Table
+As given in Tables
+This is helpful in finding the impact of class imbalance on the performance metrics.
+In Table
+This is helpful in finding the best performing architectures based on these metrics.
+A consolidated view of the best performing models is given in Table
+As given in Table
+After that, as given in Table
+Then, we sum the ranking scores as given under overall score column in Table
+We form a new ranking system where minimum among these scores is given the best possible ranking.
+As given in Tables
+The architectures are correlating well with each other especially when it comes to learning the intricacies of AD class under CEN, IBA, GM and MCC metrics.
+It can be observed that average CEN metric is offering much greater variation in its values as compared to other performance metrics.
+On the other hand, RCI, average GM, average IBA and average MCC are offering better correlation among their values.
+For example, average CEN between AD/NC(SPECT)/PD classification with combined augmentations in the spatial domain using tenfold CV approach and AD/NC(SPECT)/PD classification with combined augmentations in the frequency domain using tenfold CV approach is ≈ 16% while other performance metrics offer a variation between 1 and 4%.
+As given in Table
+We can see that there is a strong correlation between the rankings provided by the individual performance metrics such as RCI, CEN, IBA, GM and MCC and the overall ranking for a method.
+We can see the advantages brought forth by the assessment based on multiple performance metrics rather than just one metric alone.
+Methods that employed augmentations clearly outperformed those that do not.
+In addition, we can see that methods that do not combine augmentations have a slight edge over those that combine them.
+We can also see that the spatial domain methods fared better in comparison to frequency domain counterparts which could be due to the fact that intensity values of image pixels in the spatial domain allow for a better representation of data than in frequency domain.
+Another point worth mentioning is that methods deploying less data have an edge over those that used more.
+Further, we can see that methods that employ NC(PET) class performed the worst and those that employed random weak Gaussian blurred augmentation fared better than their random zoomed in/out augmentation counterparts.
+We also noticed that methods that employed NC(PET) class are able to detect PD class instances perfectly while those that employed NC(SPECT) class are able to detect AD class instances perfectly.
+One reason for this accurate detection could be attributed to very weak correlation between the samples of both AD and PD subjects which are considered for this study.
+In exploring the clinicopathological continuum between AD and PD subjects using PET and SPECT neuroimaging modalities and deep learning methods, we found that 3D-CNN architectures are an effective tool in discriminating the subjects of both these dementia types.
+The impairment of the brain in PD increases at a rapid pace due to a large number of factors such as age, tau pathology and lower CSF Aβ levels
+Neuroimaging abnormalities in PD could be due to co-morbid AD developing memory impairment and dementia in patients
+In the experiments that we performed, we can completely discriminate between AD and PD subjects using different deep learning methods.
+However, there is a need for further research in this domain using more representative samples of AD and PD subjects as well as comorbid AD/PD subjects using deep learning methods.
+In addition, there is a need for explaining the findings of a black box deep learning model in the exploration of clinicopathological continuum between AD and PD subjects.
+
+Conclusion
+To conclude, we presented a study for the combined multiclass classification of AD, NC and PD subjects in the spatial and frequency domains using different data augmentation methods and a 3D-CNN architecture.
+The best performing model is AD/NC(SPECT)/ PD classification with random weak Gaussian blurred augmentation in the spatial domain using fivefold CV approach while the worst performing model was AD/ NC(PET)/PD classification without augmentation in the frequency domain using tenfold CV approach.
+We found that spatial domain methods have an edge over their frequency domain counterparts.
+In the future, we are planning to extend this study using other frequency domain methods, data from other modalities, data augmentation techniques and novel architectures such as graph convolutional networks.
+
+
+
+Fig. 1
+Fig. 1 Schematic diagram of the 3D-CNN architecture
+
+
+
+Table 1
+Demographics of subjects with PET scans presented in mean (min-max) format
+
+
+
+Table 2
+Demographics of subjects with SPECT scans presented in mean (min-max) format
+
+
+
+Table 3
+Architecture hyperparameters for our proposed 3D-CNN model
+
+
+
+pooling Layer Filter size Number of filters Stride size Dropout rate Output size
+
+
+
+Table 4
+A description of methods employed in the study
+
+
+
+Table 5
+RCI, CEN and IBA performance metrics for the methods
+
+
+
+Table 6
+GM and MCC performance metrics for the methods
+
+
+
+Table 7
+Average values of CEN, IBA, GM and MCC performance metrics for the methods
+
+
+
+Table 8
+Ranking of the methods

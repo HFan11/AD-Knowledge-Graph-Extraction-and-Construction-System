@@ -1,0 +1,429 @@
+Bidirectional Mapping of Brain MRI and PET With 3D Reversible GAN for the Diagnosis of Alzheimer’s Disease
+Combining multi-modality data for brain disease diagnosis such as Alzheimer's disease (AD) commonly leads to improved performance than those using a single modality.
+However, it is still challenging to train a multi-modality model since it is difficult in clinical practice to obtain complete data that includes all modality data.
+Generally speaking, it is difficult to obtain both magnetic resonance images (MRI) and positron emission tomography (PET) images of a single patient.
+PET is expensive and requires the injection of radioactive substances into the patient's body, while MR images are cheaper, safer, and more widely used in practice.
+Discarding samples without PET data is a common method in previous studies, but the reduction in the number of samples will result in a decrease in model performance.
+To take advantage of multi-modal complementary information, we first adopt the Reversible Generative Adversarial Network (RevGAN) model to reconstruct the missing data.
+After that, a 3D convolutional neural network (CNN) classification model with multi-modality input was proposed to perform AD diagnosis.
+We have evaluated our method on the Alzheimer's Disease Neuroimaging Initiative (ADNI) database, and compared the performance of the proposed method with those using state-of-the-art methods.
+The experimental results show that the structural and functional information of brain tissue can be mapped well and that the image synthesized by our method is close to the real image.
+In addition, the use of synthetic data is beneficial for the diagnosis and prediction of Alzheimer's disease, demonstrating the effectiveness of the proposed framework.
+
+INTRODUCTION
+Alzheimer's disease (AD) is a common neurodegenerative disease and there is no cure for AD so far.
+Relevant researches show that AD accounts for approximately 60-70% of patients with dementia.
+Different modalities of neuroimaging can reflect disease changes of AD from different perspectives.
+Recent studies have shown that MR images and PET images contain complementary information in AD diagnosis
+However, it is difficult to obtain complete modality data for all individuals.
+Subjects may lack a specific modality due to the high cost and the usage of radioactive tracers, which will increase lifetime cancer risk.
+In clinical practice, subjects are more willing to accept MRI scans than PET scans due to price and safety considerations.
+Therefore, collecting a large number of paired data in AD research is a challenge.
+In
+This reduces the number of samples available for training.
+The lack of training data may lead to the overfitting problem, thus resulting in poor diagnosis performance.
+In the past few years, studies on medical image synthesis tasks have been performed.
+They use algorithms to estimate missing data instead of simply discarding incomplete samples.
+For example,
+Moreover,
+The synthetic data is used for AD classification
+Additionally,
+Similarly,
+The above studies demonstrate that GAN is a powerful technique for data simulation and expansion in segmentation or classification tasks.
+However, there is still much room to improve the performance in many medical image synthesis tasks.
+Some state-of-the-art methods are one-way image synthesis (for example, generating PET from MRI, generating CT from MRI, etc.), which cannot maximize the expansion of missing datasets.
+Other methods have used very complex preprocessing steps, resulting in high computational costs and difficult in reproducing their results.
+In this paper, we imputed the missing data through the 3D Reversible Generative Adversarial Network (RevGAN), and compared the advantages and disadvantages of using synthetic full image and synthetic ROI image.
+In addition, we also use the synthesized data for AD classification prediction.
+The main contributions of this study are as follows: First, the reversible structure was utilized to yield better reconstruction ability in the image synthesis experiment.
+We have improved the generator part, and only one generator was needed to realize bidirectional image synthesis in the proposed method rather than the two generators that were used in the methods of
+By adopting the generator together with the stability of reversible architecture, this allows us to train deeper networks using only modest computational resources.
+Second, by comparing the synthesis experiment of full image and ROI image, we can find that the structural and functional information of brain tissue can be mapped well, but it is difficult to map the structure information such as the skull of the MR image from the PET image.
+Third, in the classification experiment using full image, we can find that the classification model is mainly based on the brain tissue area in the neuroimaging and is not sensitive to the skull and other structures by comparing the experiment using real MRI and synthetic MRI.
+Fourth, by comparing the missing data and the use of synthetic data, our proposed image synthesis method is not only of high image quality but also contains disease information about AD, which can be beneficial for the auxiliary diagnosis of diseases.
+In addition, we also designed a multi-modal 3D CNN model that performed well on the data we used.
+In the following section, we will first introduce the dataset that we used for evaluation in section "Materials."
+We introduce the preprocessing steps and the details of the proposed method in section "Methods."
+The experiments and results are shown in section 4 "Experiments and Results, " which mainly includes three parts: experimental setup, image reconstruction and the impact of using synthetic data on Alzheimer's diagnosis and prediction.
+The discussion and the conclusion of our work are described in sections "Discussion" and "Conclusion, " respectively.
+
+MATERIALS Datasets
+The data used in this study comes from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database, which publicly provides a series of test subjects' MRI, PET, other biomarkers and related diagnostic information, providing researchers with A set of standard research data used to study the pathogenesis of Alzheimer's disease.
+The data provided by it contains four sets of sub-libraries, namely ADNI-1, ADNI-2, ADNI-3, and ADNI GO.
+These four stages contain data from subjects in three categories: cognitively unimpaired (labeled as CN), mild cognitive impairment (MCI) and AD.
+In the problem of predicting the conversion of MCI to AD, it is necessary to review the condition of the MCI subjects so as to keep up with the progress of the subject's condition.
+Data will be collected again six months, twelve months, eighteen months, twenty-four months, and thirty-six months after the baseline data is collected.
+Generally speaking, the time standard for judging whether MCI is converted is thirty-six months.
+Subjects who converted from MCI to AD within 36 months belonged to developmental mild cognitive impairment (pMCI), and vice versa were classified as stable mild cognitive impairment (sMCI).
+Although there is no cure for AD so far, the ADNI database has greatly facilitated research on AD by researchers.
+Table
+
+METHODS
+There are three major steps in the proposed framework: (i) Data preprocessing step; (ii) Missing data completion using 3D Reversible GAN; (iii) Disease classification using 3D convolutional neural networks.
+The overall framework of the proposed approach is shown in Figure
+In our research, we assume M k and P k are the MRI data and PET data for the kth subject, respectively.
+The diagnosis result of the model can be expressed as:
+where ∧ y k is the predicted label (such as sMCI/pMCI) for the k th subject.
+If the k th subject does not have PET data (missing P k ), our method will predict a virtual ∧ P k with M k by their underlying relevance.
+The diagnosis result of the model can be expressed as:
+G and F are both mapping functions.
+It can be seen from the above formula that there are two major tasks in our framework, (i) learning a mapping function G for completing the missing data, which is described in section "Data Reconstruction Using 3D RevGAN."
+(ii) learning a classification model F for AD diagnosis and prediction, which is then introduced in section "Classification With End-to-End CNNs."
+
+Data Preprocessing
+All images were preprocessed based on the following steps as described in
+The Figure
+The MR brain images were preprocessed by the standard ADNI pipeline as described in
+After that, we performed ITK N4 Bias correction on the MR image.
+Based on zxwtools, MR images were resampled to a 1 mm isotropic world coordinate system and cropped to a size of 221 × 257 × 221.
+Since the pixel value range of the MR image is long-tailed, we set voxels beyond 1024 as 1024.
+The pixel values range of the MR images were unified into [0,1024], using the formula of 1024×(inputmin)/(max-min). For PET data, each patient may have multiple images, and each Image contains multiple.nii
+files (30 min to 60 min from taking the medicine, taking pictures at regular intervals).
+After PET undergoes image quality control (removal of outliers, such as images with 0 mean and variance), we normalize the PET image to [0, 1024] according to the formula 1024×(input-min)/(max-min).
+After that, we averaged all PET images of the same patient under the same radiography.
+Finally, PET images were registered to the corresponding MR based on zxhreg through rigid registration.
+After the registration, PET images were resampled to a 1 mm isotropic spacing.
+In this study, the hippocampus region was selected as the ROI.
+We obtain the center of the ROI as follows: First, for each subject, the hippocampus was segmented using the MALP-EM
+After getting the segmentation result, we directly calculated the center of the hippocampus (the segmentation result already shows this value).
+After that, we randomly selected MR data as a template and then registered other MR images to the template through affine registration to obtain a parameter matrix of affine transformation.
+After obtaining the affine matrix, we map the hippocampus center point on the template to each MR image through the inverse transformation of the affine transformation.
+Since MR and PET have been registered before, the ROI center of the obtained MR can also be used as the ROI center of PET.
+After determining the ROI center of the image, we cropped a 96 × 96 × 48 voxel hippocampus region from the image.
+Before the data enters the model, the pixel values range of the data is unified into [0,1] using the formular of (input-min)/(maxmin).
+The full image and the corresponding ROI image are shown in Figure
+
+Data Reconstruction Using 3D RevGAN
+In recent years, a lot of studies have widely used GAN
+Problems such as data shortage and class imbalance can be solved by GAN
+Since core C and its inverse C -1 share parameters, C -1 will also be trained when training C, and vice versa.
+Finally, the decoder part is constructed by a 1 × 1 × 1 convolutional layer for constructing the images in the target domain and is directly followed by a tanh activation function.
+Decoder projects the image back into the low dimensional image space.
+For the discriminator, we adopt the PatchGAN architecture as proposed in
+It inputs a pair of real image (such as P k ) and synthetic image [G(M k )].
+We combine the adversarial loss (L GAN ) loss with the cycle consistency loss (L cyc ), so the total loss function used in our model is as follows:
+(5) The weighting factor λ (called lambda) is used to control the weight of the cyclic consistency loss in the total loss.
+
+Classification With End-to-End CNNs
+After the missing data of multi-modality have been completed using the above steps, the diagnosis and prediction of AD are then performed using a classifier.
+In some previous studies, the hippocampus regions have been chosen as the ROI for the diagnosis of AD
+The ROI selection is an important step in the proposed method in clinical practice.
+The hippocampus area is of great significance in the diagnosis of AD, and has been used as a biomarker in diagnostic criteria for Alzheimer's disease.
+The hippocampal atrophy is highly related to AD and can be reflected in MR and PET images.
+The brain atrophy of AD patients affects both the structural change and the metabolic function change at the same time.
+Lots of previous studies have used the hippocampus area as ROI for the prediction and diagnosis of AD.
+In contrast, if a full image is used, although more disease information can be used, the information of a large number of irrelevant regions in the full image coexist and may hamper the accuracy of the prediction model.
+The use of the hippocampus as an ROI is not only essential to improve the diagnostic accuracy, but also can reduce the computational burden and reduce the data redundancy.
+For a fair comparison, we also performed experiments using full images and use scipy.ndimage.zoom
+to scale the registered full image size from
+CNN has been well applied in the classification and prediction of brain disease.
+Briefly, CNN extracts feature through convolutional layers and reduces the network parameters through weight sharing and pooling of convolution.
+Finally, the classification task is completed through the fully connected layer.
+The subsequent development of many advanced networks such as AlexNet
+In our experiment, in order to evaluate the performance of our proposed 3D CNN, we chose the classic model of VGG and ResNet as the baseline model for comparisons.
+Although MR and PET share most information of AD disease changes, it should be mentioned that these two modalities also have complementary information
+The process of synthesized PET can generate complementary information.
+Although this information comes from MRI, the classification model cannot use this information directly.
+Through our synthesis method, these hidden information are displayed, so that the classification network can obtain more information.
+For example, elements (5, 6, 7) are in set A,
+As long as we know the relationship between AB, we can infer each other.
+However, in our case A does not contain B, and B does not contain A. In this study, the relationship between MRI and PET is a more complex non-linear complementary relationship, and our model is needed to fit the relationship between them.
+The synthetic network is trained through a large number of pairs of other people's MRI and PET relationships.
+During the training process, the synthetic network learns the method of converting the information in the MRI into the corresponding PET information.
+We proposed a 3D CNN model based on ROI crop to learn a classifier and to fuse different features from both MRI and PET.
+It is worth noting that the general classification model uses batch norm, while we use instance norm
+The output of each convolutional layer is down-sampled by the max-pooling operations.
+In the 1st, 2nd, 3rd, and 4th layers, the size of the convolutional kernel is set to 1 × 1 × 1, 5 × 5 × 5, 9 × 9 × 9, 5 × 5 × 5, respectively.
+The number of channels is 4 for the 1st layer, 32 for the 2nd layer, 64 for the 3rd and 4th layers.
+The classifier consists of 2 FC layers and a softmax layer.
+After passing the softmax layer, the model outputs the diagnostic label.
+The detailed model structure is shown in Figure
+
+EXPERIMENTS AND RESULTS
+We have evaluated the effectiveness of our proposed method in the following experiments.
+Firstly, we evaluated the quality of the synthetic images generated by 3D reversible GAN.
+Some image quality metrics were used for the evaluation of the reconstructed images.
+After that, we compared our classification model with other methods including the VGG and ResNet model in the diagnosis task of AD vs. CN.
+Finally, we verified the impact of the generated PET data in the classification task of Alzheimer's diagnosis and prediction.
+Bold values mean the best value in the comparative experiment.
+
+Experiment Setting
+Experimental environment: PyTorch framework, Nvidia GTX1080 GPU.
+During the image reconstruction training, the Adam optimizer
+The reversible blocks were implemented using a modified version of MemCNN (van de
+Peak signal-to-noise ratio (PSNR), and structural similarity index measure (SSIM)
+RMSE, PSNR and SSIM are the most common and widely used objective image evaluation metrics in image reconstruction.
+RMSE and PSNR measure absolute errors between source and synthetic images, and SSIM measures structural similarities between them.
+In the classification experiment, we continue to use Adam as the optimizer.
+The dataset was separated into training part, validation part and testing part.
+The ratio of training set, validation set, and test set is 7:2:1.
+ACC, SEN, SPE, AUC are used as evaluation metrics.
+These four metrics represent accuracy, sensitivity, specificity and area under the curve, respectively.
+The higher values of these metrics indicate better classification performance.
+A 10-fold cross-validation approach was employed to measure and to compare the performance of different methods.
+
+Results of Image Reconstruction
+
+Paired ROI Image
+From Figure
+When calculating the
+
+Full Image
+To compare the performance based on ROI and that based full images, we have performed a further experiment using full images.
+The registered full image data (221, 257, 221) is scaled using scipy.ndimage.zoom,
+and the size is resized to
+It can be seen from the results of Figure
+Comparing to the use of ROI, the full MR image contains not only the structural information of the brain tissue but also the structural information such as the skull.
+Although PET images also have complete head coverage, the signal levels of non-brain tissues are quite different compared with brain tissues, so it creates challenges in alignment between the MR images and the PET image.
+This will lead to decrease the reconstruction performance of image synthesis.
+
+Results of Disease Diagnosis Prediction
+
+Evaluation of our Proposed 3D CNN Classification Model
+We chose 3D-VGG11 and 3D-ResNet10 as the baseline models for comparison.
+We used the same settings for all models to make fair comparisons.
+The experimental results are shown in Tables
+The experiment in
+The experimental results show that our four-layer model has better performance than the VGG11 and ResNet10 models which have many layers with much more parameters, indicating the effectiveness of our proposed classification method in the diagnosis of AD.
+
+Results of Diagnosis Using Synthetic Data
+The model used in all multi-modal experiment is our 3D CNN model.
+We simulated the absence of data and tested the impact of the generated PET on the diagnosis and prediction of AD
+To take advantage of information about the disease, we adopted a framework to integrate multimodality information based on our proposed 3D CNN model.
+In this part of the experiment, MR and PET images are used as two parallel channels.
+After then, the paired MR image and PET image are stacked as a 4D image.
+We also employed the above four metrics for performance evaluation of AD diagnosis.
+Disease classification results were reported in Tables
+As shown in Table
+Note that "MRI + 100% synthetic PET" has the highest value in SEN.
+A similar situation can be seen in Tables
+The method used real data got the best metrics in terms of ACC, SEN, while using 100% synthetic PET has achieved the highest AUC in Table
+In Table
+Please note that "PET + 100% synthetic MRI" has the highest SEN value.
+In Table
+As shown in Tables 5-8, after using synthetic data, there is a higher classification score.
+This shows that our method is effective.
+The experimental ROC curves are shown in Figures
+Moreover, the relevant experimental results using full image are shown in  Tables 9, 10, and the ROC curve is shown in Figure
+In this study, for the classification tasks using full image, resampled images at a lower resolution were used instead of using multiple patches as
+We think that not all patches within the whole image were affected by the disease changes of AD.
+Some patches from AD subjected may be not affected by AD and their diagnostic label may be fuzzy.
+Therefore, if the selected patches are not accurate, it will lead to poor performance.
+In addition, compared with using a full image, using multiple patches will lose the spatial position information between different brain regions.
+
+DISCUSSION
+In the classification task, we propose a 3D CNN model with only four convolutional layers to achieve T1-MRI and FDG-PET AD diagnosis.
+The hippocampal area was used as ROI for input as it is the most frequently studied and is thought to be of the highest related region of AD.
+Through our experiments, we found that the proposed four-layer network has a lightweight structure but with competitive performance in AD classification tasks.
+Especially, we use small-sized kernels in the first convolutional layer to prevent early spatial downsampling in contrast to most standard architectures for image classification.
+For example, ResNet uses relatively large kernel sizes and strides in the first layer, which dramatically reduces the spatial dimension of their inputs.
+This can accelerate the computation.
+However, the loss of a large amount of information at the beginning layer may adversely affect the results, especially in medical images
+In addition, the input size is only 96 × 96 × 48 due to the use of ROI-based data in our experiments.
+Therefore, premature downsampling can cause severe performance degradation.
+It can be seen from Table
+This indicates that the complexity of the data will affect the performance, because the distribution of synthetic data and actual data may be slightly different, and mixing the two types will make it difficult to train the model.
+It can be seen from Table
+From the Table
+The data used in the experiment is an ROI image.
+"MRI+ the other 50% synthetic PET" is to replace the original real data in "MRI+50%PET+50% synthetic PET" with synthetic data and change the synthetic data to real data.
+Bold values mean the best value in the comparative experiment.
+are available).
+In lots of previous studies, the use of singlemodal PET has been able to achieve very good results in the classification of AD.
+In this work, all multi-modal experiments use the four-layer 3D CNN model we designed, and the best result of single-modal PET is to use the 3D VGG11 of
+The models used are inconsistent (Tables
+These four indicators describe the performance of the model from different aspects, rather than absolute positive correlation.
+Therefore, due to different experimental settings, some evaluation metrics will fluctuate.
+In the comparative experiments using real data and synthetic data, the number of data samples is small.
+AD, NC, pMCI, and sMCI are 647, 707, 326, and 396, respectively.
+The numbers of samples in different categories are imbalanced.
+This makes the model biased toward a certain type of sample in order to reduce its own loss, which causes fluctuations in some metrics.
+When data is missing or synthetic data is used, this situation is more likely to happen.
+From Tables 9, 10, it can be seen that although the image resolution becomes lower when using the full image, it still achieves a good classification score.
+The analysis in "Full Image" shows that the structural and functional information of brain tissue can be mapped very well, but it is difficult to map the structural information such as the skull of the MR image from the PET image.
+Therefore, it does not perform well when   synthesizing a full MRI image from a PET image (Table
+This problem can be avoided if only the hippocampus ROI is used.
+Although the quality of the synthesized MR image is not high, the classification result of using the synthesized MR image is not bad (Tables
+This shows that the model mainly focuses on changes in brain tissue structure (such as hippocampus atrophy, etc.) when diagnosing and predicting diseases, and the structure of irrelevant areas such as the skull has little effect on the results.
+In the image synthesis task, reversible blocks are very memoryefficient.
+Therefore, by adopting the generator together with the stability of reversible architecture, this allows us to train deeper networks using only modest computational resources.
+Increasing the depth of the reversible block improves the non-linear fitting ability of the model, which can generate higher quality images.
+Moreover, reversible architecture has been demonstrated to yield superior results when trained using fewer training data in the work of
+It can be seen from Table
+Despite their advantage on the alignment, our proposed method are still superior to
+It is worth noting that too much preprocessing may lose more original information and affect the reliability of the experiment.
+When registering the PET images to the corresponding MRI, we use nearest neighbor interpolation
+This leads to moiré pattern
+Compared with the real image, the synthesized PET image has reduced moiré pattern (see Figure
+Related experimental results are shown in Table
+The experimental results show that our synthetic PET is beneficial for disease diagnosis.
+If our synthetic data does not contain disease information, it may hamper the performance of AD diagnosis, leading to worse performance.
+The main limitations of this study and future work are as follows.
+In this study, since the hippocampus is an appropriate ROI selection for the AD diagnosis, we can use the ROI block that removes the redundant information in the data to diagnose and predict the disease and improve performance.
+When applied to other diseases without a specific target ROI, it is difficult to take advantage of the ROI-based method.
+Moreover, it would be interesting to show the biologically meaningful measurements of the synthetic data over the real data.
+In this work, the synthetic PET data were used for AD diagnosis and focused more on the disease changes of AD, rather than the real FDG  metabolic changes.
+The aim of the reconstruction is to improve the classification of AD in the scenario of missing data.
+The detailed investigation of reconstructing biologically meaningful synthetic data will be carried out in future.
+Last but not the least, in Tables
+By adding more synthetic PET data, the accuracy has been improved by comparing the new results in Tables
+The effect of the ratio parameter in the random selection of the synthetic PET data will be carefully studied in future work.
+Finally, the synthesized PET images may be helpful for improving the AD diagnosis performance, while they do not reflect the real metabolic changes of the FDG PET imaging.
+In Table
+Comparing Tables
+But, we also believe that there is not a strong relationship between MR and PET in all scenarios, and a good mapping between MRI and PET needs to meet some conditions.
+If the synthetic model that we trained in the AD diagnosis scene is directly applied to other diseases, it may not work.
+For example, if we want to apply our method in the scene of tumor diagnosis, a large number of paired MR and PET must be used to retrain the model so that the model can find the relationship between MR and PET in the scene of tumor diagnosis.
+In this study, hippocampal atrophy in AD patients will be reflected in the structure and functional metabolism of the hippocampus.
+However, there are many other diseases that may not affect tissue structure and tissue function metabolism at the same time, so it is difficult to find the relationship between MRI and PET.
+To sum up, whether the disease can cause changes in tissue structure and metabolic function simultaneously may be a condition for MR and PET to be able to map well.
+Therefore, further research needs to be explored.
+
+CONCLUSION
+To conclude, we proposed a 3D reversible GAN for imputing those missing data to address the issue of missing data.
+Specifically, we have also presented a novel 3D CNN architecture to perform classification for AD diagnosis.
+Moreover, we tested the impact of the synthetic data in the classification task of AD by simulating missing data.
+During the experiment to evaluate the impact of synthetic data, the multi-modal fusion method by channel fusion (MR images and PET images were stacked into 4D images) is selected.
+Experiments on the ADNI dataset demonstrate that our method generates reasonable neuroimages.
+Through the experimental results, we can also find the following three conclusions: First, we can find that the structural and functional information of brain tissue can be mapped well, but it is difficult to map the structure information such as the skull of the MR image from the PET image.
+Second, the classification model is mainly based on the brain tissue area in the neuroimaging and is not sensitive to the skull and other structures.
+Third, when the data is missing, the performance of AD diagnosis and MCI conversion prediction can be significantly improved using our method.
+
+THE ALZHEIMER's DISEASE NEUROIMAGING INITIATIVE
+The Alzheimer's Disease Neuroimaging Initiative is funded by the National Institute on Aging, the National Institute of
+
+
+
+FIGURE 1 |
+FIGURE 1 |The overall flow chart of the proposed method.
+It includes three parts, and the data is preprocessed first.
+RevGAN was then used to synthesize MRI and PET and to evaluate the image quality.
+Finally, we verify the impact of the synthesized images on disease classification.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The pipeline of data preprocessing.
+
+
+
+FIGURE 3 |
+FIGURE 3 | (A,B) show the coronal section, median sagittal section and transverse section of MR image and PET image, respectively.
+(B) is registered to the corresponding (A) through rigid registration.
+The dimensions of (A,B) are the same as 221 × 257 × 221.
+(C) is the area near the hippocampus of the MR image and (C) is obtained from (A).
+Since (A,B) are registered, we can obtain (D) corresponding to (C) from (B).
+In short, (A,B) or (C,D) represents the same area in the brain.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Illustration of our proposed image synthesis method using 3D-RevGAN for learning the mappings between MRI and PET.
+Encoders Enc (red) and Enc (purple) lift/encode from the image space into the feature spaces.
+Decoders Dec (black) and Dec (green) project/decode back to the image space.
+Compared with CycleGAN using two generators, RevGAN only uses one generator to complete the bidirectional mapping from MRI to PET and PET to MRI.
+
+
+
+FIGURE 6 |
+FIGURE 6 | Architecture of our 3D CNN model.
+Note that if the input is MRI and PET, the input size is 2 × 96 × 96 × 48.
+The first dimension is the number of channels.
+FC is a full connected layer.
+The parameters of FC1 and FC2 are 512 and 2, respectively.
+
+
+
+FIGURE 7 |
+FIGURE 7 | Deviation between real image and synthetic images.
+In the deviation image, the yellower the color, the greater the error, and the red and black areas represent smaller deviation.
+
+
+
+FIGURE 8 |
+FIGURE 8 | The ROI data is used here.
+The ROC curves in the experiment of disease classification with the synthetic PET image.
+
+
+
+FIGURE 9 |
+FIGURE 9 | The ROC curves in the experiment of disease classification with the synthetic MR image.
+The ROI data is used here.
+
+
+
+FIGURE 10 |
+FIGURE 10 | The ROC curves in the experiment of classification with the full data.
+
+
+
+TABLE 1 |
+Summary of the studied subjects and images from the dataset.
+
+
+
+Table 2 ,
+which shows that the results of different methods are similar in terms of PSNR in PET image reconstruction.It can be seen from Table2that our method SSIM reached 0.9389 in MRI image reconstruction, achieving the best performance.
+
+
+
+Table 3
+used MRI-ROI data, while the experiment in Table 4 used PET-ROI data.
+As shown in Table 3, we can see that the ACC and SEN of our proposed 3D CNN model achieved 82.00 and 82.29%, respectively.
+The experimental results are better than the VGG11 and ResNet10 models.
+The 3D VGG11 model is slightly better than our model in SPE and AUC metrics.
+As shown in Table 4, it can be seen that VGG11 has a very good performance on PET images.
+The ACC, SEN, and AUC reached 89.11, 90.24, and 92.64%, respectively.
+It is worth noting that our proposed model is higher than the other two models in the SPE metric.
+If the age-correction processing of Lin et al. (
+
+
+
+TABLE 2 |
+Comparison with others.The quality of the reconstructed image.
+Results of image synthesis achieved by different methods.
+Just as a reference, because the selected data and data preprocessing are different.
+Bold values mean the best value in the comparative experiment.
+
+
+
+TABLE 3 |
+Results (%) of the models trained from only MRI data for CN vs. AD task.
+
+
+
+TABLE 4 |
+Results (%) of the models trained from only PET data for CN vs. AD task.Bold values mean the best value in the comparative experiment.
+
+
+
+TABLE 5 |
+Diagnosis results (%).
+
+
+
+TABLE 6 |
+Diagnosis results (%).In this pMCI vs. sMCI classification experiment, all MR images are real, but PET images were divided into five cases.
+The data used in the experiment is an ROI image.
+Bold values mean the best value in the comparative experiment.
+
+
+
+TABLE 7 |
+In this AD vs. CN classification experiment, all PET images are real, but MR images were divided into five cases.The data used in the experiment is an ROI image.
+Bold values mean the best value in the comparative experiment.
+
+
+
+TABLE 8 |
+In this sMCI vs. pMCI classification experiment, all PET images are real, but MR images were divided into five cases.
+
+
+
+TABLE 9 |
+The AD vs. CN classification experiment uses synthetic full data and real full data.
+
+
+
+TABLE 10 |
+The sMCI vs. pMCI classification experiment uses synthetic full data and real full data.Bold values mean the best value in the comparative experiment.

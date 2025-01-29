@@ -1,0 +1,140 @@
+Prediction of Alzheimer’s Disease-Associated Genes by Integration of GWAS Summary Data and Expression Data
+Alzheimer's disease (AD) is the most common cause of dementia.
+It is the fifth leading cause of death among elderly people.
+With high genetic heritability (79%), finding the disease's causal genes is a crucial step in finding a treatment for AD.
+Following the International Genomics of Alzheimer's Project (IGAP), many disease-associated genes have been identified; however, we do not have enough knowledge about how those disease-associated genes affect gene expression and disease-related pathways.
+We integrated GWAS summary data from IGAP and five different expression-level data by using the transcriptome-wide association study method and identified 15 diseasecausal genes under strict multiple testing (α < 0.05), and four genes are newly identified.
+We identified an additional 29 potential disease-causal genes under a false discovery rate (α < 0.05), and 21 of them are newly identified.
+Many genes we identified are also associated with an autoimmune disorder.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common cause of dementia which is characterized by a decline in cognitive skills that affects a person's ability to perform everyday activities.
+Estimated 5.4 million people in the United States are living with AD.
+It is the fifth-leading cause of death among those age 65 and older
+Although some drugs showing effectiveness to mitigate the symptoms from getting worse for a limit time, no treatment can stop the disease.
+Heritability for the AD was estimated up to 79%
+However, the current finding of AD-associated genetic variants is not enough to fully explain the AD signal pathway in sufficient detail.
+During recent years, with the rapid advance of next-generation DNA sequencing, identify disease-related mutation from large data set and develop treatment become possible
+Genome-wide comparison studies (GWASs) have identified a significant amount of common genetic variants associated with complex traits and diseases
+Many previous studies have identified genes such as APOE
+However, the causal relation of those associated genes and variants remain unclear.
+For example, recent study and data showed that a female with the APOE gene under greater risk than a male with the APOE gene
+This strongly indicates that we have little knowledge about how this risk factor effect people.
+With GWAS summary data provided by the International Genomics of Alzheimer's Project (IGAP)
+For a complex disease such as AD, the top single nucleotide polymorphisms (SNPs) often located in the non-coding region, hard to know which gene is modified by that mutation and many significant SNPs are in high linkage disequilibrium (LD) with non-significant SNPs, plus many associated SNPs are more likely to locate in expression regulation region of the disease causal gene
+To identify disease-associated genes, we used the transcriptome-wide association study (TWAS)
+TWAS method can eliminate potential confounding and find disease causal gene by focusing only on expression trait linking related by genetic variation; it can also increase statistical power from the lower multiple-testing burden and the noise reduction of gene expression from environmental factors
+Previous studies have pointed out at AD is closely related to autoimmune disorders
+After detecting possible disease causal gene for AD, we manually curated existing research about the autoimmune diseases that potentially related to AD.
+
+MATERIALS AND METHODS
+Data we used for SNP-trait association is a large-scale GWAS summary data provided by IGAP with total 17,008 AD cases and 37,154 controls, include 7,055,881 SNPs, we selected 6,004,159 SNPs.
+Expression level data are from adipose tissue (RNA-seq), whole blood (RNA array), peripheral blood (RNA array), brain tissue (RNA-seq and RNA-seq splicing)
+Selection method can be find in Supplementary Materials.
+
+Transcriptome-Wide Association Study
+Transcriptome-wide association study can be viewed as a test for correlation between predicted gene expression and traits from GWAS summary association data.
+The predicted effect size of gene expression on traits can be viewed as a linear model of genotypes with weights based on the correlation between SNPs and gene expression in the training data while accounting for LD among SNPs.
+There are eight modes of causality for the relationship between genetic variant, gene expression, and traits.
+Scenarios Figures 1E-H should be identified as significant by TWAS and its corresponding null hypothesis is gene expression completely independent of traits (Figures
+By only focusing on the genetic component of expression, the instances of expressiontrait association that is not caused by genetic variation but variation in traits can be avoided.
+One aspect that needs to be noticed is, same as other methods, TWAS is also confounded by linkage and pleiotropy.
+
+Performing TWAS With GWAS Summary Statistics
+We integrated gene expression measurements from five tissues with summary GWAS to perform multi-tissue transcriptomewide association.
+In each tissue, TWAS used cross-validation to compare predictions from the best cis-eQTL to those from all SNPs at the locus.
+Prediction models choosing from BLUP
+Transcriptome-wide association study Imputes effect size (z-score) of the expression and trait are linear combination of elements of z-score of SNPs for traits with weights.
+The weights, W = e,s -1 s,s , are calculated using ImpG-Summary algorithm
+e,s is the estimated covariance matrix between all SNPs at the locus and gene expression and s,s is the estimated covariance among all SNPs which is used to account for LD.
+Standardized effect sizes (Z-scores) of SNPs for a trait at a given cis locus can be denoted as a vector Z.
+Also, the imputed Z-score of expression and trait, WZ, has variance.
+W s,s W t .
+Therefore, the imputation Z score of the cis genetic effect on the trait is,
+Bonferroni correction is usually applied when identifying significant disease-associated gene.
+The standard multiple testing conducted in TWAS is 0.05/15000
+But traditional p-value cutoffs adjusted by Bonferroni correction  are made too strict in order to avoid an abundance of false positive results.
+The thresholds like 0.05/15000 for significant genes are usually chosen so that the probability of any single false positive among all loci tested is smaller than 0.05, which will lead to many missed findings.
+Instead, False Discovery Rate error measure is a more useful approach when a study involves a large number of tests, since it can identify as many significant genes as possible while incurring a relatively low proportion of false positives
+For each tissue, we used the Benjamini and Hochberg procedure
+The Benjamini and Hochberg procedure is one of false discovery rate procedures that are designed to control the expected proportion of false positives.
+It is less stringent than the Bonferroni correction, thus has greater power.
+Since this is study is more exploratory, we can pay more risk of type I error for larger statistical power.
+It works as follows:
+Put individual p-values in ascending order and assign ranks to the p-values.
+(1) Calculate each individual Benjamini and Hochberg critical value with formula k m α, where k is individual p-value's rank, m is total number of tests and α is the false discovery rate.
+(2) Find the largest k such that P k ≤ k m α and reject the null hypothesis for all H i for i = 1, ...k.
+
+RESULTS
+To determine which gene is significantly associated with AD, we first performed strict multiple testing Bonferroni correction (pvalue < 0.05/15000).
+We found 15 significant genes (Table
+In order to increase the search range, we performed false discovery rate under the same alpha (0.05).
+After the Benjamini and Hochberg procedure
+Nine of those genes has previously identified to be related to AD.
+PVRL2 (p-value 4.92 * 10ˆ-34 in Brain (CMC) RNA-seq, also known as NECTIN2) is a well-known gene for AD.
+This gene encodes a single-pass type I membrane glycoprotein and interact with AOPE gene
+TOMM40 [p-value 1.13 * 10ˆ-25 in Whole Blood (YFS) RNA Array] is also located adjacent to APOE.
+It has been identified by previous studies worldwide as AD related gene
+It is the central and essential component of the translocase of the outer mitochondrial membrane
+This confirmed that mitochondrial dysfunction plays a significant role in AD-related pathology
+Other highly connected genes function group identified are BIN1 [p-value 1.18 × 10 -6 in Whole Blood (YFS) RNA Array; 3.24 × 10 -6 in Peripheral Blood (NTR) RNA Array], CLU (p-value 1.45 × 10 -16 ), MS4A6A [p-value 5.72 × 10 -8 in Peripheral Blood (NTR) RNA Array; 2.92 × 10 -10 in Whole Blood (YFS) RNA Array]
+[p-value 7.86 × 10 -9 in Brain (CMC) RNA-seq splicing] FNBP4 [p-value 1.49 × 10 -6 in Whole Blood (YFS) RNA Array], CEACAM19 [p-value 3.38 × 10 -11 in Adipose (METSIM) RNA-seq], and CLPTM1 [p-value 5.73 × 10 -17 in Brain (CMC) RNA-seq] are newly identified AD-associated genes.
+MLH3 gene is known for its function in repair mismatched DNA and risk for thyroid cancer and lupus
+CEACAM19 gene located in chromosome 19, a previous study showed high expression of CEACAM19 for patients with breast cancer
+Both CEACAM19 and CLPTM1 gene are located in chromosome 19 and near APOE gene.
+More detailed studies are needed to investigate the relationship between those genes and whether CLPTM1 and CEACAM19 are disease causal gene.
+
+New Identified Genes
+
+MLH3
+
+DISCUSSION APOE Related Genes
+Although APOE is not reported to be significant in any tissue, not enough evidence to conclude that APOE is not related to AD.
+Since each SNP has a weight assigned regarding the expression in TWAS study, even two genes are both significantly related to a disease, it is very likely only one of them will be showing significant in TWAS.
+TOMM40 (Figure
+APOE and TOMM40 may interact to affect AD pathology such as mitochondrial dysfunction
+Further study is needed to show causal relation in detail.
+PICALM [p-value 2084 × 10 -7 in Peripheral Blood (NTR) RNA Array] and PTK2B [p-value 9.93 × 10 -8 in Peripheral Blood (NTR) RNA Array; p-value 2.89 × 10 -6 in Whole Blood (YFS) RNA Array] are also related to APOE and TOMM40 gene according to previous studies
+
+Association With Autoimmune Diseases
+Complex disease such as AD, often shares common pathways or causal genes with other diseases
+For instance, TOMM40 is a shared disease-associated gene between AD and Type II diabetes
+Recent studies showing autoimmune diseases have closed relation with AD
+Among all the genes we identified through TWAS method, eight of them are related to autoimmune diseases.
+As shown in Figure
+CR1 and CLU gene are related to thymus function which could potentially cause an autoimmune disorder
+MLH3 and BIN1 gene have shown to be associated with Lupus, another severe autoimmune disease
+Although with existing result, we don't have enough evidence to prove these genes are both disease causal genes for AD and autoimmune disease, further research from areas such as metabolomics and proteomics is needed to study the disease association between AD and autoimmune diseases
+
+
+
+FIGURE 1 |
+FIGURE 1 | Eight scenarios of causal assumption between gene, expression and trait in TWAS study.
+Null hypothesis: gene expression is completely independent of traits (A-D).
+Alternative hypothesis: causal relation exists between SNPs and traits (E-H).
+
+
+
+FIGURE 2 |
+FIGURE 2 | Gene position plot in chromosome 19.
+Expression data: whole blood.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Shared disease associated gene between Alzheimer's disease (AD) and Autoimmune diseases.
+
+
+
+TABLE 1 |
+Significant genes identified by TWAS under strict multiple testing.
+
+
+
+TABLE 2 |
+Additional gene under Benjamini and Hochberg procedure.
+
+
+
+TABLE 2 |
+Continued

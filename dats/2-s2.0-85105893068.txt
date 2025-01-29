@@ -1,0 +1,420 @@
+Dual Attention Multi-Instance Deep Learning for Alzheimer’s Disease Diagnosis With Structural MRI
+Structural magnetic resonance imaging (sMRI) is widely used for the brain neurological disease diagnosis, which could reflect the variations of brain.
+However, due to the local brain atrophy, only a few regions in sMRI scans have obvious structural changes, which are highly correlative with pathological features.
+Hence, the key challenge of sMRI-based brain disease diagnosis is to enhance the identification of discriminative features.
+To address this issue, we propose a dual attention multi-instance deep learning network (DA-MIDL) for the early diagnosis of Alzheimer's disease (AD) and its prodromal stage mild cognitive impairment (MCI).
+Specifically, DA-MIDL consists of three primary components: 1) the Patch-Nets with spatial attention blocks for extracting discriminative features within each sMRI patch whilst enhancing the features of abnormally changed micro-structures in the cerebrum, 2) an attention multiinstance learning (MIL) pooling operation for balancing the relative contribution of each patch and yield a global different weighted representation for the whole brain structure, and 3) an attention-aware global classifier for further learning the integral features and making the AD-related classification decisions.
+Our proposed DA-MIDL model is evaluated on the baseline sMRI scans of 1689 subjects from two independent datasets (i.e., ADNI and AIBL).
+The experimental results show that our DA-MIDL model can identify discriminative pathological locations and achieve better classification performance in terms of accuracy and generalizability, compared with several state-ofthe-art methods.
+
+I. INTRODUCTION
+A LZHEIMER'S disease (AD) is one of the most prevalent neurological diseases with a significant growth rate in incidence
+The progression of AD gradually results in memory deterioration and impairment of cognitive functions, ultimately leading to irreversible neuron injury
+Although no treatment has been proven to be effective in preventing the progression of AD
+Specifically considering that the atrophic process occurs even earlier than the appearance of amnestic symptoms
+The conventional sMRI-based AD diagnosis methods usually partition the entire MR image into multiple regions with different scales for better feature extraction of local abnormal brain structural changes
+Based on the partition with different scales, most of the existing sMRI-based studies can be roughly divided into three categories, including 1) voxellevel, 2) region-level and 3) patch-level.
+In voxel-level methods
+However, compared with the dimensionality of features, the number of training images for AD classification is too small, which often leads to the curse of dimensionality.
+To alleviate this problem, regionlevel methods
+gray matter, cerebrospinal fluid and cortical thickness) derived from segmented regions of interest (ROIs).
+However, these methods are resource-intensive for segmenting ROIs.
+In contrast, patch-level (an intermediate scale between voxel-level and region-level) feature representations
+Specifically, the centers of patches can be located by certain anatomical landmark detectors
+However, how to combine the local patches into a global feature representation for the whole brain structure is still a challenge in patch-level methods.
+In recent years, deep learning methods have shown great success in image classification tasks such as medical imaging analysis.
+For instance, deep convolutional neural networks (CNNs) are empirically verified to have the excellent ability to learn high-level features from sMRI data, and greatly improve the performance of brain disease diagnosis with the efforts of many researchers
+However, most existing deep learning methods for AD diagnosis still rely on the manual pre-defined ROIs with experts' experience to build diagnosis models based on CNNs, which leads to insufficient consideration of individual differences using the same template space and may not include the entire disease-related atrophy features distributed in the whole brain.
+Moreover, due to the black box characteristics of neural networks, few deep learning methods have specific output for pathological locations, which neglects the issues of interpretability in medical practice.
+Since brain atrophy usually occurs locally, only a few regions in sMRI scans have obvious structural changes which are highly correlative with pathological features, while the rest of regions have little useful information for distinction.
+Therefore, the key challenge of deep learning-based diagnosis with sMRI is to enhance the identification of discriminative features, including 1) informative micro-structures within local regions and 2) relatively important regions in a global image.
+To address aforementioned challenges, we propose a dual attention multi-instance deep learning model (DA-MIDL) to identify discriminative pathological locations for AD diagnosis.
+Specifically, as illustrated in Fig.
+Through the Patch-Nets with spatial attention blocks, DA-MIDL could learn discriminative structural features from multiple local sMRI patches distributed in the brain.
+Then through the attention MIL pooling, all the patch-level features are given different weights and combined into a global feature representation for the whole brain structure information, based on which finally a global classifier is constructed for AD diagnosis.
+We have evaluated the proposed method on two public datasets (i.e., ADNI and AIBL) and the experimental results on multiple AD-related classification tasks (e.g., AD classification and MCI conversion prediction) demonstrate that our DA-MIDL method outperforms several state-of-the-art methods in terms of accuracy performance and generalizability.
+Different from the existing approaches, our major contributions can be summarized as follows.
+1) A dual attention multi-instance deep learning model (DA-MIDL) is proposed for improving AD diagnosis performance, which can automatically capture local and global structural features from sMRI scans and make AD-related classification decisions in a unified framework.
+2) The Patch-Nets with spatial attention blocks are designed to extract discriminative features within each patch and to enhance the local features of abnormally changed microstructures caused by atrophy in the brain.
+3) An attention multi-instance learning (MIL) pooling operation is proposed to balance the relative contribution of each patch and yield a global different weighted feature representation for the whole brain structure.
+The rest of the paper is organized as follows: Section II introduces the related works; Section III describes the studied materials and our proposed DA-MIDL method; Section IV shows the experimental settings and results for multiple AD diagnosis tasks compared with several state-of-the-art methods; Section V presents the discussion on the effectiveness of our attention modules, identified pathological locations and limitations; Section VI concludes the work.
+
+II. RELATED WORK
+In this section, we briefly introduce previous studies on computer-aided AD diagnosis methods with sMRI data.
+Then we respectively review multi-instance learning and attention mechanism related works in medical imaging analysis.
+
+A. Alzheimer's Disease Diagnosis with sMRI
+According to the partition of ROIs from sMRI scans, the previous brain disease diagnosis studies could be roughly divided into three categories, including voxel-level, regionlevel, and patch-level methods.
+The voxel-level methods
+In a voxel-wise manner, the tissue (e.g., gray matter and white matter) densities were generally measured as features for the classification algorithms.
+However, only analyzing features on isolated voxels would lead to the ignorance of the high correlation between voxels.
+Another limitation of voxel-level methods was the overfitting problem, because the voxel-level feature representation always had a high dimensionality compared with the small number of subjects for model training.
+Therefore, feature dimension reduction was the main challenge of voxel-level methods for improving the performance of AD classification.
+In
+In
+In contrast, region-level methods were based on the presegmented ROIs, which had much lower feature dimensionality than voxel-level methods.
+For instance, the volumetric features were extracted from 93 ROIs automatically labeled by an atlas warping algorithm and a linear support vector machine (SVM) was used for AD classification
+The hippocampal features were segmented from sMRI scans for AD diagnosis and MCI conversion prediction
+Ensemble classification models were constructed based on multiple sets of regional gray matter density features from multiple spatially normalized template spaces for AD and MCI diagnosis
+In
+However, the definition and segment of ROIs were resource-intensive due to the requirement of experts' experience.
+Furthermore, most region-level methods
+As an intermediate scale between voxel-level and regionlevel, patch-level methods
+For instance, many weak classifiers were constructed based on the features extracted from randomly sampled patches in MR images and were combined to make a final decision for AD diagnosis
+The graph representations were measured based on squared Euclidean distance between intensity features of patches, and then the SVM was used for classification
+In
+Based on the trained FCN, the voxels of highrisk were selected and fed to the multilayer perceptron (MLP) for individual-level AD classification.
+However, the spatial correlation among patches were processed inadequately in these works.
+A hierarchical full convolutional neural network was proposed for AD diagnosis
+Then a pruning strategy was used to remove uninformative patches and cut down the learnable parameters.
+However, it may lead to the loss of potential spatial correlation between the removed patches and left patches.
+Therefore, highlighting the discriminative features while retaining the spatial correlation among patches is still a challenge in patch-level methods.
+
+B. Multi-instance Learning
+In multi-instance learning (MIL)
+That is, the training set can be regarded as a set of labeled bags, where each bag contains multiple unlabeled instances.
+Specifically, one positive labeled bag contains at least one positive instance.
+In addition, the positive labeled bag may contain negative instances or useless instances which are irrelevant to the label of the bag.
+While, all the instances in the negative bags are negative.
+The main task of MIL is to predict the labels of unseen bags.
+Multi-instance learning performs well in the computer-aided medical diagnosis domain
+For example, a novel MIL framework MIS-Boost was employed for the identification of cerebral small vessel disease, using the intensity patches from regions with high probability of containing lesions in CT images
+A new method as MIL pooling was proposed based on the quantile function to aggregate the predictions from smaller regions into an image-level classification for breast tumor histology
+A deep MIL model was proposed for AD diagnosis, which simply concatenated the local features learned from sub-CNNs for the global feature representation of whole brain structure
+However, how to combine the instance-level features into a global bag-level feature representation is still a challenge in MIL.
+
+C. Attention Mechanism
+Since the features of different parts make different contributions to the overall classification performance, the attention mechanism has been proposed to automatically find and highlight the most informative points on feature maps for boosting the performance of image classification
+Specifically, the attention modules can learn task-oriented different weighted feature maps for subsequent representation learning and classification.
+Recently, the attention mechanism has been widely used in the medical imaging analysis domain
+Different taskoriented attention modules were proposed to help classification or segmentation models to enhance the features of diseaserelated regions in images.
+For instance, a weakly-supervised attention network was proposed for dementia status prediction
+A cross-attention model was designed to find the areas with high pathogenic chances and eliminate noises for thoracic disease diagnosis
+A channel attention module was integrated into the conventional residual block to extract more informative features for improving tissue quantification in fingerprinting
+Although both attention mechanism and multi-instance learning have good performance in the field of medical imaging analysis, there are few studies to combine these two methods.
+In MIL, the key stage is the combination of instancelevel features into a global bag-level feature representation.
+It may be unreasonable to combine the instance-level features equally, since different instances contain different amounts of information.
+Therefore, the attention mechanism can be used to estimate the weight of each instance.
+To this end, we propose a dual attention multi-instance deep learning model (DA-MIDL) for identifying discriminative pathological locations and AD diagnosis with structural MRI data.
+
+III. MATERIALS AND METHOD
+In this section, we first present materials used in our study.
+Then we introduce the proposed DA-MIDL method, including the overall architecture, key components and loss function based on multi-instance learning and attention mechanisms.
+Finally, we provide the implementation details.
+
+A. Subjects and Image Pre-Processing
+Two datasets (i.e., ADNI and AIBL) used in our study are acquired from the public Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+In the ADNI dataset, there are totally 1193 1.5T/3T T1-weighted structural MRI (sMRI) scans from subjects at their own baseline/screening visit (i.e., the first examination) across three ADNI phases (i.e., ADNI-1, ADNI-2 and ADNI-3).
+These subjects can be divided into three categories: AD (Alzheimer's disease), MCI (mild cognitive impairment) and NC (normal control) in accordance with the standard clinic criteria, such as Mini-Mental State Examination (MMSE) scores and Clinical Dementia Rating (CDR).
+For MCI conversion prediction, MCI subjects can be further categorized into two classes: pMCI (progressive MCI subjects who had converted to AD within 36 months after baseline visit) and sMCI (stable MCI subjects who were continuously diagnosed as MCI for 36 months after baseline visit).
+The studied ADNI dataset contains 389 AD, 172 pMCI, 232 sMCI and 400 NC subjects.
+The AIBL dataset consists of baseline sMRI scans from 496 different subjects, including 79 AD, 17 pMCI, 93 sMCI and 307 NC subjects.
+The demographic detail of these 1689 subjects from the ADNI and AIBL datasets is shown in Table
+The original structural MRI data downloaded from ADNI are pre-processed for subsequent better feature learning and classification.
+First, the original images in 3D Neuroimaging Informatics Technology Initiative (NIfTI) format are standardized through geometry correction for gradient nonlinearity by 3D gradwarp correction
+Then, we perform linear registration to the Colin27 template
+After image normalization to the Colin27 standard space, MR images have a size of 181×217×181 voxels.
+
+B. Overall Architecture Based on Multi-Instance Learning
+We regard the patch-level brain morphometric pattern analysis for AD diagnosis as a multi-instance problem and construct our model based on multi-instance learning.
+In MIL, the training data is a set of bags, i.e.,
+, where X i is the i-th sample/bag, Y i is the bag-level label of X i , and N is the number of bags.
+Each bag contains multiple unlabeled instances, i.e., X i = {I i,j } Ni j=1 , where I i,j is the j-th instance, N i is the number of instances in X i .
+Besides, in a positive bag there is at least one positive instance while all the instances in a negative bag are negative.
+We denote Y i = 0 only when Ni j=0 y i,j = 0, where y i,j represents instance-level label of
+Brain abnormal atrophy occurs at few local regions, especially at the early stage of AD
+To this end, we regard the bag of patches from a certain patient's MR image as a positive bag.
+Correspondingly, we group the patches from a normal control into a negative bag.
+Thus, the bags of multiple patches with bag-level labels take the place of whole large images as the training data for AD-related diagnosis.
+Our proposed DA-MIDL model (shown in Fig.
+The probability Θ of positive category is expressed as: Θ(X) = gφf (X).
+
+C. Patch Location Proposals
+Patch location proposals are used to initially select patches from sMRI scans as input to our model.
+Inspired by the patch extraction in
+In our method, we first uniformly divide the MR images into multiple cubic patches with a fixed size (e.g., W × W × W ) without overlapping in order to simplify calculations and avoid redundant information.
+However, not all the partitioned patches are related to abnormal atrophy caused by AD.
+The t-test is a method to identify the significance of the difference between the experimental group and the control group.
+In our experiment, the patch locations with more significant differences between AD group and NC group are more likely to be the brain regions with abnormal atrophy.
+Thus, we apply the t-tests to sort the informativeness in all patches.
+We calculate the average of the voxel-wise features in one patch as its patch-level feature.
+Then we make a group comparison on two groups of patch-level features at one patch location respectively from the same amount of AD patients and normal controls in training set using a t-test.
+So we can obtain a p-value at this patch location, which can represent the informativeness of this location.
+All the p-values respectively calculated on all the locations are normalized by pvalue-M IN M AX-M IN and form a p-value map covering the whole brain MR image.
+Additionally, the locations with smaller p-values are roughly considered to have higher discrimination.
+According to the pvalue map, we select a number of patches in one image at the locations with the smallest p-values to compose a bag (e.g.,
+and k is the number of selected patches) as input to our model.
+
+D. Patch-Net with Spatial Attention Block
+Fig.
+There are two tasks in Patch-Net, including 1) learning a spatial attention-aware patch-level feature representation, and 2) outputting an affect score which indicates the ability of triggering the bag label.
+Spatial attention blocks are used for feature enhancement of discriminative parts in fixed-size patches.
+Specifically, all the Patch-Nets in our DA-MIDL method have the same architecture.
+1) Patch-Net: The former part as a backbone of Patch-Net aims to learn more abstract feature representations from original patches and reduce the size of feature maps.
+It consists of four 3D convolutional layers and a max pooling in the middle for adapting the size of input patches.
+The first convolutional layer has a kernel size of 4×4×4.
+The last three convolutional layers have the same filter size of 3 × 3 × 3. The max pooling has a filter size of 2 × 2 × 2 with 2-unit-length stride for down-sampling.
+In detail, the number of channels from conv1 to conv4 is 32, 64, 128 and 128 sequentially.
+All the convolutional layers are trained in a unit stride with non-zero-padding feature maps.
+Each convolutional layer is followed by batch normalization (BN) and rectified linear unit (ReLU) activations.
+Based on the feature maps output from conv4, the Patch-Net extends to two branching modules.
+One is the spatial attention block (Section III-D2) for learning a spatial attention-aware patch-level representation (whose size is C × w × w × w, where C is the number of channels and w × w × w is the size of the feature maps).
+The other module (including a global average pooling, a fully connected layer and a sigmoid function) aims to produce an affect score which is used to identify the discriminative pathological locations.
+Instead of generating one-dimensional feature vectors in most existing instance-level transforms in MIL, the local patchlevel features output from Patch-Nets maintain the threedimensional shape for the better combination of patches and further learning of the spatial relationship among patches.
+2) Spatial Attention Block: Inspired by the spatial attention module proposed in
+The architecture of the spatial attention block is also shown in Fig.
+Two different pooling along the channel axis (i.e., channel max pooling and channel average pooling) are adopted to generate two feature maps in the name of the max features and average features respectively.
+Then the two feature maps are concatenated with a size of 2 × w × w × w as the input of the subsequent convolutional layer (stride: 1, kernel size: 3×3×3, padding: 1 for maintaining the size of feature maps).
+The output of the convolutional layer can be regarded as a spatial attention map (A spatial ∈ R w×w×w , the same size as the feature maps from conv4) where the attention score at each location is limited to the range of 0 to 1 through the sigmoid layer.
+The spatial attention map describes the spatially-varying contributions of different parts in a patch, which reveals which part to emphasize or suppress in feature representations.
+Each feature map in the output of conv4 is multiplied at element wise with the calculated attention map A spatial so that the local spatial attention-aware structural representations are generated ultimately.
+Then we explain the proposed spatial attention block with several formulas.
+We denote the output of conv4 as
+where F i ∈ R w×w×w and C is the number of channels.
+Max pooling along channel axis can be expressed as
+where F w,h,l max = max{F w,h,l
+}. Average pooling along channel axis is denoted as
+where
+. Then we concatenate the two feature maps and calculate a spatial attention map.
+where σ is sigmoid activation, W is the weight of the convolutional layer and [ ; ] is concatenation.
+The patch-level spatial-attention-aware feature representaion F is denoted as
+where ⊗ is element-wise multiplication.
+
+E. Attention MIL Pooling
+We also propose an attention MIL pooling operation for learning a patch-attention map which indicates relative contribution of each patch.
+The architecture of attention MIL pooling is also shown in Fig.
+Each patch-level structural representation F ∈ R C×w×w×w output from Patch-Net are firstly compressed by averagepooling along channel axis to F ∈ R 1×w×w×w .
+Then, the compressed patch-level feature representations are concatenated to the global feature representation as
+where C is also the number of patches and Fi represents the patch-level features of the i-th input patch.
+The global average pooling (GAP ) and global max pooling (GM P ) are constructed in parallel for generating two different feature descriptors, since it is empirically confirmed that exploiting both above feature descriptors can improve representation power of networks rather than only adopting one of them
+Then the two descriptors are respectively further learned by corresponding two 1 × 1 × 1 convolutional layers to produce two patch-attention maps.
+We respectively use W 0 , W 1 as the weights of the convolutional layers.
+Herein, the convolutional layers in processing the average feature descriptor share the parameters with the convolutional layers in processing the max feature descriptor.
+Apart from the two patch-attention maps learned from interpatch relationships, the affect score learned from each intrapatch feature is also considered to estimate the contribution of each patch.
+The affect scores from all the Patch-Nets form an affect vector a = {a 1 , a 2 , • • • , a C }, where C is the number of patches.
+The affect vector is extended to the same size as the patch-attention maps.
+Thus, the three different attention maps can be merged into a comprehensive patch-attention map A patch by element-wise summation, which is activated by sigmoid function σ afterwards.
+Finally, the previous global representations are multiplied with the patch-attention map to produce the attention-aware global feature representation F global .
+where ⊗ represents tensor multiplication.
+Different from the conventional max MIL pooling and average MIL pooling, our attention MIL pooling not only considers all patch features instead of only depending on the most probably discriminative patch, but also gives each patch a different weight instead of combining all the patches equally.
+Therefore, the attention MIL pooling can emphasize the feature representations for crucial patches to lighten the noise interference and meanwhile remain the connection between unimportant patches and key patches to avoid the loss of potential relevant features, so that it can improve the classification performance and reduce the misdiagnosis rate of special subjects.
+Specifically, the patch-attention map can be a reference to identify pathological locations.
+
+F. Attention-Aware Global Classifier
+Attention-aware global classifier (shown in Fig.
+Compared with directly using fully connected layers to explore the correlation among patch-level features, the convolutional layers show a superior high-level feature extraction capability for deep learning on inter-patch features.
+Thus, the two-layer convolutional network in the front of the global classifier are used to further learn the attention-aware feature representation from the MIL pooling for extracting more structural information among patches and squeezing the feature maps along channels.
+The two convolutional layers respectively have 128 filters and 64 filters with the same size of 2×2×2 and unit stride, followed by batch normalization (BN) and rectified linear unit (ReLU) activations.
+Then an adaptive 3D average pooling is adopted to downsample the feature maps to F ∈ R 64×1×1×1 .
+Then the feature representation is flattened as the input of subsequent two fully connected layers with 32 and 2 units to generate two scores (normalized by softmax function) representing the negative and positive probability respectively.
+Based on the different weighted feature maps output from the previous attention MIL pooling, the attention-aware global classifier is designed to further learn the integral feature representations for the whole brain structural information in MRI scans and output classification results for AD classification or MCI conversion prediction.
+
+G. Loss Function
+Since only image-level labels are given while patch-level labels are ambiguous, the image-level label is regarded as the unique guidance used in back propagation for updating our network weights W. The loss function we use in model training based on the cross entropy loss is described as :
+where N is the number of images, P (Y n |X n ; W) is the probability of correct prediction for X n .
+As an end-to-end network, the training losses are backpropagated from the global classifier to the MIL pooling and Patch-Nets for assisting in updating the parameters of the network with an optimization algorithm (e.g., Adam).
+By minimizing the loss function, our network finally learns a map: X to Y .
+
+H. Implementation
+Our proposed DA-MIDL network (whose framework is shown in Fig.
+To alleviate the overfitting issue, we use the batch normalization activation after the convolutional layers.
+We make all the Patch-Nets share the weights, which reduces the number of trainable parameters especially when a large cohort of patches are inputted.
+Besides, the input image patches to Patch-Nets are extracted from different brain locations with various anatomical structures, which effectively augments the diversity of training data.
+Two datasets (i.e., ADNI and AIBL) are used to evaluate the performance and generalizability of our DA-MIDL method.
+Specifically, we divide the samples from the ADNI dataset into training and test datasets, in which 80% samples are used for model training while the remaining 20% samples held out as a test dataset.
+A five-fold cross validation strategy is used for choosing the hyper-parameters and model training on the ADNI training dataset.
+Then the trained model with optimized hyper-parameters is tested on the held out ADNI test dataset.
+To further verify the robustness and generalizability of our model, we have also evaluated our model on an independent dataset (AIBL).
+In the training stage, we first calculate the p-value map covering the whole MR image by group comparison on the training set (i.e., 4 subsets each round in 5-fold) to initialize the input patch locations.
+Then we feed the patches extracted from the selected locations in MR images to the corresponding Patch-Nets, respectively.
+The proposed DA-MIDL is trained using the Adam optimizer for 100 epoch, which requires ∼ 5.5 hours on one NVIDIA GTX Titan X GPU, and evaluated on the remaining 1 validation subset.
+The architecture (e.g., the number of channels) of DA-MIDL and its hyper-parameters (e.g., learning rate = 0.001, batch size = 10, patch size = 25×25×25 and patch number = 60) are chosen by the mean validation performance across all folds.
+In addition, the validation performances of our method with different parameters are shown in Section II-A of the Supplementary Materials.
+In the test stage, we feed the patches extracted at the same locations used in the training stage from an unseen MR image to the trained network for AD diagnosis, which takes ∼ 0.25 seconds for one subject based on the pre-processed MR image.
+
+IV. EXPERIMENTS
+In this section, we present the experimental settings and the performance and generalizability of our DA-MIDL method on multiple AD-related diagnosis tasks compared with several state-of-the-art methods.
+
+A. Experimental Settings
+Our DA-MIDL method is verified on multiple AD-related diagnosis tasks, such as AD classification (AD vs. NC), MCI conversion prediction (pMCI vs. sMCI) and MCI classifications (pMCI vs. NC and sMCI vs. NC).
+We apply four metrics to evaluate the classification performance, including accuracy (ACC), sensitivity (SEN), specificity (SPE), and the area under receiver operating characteristic curve (AUC).
+These metrics are defined as: ACC = T P +T N T P +T N +F P +F N , SEN = T P T P +F N , SP E = T N T N +F P , where TP, TN, FP and FN are denoted as true positive, true negative, false positive and false negative value respectively.
+ACC, SEN and SPE are calculated using the default threshold of 0.5.
+AUC is calculated on all possible pairs of true positive rate (T P R = SEN ) and false positive rate (F P R = 1-SP E) by changing the thresholds performed on the prediction results from our trained DA-MIDL network.
+
+B. Competing Methods
+We compare our DA-MIDL method with three baseline methods, i.e., a conventional voxel-level method (i.e., VBM), a conventional ROI-level method (i.e., ROI), a conventional patch-level method (i.e., PLM), and two state-of-the-art patchlevel deep learning-based methods (i.e., DMIL
+1) Voxel-level Morphometry (VBM): According to the study
+Due to the high dimension of the voxel-wise features, a t-test is adopted to make a difference comparison on two groups of images at each voxel respectively from AD patients and normal controls for feature selection.
+Then based on the selected voxel-level feature vectors, a linear SVM is trained for AD-related diagnosis.
+2) ROI-level Method (ROI): Following the work
+Then we calculate the gray matter volume in each ROI as the region-level feature which is further normalized by the total intracranial volume.
+Based on the feature vectors which consist of 93 ROI features, a linear SVM is constructed for AD-related classification.
+3) Patch-level Method (PLM): Similar to
+Then, we use t-tests to select the relevant voxels with p-values smaller than 0.05.
+The selected patches (i.e., contain the relevant voxels) from tissue density maps are used to compose a patch pool as the features for Alzheimer's disease classification.
+We construct a classifier (i.e., SVM) based on the patch pool to obtain the classification results.
+
+4) Deep Multi-instance Learning (DMIL):
+In this work
+Multiple sub-CNNs with the same structure of 6 convolutional layers generate patch-level feature representations, where each sub-CNN corresponds to a patch and has different parameters.
+Then the patch-level feature representations are concatenated into a global feature representation as the input of the subsequent classifier including 5 fully connected layers and a softmax layer for AD diagnosis.
+
+5) Hierarchical Fully Convolutional Network (HFCN):
+The HFCN model
+Multi-scale feature representations are jointly learned and fused for the construction of hierarchical classifiers.
+That is, the outputs from low-level sub-networks are spatially combined to form input features for high-level sub-networks.
+Note that the conventional methods are simply implemented by linear SVMs based on selected local features of different scales (i.e., voxel-level, ROI-level and patch-level) and the patch-level deep learning-based models are trained on the patches at the same proposal locations as our DA-MIDL method instead of the landmarks with prior knowledge.
+Thus, these contrast methods may fail to achieve the first-rate results in their papers.
+All the methods are trained and evaluated on the same training set and test sets.
+
+C. Classification Performance on ADNI
+The performances on AD classification and MCI conversion prediction achieved by our DA-MIDL method and the competing methods on the test set from ADNI are shown in Table
+Also, the 5-fold validation performances of our method on the training set from ADNI are shown in Table
+As shown from Table
+For example, our DA-MIDL method obtains better results on all four metrics (i.e., ACC = 0.924, SEN = 0.910, SPE = 0.938 and AUC = 0.965) in AD classification.
+Additionally, in the MCI conversion prediction task, the ACC (0.802), SEN (0.771) and AUC (0.851) yielded by our DA-MIDL method are also much better than the results from the other five methods.
+Meanwhile, the patch-level methods (i.e., PLM, DMIL, HFCN and DA-MIDL) all outperform the voxel-level and ROI-level methods (i.e., VBM and ROI).
+The possible reason is that the patchlevel feature representation can capture more suitable local discriminative structural features.
+Furthermore, compared with the conventional patch-level method (i.e., PLM), the deep learning-based methods (i.e., DMIL, HFCN and DA-MIDL) achieve much better results for Alzheimer's disease diagnosis.
+The main reason could be that using the task-oriented features learned by deep learning methods can mitigate the heterogeneity between features and subsequent classification algorithms.
+Compared with the two state-of-the-art methods (i.e., DMIL and HFCN), our DA-MIDL method overall achieves better classification performance with the same inputs.
+The underlying reason could be that the different weighted feature representations learned by our DA-MIDL model are effective for AD detection.
+Specifically, our DA-MIDL method has a superior improvement on the sensitivity metric, which implies that our DA-MIDL method has much lower missed diagnosis rate in AD classification and MCI conversion predication.
+It indicates that our DA-MIDL method is more sensitive to the disease-related structural changing features in the brain.
+To further evaluate the performance of DA-MIDL, we perform the additional experiments on MCI classification tasks (including pMCI vs. NC and sMCI vs. NC).
+Specifically, the classification between sMCI and NC is also as challenging as MCI conversion prediction (i.e., pMCI vs. sMCI) due to the slight structural changes in the cerebrum at the early stage of AD.
+As shown in Table
+For example, in the classification task of distinguishing pMCI subjects from normal controls, our DA-MIDL method acquires better results (i.e., ACC = 0.895, SEN = 0.824, SPE = 0.925 and AUC = 0.917).
+In the challenging classification between sMCI subjects and normal controls, our DA-MIDL method also obtains quite better results, especially on ACC (0.825) and AUC (0.860).
+
+D. Generalization on AIBL
+To verify the generalizability of our method, we further use an independent AIBL dataset to evaluate our DA-MIDL method and its competing methods trained on the ADNI dataset.
+The experimental results for AD classification and MCI conversion prediction on the AIBL dataset are shown in Table
+As shown in Table
+For example, the DA-MIDL achieves the best ACC (0.902) for the AD vs. NC classification task on the AIBL dataset by using the model trained on the ADNI dataset, which is better than VBM (0.808), ROI (0.793), PLM (0.839), DMIL (0.868), and HFCN (0.889).
+For the pMCI vs. sMCI classification task, our DA-MIDL method also obtains better results (0.809, 0.706, 0.828, and 0.824 for ACC, SEN, SPE and AUC, respectively), which is superior to that of the second-best method (0.782, 0.647, 0.806, and 0.796 for ACC, SEN, SPE and AUC, respectively).
+These results suggest our DA-MIDL method can achieve a robust performance across different datasets.
+Furthermore, compared with the results reported in Table
+The performance of our DA-MIDL has a serious drop in terms of sensitivity for the pMCI vs. sMCI task.
+The possible reason is the small number of pMCI in the AIBL dataset.
+Even one misclassified sample will lead to a serious drop in terms of sensitivity.
+Nevertheless, these results overall indicate the good generalization capability of our method for AD diagnosis.
+
+E. Comparison with Previous Works
+For a broad comparison between our method and related studies on the performance of AD diagnosis, in Table
+As shown in Table
+First, our method achieves competing performance in both AD-related classification tasks.
+Second, compared with voxel-level methods
+The possible reason is that our method can deal with the spatial correlation (i.e., latent non-linear features) of local patch-level brain structures by convolutional neural networks better than the linear voxel-level feature vectors.
+Third, different from the region-level methods based on empirically predefined ROIs
+However, our method has competing performance, which implies the effectiveness of our DA-MIDL model for identifying the pathological locations.
+Finally, our method outperforms the other patch-level methods
+
+V. DISCUSSION
+In this section, we first evaluate the effectiveness of attention modules (i.e.
+spatial attention block and attention MIL pooling) and the influence of Attention MIL Pooling in our method.
+Then we present the discriminative pathological locations identified by our method and the potential of clinical translation.
+Finally, we analyze the limitations of our work and possible future research directions.
+
+A. Effectiveness of Attention Modules
+To evaluate the effectiveness of the attention modules used in our study, we further compare the proposed DA-MIDL method with its counterparts, i.e., the model with neither attention modules (N-MIDL), the model only with spatial attention blocks (S-MIDL), and the model only with attention MIL pooling (A-MIDL).
+We evaluate these four methods on two AD-related diagnosis tasks (e.g., AD vs. NC and pMCI vs. sMCI), with results reported in Table
+As shown in Table
+For instance, our DA-MIDL method with dual attention modules has higher accuracy than its counterparts (i.e., N-MIL, S-MIL and A-MIL) in AD classification and MCI conversion prediction.
+These results imply that using both attention modules could achieve better classification performance.
+The possible reason is that the attention modules are effective in enhancing the discriminative features for AD-related classification.
+
+B. Influence of Attention MIL Pooling
+We further compare the proposed attention MIL pooling with several common MIL pooling which are widely used for aggregating the instance-level representations in processing MIL problems such as average MIL pooling and max MIL pooling
+Average MIL pooling is used to calculate the average feature representation of instance-level features as the bag representation (i.e, B = 1 K K k=1 I k ).
+In contrast, max MIL pooling only focuses on discriminative instance-level features (i.e., B = max k=1,•••,K {I k }).
+We replace the attention MIL pooling in DA-MIDL with average MIL pooling and max MIL pooling as two control methods, which are implemented respectively by element-wise average and maximum operators.
+As shown in Fig.
+It implies that only focusing on one single discriminative patch (as max MIL pooling does) may not adequately represent the disease-related features for classification, since the atrophy occurs at multiple patches distributed in the brain.
+In addition, the average MIL pooling may relatively lack of identifying discriminative features with a lower sensitivity, due to aggregating all patchlevel features equally.
+In contrast, attention MIL pooling may balance the contribution of each patch for AD classification by learning a relative weight for each patch-level features with different informativeness, which could be effective for improving the classification performance.
+
+C. Discriminative Pathological Locations and the Potential of Clinical Translation
+The potential of clinical translation is of importance to the computer-aided diagnosis.
+One of the keys to the clinical diagnosis of AD is to observe the morphological changes of the brain (i.e., to find abnormally atrophy areas of the brain).
+As an auxiliary diagnostic approach, our proposed DA-MIDL method can automatically identify the possible pathological locations in the whole MR images for doctors to find the regions of interest for diagnosis easily.
+That is, our method can identify the subject-specific discriminative pathological locations, including relative discriminative patches in global images and discriminative micro-structures in local patches.
+1) Discriminative Patch Locations: The upper part of Fig.
+The discriminative patch locations are marked at the perspective direction of one view (e.g., coronal, axial or sagittal view) in 3D images.
+In total 12 most discriminative patches are marked for one subject, which cover ∼ 10.61% of non-zero voxels in the whole image.
+Also, the left and right panels respectively correspond to the probable pathological locations for AD classification and MCI conversion prediction.
+Besides, the marked patch locations in the first and second rows are respectively suggested by the affect scores and attention weights yielded from DA-MIDL.
+Compared with the discrete locations identified by affect scores, the patches identified by attention weights gather in certain regions.
+The possible reason is that the affect scores are calculated depending on isolated patches, while the attention weights take account of the correlations among patches.
+Furthermore, the probable pathological locations in AD classification and MCI conversion prediction are very similar, which is in line with the high correlation between the two classification tasks according to the progression of Alzheimer's disease.
+We further mark out three major brain regions where more patches are gathered with a visualization tool
+The marked regions are consistent with many previous works
+Specifically, the hippocampus is highly correlative with long-term memory.
+The influence of brain atrophy caused by AD on the hippocampus has been biologically verified
+The amygdala has effect on emotion functions and control of learning and memory
+In addition, the thalamus is thought to be related to cognition and information processing speed
+2) Discriminative Parts within Patches: The last two rows of Fig.
+The spatial heat maps demonstrate the discriminative micro-structures in fixed-size patches for AD diagnosis.
+We can observe that most of informative parts with red colors are located at the edges of sulcus gyrus and gray matter, which may effectively reflect the local structural changes by brain atrophy.
+
+D. Limitations and Future Work
+Although our proposed DA-MIDL method achieves good performance in AD-related diagnosis and identifying discriminative pathological locations, there are still several limitations which may influence the generalization capability of our model.
+We summarize the limitations and potential solutions as follows.
+1) The size of input patches is fixed and equivalent.
+However, the structural changes in the cerebrum caused by brain atrophy may occur across multiple regions with different scales.
+Using the fixed size could not represent various local features.
+It's more reasonable to use multi-scale patches as inputs, while it may increase the difficulty of constructing the networks.
+In addition, ROI pooling
+2) The patch location proposals based on the group comparison are isolated from the subsequent network.
+This means that our proposed method is not strictly an end-to-end analysis procedure, which may affect the optimal performance of our model.
+Therefore, it is important to combine the generator of patch location proposals and the network into a unified framework.
+In the future works, we can embed a weakly-supervised network for detecting informative landmarks in a whole brain and based on the detected patches at the discriminative landmarks we construct our DA-MIDL model for AD-related diagnosis.
+The parameters in the detection network and DA-MIDL model can be optimized jointly as an end-to-end model.
+
+VI. CONCLUSION
+In this study, we propose a dual attention multi-instance deep learning network (DA-MIDL) for computer-aided AD diagnosis, which includes three major components: 1) Patch-Nets with spatial attention blocks for extracting discriminative features from local patches, 2) an attention MIL pooling operation for balancing the relative contribution of each patch, and 3) an attention-aware global classifier for making the ADrelated diagnosis decisions based on the combined feature representation for the whole brain structure.
+Our proposed DA-MIDL method is evaluated on 1689 subjects from two independent datasets (i.e., ADNI and AIBL) in multiple ADrelated diagnosis tasks.
+Experimental results demonstrate that our method can not only identify discriminative pathological locations in sMRI scans, but also achieve better diagnosis performance than several state-of-the-art methods.
+
+
+
+Fig. 1 .
+Fig. 1.
+Illustration of our dual attention multi-instance deep learning network (DA-MIDL), which consists of Patch-Nets with Spatial Attention Blocks, Attention MIL Pooling and Attention-Aware Global Classifier.
+
+
+
+Fig. 2 .
+Fig. 2. AD classification performance of our DA-MIDL model with different MIL pooling including Max-MIL-Pooling, Average-MIL-Pooling and Attention-MIL-Pooling on the ADNI test set.
+
+
+
+Fig. 3 .
+Fig. 3. Discriminative pathological locations identified by DA-MIDL on AD classification (i.e., the left panel) and MCI conversion prediction (i.e., the right panel).
+The first and second rows show the informative patch locations respectively suggested by affect scores and attention weights.
+The rightmost panel shows the marked brain regions where more patches are gathered.
+The last two rows show the discriminative micro structures in several fixed-size informative patches identified by spatial attention blocks.
+
+
+
+TABLE I DEMOGRAPHIC
+
+
+
+TABLE II RESULTS
+FOR AD CLASSIFICATION (AD VS.
+NC) AND MCI CONVERSION PREDICTION (PMCI VS.
+SMCI) ON THE ADNI TEST SET.
+
+
+
+TABLE III RESULTS
+FOR PMCI VS.
+NC AND SMCI VS.
+NC CLASSIFICATIONS ON THE ADNI TEST SET.
+
+
+
+TABLE VI REFERENTIAL
+COMPARISON ON SMRI-BASED STUDIES FOR AD CLASSIFICATION AND MCI CONVERSION PREDICTION.

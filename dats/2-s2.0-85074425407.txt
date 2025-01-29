@@ -1,0 +1,253 @@
+Inferring the Molecular Mechanisms of Noncoding Alzheimer’s Disease-Associated Genetic Variants
+More than 20 genetic variants associated with late-onset Alzheimer's disease (LOAD) have been identified by genome-wide association studies (GWAS).
+However, these variants are tag markers for nearby genetic variants in linkage disequilibrium (LD) and may not be themselves functional.
+Moreover, most of the significant variants identified by the International Genomics of Alzheimer's Project (IGAP) meta-analysis are in non-protein-coding regions, implicating gene regulatory mechanisms as underlying the association signal.
+There are several previously identified coding variant associations with AD, notably the strong APOE signal, but all the novel signals identified in the IGAP GWAS were noncoding.
+We set out to characterize the causal variants, regulatory mechanisms, tissue contexts, and target genes underlying noncoding LOAD-associated genetic signals.
+To do so, we applied our INFERNO method to the IGAP GWAS data, annotating all LD-expanded potentially causal variants at each locus with tissue-specific regulatory activity.
+Bayesian co-localization analysis of GWAS summary statistics and eQTL data was performed to identify tissue-specific target genes.
+INFERNO identified enhancer dysregulation in all 19 tag regions analyzed, significant enrichments of enhancer overlaps in the immune-related blood category, and co-localized eQTL signals overlapping enhancers from the matching tissue class in ten regions (ABCA7, BIN1, CASS4, CD2AP, CD33, CELF1, CLU, EPHA1, FERMT2, ZCWPW1).
+In several cases, we identified dysregulation of long noncoding RNA (lncRNA) transcripts and applied the lncRNA
+
+Introduction
+Alzheimer's disease (AD) is the most common cause of dementia in the United States
+Late-onset Alzheimer's disease (LOAD), defined by age-at-onset after 60 years, is the most common form of AD.
+Heritability estimates for LOAD stand at 60-80%, implicating genetics as an important factor in disease development
+While the APOE locus shows the strongest association
+Recent studies have implicated a number of different biological processes in LOAD susceptibility such as microglial-mediated innate immunity
+The majority of top GWAS variants reside in noncoding regions of the genome outside of protein-coding sequences
+Any variant in linkage disequilibrium (LD) with a top GWAS variant could be responsible for the association signal, and GWAS data alone lacks the granularity to identify these causal variants.
+In addition, noncoding variants presumably affect gene regulatory elements, and the affected target genes are often not the closest ones
+Thus, functional annotation is needed to reveal the causal variants, regulatory mechanisms, tissue context, and target genes underlying GWAS signals.
+Enhancers, which modulate the expression of a target gene independently of orientation and distance, are one of the most common regulatory elements in the noncoding genome
+Several consortia have generated large-scale functional genomics datasets to characterize regulatory activity in the noncoding genome across different tissue contexts
+We hypothesize that noncoding LOAD GWAS signals modulate disease risk by perturbing genomic elements that regulate genes involved in pathogenesis.
+To explore this hypothesis, we applied our bioinformatics pipeline, INFERNO (INFERring the molecular mechanisms of NOncoding genetic variants)
+INFERNO characterizes noncoding GWAS signals by integrating information across diverse functional genomics data sources to identify causal noncoding variants and the regulatory mechanisms, tissue contexts, and target genes they affect (Figure
+INFERNO identified several putatively causal genetic variants in ten GWAS regions and uncovered strong functional evidence of their effects on immune-and brain-related regulatory mechanisms.
+Using luciferase reporter assays, we validated the enhancer activity and allelic differences of causal variants in three regions prioritized by relevant tissue context, strength of annotation support, and prior literature.
+
+Materials and Methods
+
+INFERNO analysis of IGAP top hits
+INFERNO (details of the algorithm and data sources are described in
+INFERNO was run using P value expansion within one order of magnitude and 500 kilobases (kb) of each tagging variant, and the European population from the 1,000 Genomes Project
+All rsID annotations are from dbSNP build 137.
+For both pruning and expansion, a threshold of r 2 >= 0.7 was used to define LD blocks.
+All downstream analyses including lncRNA correlation and pathway analysis were performed as defined in
+WebGestalt was used for all pathway analyses
+Supplementary Note 1 highlights a few possible ways to prioritize the causal variants for further mechanistic studies.
+
+Luciferase validation
+From patient DNA with each allele of interest, insert sequences including the enhancers (800-1,739 base pairs (bp) in length, Supplementary Table
+The HindIII high fidelity enzyme (New England Biolabs) was used to digest the PCR product along with the vector plasmid containing a minimal promoter and the luciferase reporter gene, pGL4.23[luc2/minP]
+(Promega).
+Enhancer constructs and plasmids were then ligated using the T4 DNA Ligase (New England Biolabs).
+These ligated vectors were used to transform One Shot TOP10 Competent cells (Invitrogen), and colonies containing the full enhancer sequences along with either allele of the prioritized variants were identified.
+These clones were amplified using the EndoFree Plasmid Maxi Kit (Qiagen) to generate high levels of DNA suitable for mammalian cell line transfection.
+Two different vectors were generated this way for each prioritized variant: one with the minor allele of the prioritized variant and one with the major allele.
+Additionally, we generated vectors containing a minimal promoter with no enhancer inserted and another negative control vector with a minimal promoter and a ~1kb random genomic heterochromatin insert.
+300ng of each vector was mixed with one-tenth the amount of a Renilla expressing vector, allowing us to normalize Luciferase expression for transfection efficiency.
+This mixture was transfected into separate aliquots of K562 (ATCC) cells using the Lonza Nucleofector Device with Kit V. A mock sample was run through the same transfection procedure with no DNA to account for background luminescence.
+The Promega Dual-Glo system was used to measure Luciferase and Renilla expression after 24 hours of incubation for the cells to express the luciferase vector.
+Background-subtracted Luciferase luminescence levels were divided by the corresponding background-subtracted Renilla luminescence, and all ratios were normalized to the average of the minimal promoter condition for quantitative analysis.
+A total of n = 5 biological replicate experiments were carried out, each including 4 technical replicates per condition.
+Statistical analysis was performed using a linear mixed model treating experimental days as random effects and alleles as fixed effect using the lmerTest package
+P values for the comparisons between conditions were obtained by analysis of variance (ANOVA) using Satterthwaite's approximation for degrees of freedom.
+
+eGWAS data processing and sampling analysis
+For the Zou et al 2012 eGWAS, eQTL data tables using HapMap2-imputed genotypes were downloaded from the National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site at the University of Pennsylvania
+Custom awk scripts were used to investigate INFERNO-prioritized variants, matching by rsID and/or by hg18 genome position.
+
+Results
+
+Expansion and annotation of IGAP loci
+To identify genetic variants with regulatory potential for LOAD, we used INFERNO to analyze the 19 genome-wide significant loci from Phase I of IGAP (Figure
+The region tagged by each top variant is referred to by the name of the nearest gene by convention, although these genes are not necessarily causal for the association signals.
+For each top variant, we identified all variants within 500kb that had a P value within an order of magnitude and the same minor allele effect direction (i.e.
+variants whose minor alleles are associated with increased AD risk if the top variant is a risk variant, or decreased AD risk if the top variant is protective), identifying a total of 496 variants (Table
+These variants come from various haplotypes that may underlie the observed association signal at each locus, so to define a comprehensive set of potentially causal variants, we pruned the p-value expanded sets by LD into 52 independent variants tagging each potentially causal haplotype.
+Then, we re-expanded these by LD, yielding 1,044 unique potentially causal variants (Table
+These variants were primarily in introns and intergenic regions, with only 17 in mRNA exons (Figure
+Next, we sought to compute the number of overlaps with different functional genomics data, before statistically quantifying the enrichments of variants overlapping FANTOM5 enhancers, Roadmap enhancers, or both within INFERNO tissue categories (Figure
+We overlapped these variants with enhancers defined by bidirectional enhancer RNA (eRNA) transcription in 112 tissues and cell types from the FANTOM5 consortium
+This identified 39 variants overlapping FANTOM5 enhancers in 9 tag regions (Table
+The FANTOM5 data source with the most enhancer-overlapping variants was monocyte cells, with 25 overlapping variants, whereas the brain harbored only 6 variants (Supplementary Figure
+For the Roadmap data, variants were overlapped with a total of 15 ChromHMM states including 3 types of enhancer states (enhancers, genic enhancers, and bivalent enhancers).
+659 variants representing all 19 tag regions were found to overlap a ChromHMM-defined enhancer state in at least one tissue (Table
+Like the FANTOM5 results, primary monocytes from peripheral blood had the most overlapping variants (149 unique variants, Supplementary Figure
+We also used INFERNO to identify variants overlapping tissue-specific small noncoding RNA (sncRNA) loci from our DASHR database
+The DASHR overlap analysis found only one sncRNA overlap, where the variant rs4543938 in the CELF1 region overlapped the piRNA piR-56133.
+Analysis of miRNA seed disruption found that 46 variants across 5 tag regions (CELF1, FERMT2, INPP5D, MS4A6A, and ZCWPW1) overlapped binding sites for 40 miRNAs in 11 target genes (Supplementary Table
+We also used INFERNO to find variants affecting transcription factor binding sites (TFBSs) as identified by HOMER
+This identified 451 variants representing all 19 tag regions that either increased or decreased TFBS strength (measured by the change in the positional weight matrix, ΔPWM) for 191 unique transcription factors (Supplementary Figure
+The majority of these overlaps had negative ΔPWM values, reflecting TFBSs disruptions.
+
+Integrative analysis of enhancer enrichment patterns
+Using INFERNO's tissue categorization approach
+All of these regions harbored at least one variant with concordant support in the blood category, supporting the hypothesis of immune mechanisms underlying LOAD genetic signals
+The CELF1 region was the only one to harbor variants with concordant overlaps of brain enhancers, supporting the approach of performing functional annotation in all available tissues rather than focusing on a single predetermined tissue context.
+However, we point out that this region contains concordant enhancer overlaps in 9 tissue contexts (Figure
+Many variants overlapped FANTOM5 enhancers in the blood category, which included all the immune-related cell lines such as monocytes and macrophages in addition to whole blood (Supplementary Figure
+All 22 of the tissue categories sampled by the Roadmap Epigenomics consortium contained ChromHMM-defined enhancer-related states that harbored at least one variant in the expanded set (Supplementary Figure
+Again, many variants overlapped Roadmap enhancers in the blood category.
+INFERNO includes a method to statistically quantify the enrichments of variants overlapping FANTOM5 enhancers, Roadmap enhancers, or both in each tissue category.
+This revealed significant enrichments of variants overlapping both FANTOM5 and concordant enhancers in the blood category and a significant enrichment of Roadmap enhancers in the brain category (Figure
+Some of these tissue categories had even stronger enrichments than brain or blood, supporting our hypothesis generating approach of performing functional annotation and enrichment analysis in a wide range of tissue contexts.
+One possible scenario explaining these results is that AD-associated genetic variation could also affect regulatory mechanisms that are active in earlier life and in non-brain regions.
+
+Co-localization analysis with GTEx eQTLs
+To identify target genes affected by dysregulated enhancers, INFERNO uses expression quantitative trait loci (eQTLs) -variants whose alleles are correlated with differing levels of a target gene -from the Genotype-Tissue Expression (GTEx) project
+Of the 1,044 potentially causal variants, 750 were significant eQTLs in at least one tissue (corrected q-value ≤ 0.05 on empirical p-values from Matrix eQTL
+However, due to dense LD structures in many of our significant regions, this direct overlap approach may yield false positive variants in LD with the truly causal eQTL variant.
+To address this issue, INFERNO incorporates a Bayesian statistical model (COLOC
+The COLOC method also computes the probability of any individual variant being the shared causal variant, quantified as their Approximate Bayes Factors (ABFs).
+We applied COLOC to compare GWAS signals across all 19 tag regions with tissue-specific eQTL signals for 884 unique genes in 44 tissues (median number of genes within each region = 34) for 25,435 tests of GWAS -tissue-specific eQTL co-localization (Supplementary Figure
+We identified 153 co-localized GWAS/eQTL signals (P(H 4 ) >= 0.5 representing strong support for a shared causal signal
+These co-localization signals were found in 16 tissue categories, with the majority of signals in the brain category.
+For 32 of these 153 GWAS/eQTL signals, COLOC identified individual variants with ABF >= 0.5, but in the majority of cases COLOC was not able to prioritize a single causal variant.
+This is likely caused by dense LD structures where GWAS and eQTL signals are dispersed across all variants in the LD block (Supplementary Figure
+Thus, for each co-localized GWAS/eQTL signal we sampled the highest ABF variants until their sum was 0.5 or greater (Supplementary Figure
+Across the 153 co-localized signals, this yielded 1,291 unique variant-tissue-target gene relationships accounted for by 286 unique variants, 182 of which were in the LD-expanded set.
+
+Comparison of enhancer overlaps with eQTL co-localization signals
+We next used the INFERNO tissue categorizations to stratify variants in the ABF-expanded sets by whether they affected a TFBS, overlapped any enhancer, and whether the enhancer came from the concordant tissue category matching the eQTL (Figure
+To identify the variants with the strongest INFERNO support, we began by filtering the ABF-expanded variant sets to include only those variants overlapping concordant enhancers, and took two complementary approaches for further variant prioritization: requiring that the variant also overlapped a TFBS (TFBS prioritization) and/or requiring that the variant was the only one in the ABF-expanded set (e.g.
+ABF ≥ 0.5; ABF prioritization).
+TFBS prioritization identified 20 unique variants involved in 43 unique variant-tissue-gene sets across 8 tag regions (Figure
+ABF prioritization identified 6 unique variants involved in 14 variant-tissue-gene sets across 5 tag regions (Figure
+Together, these two approaches identified potentially causal variants in 10 tag regions (Table
+We further prioritized four of these signals for experimental validation based on prior literature, strength of annotation support, and relevant tissue contexts: EPHA1, CD33, BIN1, and CD2AP.
+
+EPHA1 region functional variant upregulates lncRNA affecting the JAK2 signaling axis
+The strongest signal by both annotation and ABF evidence was in the EPHA1 region, where the variant rs11765305:C>G (chr7.hg19:g.143111112C>G,
+R 2 = 1 with tag variant rs11771145) had an ABF of 0.999 underlying an eQTL for the EPHA1-AS1 antisense long non-coding RNA (lncRNA) in whole blood (P(H 4 ) = 0.516).
+This variant also colocalized with whole blood eQTLs for the TAS2R60 taste receptor gene (P(H 4 ) = 0.516, ABF = 1.00) and the TAS2R62P taste receptor gene (P(H 4 ) = 0.537, ABF = 0.714) (Supplementary Table
+rs11765305 overlapped FANTOM5 and Roadmap enhancers in the blood category, including white blood cells in the myeloid lineage such as monocytes and macrophages (Figure
+This increase in TF binding is consistent with the positive effect of the rs11765305 minor allele on EPHA1-AS1 expression observed in GTEx (β = 1.25,
+where a β greater than 1 reflects an increase in gene expression).
+To compare enhancer activity between the major and minor alleles of rs11765305, we performed luciferase assays in K562 leukemia cells, which are from the same myeloid cell lineage as monocytes.
+Although the major allele had no significant luciferase expression compared to controls, the minor allele had significantly higher expression compared to both controls and the major allele (Figure
+These results confirm the predicted monocyte enhancer activity in this region and are consistent with the mechanism that the minor allele of rs11765305 creates a stronger CEBPB TFBS, increasing the activity of an enhancer regulating EPHA1-AS1, TAS2R60, and TAS2R62P.
+We next set out to computationally identify the downstream effects of EPHA1-AS1, as lncRNAs can modulate gene expression through recruitment of regulatory proteins or binding to target transcripts
+INFERNO uses GTEx RNA-seq data to identify genes whose expression is correlated with that of a lncRNA using a threshold of 0.5 on both Pearson and Spearman correlations across 44 tissues
+Note that correlation between the expression of genes does not imply causal regulation.
+We introduced this computational approach as part of INFERNO for identifying gene hubs for functional enrichment analyses.
+Experimental approaches (such as knocking down the lncRNAs in the relevant tissues/cell types) could provide mechanistic validation to identify the downstream effects of the identified lncRNAs in followup studies.
+For EPHA1-AS1, this correlation approach yielded one gene, JAK2 (Pearson r 2 = 0.517, Spearman r 2 = 0.582) (Figure
+JAK2 is part of the JAK2/STAT3 signaling axis, whose disturbance by amyloid-β leads to memory impairment
+The tag variant in this region is protective and rs11765305 has the same effect direction, so INFERNO prioritized a mechanism whereby the protective minor allele of rs11765305 increases EPHA1-AS1 expression which in turn increases the activity of the JAK2/STAT3 signaling axis, implying that JAK2/STAT3 activation may protect against LOAD.
+To investigate these signals in an eQTL dataset specific to AD, we analyzed the Mayo eGWAS dataset comparing AD patients (n=202) to subjects with non-AD neurodegenerative diseases (n=197)
+This study used expression microarrays and genotyping to perform eQTL mapping in cerebellum and temporal cortex on AD cases, non-AD cases, and the combined patient population.
+In this study, rs11765305 was not genotyped or imputed, so we investigated the tag variant rs11771145 as a proxy which is in perfect LD.
+This variant had two significant eQTL signals in the cerebellum combined condition (q-value = 0.02254) and the temporal cortex non-AD patient condition (q-value = 0.02215), both for the gene ZYX.
+One limitation of the expression microarray approach is that the expression of long noncoding RNAs such as EPHA1-AS1 were not quantified, so this dataset cannot recapitulate these INFERNO results.
+However, ZYX was the most strongly correlated gene with EPHA1-AS1 by Spearman correlation (r = 0.6095), suggesting that these eQTL signals may reflect other downstream effects of EPHA1-AS1.
+ZYX encodes the zyxin protein which is part of the actin cytoskeleton, can be induced by amyloid-β, and may interact with SIRT1, an important protein in the aging process
+The eGWAS data could not recapitulate the JAK2 signal because it is on a different chromosome and the eGWAS analysis only tested cis-eQTLs within 200kb of any gene of interest.
+
+Functional validation of blood regulation of CD33
+In the CD33 region, COLOC identified co-localized GWAS/eQTLs for CD33 itself in whole blood (P(H 4 ) = 0.955) and for AC018755.1 (P(H 4 ) = 0.683) in brain hypothalamus.
+In both cases, rs12459419:C>T (chr19.hg19:g.51728477C>T) was prioritized by concordant enhancer and motif overlap.
+However, the tag variant rs3865444:C>A (chr19.hg19:g.51727962C>A)
+had a higher ABF in both cases (0.491 and 0.489, respectively) and is in perfect LD (R 2 = 1) with rs12459419.
+rs3865444 overlaps Roadmap enhancers in 6 cell lines including primary monocytes and primary T regulatory cells from peripheral blood.
+In contrast, rs12459419 only overlapped Roadmap enhancers from 3 cell lines including primary T regulatory cells from peripheral blood and fetal brain but lacked the monocyte enhancer overlap (Supplementary Table
+Additionally, rs3865444 has been extensively studied, with previous work showing that the protective minor allele (A) decreases the levels of CD33 protein
+Based on the prior literature, the strong ABF signal, perfect LD with rs12459419, and the monocyte enhancer overlap, we analyzed rs3865444 in our luciferase assays.
+This found significant increases for the major allele and significant decreases for the minor allele relative to the controls, as well as a striking decrease in enhancer activity of the minor allele relative to the major allele (Figure
+This was consistent with prior reports and the GTEx eQTL direction for this variant (β = 0.352).
+We also investigated rs3865444 in the eGWAS dataset but found no significant eQTL signals for that variant or any of the 5 other variants in the LD-expanded set in the CD33 region.
+This is consistent with the putative monocyte mechanism affected in this region, which we would not expect to detect in bulk brain tissue samples as they only include a small fraction of monocytes
+
+Functional validation of lymphocyte regulation of BIN1
+In the BIN1 region, INFERNO identified a co-localized GWAS/eQTL for BIN1 in EBVtransformed lymphocytes (P(H 4 ) = 0.652) with the variant rs4663105:A>C (chr2.hg19:g.127891427A>C)
+prioritized by ABF (ABF = 0.777).
+This variant overlaps Roadmap enhancers in primary monocyte cells and placenta but does not overlap any TFBSs and is in strong LD with the tag variant rs6733839 (R 2 = 0.8968).
+rs4663105 has been previously associated with LOAD risk, and an insertion in that region was associated with increased BIN1 expression
+This previous study found no difference in luciferase activity between the two alleles of rs4663105 in SKNSH-SY5Y and HEK cells.
+However, their construct only spanned 60bp around the variant, whereas the monocyte enhancer is 800bp.
+Therefore, we cloned the full Roadmap enhancer region (Supplementary Table
+This found significantly increased enhancer activity for both alleles of rs4663105 relative to the control vectors, and a slight but significant decrease of the minor allele relative to the major allele (p = 0.0328, Figure
+We investigated these signals in the Mayo eGWAS datasets, but none of the variants in the BIN1 region were genotyped or imputed in any samples.
+
+CD2AP region variants modulate lncRNA with widespread brain regulatory effects
+Finally, in the CD2AP region, INFERNO prioritized several co-localized signals including RP11-385F7.1 in brain cerebellar hemisphere and cerebellum (P(H 4 ) = 0.904 and 0.923, respectively) and an eQTL for CD2AP in fibroblasts (P(H 4 ) = 0.801).
+TFBS prioritization implicated rs9367279:A>G (chr6.hg19:g.47448336A>G),
+which overlaps Roadmap enhancers in 33 tissues/cell lines from 13 tissue categories and disrupts a CArG-box binding site (ΔPWM = -1.38)
+for the MADS-box family of transcription factors, which includes the enhancer-related factors SRF and MEF2A
+CD2AP encodes a scaffolding molecule that regulates the actin cytoskeleton and is involved in endocytic processes
+We performed luciferase assays, but both alleles of rs9367279 had significantly decreased enhancer activity relative to the controls, and there was no strong difference between the two alleles, suggesting that this enhancer may not be active in K562 cells (Figure
+RP11-385F7.1 was strongly correlated with 64 transcripts (Figure
+The gene with the strongest Pearson correlation was PPP1R16A (Pearson r 2 = 0.641, Spearman r 2 = 0.593) and the gene with the strongest Spearman correlation was COQ4 (Pearson r 2 = 0.608, Spearman r 2 = 0.660).
+PPP1R16A, also known as MYPT3, directs the protein phosphatase PP1c to its targets and is involved in actin binding and G-protein coupled receptor pathways
+COQ4 is part of the coenzyme Q biosynthesis pathway, an antioxidant that may modify LOAD-associated oxidative damage
+The eQTL effects of rs9367279 on RP11-385F7.1 are weak and inconsistent between the two brain regions (β = 0.969 in cerebellar hemisphere and 1.194 in cerebellum), suggesting that rs9367279 contributes to fine-scale regulation of RP11-385F7.1 in brain, although it has a relatively strong repressive effect on CD2AP in fibroblasts (β = 0.505).
+We also investigated this variant in the Mayo eGWAS data, but it was only tested for association with CD2AP and not any lncRNAs, and it was not a significant eQTL for CD2AP in any condition.
+
+Discussion
+Our application of INFERNO to LOAD GWAS data prioritized perturbations of tissuespecific regulatory mechanisms in 10 IGAP tag regions (Table
+In the EPHA1, CD2AP, CELF1, and CASS4 regions, the target genes of the co-localized GWAS/eQTL signals included lncRNAs, so identifying affected enhancers and target genes may be only the first step towards understanding genetic effects on regulatory networks contributing to disease pathogenesis.
+The tissue classification approach implemented in INFERNO also enabled the unbiased investigation of the relevant tissue contexts affected by each genetic signal.
+Limiting our analysis to only brain datasets would have missed the blood-category signals that we detected.
+These immunity-related signals are in line with other recent work highlighting neuroinflammation as a crucial component of LOAD pathogenesis and etiology
+Our validation experiments used K562 as an immunerelated cell line to test that the enhancers predicted by FANTOM5 and Roadmap were indeed active and that there was differential activity between the alleles of our prioritized variants.
+This cell line does not model specific aspects of AD pathology, but these experiments were aimed at validating the enhancer mechanisms prioritized by INFERNO, and followup studies will elucidate the effects of these regulatory mechanisms in ADspecific contexts.
+In our primary INFERNO analysis, we considered GTEx eQTLs that come from healthy, non-diseased tissues, rather than eQTLs from AD patients.
+We believe that this is a desirable approach for our goal of characterizing the molecular mechanisms underlying AD GWAS signals, which measure genetic susceptibility conferred by inherited (i.e.
+germline) genetic variation.
+These susceptibility signals reflect the life-time risk of developing AD, which is present from conception and conferred well before the neurodegenerative disease process begins.
+The molecular mechanisms underlying these associations might exert their effects beginning in the normal state and continuing throughout the life-time.
+On the other hand, AD eQTL data measures genetic variants associated with AD-associated differential gene expression which could be either up-or down-stream of the actual pathologic processes and susceptibility mechanisms.
+Also, the onset of AD results in neurodegeneration and the loss of specific cell types which may drive expression changes, but bulk tissue datasets may not account for these proportional changes.
+Thus, we used GTEx data to generate hypotheses about regulatory mechanisms underlying genetic susceptibility and then incorporated the eGWAS dataset to explore if these mechanisms were recapitulated in the disease state.
+Consistent with the majority of our signals reflecting immune-related processes and the lack of lncRNA profiling by microarray, the majority of our signals were not detected in the eGWAS dataset, supporting our approach of using the GTEx data to generate hypotheses.
+INFERNO did not identify regulatory mechanisms in all 19 of the IGAP regions, and this may be driven by several aspects of this analysis.
+We are limited by the sample sizes and sets of tissues that were assayed by the FANTOM5, Roadmap, and GTEx consortia and the number of datasets that went into each tissue category, with some categories being much more sparsely sampled than others
+Another issue with this bulk tissue-based approach is that tissue samples are a mixture of a large variety of different cell types such as neurons, astrocytes, and microglia in brain
+Emerging single cell technologies aimed at analyzing homogeneous cell populations will help to address this gap, but we are not currently aware of any data sources measuring enhancer or eQTL signals in single brain cells.
+Our application of INFERNO to IGAP GWAS data for late-onset Alzheimer's Disease yielded insights into the regulatory mechanisms affected by noncoding LOAD-associated genetic variants.
+Experimental validation supported our computationally predicted regulatory effects, suggesting that our approach is able to prioritize truly causal regulatory mechanisms at GWAS loci for post-GWAS experiments.
+Incorporating more functional genomics data as it is generated in concert with more refined validation experiments using a broader range of cell types and molecular techniques will yield insights into a range of phenotypes.
+
+
+
+Figure 1 :
+Figure 1: LD expansion and functional annotation of top IGAP hits.
+a) Flowchart of analysis approach.
+b) Genomic localization of all variants in P value-and LD-expanded set.
+c) Genomic partition proportions split by tag regions.
+
+
+
+Figure 2 :
+Figure 2: Integrative analysis of annotations for IGAP top hits.
+a) Integrative tissue context analysis of enhancer overlaps from FANTOM5 and Roadmap datasets.
+b) Results of LD-collapsed bootstrapping for enhancer annotation overlap enrichments c) Distributions of variant probability of underlying highly colocalized signals stratified by annotation overlap.
+d) Barplots of numbers of variant -eQTL comparisons across tag regions stratified by motif overlap, enhancer support, and concordant support in a relevant tissue class.
+
+
+
+Figure 3 :
+Figure 3: Functional variant in EPHA1 region upregulates EPHA1-AS1 lncRNA which regulates the JAK2 signaling axis.
+a) Genome browser view of the region around rs11765305 (in red box) including relevant FANTOM5 and Roadmap enhancer annotations.
+b) Luciferase assay results for rs11765305 in K562 cells.
+Luciferase expression is normalized against Renilla expression in the same well.
+Negative control is randomly sampled heterochromatin insert.
+A linear mixed model was applied to 5 biological replicates per condition, each with 4 technical replicates per experimental day.
+c) Scatterplot of Pearson and Spearman correlations between expression of EPHA1-AS1 and all other genes in the genome across all GTEx tissues.
+
+
+
+Figure 4 :
+Figure 4: Luciferase and lncRNA analysis in the BIN1, CD33, and CD2AP regions.
+a) Luciferase validation in the CD33 region.
+b) Luciferase validation in the BIN1 region.
+c) Luciferase validation in the CD2AP region.
+For all luciferase analyses, a linear mixed model was applied to 5 biological replicates per condition, each with 4 technical replicates per experimental day.
+d) Scatterplot of Pearson and Spearman correlations between expression of RP11-385F7.1 (CD2AP region) and all other genes in the genome across all GTEx tissues.
+
+
+
+Table 1 :
+IGAP top hits expansion counts and annotation overlaps

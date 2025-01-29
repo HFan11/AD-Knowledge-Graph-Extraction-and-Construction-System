@@ -1,0 +1,223 @@
+A Deep Learning Model to Predict a Diagnosis of Alzheimer Disease by Using <sup>18</sup>F-FDG PET of the Brain
+lthough Alzheimer disease (AD) remains a diagnosis based on clinical grounds (1,2), advancements in diagnostic technology such as PET with fluorine 18 ( 18 F) fluorodeoxyglucose (FDG) allow earlier diagnosis and treatments, when they may be most effective (3).
+There is a continuous spectrum from normal cognition to AD, including mild cognitive impairment (MCI) as a prodromal stage of AD (4,5).
+Classically, patients with AD tend to show hypometabolism on 18 F-FDG PET scans in regions of the posterior cingulate, parietotemporal cortices, and frontal lobes, while patients with MCI often show posterior cingulate and parietotemporal hypometabolism with variable frontal lobe involvement.
+However, there is substantial overlap of findings as both entities lie along a continuum (5).
+In current practice, 18 F-FDG PET requires interpretation by specialists in nuclear medicine and neuroimaging to make pattern recognition decisions mostly using qualitative readings.
+This is particularly challenging in the setting of a disease that involves a wide continuous spectrum, from normal cognition to MCI to AD, with only a fraction of patients with MCI eventually advancing to AD.
+At present, there is no definite marker to determine this eventual progress.
+There is wide recognition that deep learning may assist in addressing the increasing complexity and volume of imaging data, as well as the varying expertise of trained imaging
+physicians
+There has been substantial effort to apply deep learning in many diseases and imaging types such as breast cancer detection with mammography, pulmonary nodule detection with CT, and hip osteoarthritis classification with radiography, though integration into clinical flow is yet to be developed and validated
+The application of machine learning technology to complex patterns of findings, such as those found at functional PET imaging of the brain, is only beginning to be explored.
+In this study, we aimed to evaluate whether a deep learning algorithm could be trained to predict the final clinical diagnoses in patients who underwent 18 F-FDG PET of the brain and, once trained, how the deep learning algorithm compares with the current standard clinical reading methods in differentiation of patients with final diagnoses of AD, MCI, or no evidence of dementia.
+We hypothesized that the deep learning algorithm could detect features or patterns that are not evident on standard clinical review of images and thereby improve the final diagnostic classification of individuals.
+
+Materials and Methods
+
+Data Acquisition
+This institutional review board approved, written informed consent waived, and Health Insurance Portability and Accountability Act compliant study involved retrospective analysis of prospectively collected 2109 18 F-FDG PET imaging studies from 1002 patients, most patients with multiple scans, with dates ranging from May 2005 to January 2017, across Alzheimer's Disease Neuroimaging Initiative (ADNI)-1, ADNI-2, and ADNI-GO (Grand Opportunities) studies (Appendix E1
+Data regarding the patient's final diagnoses were downloaded from the ADNI web portal (adni.loni.ucla.edu)
+Detailed 18 F-FDG PET imaging protocols can be found at
+Ninety percent (1921 imaging studies, 899 patients) of this data set was used for model training and internal validation.
+The re-maining 10% (188 imaging studies, 103 patients) was used for model testing, which we call 10% ADNI hold-out test set, serving as the internal test set from the perspective of the algorithm.
+An additional test set was obtained from the author's own institution, which we call independent test set, serving as the external test set from the perspective of the algorithm.
+The independent test set (Fig
+Approximately 45 minutes after intravenous administration of 8-10 mCi 18 F-FDG, following standard clinical guidelines, images were acquired as dedicated PET emission-only images (ECAT HR+; Siemens, Knoxville, Tenn) or as part of PET-CT (Discovery VCT, General Electric, Wakesha, Wis; or Biograph 16, Siemens).
+Only PET emission images were utilized in the test set to remain consistent with the training set.
+Necropsy data were used as the final diagnosis in one patient for which they were available.
+None of the patients had a diagnosis of a dementia of the non-Alzheimer type.
+For both data sets, final clinical diagnosis after all follow-up examinations was used as the ground truth label.
+
+Data Preprocessing
+The imaging data were preprocessed by using a grid method (Fig
+Images were resampled to 2-mm isotropic voxels and cropped to a 100 3 100 3 90-pixel grid resulting in a 200 3 200 3 180-mm 3 volume.
+An Otsu threshold was utilized to select brain voxels.
+Connected component analysis was used to derive the relevant imaging volume by selecting the cranialmost and caudal-most sections representing more than 100 3 100 mm 2 of brain parenchyma.
+The total volume was then divided into 16 evenly spaced sections, rounded to the nearest axial location, and distributed into a 4 3 4 grid with the cranial-most section in the top left and caudal-most section in the bottom right.
+All preprocessing steps were conducted in Python (Python 2.7; Python Software Foundation, Wilmington, Del; 2009) using package SciPy (
+
+Model Training
+After preprocessing, the images were 512 3 512 matrix size and were loaded onto a machine with Linux operating system (Ubuntu 14.04; Canonical, London, England).
+The machine has six-core Intel i7 5930k 3.5-gHz processor (Intel, Santa Clara, Calif ), 64 GB of DDR4 SDRAM, and a NVIDIA Pascal Titan X graphical processing unit (Nvidia Corporation, Santa Clara, Calif ) with CUDA 8.0 and CuDNN 6.0 (Nvidia).
+Convolutional neural network architecture Inception V3 was used in the study
+The network was pretrained on ImageNet, an everyday image data set containing 14 million images of 1000 classes, before being fine-tuned using 90% of the ADNI data set (1921 imaging studies).
+Data augmentation, including random width and height shift (range, 0%-10%) and zooming (range, 0%-8%), was performed on the training set.
+Dropout layer with a rate of 0.6 was added before the fully connected layers at the end of the network as means of regulation.
+The neural network architecture is shown in Figure
+
+Model Interpretation and Data Visualization
+To gain further intuition into how the network derived its decisions, one average saliency map taken across 10% ADNI test set and one across independent test set were shown.
+Saliency map plots the gradient of AD class score regarding each input pixel and thereby visualizes areas on the images that were deemed important for the classification result
+To illustrate the connection between the saliency map and anatomy, an additional example individual saliency map was presented with anatomy overlay.
+All saliency maps were produced by using Keras 2.0.
+t-Distributed stochastic neighbor embedding (t-SNE) (18), a dimension reduction method that preserves relative closeness of data points, was then performed on features extracted by the deep learning network on training data.
+By using package scikitlearn
+
+Clinical Interpretation of 18 F-FDG PET
+To obtain reader performance on the independent test set, three board-certified nuclear medicine physicians (R.A.H., nuclear medicine; B.L.F., nuclear medicine; S.C.B., abdominal imaging and nuclear medicine) with 36, 14, and 5 years of experience, respectively, performed independent interpretations of the 40 18 F-FDG PET imaging studies from the independent test set.
+Interpretations consisted of two components: qualitative interpretation of the PET emission images in axial, sagittal, and coronal planes, followed by a semiquantitative regional metabolic analysis using a commercially available clinical neuro-analysis software package (MIM Software, Cleveland, Ohio).
+Only 18 F-FDG PET imaging data, name, age, and date of scan were visible to the readers.
+Qualitative and quantitative interpretations for one patient were performed consecutively before moving on to the next patient.
+If any of the three qualitative interpretations disagreed, the imaging study was interpreted by two additional radiology readers (L.N, nuclear medicine; C.M.A., nuclear medicine) with 1 year and 13 years of experience, respectively.
+The diagnosis of the majority of the five radiology readers was taken as the final clinical imaging diagnosis.
+
+Model Testing and Statistical Analysis
+The trained deep learning model was tested on two test data sets: 10% ADNI set as internal hold-out test set and independent test set from local institution as external test set.
+Probability that an image belongs to class AD, MCI, and non-AD/ MCI was output by the model, and the class with the highest probability was chosen as the classification result.
+Receiver operating characteristic (ROC) curves of the model on 10% ADNI set were plotted and the area under the ROC curve (AUC) was calculated.
+To compare the performance of deep learning model to reader performance, the ROC curves of deep learning model on independent test set were plotted with 95% confidence interval (CI), calculated by using package pROC 1.12.1 in R 3.5.1 with 200 iterations Adam, a first-order gradient-based stochastic optimization algorithm, with a learning rate of 0.0001, categorical cross entropy loss function, and batch size of 8 was used for model training
+The trained algorithm was tested by the accuracy on the held-out ADNI data set (n = 188) and the independent test set (n = 40).
+Keras 2.0 (2017; Google, Mountain View, Calif ) with Tensorflow 1.3 (2015; Google) backend was used for designing neural networks and loading pretrained weights.
+All programs were run in Python 2.7.
+
+Results
+
+Demographics
+As shown in Table
+The average age of the patients was 76 years (range, 55-93 years) for men and 75 years (range, 55-96 years) for women (P < .001),
+with an average age of 77 years (range, 56-92 years) for men and 75 years (range, 55-93 years) for women in the AD group (P = .04),
+76 years (range, 55-93 years) for men and 74 years (range, 57-91 years) for women in the MCI group (P = .01),
+and 76 years (range, 60-90 years) for men and 75 years (range, 60-96 years) for women in the non-AD/MCI group (P = .14).
+The overall percentage of men was 54% (547 of 1002) by patient and 58% (1225 of 2109) by imaging study.
+The average follow-up period of the patients was 54 months by patient and 62 months by imaging study.
+The independent test set was composed of 40 patients, with seven clinically diagnosed as having AD, seven as having MCI, and 26 as having non-AD/MCI at the end of the follow-up period.
+The average age of the 40 test patients was 66 years (range, 48-84 years) for men and 71 years (range, 41-84 years) for women, with an average age of 69 years (range, 56-79 years) for men and 73 years (range, 73-73 years) for women in the AD group, 63 years (range, 48-83 years) for men and 68 years (range, 68-68 years) for women in the MCI group, and 66 years (range, 55-84 years) for men and 71 years (range, 41-84 years) for women in the non-AD/ MCI group.
+The overall percentage of men was 58% (23 of 40), while the percentage in the AD, MCI, and non-AD/ MCI group was 86% (six of seven), 86% (six of seven), and 42% (11 of 26), respectively.
+The average follow-up period of the patients was 76 months, with an average of 82 months in the AD group, 75 months in the MCI group, and 74 months in the non-AD/MCI group.
+
+Results of Model Training
+The ROC curves of the inception V3 network trained on 90% of ADNI data and tested on the remaining 10% are shown in Figure
+The AUC for prediction of AD, MCI, and non-AD/ MCI was 0.92, 0.63, and 0.73 respectively.
+The above AUCs indicate that the deep learning network had reasonable ability to distinguish patients who finally progressed to AD at the time of imaging from those who stayed to have MCI or non-AD/MCI, but was weaker at discriminating patients with MCI from the others.
+As shown in Table
+The ROC curves of the inception V3 network trained on 90% ADNI data and tested on independent test set with 95% CI are shown in Figure
+The AUC for the prediction of AD, MCI, and non-AD/MCI was 0.98 (95% CI: 0.94, 1.00), 0.52 (95% CI: 0.34, 0.71), and 0.84 (95 CI: 0.70, 0.99), respectively.
+Choosing the class with the highest probability as the classification result, in the prediction of AD, MCI, and non-AD/MCI, respectively, the sensitivity was 100% (seven of seven), 43% (three of seven), and 35% (nine of 26), the specificity was 82% (27 of 33), 58% (19 of 33), and 93% (13 of 14), and the precision was 54% (seven of 13), 18% (three of 17), and 90% (nine of 10).
+With a perfect sensitivity rate and reasonable specificity on AD, the model preserves a strong ability to predict the final diagnoses prior to the full follow-up period that, on average, concluded 76 months later.
+
+Model Interpretation: Saliency Map and t-SNE Plot
+As shown in the saliency map in Figure
+The result indicates their importance in the decision of classifying a patient with AD, which is in line with the clinical implication that more caudal sections in the parietotemporal regions are informative of AD.
+However, the patterns are not specific enough to extract a unified human-interpretable imaging biomarker, and overall, the saliency map suggests that the deep learning model considered the whole brain when making the prediction, as presented in Figure
+As shown in Figure
+While the cluster of non-AD/MCI was almost pure, the cluster of MCI was mixed with patients with non-AD/MCI and patients with AD, and the cluster of AD was mixed with the other two classes.
+This gives insight to the behavior of the model at test time: We obtained a high sensitivity rate on AD class because nearly all patients with AD were located in the AD cluster; we obtained a relatively high precision rate on non-AD/MCI class because the non-AD/MCI cluster was almost pure.
+
+Comparison to Clinical Interpretations
+As reported in Table
+By plotting reader performance and ROC curves for model performance in the same ROC space as in Figure
+While for class MCI and non-AD/MCI, reader performance lies above and below the model ROC curves, respectively, but both within the 95% CI of the ROC curve.
+Therefore, compared with radiology readers, the deep learning model performed better, with statistical significance, at recognizing patients who would go on to have a clinical diagnosis of AD.
+On the independent test set, it also performs better at recognizing patient with neither AD nor MCI, while worse at recognizing patients who would develop MCI but would not advance to AD, though without statistical significance.
+
+Discussion
+There is a growing number of patients living with AD, and it has been forecasted that more than 2% of the U.S. population and 1% of the world's population will have AD by 2050
+Unfortunately, early identification of those patients who will have a final diagnosis of AD is challenging.
+The deep learning algorithm developed and tested in our study was shown to be robust across ADNI hold-out test set and independent test set, with 100% sensitivity (95% CI: 65%, 100%) for AD PET images has implications in differentiating AD or MCI from a normal brain; however, 18 F-FDG itself is not a definitive imaging biomarker for AD or MCI.
+The past decade has produced several tools for the early diagnosis of AD, including increasingly specific biomarkers of the disease
+For example, b-amyloid (Ab), a marker of AD, can be detected in the cerebral spinal fluid or at imaging with PET by using radiolabeled Ab ligands, such as 18 F-florbetapir, flutemetamol, and florbetaben
+However, these innovations are prediction on the independent test set.
+Furthermore, in predicting the final diagnosis of AD on the independent test set, it outperformed three radiology readers in ROC space, with statistical significance.
+With further validation with larger and more diverse datasets, this algorithm may be able to augment radiologist reader performance and improve the prediction of AD diagnosis, providing an opportunity for early intervention.
+Multiple previous studies have shown that the distinctive distribution of areas of cortical hypometabolism on 18 F-FDG  too early to show clinical signs of AD or may be those who will not progress to AD.
+It is noteworthy that model visualization with saliency map did not reveal a distinctly human interpretable imaging biomarker that appears influential for AD prediction.
+Instead, the deep learning algorithm apparently utilized the whole brain with varying degrees of influence from various anatomic areas to make its final decision.
+This highlights the strength of the deep learning algorithm that considers the brain as a pixel-by-pixel volume in its classification, implying associated with a high cost that may not be reimbursed by a patient's health insurance or may not be universally available; hence, enhancement of the diagnostic and predictive ability of a long-established imaging technique, such as 18 F-FDG PET, using a deep learning algorithm offers the opportunity to provide clinically relevant molecular imaging data across a multitude of populations and settings worldwide.
+Substantial work in the area of computer-aided diagnosis and risk classification has been performed by using structural imaging of the brain
+But less work has been devoted to applying deep learning methods to functional imaging alone to classify patients with symptoms of dementia.
+To our knowledge, the method in our present study has not previously been emphasized in the literature.
+After training the deep learning model on 90% of the ADNI dataset, validation of the model using the remaining 10% of the ADNI 10% hold-out dataset yielded discrimination of AD of more than 90% as shown by the AUC.
+Notably, the pooled sensitivity and specificity of 18 F-FDG PET imaging in identifying mild AD as the cause of a patient's symptoms across several studies are reported as 90% and 89%, respectively
+Application of the model to standard clinical 18 F-FDG PET imaging studies performed on a cohort of patients for the indication of memory loss (referred to as independent test set) yielded high predictive ability for those patients who were ultimately diagnosed with AD (92% in ADNI test set and 98% in the independent test set) and those who were non-AD/MCI (73% in ADNI test set and 84% in the independent test set).
+Arguably, these two groups are the most important to classify correctly.
+However, the model's predictive ability for those patients who were ultimately diagnosed with MCI was lower (63% in ADNI test set and 52% in the independent test set).
+This is not unexpected given the high degree of variability in the diagnosis of MCI and its existence on a continuum with AD.
+The lower diagnostic power can also be caused by the fact that patients who carried final diagnosis of MCI may have been at a state  that the deep learning algorithm arrives at the diagnosis distinct from how humans interpret the imaging studies.
+Our study had several limitations.
+First, our independent test data were relatively small (n = 40) and were not collected as part of a clinical trial.
+Most notably, this was a highly selected cohort in that all patients must have been referred to the memory clinic and neurologist must have decided that a PET study of the brain would be useful in clinical management.
+This effectively excluded most non-AD neurodegenerative cases and other neurologic disorders such as stroke that could affect memory function.
+Arguably, such cohort of patients would be the most relevant group to test the deep learning algorithm, but the algorithm's performance on a more general patient population remains untested and unproven, hence the pilot nature of this study.
+Second, the deep learning algorithm's robustness is inherently limited by the clinical distribution of the training set from ADNI.
+The algorithm achieved strong performance on a small independent test set, where the population substantially differed from the ADNI test set; however, its performance and robustness cannot yet be guaranteed on prospective, unselected, and real-life scenario patient cohorts.
+Further validation with larger and prospective external test set must be performed before actual clinical use.
+Furthermore, this training set from ADNI did not include non-AD neurodegenerative cases, limiting the utility of the algorithm in such patient population.
+Third, the deep learning algorithm did not yield a human interpretable imaging biomarker despite visualization with saliency map, which highlights the inherent black-box limitation of deep learning algorithms.
+The algorithm instead made predictions based on holistic features of the imaging study, distinct from the human expert approaches.
+Fourth, MCI and non-AD/MCI were inherently unstable diagnoses in that their accuracy is dependent on the length of follow-up.
+For example, some of the MCI patients, if followed up for long enough time, may have eventually progressed to AD.
+Overall, our study demonstrates that a deep learning algorithm can predict the final diagnosis of AD from 18 F-FDG PET imaging studies of the brain with high accuracy and robustness across external test data.
+Furthermore, this study proposes a working deep learning approaches and a set of convolutional neural network hyperparameters, validated on a public dataset, that can be the groundwork for further model improvement.
+With further large-scale external validation on multi-institutional data and model calibration, the algorithm may be integrated into clinical workflow and serve as an important decision support tool to aid radiology readers and clinicians with early prediction of AD from 18 F-FDG PET imaging studies.
+
+
+radiology.rsna.org
+n Radiology: Volume 290: Number 2-February 2019
+
+
+
+Figure 1 :
+Figure 1: Inclusion and exclusion criteria for the independent test set.
+Patient must have had at least one follow-up with a neurologist at our local institution.
+ADNI = Alzheimer's Disease Neuroimaging Initiative.
+
+
+
+Figure 2 :
+Figure 2: Example of fluorine 18 fluorodeoxyglucose PET images from Alzheimer's Disease Neuroimaging Initiative set preprocessed with the grid method for patients with Alzheimer disease (AD).
+One representative zoomed-in section was provided for each of three example patients: A, 76-year-old man with AD, B, 83-year-old woman with mild cognitive impairment (MCI), and, C, 80-year-old man with non-AD/MCI.
+In this example, the patient with AD presented slightly less gray matter than did the patient with non-AD/MCI.
+The difference between the patient with MCI and the patient with non-AD/MCI appeared minimal to the naked eye.
+
+
+
+Figure 3 :
+Figure 3: Convolutional neural network architecture, Inception v3, used in this study.
+Inception v3 network stacks 11 inception modules where each module consists of pooling layers and convolutional filters with rectified linear units as activation function.
+The input of the model is two-dimensional images of 16 horizontal sections of the brain placed on 4 3 4 grids as produced by the preprocessing step.
+Three fully connected layers of size 1024, 512, and 3 are added to the final concatenation layer.
+A dropout with rate of 0.6 is applied before the fully connected layers as means of regularization.
+The model is pretrained on ImageNet dataset and further fine-tuned with a batch size of 8 and learning rate of 0.0001.
+
+
+radiology.rsna.org
+n Radiology: Volume 290: Number 2-February 2019
+
+
+
+Figure 4 :
+Figure 4: Receiver operating characteristic (ROC) curves of deep learning model Inception V3 trained on 90% of Alzheimer's Disease Neuroimaging Initiative (ADNI) data and tested on the remaining 10% of ADNI set and independent test set.
+(a) ROC curves of trained deep learning model tested on the remaining 10% of ADNI set.
+ROC curve labeled AD (Alzheimer disease) represents the core model performance for distinguishing AD versus all other cases.
+ROC curves for mild cognitive impairment (MCI) and non-AD/MCI are also reported for technical completeness.
+(b) ROC curves including the 95% confidence of trained deep learning model tested on the independent test set together with reader performance plotted on ROC space.
+The deep learning algorithm performs statistically significantly better at recognizing patients with AD on the independent test set.
+The algorithm is also better at recognizing patient with non-AD/ MCI and worse at recognizing patients with MCI, but did not reach statistical significance.
+
+
+
+Figure 5 :
+Figure 5: Saliency map of deep learning model Inception V3 on the classification of Alzheimer disease.
+(a) A representative saliency map with anatomic overlay in 77-year-old man.
+(b) Average saliency map over 10% of Alzheimer's Disease Neuroimaging Initiative set.
+(c) Average saliency map over independent test set.
+The closer a pixel color is to the "High" end of the color bar in the image, the more influence it has on the prediction of Alzheimer disease class.
+
+
+
+Figure 6 :
+Figure 6: Visualization of training set after dimension reduction with t-distributed stochastic neighbor embedding (t-SNE).
+Each dot represents the 1024 features output by the final fully connected layer of the Inception V3 network.
+Red dots represent samples from Alzheimer disease (AD), green dots represent samples from mild cognitive impairment (MCI), and blue dots represent samples from neither classes (non-AD/MCI).
+
+
+
+Table 1 : Demographics of Datasets
+
+
+
+Table 2 : Performance Comparison of Deep Learning Algorithm and Radiology Readers
+Unless otherwise indicated, data are averages ± standard deviation.ADNI = Alzheimer's Disease Neuroimaging Initiative, AD = Alzheimer disease, MCI = mild cognitive impairment, Non-AD/MCI = neither Alzheimer disease nor mild cognitive impairment.*
+Numbers in parentheses are raw data used to calculate the percentage.†
+Numbers indicate higher performance from deep learning algorithm compared with reader performance on independent test set.

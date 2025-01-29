@@ -1,0 +1,296 @@
+Modeling autosomal dominant Alzheimer's disease with machine learning
+Introduction: Machine learning models were used to discover novel disease trajectories for autosomal dominant Alzheimer's disease.
+Longitudinal structural magnetic resonance imaging, amyloid positron emission tomography (PET), and fluorodeoxyglucose PET were acquired in 131 mutation carriers and 74 non-carriers from the Dominantly Inherited Alzheimer Network; the groups were matched for age, education, sex, and apolipoprotein ε4 (APOE ε4).
+A deep neural network was trained to predict disease progression for each modality.
+Relief algorithms identified the strongest predictors of mutation status.
+The Relief algorithm identified the caudate, cingulate, and precuneus as the strongest predictors among all modalities.
+The model yielded accurate results for predicting future Pittsburgh compound B (R 2 = 0.95), fluorodeoxyglucose (R 2 = 0.93), and atrophy (R 2 = 0.95) in mutation carriers compared to non-carriers.
+Discussion: Results suggest a sigmoidal trajectory for amyloid, a biphasic response for metabolism, and a gradual decrease in volume, with disease progression primarily in subcortical, middle frontal, and posterior parietal regions.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common form of dementia, accounting for 60% to 70% of the 50 million dementia cases worldwide.
+AD leads to slow cognitive decline, behavioral and psychiatric disorders, and impairments in functional status.
+Pathological features of AD include the accumulation of amyloid beta (Aβ) plaques, neurofibrillary tau tangles, and neuronal/synaptic losses that correspond with atrophy and decreased glucose metabolism.
+Autosomal dominant Alzheimer's disease (ADAD) accounts for <1% of all AD cases and is caused by pathogenic mutations in amyloid precursor protein (APP), presenilin 1 (PSEN1), or presenilin 2 (PSEN2) genes that lead to early increases in Aβ deposition in the brain, which, in turn, is hypothesized to initiate a cascade that causes cognitive decline.
+The age of onset of cognitive impairment in ADAD mutation carriers (MC) is earlier than LOAD and remains fairly consistent within a family, allowing for calculation of the estimated age of symptom onset (EAO).
+ltiple neuroimaging methods have been used to evaluate in vivo changes in the brain due to AD. [ 11 C]Pittsburgh compound B (PiB) has high affinity for Aβ plaques, with distributions similar to those seen at autopsy.
+PiB positron emission tomography (PET) has been used in ADAD to identify amyloid deposition, with amyloid deposition identified >20 years prior to EAO in MC.
+18 F]Fluorodeoxyglucose (FDG) uptake reflects glucose metabolism and has shown promise in discriminating symptomatic MCs from cognitively normal, mutation-negative non-carriers (NC).
+In ADAD, studies have shown FDG uptake in MCs is decreased in the precuneus
+
+RESEARCH IN CONTEXT
+1. Systematic review: The authors reviewed the literature using traditional (eg, PubMed) sources and meeting abstracts and presentations.
+Relevant citations are included where appropriate.
+2. Interpretation: Our findings suggest that within autosomal dominant Alzheimer's disease (AD) mutation carriers, amyloid accumulation shows a sigmoidal progression, glucose metabolism shows a biphasic response, and there is a gradual decrease in brain volume, with disease progression primarily in subcortical, middle frontal, and posterior parietal regions.
+These results are consistent with clinical findings.
+and is inversely correlated with PiB binding.
+Marked decreases in glucose metabolism occur approximately 5 to 10 years before EAO in MCs.
+ructural magnetic resonance imaging (MRI) provides a method to evaluate regional volumetric changes in neurodegeneration that occur with disease progression.
+MRI can reveal regional brain atrophy, which is a characteristic feature of neurodegeneration due to synaptic losses.
+ADAD is characterized by progressive atrophy that manifests as changes initially in the temporal lobes and subcortical regions with eventual spread to other regions.
+Observed changes in atrophy are related to the spread of neurofibrillary tangles in AD.
+vances in ML offer promise for a number of applications, including medical imaging and predictive analytics.
+Compared to traditional statistics that provide primarily group-level results, ML algorithms can predict clinical outcomes at the individual level and could enable personalized treatments that provide targeted care for patients.
+though a number of studies have applied ML to neuroimaging measures to study LOAD,
+Because time until conversion to symptomatic impairment can be estimated with EAO, ADAD provides a unique opportunity for ML to model the progression of the disease and provide decision support to evaluate therapies currently being investigated in the Dominantly Inherited Alzheimer Network Trials Unit (DIAN-TU).
+In this longitudinal study, we used artificial neural networks (ANNs)
+to evaluate progression to cognitive impairment using multimodal neuroimaging biomarkers.
+Specifically, within a cohort of MCs (n = 131)
+and NCs (n = 74), we used ANNs to investigate: (1) changes in Aβ deposition (using PiB), (2) changes in glucose metabolism (using FDG), and (3) brain atrophy (using structural MRI) as a function of aging in relation to EAO.
+Further, we used feature selection to identify regions that were the strongest discriminators of mutation status for each modality.
+We then performed Monte Carlo simulations to identify cutoffs for the identified regions.
+This data-driven approach provides an opportunity to discover novel mechanisms and disease trajectories specific for ADAD.
+
+METHODS
+
+Participants
+One
+
+Clinical classification
+The Clinical Dementia Rating (CDR ® ) Dementia Staging Instrument was used to assess dementia status at each clinical assessment.
+A participant's EAO was calculated at each visit on the basis of the participant's current age relative to the family mutation-specific expected age at onset of dementia symptoms.
+Parental age at first progressive cognitive decline was used if the mutation-specific EAO was unknown.
+EAO was calculated identically for both MCs and NCs.
+All clinical evaluators were blinded to the mutation status of participants.
+The presence/absence and type of mutation were determined using polymerase chain reaction amplification followed by Sanger sequencing. 7
+
+MRI acquisition and processing
+MRI was performed using the Alzheimer's Disease Neuroimaging Initiative (ADNI) protocol.
+Sites used a 3T scanner that passed regular quality control assessments.
+The ADNI Imaging Core screened images for compliance.
+T1 weighted images at 1.1 × 1.1 × 1.2 mm voxel resolution were acquired for participants.
+FreeSurfer 5.3
+Segmentations were inspected and edited as needed by members of the DIAN Imaging Core.
+A regression approach was used to correct subcortical volumes for intracranial volumes.
+Volumetric measures were averaged across hemispheres.
+FreeSurfer-defined cortical and subcortical ROIs (44 total) were used for regional processing of PET data.
+The FreeSurfer-defined ROIs were derived from the Desikan/Killiany atlas
+These are standard regions used for volumetric analyses.
+
+PET acquisition and processing
+Amyloid PET was performed using a bolus injection of PiB.
+Data from 40 to 70 minutes post-injection were converted to regional standardized uptake value ratios (SUVRs) relative to the cerebellar gray matter using FreeSurfer-derived ROIs (PET Unified Pipeline).
+Glucose metabolism imaging was performed with a single bolus injection of FDG.
+A 30-minute dynamic acquisition beginning 30 minutes postinjection was acquired.
+The last 20 minutes of each FDG scan were converted to SUVRs using the cerebellar gray matter as a reference region.
+All PET data were partial volume corrected using a regional spread function technique.
+PET images were aligned to the T1 image processed using FreeSurfer.
+PET scanner-specific filters were applied to account for differences in spatial resolution and to achieve a common resolution (8 mm).
+The DIAN imaging core performed quality control checks on the PET Unified Pipeline processing.
+
+Machine learning and statistical analyses
+ML analyses were performed in MATLAB R2018b.
+Deep feedforward ANNs were trained for each of the neuroimaging modalities.
+Feedforward ANNs map an input to an output by composing sets of smaller functions laid out as a directed acyclic graph.
+The feasibility of these networks is based on the universal approximation theorem, which states a neural network with a single hidden layer contains a finite set of artificial neurons that approximate continuous functions on subsets of R n .
+r ANNs contained four hidden layers with 10 artificial neurons in each layer.
+The network architecture was decided based on design methodologies,
+Further details on model design and validation can be found in supporting information (Methods-Machine Learning Model Design).
+An ANN was trained to output all ROIs for each modality.
+Input to the models included age, sex, apolipoprotein E (APOE) ε4 status, mutation status, the amount of time in the future to predict, and the given imaging variables (MRI or SUVR) for 44 FreeSurfer ROIs.
+A complete list of the ROIs can be found in Table
+We chose this window based on previous work,
+Predictive features of mutation status were ranked according to importance using a Relief algorithm.
+Relief algorithms detect conditional dependencies between attributes using a nearest neighbor approach, with features ranked by estimating how well their values distinguish between proximal comparisons.
+Further, cutoff points for PiB, FDG, and brain volumetrics were identified based on the likelihood of the values generated by Monte Carlo model simulations.
+The simulations generated an equal number (by mutation status) of random sample points from the multivariate distribution defined by the mean and covariance matrix of the data given a specific mutation status, age, and EAO range.
+also trained a linear regression model to compare the results to our ANN.
+This comparative analysis was performed due to recent research suggesting that, in some cases, linear models can outperform nonlinear models.
+When training the regression model, all methods previously described for training the ANN were applied.
+Each biomarker was modeled separately, and the models were trained using five-fold cross-validation.
+Cross-validation was performed at the participant level, and all results reported were derived by combining the test data results from each of the five folds of cross-validation.
+In addition, the input to the regression model was the same as the ANN, but the only output considered was the precuneus.
+We chose the precuneus as it is highly predictive and heavily involved in disease progression in ADAD,
+Further, a multivariate linear regression was performed that derived brain regions in the same manner as the ANN.
+The regression model used ordinary multivariate normal maximum likelihood estimation with the full variancecovariance matrix and constant, linear, and interaction terms.
+We also performed the zero-rule algorithm on the data to compare baseline predictability using the mean of the output values observed in the training data compared to the testing data.
+
+RESULTS
+
+Demographics of the cohort
+Detailed demographics are presented in Table
+Participants were matched for age, sex, and education.
+
+PiB
+The
+
+FDG
+The strongest predictors of mutation status with respect to metabolism were the pericalcarine, caudate, precuneus, fusiform, anterior cingulate, insula, and transverse temporal regions
+
+Volume
+The strongest predictors of mutation status with respect to brain atrophy were seen in the nucleus accumbens, pericalcarine, caudate,
+
+Simulations
+Using the trained models, amyloid accumulation, changes in metabolism, and brain atrophy were simulated for MCs and NCs (Figure
+Consistent with previous work, the models showed that in the MC group, the earliest changes are in amyloid deposition, which follows a sigmoidal trajectory and continues to accumulate past EAO.
+A biphasic response was seen for metabolism, with changes occurring earlier than expected, and progressive decline was observed in atrophy throughout the course of the disease, with the greatest changes occurring just prior to EAO.
+The NC groups showed little change over time for all modalities.
+We fitted a polynomial curve to the normalized rates of change for each of the neuroimaging biomarkers (Figure
+Consistent with the models, amyloid showed an inverted U shape, with increases occurring early in the disease, and subsequently followed by a gradual decline in rate of PiB accumulation.
+FDG showed a slight increase in the early stages, followed by a gradual decrease when the distance from EAO approached 0. Finally, brain volumetrics showed a gradual increase in the rate of decline throughout progression to EAO.
+Cut-points were 1.17 for the nucleus accumbens, 1.3 for the caudate, 1.4 for the precuneus, and 1.2 SUVR for total cortical mean.
+For FDG, the cut-points were less defined for some regions.
+Cut-points for the anterior cingulate, caudate, precuneus, and total cortical mean ranged had greater atrophy than NCs.
+Cutoffs were identified for the nucleus accumbens (550 mm 3 ), caudate (3300 mm 3 ), precuneus (8500 mm 3 ), and total gray matter (575,000 mm 3 ).
+As expected, the ANN showed lower RMSE compared to multivariate linear regression and the zero-rule algorithm for all modalities.
+
+Alternative analysis methods
+
+DISCUSSION
+Our models yielded high accuracy in predicting amyloid accumulation, changes in metabolism, and brain atrophy in ADAD.
+The Relief algorithm identified both subcortical (caudate) and cortical (precuneus and anterior cingulate) ROIs as the strongest predictors of mutation status. Figure
+For amyloid PET, which is believed to reflect the earliest changes in ADAD, changes were primarily seen within subcortical (pallidum, nucleus accumbens, caudate, putamen, and entorhinal) compared to cortical regions (middle frontal, anterior cingulate, and precuneus).
+For changes in metabolism measured by FDG, which reflect changes later in the disease process compared to amyloid, more cortical (insula, fusiform, middle frontal, precuneus, anterior cingulate, pericalcarine, and transverse temporal) rather than subcortical (caudate) regions were involved.
+For changes that occur late in the disease process due to atrophy, both cortical (precuneus, anterior cingulate, pericalcarine, transverse temporal) and subcortical (caudate, pallidum, nucleus accumbens, entorhinal, thalamus) regions were affected.
+This suggests that the disease may start within subcortical areas and quickly involve additional subcortical and cortical regions.
+Overall, these analyses point to multiple hubs being affected early in the disease process, followed by spread to other brain regions (Figure
+Bottom right, Mean absolute error of predicted (normalized) biomarker values given the amount of time in the future to predict, fit with a two-degree polynomial curve projected into the future.
+Errors increased linearly with an increase in the amount of time in the future to predict.
+SUVR, standardized uptake value ratio biomarkers, as well as the mean overall RMSE of the models compared to the zero-rule algorithm and multivariate linear regression.
+In the amyloid analysis, the model achieved 0.95 R 2 and 0.2 RMSE (see Figure
+The model showed PiB uptake was greater in MCs compared to NCs for most regions.
+Our results also confirm that the presence of amyloid alone is insufficient for conversion to symptomatic AD.
+The simulated trajectory for mean cortical amyloid accumulation (see Figure
+These results are consistent with other studies that focused on global and regional amyloid deposition.
+Our model indicates a sigmoidal trajectory of accumulation for amyloid, with a slow increase 20 to 30 years from EAO, an abrupt increase 0 to 15 years from EAO, and slowing to an eventual decline after EAO.
+This is consistent with what has been hypothesized to occur in LOAD.
+a point of reference, we calculated the normalized rates of change for all mutation-positive participants (see Figure
+The normalized rate of amyloid deposition shows a consistent increase from roughly 10 years prior to EAO followed by slowing in the rate of years before symptom onset and continued to decline after EAO.
+These results are consistent with the normalized rate of change (see Figure
+The rate of metabolism did not decline below baseline until 10 years prior to EAO, followed by a steady decline.
+An uptick in metabolic activity was observed in the early stages of amyloid accumulation and did not begin to decrease until amyloid significantly increased.
+This was observed in the simulated trajectory and the normalized rate of change.
+Similar results were observed within the precuneus in a cross-sectional analysis.
+Rate of change analysis revealed this primarily occurs in the basal ganglia.
+Because the basal ganglia show the least toxic response to amyloid deposition,
+4]
+Our model showed total gray matter volume slightly declined during the early stages of ADAD, followed by a dramatic decrease 5 to 10 years prior to EAO.
+The decrease in volume occurred when metabolism was decreased and amyloid had accumulated.
+Volumetrics continued to decline even after EAO.
+The model was able to predict volumes with an R 2 of 0.95.
+These findings have clinical importance for the care of people with ADAD in the context of amyloid, metabolism, and atrophy.
+Using feature selection methods, we have identified brain regions that are both common among modalities as well as unique for each modality (Figure
+Specifically, we have shown the precuneus, caudate, and anterior cingulate are strong predictors of mutation status among all modalities.
+These findings are significant for multimodal imaging studies and clinical trials whose goal is to assess the overall impact of a therapy.
+Further, the fact that we have identified regions that are unique to each modality suggests a complex set of evolving interactions that are not localized to a small set of brain regions.
+Our models also suggest a complex disease progression that goes beyond a linear or sigmoidal pattern that has been hypothesized for LOAD (Figure
+We have identified a biphasic response in metabolism, in which hypermetabolism is seen very early in the disease process.
+Future studies should investigate this phenomenon, as previous studies have primarily focused on hypometabolism that occurs later in the disease process.
+We also extend the literature by establishing clinically useful algorithms for modeling the progression of ADAD, and show the utility of Limitations and future work for this study are detailed as follows.
+Data leakage, which refers to the use of test data in any part of the training process, is a major concern in the AD field,
+This is especially relevant in the context of ADAD.
+While we use the largest available data set, the fact that ADAD only accounts for a small portion of the total AD cases restricts the number of available of samples.
+Still, choosing the proper set of hyperparameters in the context of deep neural networks is a difficult task.
+However, the performance and flexibility of these models crucially depends on how these parameters are set.
+In our analysis, the number of layers and number of artificial neurons in each layer were identified by testing multiple network architectures within our data (see supporting information).
+Measures were taken to ensure that the partitioning of the data for five-fold cross-validation in this process did not match the data partitions used for the five-fold crossvalidation for the final analysis.
+We also ensured the models trained in the network architecture identification process were discarded after the fact, and all subsequent models generated in the main analysis had randomly initialized weights.
+However, because the same data set was used to identify the size of the network as well to perform the main analysis, we acknowledge that this could be a source of data leakage, which could lead to an underestimation of errors.
+Future work will involve further validation and testing of the proposed models.
+Specifically, conducting blinded out-of-sample testing on newly acquired data from the DIAN study is needed to ensure issues such as data leakage and overfitting do not influence the model results.
+Further, alternative network models will need to be considered.
+As more longitudinal time points are acquired for participants in DIAN, time series-specific networks, such as long short-term memory network may be more appropriate.
+Last, alternative forms of feature selection should be considered to investigate the relationships between biomarkers and brain regions.
+
+CONCLUSION
+To provide targeted treatment to persons with ADAD, novel methods are needed to model disease trajectories.
+We have shown ANNs can accurately forecast amyloid accumulation, changes in glucose metabolism, and brain atrophy.
+Using feature extraction methods, we identified the strongest predictors of mutation status over 44 brain regions.
+Our results show a sigmoidal progression of amyloid accumulation, a biphasic response to glucose metabolism, and a gradual increase in brain atrophy in MCs compared to NCs.
+Our models indicate disease progression is primarily in subcortical regions, followed by cortical involvement within anterior and posterior portions of the brain.
+
+
+
+3 .
+Future directions: Future work will focus on (a) understanding the role of increased glucose metabolism observed in the early stages of the disease; (b) relating the current results with other functional neuroimaging methods, such as cerebral blood flow and resting state functional magnetic resonance imaging; and (c) relating the current results with blood and cerebrospinal fluid biomarkers of AD.
+
+
+supporting information.
+The output of each model corresponded to the ROI values at a time point in the future.
+Rates of change were calculated by subtracting scans at time point N by the scan at time point N-1.
+Rates were then divided by the number of months between the scans to obtain a normalized rate of change.
+The mean time between scans was 2.6 years (±1.4).
+If a participant had more than two scanning sessions, all possible combinations were evaluated.
+Using the first time point, data were projected into the future by iteratively adding the normalized rate of change, and these data were used for training.
+For each point, the rate of change was used to project the data ±3 years from the current age.
+Data were projected into the future and the past to avoid biasing the model to later phases of the dis-
+
+
+
+F I G U R E 1
+Results of Pittsburgh compound B (PiB) predictions for mutation carriers (MC; blue) and non-carriers (NC; red).
+Correlation and root mean squared error (RMSE) of predicted versus actual values.
+The artificial neural network (ANN) was able to predict future PiB values with an average R 2 of 0.95 and RMSE of 0.2 in both MCs and NCs.
+SUVR, standardized uptake value ratio distinct clouds were seen for PiB, with lower SUVRs seen at greater distances from EAO, while MCs closer to EAO had elevated PiB SUVRs.
+
+
+. The ANN was able to predict future FDG values with an R 2 value of 0.93 and RMSE of 0.02 in both groups.
+Figure 2 depicts results for the four best-predicted ROIs.
+The algorithm showed a trend of MCs having lower future FDG values than NCs. Figure S2 in supporting information shows the model predictions for MCs based on distance from EAO for FDG.
+Two clouds are seen for FDG, with higher SUVRs seen at greater distances from EAO, while MCs closer to EAO had lower FDG SUVRs.
+
+
+Results of fluorodeoxyglucose (FDG) predictions for mutation carriers (MC; blue) and non-carriers (NC; red) in select regions of interest.
+Correlation and root mean squared error (RMSE) of predicted versus actual values.
+The ANN was able to predict future FDG values with an average R 2 of 0.93 and RMSE of 0.02 in MCs and NCs, with MCs showing trends of lower predicted FDG values than NCs.
+SUVR, standardized uptake value ratio precuneus, anterior cingulate, insula, entorhinal cortex, pallidum, and transverse temporal regions.
+The ANN was able to predict changes in brain volumes with an average R 2 value of 0.95. Figure 3 depicts results for the four best-predicted regions.
+The algorithm showed a general trend of MCs having more brain atrophy than NCs. Figure S3 in supporting information shows the model predictions for MCs as a function of distance from EAO for brain volumes.
+
+
+
+Figure 4 (
+Figure 4 (bottom right) shows the normalized model errors based on years to predict (eg, the error for a participant's PET/MRI values predicted 1 year in the future vs the error for predicting 5 years in the future).
+A two-degree polynomial curve was fit to the error data, which showed a predominantly linear increase with increasing number of years to predict.
+The fit lines were projected into the future for up to 40 years.
+The plot shows that the model maintains a mean absolute error <0.1 up to 10 years in the future.
+The individual biomarkers showed similar trends, only at different scales.Figures S4-S6 in supporting information display the results of the Monte Carlo model simulations for each of the highly predictive regions for each modality.
+Larger values on the y-axis represent a greater likelihood of producing a given value.
+For PiB, clear cut-points were observed between MCs and NCs with nearly 100% specificity.
+
+
+
+F I G U R E 3
+Results of brain volumetric predictions for mutation carriers (MC; blue) and non-carriers (NC; red).
+Correlation and root mean squared error (RMSE) of predicted versus actual values.
+The artificial neural network (ANN) was able to predict changes in brain volumes with an average R 2 value of 0.95 and showed a general trend of MCs having more brain atrophy than NCs from 1.4 to 1.825 SUVR.
+The model simulations indicate MCs had a trend for decreased FDG in each of these ROIs, as well as a biphasic response in the caudate and anterior cingulate.
+For brain volumes, MCs
+
+
+
+Figure
+Figure S8 in supporting information displays the error histograms (probabilities of errors [actual-predicted]) for the ANN versus the regression model for PiB in the precuneus.
+Although both models performed very well, the performance obtained through regression was lower than that obtained through the ANN.
+The ANN's error probability distribution was highly clustered around 0 (RMSE = 0.17), whereas the regression model showed greater dispersion (RMSE = 0.28), indicating a greater likelihood of making a larger error compared to the ANN.
+Similar results were seen using FDG and volumetric data.
+Whole brain average RMSE for the ANN, multivariate linear regression, and zero-rule algorithm are provided at the bottom of TableS1.
+As expected, the ANN showed lower RMSE compared
+
+
+
+F I G U R E 4
+Top left, Simulated biomarker evolution for total mean cortical and subcortical Pittsburgh compound B (PiB), total mean cortical and subcortical fluorodeoxyglucose (FDG), and total gray matter volume (scaled to a common interval) derived from the artificial neural network (ANN) in mutation carriers (MC).
+Shaded region indicates model variability, with estimated age of onset (EAO) marked by perpendicular line.
+Top right, Simulated biomarker evolution for total mean cortical and subcortical PiB, total mean cortical and subcortical FDG, and total gray matter volume (scaled to a common interval) derived from the ANN in mutation non-carriers (NC).
+Bottom left, Normalized biomarker rate of change for mean PiB, mean FDG, and total gray matter volume (scaled to a common interval) fit to a polynomial curve showing 95% confidence interval.
+
+
+
+F I G U R E 5
+Strongest predictors of mutation carrier (MC) status for autosomal dominant Alzheimer's disease (ADAD) as identified by Relief algorithms.
+The strongest predictors across all modalities were the precuneus, caudate, and anterior cingulate.
+Changes in amyloid positron emission tomography (Pittsburgh compound B [PiB], blue circle) were primarily seen within subcortical regions.
+Changes in metabolism (fluorodeoxyglucose [FDG], orange circle) showed more cortical involvement.
+Volumetric changes (Volume, green circle) showed both cortical and subcortical involvement accumulation after EAO.
+Only after EAO does the rate of accumulation diminish, which is consistent with the sigmoidal model trajectory.With regard to metabolism, our model yielded 0.93 R 2 and 0.02 RMSE.
+Although the MCs had greater decrease in FDG for most brain regions, the separation between the two groups was not as well defined compared to PiB.
+This is likely because the rate and amount of change are less extreme compared to amyloid (see Figure4, top left).
+Our model indicates metabolism did not decrease below a baseline until 10
+
+
+Demographics of participants
+
+
+
+Table S1

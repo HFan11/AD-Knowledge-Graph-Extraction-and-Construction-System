@@ -1,0 +1,350 @@
+Predicting brain age from functional connectivity in symptomatic and preclinical Alzheimer disease
+a b s t r a c t "Brain-predicted age " quantifies apparent brain age compared to normative neuroimaging trajectories.
+Advanced brain-predicted age has been well established in symptomatic Alzheimer disease (AD), but is underexplored in preclinical AD.
+Prior brain-predicted age studies have typically used structural MRI, but resting-state functional connectivity (FC) remains underexplored.
+Our model predicted age from FC in 391 cognitively normal, amyloidnegative controls (ages 18-89).
+We applied the trained model to 145 amyloid-negative, 151 preclinical AD, and 156 symptomatic AD participants to test group differences.
+The model accurately predicted age in the training set.
+FC-predicted brain age gaps (FC-BAG) were significantly older in symptomatic AD and significantly younger in preclinical AD compared to controls.
+There was minimal correspondence between networks predictive of age and AD.
+Elevated FC-BAG may reflect network disruption during symptomatic AD.
+Reduced FC-BAG in preclinical AD was opposite to the expected direction, and may reflect a biphasic response to preclinical AD pathology or may be driven by inconsistency between age-related vs. AD-related networks.
+Overall, FC-predicted brain age may be a sensitive AD biomarker.
+
+Introduction
+Magnetic resonance imaging (MRI) has revealed structural and functional brain changes in the progression of Alzheimer disease (AD)
+Specifically, regional cortical thinning and volume loss are thought to result from neurodegenerative processes and typically occur after amyloid deposition and hyperphosphorylated tau aggregation
+Additionally, differences in resting-state functional connectivity (FC) are thought to reflect disruption of brain net-tured by brain-predicted age may yield substantial clinical utility as reliable, personalized biomarkers of physiological processes that underly brain aging and contribute to cognitive decline or reserve.
+Several studies have observed advanced brain aging in mild cognitive impairment (MCI) and symptomatic AD
+Further, brain-predicted age predicts progression from MCI to AD with greater discrimination than simpler structural estimates of hippocampal volume, established cognitive screening tests, or biomarkers of amyloid and tau pathophysiology
+Beyond AD, brain-predicted age estimates are broadly sensitive to a range of psychiatric and neurological disorders
+Thus, brain-predicted age may provide a comprehensive view of healthy and pathological brain aging above and beyond simpler univariate measures derived from the same imaging data.
+Hence, brainpredicted age might be useful as a screening or staging tool in early AD.
+However, it is unknown at what stage of AD progression advanced brain aging first appears.
+For instance, brain-predicted age may be sensitive to subtle differences associated with preclinical amyloidosis and/or tau pathophysiology.
+Although previous studies have demonstrated that brain-predicted age is associated with genetic risk of AD
+Moreover, prior brain-predicted age models have focused primarily on structural MRI
+More recent studies have considered additional imaging modalities, including metabolic PET
+FC-based brain age models have been applied to developmental samples
+Recent multimodal comparisons of FC-and structural MRI-based age prediction have shown that these unimodal estimates are only modestly correlated
+These results are consistent with the interpretation that functional and structural imaging modalities capture complementary age-related signals.
+Thus, FC might offer a promising avenue for modeling age-related differences and maximizing sensitivity to early AD.
+Since FC disruptions have been noted in both healthy age differences and preclinical AD, unrecognized preclinical AD pathology in older adult samples may inflate "healthy aging " effects
+This influence is particularly relevant in brain-predicted age models, which define normative trajectories based on supplied training data
+The presence of preclinical pathology in training sets will bias the "healthy aging " model and will reduce sensitivity to detect true deviation due to preclinical pathology.
+Hence, we aim to develop and validate a model of FC-predicted brain age that controls for preclinical AD pathology.
+We will test the sensitivity of this model to symptomatic and preclinical AD.
+We predict that the FC-predicted brain age will be elevated in symptomatic AD, consistent with structural MRI models.
+Importantly, we test the novel hypothesis that FC-predicted brain age should also be sensitive to subtle network disruptions in preclinical AD.
+Finally, we evaluate model-specific FC feature importance to compare patterns of network disruption in healthy vs. pathological brain aging.
+
+Materials and methods
+
+Participants
+To model differences in functional connectivity across the adult lifespan we combined FC data from three sources: participants enroled in studies at the Knight Alzheimer Disease Research Center (ADRC) at Washington University in St. Louis (WUSTL)
+To train and test the model's ability to predict age in healthy controls, we limited participants only to those who were cognitively normal, as assessed by the Clinical Dementia Rating (CDR 0)
+We excluded 59 participants over age 50 who did not have an available CDR or biomarker measures in order to minimize the likelihood of undetected AD pathology in our training set.
+This set of healthy control participants was randomly split into a training set ( ∼80% of the sample; N = 391), in which the model learned to predict age from FC features, and a held-out testing set ( ∼20%; N = 98), in which the generalizability of the model was evaluated in unseen data.
+Finally, independent samples for residual analyses included three participant groups from the Knight ADRC cohorts: a randomly selected subset of amyloid-negative controls (who were not included in the training or testing sets), amyloid-positive preclinical AD participants, and symptomatic AD participants.
+Importantly, since we hypothesized that model predictions of brain age should have increased error in the preclinical and symptomatic AD samples, these samples were used only for hypothesis testing and not for evaluating model performance.
+Moreover, these samples came from a restricted age range, which is not representative of the full adult lifespan sample on which the model was trained.
+See Table
+All procedures were approved by the Human Research Protection Office at WUSTL.
+
+Assessment of dementia
+Cognitive status was assessed annually using the CDR
+A CDR score of 0 defines cognitive normality, while CDR 0.5, 1, and 2 define very mild, mild, and moderate dementia, respectively.
+By design, all participants included in the training set, amyloid-negative control, or preclinical AD groups had CDR scores of 0. The symptomatic AD group included participants with CDR > 0 with a biomarker measure consistent with amyloid pathology (see below) and/or a primary diagnosis of AD dementia
+
+PET & CSF biomarkers
+Amyloid burden was imaged with positron emission tomography (PET) using [11C]-Pittsburgh Compound B (PIB)
+Regional standard uptake ratios (SUVRs) were modeled from 30 to 60 min after injection for PIB and from 50 to 70 min for AV45, using cerebellar grey as the reference region.
+Regions of interest were segmented automatically using Freesurfer 5.3
+Global amyloid burden was defined as the mean of partial-volume-corrected SUVRs from bilateral precuneus, superior and rostral middle frontal, lateral and medial orbitofrontal, and superior and middle temporal regions
+Cerebrospinal fluid (CSF) was collected via lumbar puncture using methods described previously
+After overnight fasting, 20-to 30 mL samples of CSF were collected, centrifuged, then aliquoted (500 μL) in polypropylene tubes, and stored at -80 °C.
+CSF amyloid  peptide 42 (A 42), A 40, and phosphorylated tau-181 (pTau) were measured with automated Lumipulse immunoassays (Fujirebio, Malvern, PA) using a single lot of assays for each analyte.
+Amyloid positivity was defined using previously published cutoffs for PIB (SUVR > 1.42)
+Additionally, the CSF A 42/A 40 ratio has been shown to be highly concordant with amyloid PET (positivity cutoff < 0.0673)
+Thus, participants were defined as amyloid-positive (for preclinical or symptomatic AD groups) if they had either a PIB, AV45, or CSF A 42/A 40 ratio measure in the positive range.
+Since no published thresholds were available for CSF tau positivity, we defined an exploratory threshold by a median split of pTau within the preclinical AD sample (positivity cutoff > 53.15 pg/mL).
+
+APOE genotype
+APOE genotyping was performed using either an Illumina 610 or Omniexpress chip using methods described previously
+We defined  4 carriers as those with at least one  4 allele present, that is,  2/  4,  3/  4, and  4/  4, whereas  4 non-carriers were those without a single  4 allele present, that is,  2/  2,  2/  3, and  3/  3. The frequencies of APOE genotypes per group are presented in Table
+
+MRI acquisition and preprocessing
+All MRI data were obtained using a Siemens 3T scanner, although there was a variety of specific models within and across studies (see Table
+As described previously, participants in the Knight ADRC
+All MRI data were processed using a common pipeline.
+Multiple resting state runs from a single session were processed together.
+Initial preprocessing followed conventional methods, as described previously
+Briefly, these steps included frame alignment, debanding, rigid body transformation, bias field correction, and normalization of within-run intensity values to a whole-brain mode of 1000
+Transformation to an in-house atlas template based on 120 independent, cognitively normal older adults (CAPIIO) was performed using a composition of affine transforms connecting the functional volumes with the T2-weighted and MPRAGE images.
+Frame alignment was included in a single resampling that generated a volumetric timeseries of the concatenated runs in isotropic 3 mm atlas space.
+As described previously
+Masks of whole brain, grey matter, white matter, and CSF were generated from T1 images in FreeSurfer 5.3
+Two indices of framewise motion were calculated across the BOLD timeseries, including framewise displacement (FD) and derivative of variance (DVARS).
+Data were subjected to framewise censoring based on the motion estimates.
+Specifically, volumes were censored if FD exceeded 0.3 mm or if DVARS exceeded 2.5 SD from the participant's mean.
+To further minimize the confounding influence of head motion on FC estimates
+BOLD data were subjected to a temporal band-pass filter (0.005 Hz < f < 0.1 Hz) and subjected to nuisance variable regression, including motion parameters, as well as timeseries from the whole brain (global signal), CSF, ventricle, and white matter masks, as well as the derivatives of these signals.
+Finally, BOLD data were spatially blurred (6 mm full width at half maximum).
+
+Functional connectivity features
+Final BOLD timeseries data were averaged across voxels within a set of 300 spherical regions of interest (ROIs) in cortical, subcortical, and cerebellar areas
+Each ROI has previously been assigned to one of 16 putative networks, including: somatomotor (SM), lateral somatomotor (SML), cingulo-opercular (CO), auditory (AUD), default mode (DMN), parietal memory (PMN), visual (VIS), fronto-parietal (FPN), salience (SAL), ventral attention (VAN), dorsal attention (DAN), medial temporal lobe (MTL), reward (REW), basal ganglia (BG), thalamus (THAL), cerebellum (CER) networks, as well as unassigned (NA) ROIs
+For each scan, we calculated the 300 x 300 FC matrix as the Fisher-transformed Pearson correlation matrix of the final averaged BOLD timeseries between all ROIs.
+We then used the vectorized upper triangle of each correlation matrix (excluding auto-correlations; 44,850 total correlations) as the input features for predicting age.
+Since site and/or scanner differences between samples might confound neuroimaging estimates, we harmonized FC correlation matrices across sites and scanners using an empirical Bayes modeling approach (ComBat, see Supplementary Fig.
+We also performed analyses without ComBat and observed consistent results (see Supplementary Table
+
+Gaussian process regression (GPR)
+Machine learning analyses were conducted using the Regression Learner application in Matlab 2021a ( MathWorks, 2021a ).
+Following previous models of brain-predicted age using structural imaging
+The  hyperparameter was tuned by searching a range of values from 10 -4 to 10 * SD age using Bayesian optimization across 100 training evaluations.
+The optimal range of  was found from ∼10 -4 to 1 (see Supplementary Fig.
+All other hyperparameters were set to default values (basis function = constant, standardize = true, MathWorks, 2021b ).
+Model performance in the training set was assessed using 10-fold cross validation via the total proportion of variance explained ( R 2 ), rootmean-squared error ( RMSE ), and mean absolute error ( MAE ) between true chronological age and the cross-validated age predictions merged across the 10 folds.
+We then evaluated generalizability of the trained GPR model to predict age in unseen data by applying the trained model to the held-out test set of healthy controls.
+Finally, we applied the same trained GPR model to separate analysis sets of symptomatic AD, preclinical AD, and amyloid-negative controls in order to derive estimates of FC-predicted brain age and test our hypotheses regarding AD-related group differences.
+For each participant in the analysis sets, we calculated the FCpredicted brain age gap (FC-BAG) as the difference between modelpredicted and chronological age.
+In order to correct for regression dilution commonly observed in similar models
+However, to avoid inflating estimates of prediction accuracy
+Greater residual FC-BAG estimates can be interpreted to reflect cases in which the pattern of FC appears older than expected given the participant's true age, after correcting for the age-dependent bias on the model prediction.
+We hypothesized that this pattern of elevated FC-BAG should be observed in preclinical and symptomatic AD.
+
+Feature selection analyses
+To explore which FC networks drove age prediction in the GPR model, we identified the strongest predictors of age by performing forward sequential feature selection
+Specifically, we used the sequentialfs() function in MatLab ( MathWorks, 2021c ) to identify FC network features that improved cross-validated age prediction accuracy in the fully-trained and optimized GPR model.
+Compared to backward feature selection methods (e.g., recursive feature elimination;
+Given that the aim of this analysis was to reduce the number of important features to an interpretable amount, forward selection was chosen over backward selection.
+In order to further improve interpretability, minimize collinearity between the 44,850 regional FC pairs, and reduce computational time, we performed feature selection at the level of functional networks (17 x 17 matrix), rather than ROIs (300 x 300 matrix).
+However, this network-level approach necessarily loses information regarding regional specificity and assumes that network-level averages adequately summarize regions within the networks.
+To compare these age-predictive FC features to those that are most predictive of AD, we also performed forward sequential feature selection with support vector machine (SVM; MathWorks, 2021d ) models.
+These analyses identified features that improved cross-validated classification accuracy between amyloid-negative controls and either preclinical AD or symptomatic AD participants.
+SVM hyperparameters for kernel function, box constraint, and kernel scale were tuned separately for preclinical and symptomatic SVM models using a similar Bayesian optimization approach.
+
+Design and statistical analysis
+We tested our hypotheses regarding symptomatic and preclinical AD by performing cross-sectional analyses of existing data.
+All statistical analyses were conducted in R 4.0.2. ( R Core Team, 2020 ).
+Group differences in the AD samples were tested with independent-samples t tests for continuous variables and  2 tests for categorical variables, using the cognitively normal amyloid-negative controls as a reference group.
+FC-BAG was the main dependent variable of interest.
+We tested symptomatic and preclinical AD group differences with linear regression models.
+To correct for age-related bias in FC-BAG estimates (e.g.,
+Post hoc pairwise group comparisons were tested with independent-samples t tests.
+For all independent-samples t tests, we tested the assumptions that residual FC-BAG was normally distributed with equal variance between groups, respectively, with the Shapiro-Wilk test of normality and Levene's test for equality of variances.
+To distinguish between effects of APOE genotype vs. AD pathology, we performed analyses with and without controlling for APOE genotype.
+Effect sizes were computed as partial  2 (  p 2 ).
+
+Data availability
+The data and code used in this study are available by request through the Knight ADRC (
+).
+
+Results
+
+Sample & demographics
+A total of 391 participants were included in the training sets (137 Ances lab controls, 120 DIAN controls, and 134 Knight ADRC controls).
+An additional 98 participants were included in the test sets (38 Ances lab controls, 26 DIAN controls, and 34 Knight ADRC controls).
+Finally, 483 independent participants from the Knight ADRC were included in the analysis sets (145 amyloid-negative controls, 151 preclinical AD, and 156 symptomatic AD).
+Full demographic characteristics are reported in Table
+Preclinical AD participants were significantly older ( t = 6.42, p < .001)
+and more likely to be APOE  4 carriers (  2 = 35.39,
+p < .001)
+than amyloid-negative controls.
+Further, symptomatic AD participants were significantly older ( t = 9.80, p < .001),
+more likely male (  2 = 9.56, p = .002),
+more likely to be APOE  4 carriers (  2 = 55.25, p < .001),
+and had marginally fewer years of education ( t = 2.01, p < .046)
+and lower MMSE scores ( t = 12.55, p < .001)
+than amyloid-negative controls.
+
+FC successfully predicts brain age in training and test sets
+The GPR model was able to accurately predict chronological age from the FC matrices in the full training set of healthy controls as assessed using 10-fold cross validation.
+As shown in Fig.
+with an MAE of 8.587 years ( RMSE = 10.441).
+Further, accurate model performance was generalizable to the held-out test set, as shown in Fig.
+MAE = 8.195, RMSE = 10.317).
+
+Elevated FC-BAG in symptomatic AD
+Residual FC-BAG was normally distributed in all groups defined by cognitive status (Shapiro-Wilk statistics > 0.99, ps > 0.39).
+Variance in residual FC-BAG did not differ between groups (Levene's statistic = 0.07, p = 0.80).
+A linear regression model tested the effect of symptomatic AD (defined as CDR > 0 vs. CDR = 0 within the complete analysis sets) on FC-BAG, controlling for true age and demographic covariates (see Table
+FC-BAG was 2.88 years older in symptomatic AD participants compared to controls (  = 2.88, p < 0.001,  p 2 = 0.04, see Fig.
+Importantly, the effect of symptomatic AD remained significant in the full model controlling for all biomarkers and covariates (  = 3.71, p < 0.001,  p 2 = 0.03, see Table
+Pairwise independent-samples t tests revealed that residual FC-BAG was only marginally elevated in CDR > 0.5 participants relative to CDR = 0 ( t = 1.64, p = .109,
+see Supplementary Fig.
+
+Reduced FC-BAG in preclinical AD
+Residual FC-BAG was normally distributed in all groups defined by AD biomarkers (Shapiro-Wilk statistics > 0.98, ps > 0.29).
+Variance in residual FC-BAG did not differ between groups (Levene's statistic = 0.26, p = 0.77).
+Another regression model tested the effect of preclinical AD (defined as cognitively normal amyloid-positive vs. amyloid-negative) on FC-BAG, controlling for age and demographic covariates (see
+FC-BAG was 1.92 years younger in preclinical AD participants compared to controls (  = -1.92,
+p = .018,
+p 2 = 0.02, Table
+To explore whether the effects of preclinical AD pathology on FC-BAG were associated with the stages of amyloidosis (A-vs.
+A + ) and/or tau pathophysiology (T-vs.
+T + ), we further split the preclinical and control samples by tau positivity and simultaneously tested these effects in an additional linear model (see
+FC-BAG was 2.15 years younger in T + compared to T-participants (  = -2.15,
+p = .034,
+p 2 = 0.02, see Fig.
+Controlling for tau, there was no difference between A + and A-participants (  = 0.03, p = .976).
+Followup pairwise independent-samples t tests revealed that residual FC-BAG was significantly lower in A + T + participants compared to A-T-( t = 3.35, p < .001,
+see Fig.
+However, the effect of tau was not significant in the full model controlling for all biomarkers and covariates (  = -1.39,
+, and the effect of amyloid was not significant (  = 0.15, p = .877).
+
+Reduced FC-BAG in APOE 𝜀 4 carriers
+Residual FC-BAG was normally distributed in all groups defined by APOE genotype (Shapiro-Wilk statistics > 0.98, ps > 0.37).
+Variance in residual FC-BAG did not differ between groups (Levene's statistic = 0.37, p = 0.55).
+A final regression model tested the effect of APOE genotype (defined as cognitively normal APOE  4 carriers vs. APOE  4 non-carriers) on FC-BAG, controlling for age and demographic covariates (see
+FC-BAG was 1.88 years younger in APOE  4 carriers compared to noncarriers (  = -1.88,
+p = .016,
+p 2 = 0.02, see Fig.
+The effect of APOE was only marginally significant in the full model controlling for all biomarkers and covariates (  = -1.44,
+p = .072,
+p 2 = 0.01, see Table 2 E).
+
+Comparison of age and AD features
+We used forward sequential feature selection to identify the FC networks that were the strongest predictors of age in a similar GPR model trained to predict age based on network-level FC (i.e., 153 intra-and inter-network FC summary measures).
+To validate this method, the network-level GPR model achieved moderate performance in predicting age ( R 2 = 0.52).
+Further, SVM models using network-level FC discriminated between symptomatic AD and controls with 74% accuracy, al-though classification of preclinical AD was only modestly above chance (accuracy = 55%).
+The forward sequential feature selection algorithm identified 32 FC features that most strongly predicted age.
+As shown in Fig.
+Only 4 FC features were identified as strong predictors of preclinical AD (CER x CER, PMN x SML, FPN x AUD, and CER x PMN, see Fig.
+Finally, 10 FC features were identified as strong predictors of symptomatic AD (SM x SM, CO x CO, BG x BG, as well as inter-network connections prominently including the CO and DMN networks, see Fig.
+As shown in Fig.
+However, there was no overlap in features that strongly predicted age and symptomatic AD, nor between preclinical and symptomatic AD.
+
+Discussion
+The present results offer several noteworthy findings.
+To review, our machine learning model successfully predicted chronological age from FC data.
+FC-based age predictions were significantly elevated in symptomatic AD compared to cognitively normal controls.
+Surprisingly, FC-based age predictions were also significantly reduced in preclinical AD compared to biomarker-negative controls, particularly in participants with positive amyloid and tau pathophysiology, and were also reduced in APOE  4 carriers relative to non-carriers.
+Finally, FC features that were strongest predictors of healthy age differences mini-Fig.
+Comparisons are presented between cognitively normal (CDR = 0, blue) vs. symptomatic AD (CDR > 0, red) (A, B); A-T-(blue) vs.
+A + T-(green) vs.
+A + T + (gold) (C, D); and cognitively normal APOE  4 carriers (blue) vs. non-carriers (green) (E, F).
+Scatterplots (A, C, E) show predicted vs. true age for each group.
+Colored lines and shaded areas represent group-specific regression lines and 95% confidence regions.
+Dashed black lines represent perfect prediction.
+Violin plots (B, D, F) show residual FC-BAG (controlling for true age) in each group.
+Group differences are reported from pairwise independent-samples t tests.
+* * * p < .001,
+* * p < .01,
+* p < .05,
+ˆ p < .10. mally overlapped with predictors of preclinical AD, and did not overlap with symptomatic AD.
+We now discuss each of these findings in turn.
+
+Modeling brain age with FC
+Our FC-based model successfully predicted chronological age in an adult lifespan sample with an MAE of about 8 years.
+Previous models, mostly trained on structural MRI data, have reported MAE s as low as 3 to 5 years
+Thus, the present model predicts age with lower accuracy compared to structural-based models, which is consistent with other direct comparisons between FCand structural MRI-based age prediction models
+The observed level of performance is more consistent with previous FC-predicted brain age models Fig.
+Matrices display intra-network (on diagonal) and inter-network (off diagonal) FC features that were identified as strongest predictors via forward sequential feature selection (see methods).
+Overlapping features (D) are plotted for age, preclinical AD, and symptomatic AD.
+in developmental
+Moreover, although prediction accuracy is of course an essential part of evaluating brain age models, our application of this model is primarily motivated by the sensitivity of deviations in age prediction to disease status.
+Notably, BAG estimates in models with "moderate " accuracy are more discriminative of disease states than those from overly "tight " or "loose " age prediction models
+Thus, the relatively low accuracy of the current age prediction model does not preclude its application as a sensitive measure of AD.
+Importantly, our approach utilized conservative pre-processing and quality assurance methods to minimize the influence of head motion in FC estimates
+Thus, our model likely captures meaningful signal related to age with minimal confounding influence of head motion.
+One further advantage of our approach was that we trained the model using data from samples that were well characterized in AD biomarkers and clinical assessments of dementia.
+Since undetected AD pathology may inflate age differences in FC estimates
+Hence, the patterns of FC differences across the adult lifespan captured in our model most likely reflect the influence of healthy age differences with minimal confounding influence of AD pathology.
+
+FC-predicted brain age as a marker of symptomatic AD
+As predicted, our model estimates of FC-BAG were significantly elevated in symptomatic AD participants compared to cognitively normal controls.
+The mean difference in FC-BAG (about 3 years) was relatively small compared to previously reported effects in AD and MCI samples using structural-based brain age models (about 5 to 10 years)
+However, we note that the largest of these effects were reported in CDR 1 samples
+Thus, FC may capture meaningful, but relatively small, signal that is sensitive to the earliest symptomatic stages of AD.
+However, in the 37 participants with CDR > 0.5 in the current sample, FC-BAG was not significantly elevated in CDR > 0.5 relative to CDR 0.5, as would be expected by this interpretation.
+Importantly, this FC-related signal may capture complex disruptions of connectivity within and between networks, as have been previously described in early AD
+This FC signal may thus be distinct from AD-related atrophy, captured for instance in structural MRI.
+Hence, multimodal models of age-related functional and structural features may maximize sensitivity to AD.
+Indeed, recent studies have demonstrated the unique benefits of multimodal brain-age models in improving the accuracy of age prediction
+
+FC-predicted brain age as a marker of preclinical AD
+Perhaps the most novel aspect of this study was the analysis of brainpredicted age in the context of preclinical late onset AD pathology, which to our knowledge, has not been evaluated in previous brainpredicted age reports using FC.
+Surprisingly, we found that FC-BAG was significantly reduced by about 2 years in preclinical AD, compared to cognitively normal amyloid-negative controls.
+Interestingly, there was also a significant effect in the same direction for APOE  4 carriers compared to non-carriers, suggesting that even cognitively normal individuals at increased genetic risk of AD demonstrate relatively "younger " patterns of FC.
+These results were in the opposite direction of our prediction that preclinical disruption of FC networks should produce elevated estimates of brain age.
+We offer some potential interpretations of this surprising observation.
+First, it is possible that the relative reduction in FC-BAG in preclinical AD and the relative elevation in symptomatic AD may reflect a biphasic response to AD progression.
+Similar biphasic responses have been proposed in models of functional task activation
+Observations of hyper-activation and hyper-connectivity, along with the present "younger " appearing pattern of FC in preclinical AD, may reflect a compensatory response to early AD pathology, allowing these individuals to maintain normal cognition despite accumulating pathology
+This interpretation predicts that lower FC-BAG should be associated with better cognition in the preclinical AD sample.
+Other models posit that amyloid-related hyper-excitability and tau-related hypo-excitability emerge in neuronal circuits via proteinspecific disruption of neurotransmitters
+However, previous studies have reported patterns of hyper-connectivity in participants with positive amyloid accumulation and low tau, while the later preclinical stage of elevated tau is associated with hypoconnectivity
+In contrast, we observed that reduced FC-BAG was most prominent in the A + T + participants.
+Thus, if the present results indeed reflect a biphasic response of FC to AD progression, it appears to be lagging behind previous observations.
+Alternatively, it is possible that the significant reduction in FC-BAG may indeed reflect genuine dysfunction of the functional networks in response to preclinical AD pathology.
+However, this pattern may be inconsistent with "older " appearing patterns of FC, and thus a model trained to predict age might detect some pathological variance as appearing "younger.
+" Consistent with this interpretation, we identified minimal overlap in feature importance for FC networks predictive of age and AD, as discussed below.
+Further, the relative effects of preclinical AD and APOE  4 positivity both went in the same negative direction, suggesting that both AD biomarker pathology and genetic risk are associated with reduced FC-BAG in cognitively normal samples.
+However, the effects we observed in preclinical AD and APOE  4 were only marginally significant in the full model, which included terms for all biomarker and genetic factors, which may be collinear.
+Further, these effects were relatively small, and thus may be driven by sample-specific noise, or the younger age prediction may be driven by statistical artifacts related to regression dilution (see also 4.5 Limitations).
+Hence, future studies should attempt to replicate these results in independent samples.
+
+Predictive FC features of age and AD
+Importantly, although one inter-network FC feature (PMN x CER) was identified as a strong predictor for both healthy age differences and preclinical AD, overall, age and AD were predicted by mostly nonoverlapping networks.
+Thus, AD likely produces disruptions in FC networks that are distinct from those disrupted in healthy age differences, as opposed to an accelerated age-like pattern.
+Nevertheless, we found that the model trained on age differences was indeed sensitive to both preclinical and symptomatic AD, as well as genetic risk of AD.
+This result may reflect a unique benefit of the brain-predicted age approach in comprehensively summarizing complex neuroimaging indicators of "brain health " into a simple summary estimate.
+
+Limitations
+One limitation of this study is that the training set included MRI scans merged across independent datasets, spanning a range of collection sites, scanner models, and acquisition sequence parameters.
+These differences may introduce noise and/or confounding variance into the FC features.
+We have attempted to mitigate this problem by: (1) limiting the sample to only data from Siemens 3T scanners using similar protocols; (2) processing all MRI data through common pipelines and quality assessments; and (3) statistically harmonizing across different sites and scanners before combining the datasets.
+Unsurprisingly, both preclinical and symptomatic AD groups were significantly older than the amyloid -controls.
+We have attempted to correct for this difference by including age as a covariate in our statistical models, as has been done in similar reports (e.g.,
+This approach limits interpretation of the group effect, as group variance and age variance are intermixed
+However, we note that differences in FC-BAG went in opposite directions for preclinical and symptomatic AD groups.
+Thus, age-related biases cannot fully account for the present results.
+Additionally, we only conducted cross-sectional analyses of FC-BAG.
+Longitudinal analyses would be useful to address intra-individual reliability and trajectory of brain age estimates as AD pathology progresses over time, and should be investigated in future studies.
+Further, although the DIAN and Knight ADRC samples were well characterized in assessments of dementia and AD biomarkers, these measures were not available in all samples.
+We minimized the chance of including participants with undiagnosed AD pathology by excluding participants over the age of 50 if these measures were unavailable.
+Future brain-predicted age models would benefit by using more richly characterized datasets to exclude potentially confounding age-related pathology.
+Tau positivity was determined in this study based on a median split of CSF pTau 181.
+Future studies might improve upon this approach by using an a priori validated threshold of positivity and/or using tau PET.
+Feature selection analyses were based on models that only achieved modest (74% for symptomatic AD) to poor (55% for preclinical AD) classification accuracy.
+Thus, the features identified as strong predictors (especially of preclinical AD) may be unstable.
+Finally, although the Ances lab controls were relatively diverse, participants in other samples were mostly white and highly educated.
+Hence, this model may not be generalizable to broader samples.
+Future models would benefit by using more representative training samples.
+
+Conclusions
+Overall, the present study suggests that FC is sensitive to differences across the adult lifespan and can be used to successfully predict brain age, even after carefully controlling for head motion and preclinical AD.
+Consistent with structural-based models, FC-predicted brain age might be sensitive in detecting symptomatic AD.
+Further, our results suggest that FC-BAG might also be sensitive to preclinical AD, as well as AD genetic risk, although interpretation of the unexpected direction of this relationship requires further investigation.
+Although age and AD were predicted by mostly non-overlapping FC features, the present FC-predicted brain age model significantly detected deviations in both symptomatic and preclinical AD.
+Hence, FC may provide useful, distinct signal in developing models of comprehensive brain health to be used as biomarkers of AD, along with other neurological and psychiatric disorders.
+
+
+
+Fig. 1 .
+Fig. 1.
+Performance of the FC-predicted brain age model.
+Scatterplots show the cross-validated model predictions in the training set (A) and in the held-out test set (B). Age predicted by the model (y axis) is plotted against true age (x axis).
+Blue lines represent regression lines.
+Dashed black lines represent perfect prediction.
+Model performance is evaluated by proportion of variance explained ( R 2 ), root-mean-square error ( RMSE ), and mean absolute error ( MAE ).
+
+
+
+Table 1
+Demographic information of the combined samples.
+DIAN = Dominantly Inherited Alzheimer Network, ADRC = Alzheimer Disease Research Center, AD = Alzheimer disease, CDR = Clinical Dementia Rating, MMSE = Mini Mental State Examination, FD = framewise displacement, WUSTL = Washington University in St. Louis, T = Tesla, TR = repetition time.
+Group differences from the amyloid-negative controls were tested with t tests for continuous variables and 2 tests for categorical variables.
+* * * p < .001,
+* * p < .01,
+* p < .05,
+ˆ p < .10.
+
+
+
+Table 2
+Linear regression models predicting FC-BAG.
+Model estimates are presented as beta weight (standard error).
+CDR = Clinical Dementia Rating.

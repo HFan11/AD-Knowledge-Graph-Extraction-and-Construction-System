@@ -1,0 +1,318 @@
+Bayesian hidden Markov models for delineating the pathology of Alzheimer’s disease
+Alzheimer's disease (AD) is a firmly incurable and progressive disease.
+The pathology of AD usually evolves from cognitive normal (CN), to mild cognitive impairment (MCI), to AD.
+The aim of this paper is to develop a Bayesian semiparametric mixed hidden Markov modeling (BSMHM2) framework to characterize disease pathology, identify hidden states corresponding to the diagnosed stages of cognitive decline, and examine the dynamic changes of potential risk factors associated with the CN-MCI-AD transition.
+The BSMHM2 framework consists of two major components.
+The first one is a state-dependent semiparametric regression for delineating the complex associations between clinical outcomes of interest and a set of prognostic biomarkers across neurodegenerative states.
+The second one is a parametric transition model, while accounting for potential covariate effects on the cross-state transition.
+The inter-individual and inter-process differences are taken into account via correlated random effects in both components.
+Based on the Alzheimer's Disease Neuroimaging Initiative dataset, we are able to identify four states of AD pathology, corresponding to common diagnosed cognitive decline stages, including CN, early MCI, late MCI, and AD and examine the effects of hippocampus, age, gender, and APOE-ε4 on degeneration of cognitive function across the four cognitive states.
+
+Introduction
+Alzheimer's disease (AD) is a chronic neurodegenerative disease that usually starts slowly and worsens over time.
+The most common early symptom of AD is short-term memory loss, also referred to mild cognitive impairment (MCI).
+Patients at MCI state have high likelihood to transit to dementia or AD within a few years
+Despite an increasing attention to its growing public threat, the cause of AD remains poorly understood.
+Thus, it is great interest to discovering or validating prognostic biomarkers that may identify subjects at great risk for future cognitive decline and investigating the functional effects of various biomarkers on the conversion from NC to AD.
+The Alzheimer's Disease Neuroimaging Initiative (ADNI) study began in 2004 and it collected imaging, generic, clinical, and cognitive data from subjects under cognitive normal (CN) controls and subjects with MCI or AD in order to delineate the complex associations among various characteristics of the clinical spectrum of AD.
+The ADNI-1 recruited approximately 800 subjects according to its initial aim and has been extended by three follow-up studies, namely, ADNI-GO, ADNI-2, and ADNI-3.
+ANDI-1 subjects had an option to refuse follow-up monitoring in subsequent studies.
+More information on ADNI can be obtained in the official website (www.adni-info.org).
+Functional assessment questionnaire (FAQ), an assessment of abilities to function independently in daily life, is widely used to monitor the decline of cognitive ability over time.
+The FAQ scores of each subject were obtained at baseline and then every 6 months across 9 years multiple study phases.
+For this longitudinal study, several central questions are naturally raised as follows:
+
+•
+(i) How many hidden pathophysiological states exist in the progression of AD?
+• (ii) Which factors should contribute to the neuro-degenerative pathology from one state (e.g., MCI) to another (e.g., AD)?
+• (iii) Whether the identified risk factors are equally good predictors of cognitive decline at each state?
+Given these questions, there is a particular need for the development of statistical models that delineate cognitive decline in terms of the pathophysiological states of AD.
+Hidden Markov models (HMM) are well suited to the characterization of longitudinal data in terms of a set of hidden states
+HMMs consist of two components: a transition model to describe the dynamic transition of hidden states and a conditional regression model to examine state-specific covariate effects on responses.
+Owing to their ability to simultaneously reveal the longitudinal association structure and dynamic heterogeneity of the observed process, HMMs and their variants have attracted significant attention from the medical, behavioral, social, environmental, and psychological sciences
+In particular, HMMs have previously been applied to investigate diseases progression to identify latent pathophysiological states.
+For instance,
+Despite the rapid development and wide applications of HMMs, existing literature has mainly focused on parametric HMMs, in which the forms of covariate effects on responses and on transition probabilities are pre-specified.
+One problem of parametric models is that they may be too restrictive to reflect correctly the reality because the complex relationships among variables are seldom known a priori, and a pre-specified parametric form tends to overlook the subtle pattern of a function.
+A more comprehensive analysis can be performed by incorporating nonparametric functions into HMMs so that the functional effects of interest can be discovered.
+To the best of our knowledge, however, such nonparametric modeling has not been introduced into the HMM framework.
+In this study, we propose a Bayesian mixed semiparametric hidden Markov modeling (BMSHM2) framework to analyze the ADNI-I dataset.
+Similar to conventional HMMs, the proposed model consists of two major components.
+The first component is a state-dependent semiparametric regression to investigate the linear and nonlinear effects of covariates, such as hippocampus, age, gender, and APOE-ε4, on the clinical outcome of cognitive decline (e.g., FAQ score).
+The second component is a mixed continuation-ratio logit transition model to examine various covariate effects on the probabilities of transitioning among neurodenerative states.
+We introduce a random effect in both models in order to account for inter-individual differences and allow the random effects to be dependent by assigning a joint distribution for them.
+Such joint random effects enable the model to accommodate the situation where some omitted factors influence both the observed process and the hidden transition process
+We develop a full Bayesian approach, along with Bayesian P-splines procedure and Markov chain Monte Carlo (MCMC) methods, for statistical inference.
+As far as we know, no previous study has ever been conducted either on the proposed BMSHM2 or on Bayesian HMMs.
+Also, this paper is the first to investigate the neurodegenerative pathology of AD.
+Section 2 defines BMSHM2 and discusses the related identifiability issues.
+Section 3 introduces the Bayesian inference procedure.
+Section 4 illustrates the use of BMSHM2 in the analysis of the ADNI dataset.
+Section 5 demonstrates the empirical performance of the proposed methodology through a simulation study.
+Section 6 discusses the findings obtained from the analysis of the ADNI dataset.
+Technical details are provided in the Appendix.
+
+Model description
+
+Questions of Interest for ADNI-1
+Data used in this article were obtained from the ADNI-1 database launched in 2003.
+A total of n = 633 patients at baseline, 6 months, 12 months, and 24 months (t = 1, …, 4) were considered in the analysis.
+We use the score of FAQ, denoted by y it , to characterize the cognitive function of subject i at occasion t.
+Moreover, we observe a r × 1 vector of discrete covariates, denoted by b it = (b it,1 , …, b it,r ) T , and a q × 1 vector of continuous covariates, denoted by x it = (x it,1 , …, x it,q ) T .
+The covariates of interest include gender (1 = male; 0 = female), apolipoprotein E-ε4 (APOE-ε4), hippocampus, and age at baseline, in which APOE-ε4 is a known genetic risk factor for AD and is coded as 0, 1, and 2, denoting the number of APOE-ε4 alleles, and hippocampal volume is divided by whole brain volume to account for the confounding effect of brain size.
+Thus, APOE-ε4 (=1, b it,1 ), APOE-ε4 (=2, b it,2 ), and gender (b it,3 ) are discrete, whereas hippocampus (x it,1 ) and age at baseline (x it,2 ) are continuous.
+Several kinds of dependencies/heterogeneities are worthy of investigation.
+The first one is the dynamic heterogeneity across different groups.
+Figure
+The cognitive decline patterns are apparently distinct over the groups, suggesting at least three (and probably more) distinct neurodegenerative states existent underlying the observations of FAQ score.
+The second one is the dependency of FAQ score on potential covariates, such as hippocampus, age at baseline, APOE-ε4, and gender.
+The third one is the serial dependency of the longitudinal observations, owing to relative persistence of neurodegenerative states.
+The last one is the heterogeneity caused by the existence of some omitted clinical or genetic indicators that influence both cognitive decline and its underlying transition.
+The BMSHM2 described below perfectly accommodates all these features.
+
+Model Setup
+The BMSHM2 consists of two major components, including a conditional seminparametric regression model and a continuation-ratio logit transition model, as detailed below.
+
+Conditional semiparametric regression model-Let
+y it with subject i = 1, …, n at t = 1, …, T be the observation process.
+The hidden state process, Z it , which takes values in {1, …, S}, is assumed to follow a first-order Markov chain.
+Given the hidden state Z it = s, the conditional semiparametric regression model is defined as follows:
+where μ s is a state-specific intercept, γ s = (γ 1 , …, γ r ) is a state-specific vector of fixed effect of discrete covariates, f sj (•)s are state-specific unknown smoothing functions, b it = (b it,1 , …, b it,r ) T and x it = (x it,1 , …, x it,q ) T are r × 1 vector of discrete covariates and q × 1 vector of continuous covariates respectively, w i1 is a subject-specific random effect, δ it is a random residual independent of y it , and
+The conditional model defined by (1) extends the parametric regression to allow the additive nonparametric functions of covariates, so that the functional effects of interest can be discovered.
+Such nonparametric modeling provides great flexibility in fitting nonlinear effects whose forms need not be specified a priori.
+When used as an exploratory tool, the proposed model is able to help users to visually examine and interpret the functional effects of potential predictors on the response of interest.
+Moreover, the subject-specific random effect w i1 permits additional dependencies elicited from other sources and thus avoids a large number of hidden states caused by possible residual correlation among responses.
+
+Continuation
+-ratio logit transition model-Let p itus denote the transition probability from state Z i,t-1 = u at occasion t -1 to state Z it = s at occasion t for individual i.
+Based on the assumption of the first-order Markov chain, we have
+The initial distribution of Z i1 is assumed to be a multinomial with probabilities (τ 1 , …, τ S ) T such that τ s ≥ 0 and
+T is then fully determined by the transition probabilities and the distribution of the initial state.
+In the study of disease progression, the hidden states can often be naturally ranked (e.g., CN, MCI, and AD can be ranked from the best to the worst cognitive condition).
+Thus, we assume that the hidden states {1, …, S} are ordered and ϑ itus = P(Z it = s|Z it ≥ s, Z i,t-1 = u).
+Then, the transition across the ordered states can be described by continuation logits as follows: For t = 2, …, T, s = 1, …, S -1, and u = 1, …, S,
+The parameterization in (
+To examine the effects of potential predictors on the transition probabilities, we consider a continuation-ratio logit transition model as follows:
+where ζ us is a state-specific intercept,
+T is the vector of covariates defined in
+(1), α is a (q + r) × 1 vector of regression coefficients that can be interpreted as conditional log odds ratios in a logistic regression, w i2 is a subject-specific random effect that is distinct from but correlated with w i1 , and w i = (w i1 , w i2 ) T is assumed to follow a multivariate normal distribution N(0, Φ).
+Similar to the proportional assumption in a cumulative logit model, α in (
+This outcome, in turn, greatly reduces the complexity and enhances the interpretability of the transition model.
+Notably, random effects w i1 and w i2 play different roles in the conditional and transition models.
+While w i1 in conditional model (1) relaxes the assumption that observations {y it ; i = 1, …, n, t = 1, …, T} are conditionally independent given the hidden state Z it = s, w i2 in transitional model (4) releases the assumption that hidden process Z it is Markovian.
+Unlike the existing literature that usually treats w i1 and w i2 separately, we accommodate their possible correlation by assigning a joint distribution for w i = (w i1 , w i2 ) T .
+Consequently, the possible correlation between the heterogeneities existent within the two stochastic processes can be appropriately addressed and examined through the covariance matrix Φ.
+
+Model identification
+The proposed model is not identifiable because of the following two model indeterminacies.
+The first is caused by the additive nonparametric functions involved in (1), in which each unknown function is not identifiable up to a constant.
+To address this problem, we need to impose constraints on the unknown functions to enforce their integrations in the ranges of predictors to zero
+where j is the support of x j .
+The other model determinacy is the label switching problem elicited by the invariance of the likelihood function to a random permutation of the state labels, which results in a multi-modal posterior under a symmetric prior specification.
+We follow Frühwirth-Schnatter (
+3 Bayesian Inference
+
+Nonparametric modeling
+The first critical issue in the Bayesian analysis of the proposed model is to estimate the nonparametric functions involved in (1).
+We consider the use of Bayesian P-splines
+The basic idea is to estimate the unknown smoothing functions through a sum of B-splines basis functions
+Specifically, f sj (x it,j ), the functional effect of the jth covariate at state s for subject i at time t, can be approximated as follows:
+where L is the number of splines determined by the number of knots, β sj = (β sj,1 , …, β sj,L ) T is the vector of the unknown parameters, B(•)s' are cubic B-splines basis functions, and B(x it,j ) = (B 1 (x it,j ), …, B L (x it,j )) T .
+Usually, L taking a value from 10 to 30 provides sufficient flexibility in fitting most smooth functions.
+One problem of applying (6) to approximate an unknown smooth function is the over-fitting caused by the use of a large number of knots.
+Such penalization can be implemented in the Bayesian framework by applying random walk priors to β sj
+
+Prior distributions
+We assign a truncated Gaussian priors for β sj as follows:
+where ν sj is a smoothing parameter for controlling the amount of penalty, K sj is a penalty matrix derived according to the random walk penalties proposed, L sj is the rank of K sj , 1 n s is an n s × 1 vector with all elements equal to 1, n s is the sample size at state s, B sj is the submatrix of B j = [B l (x it,j )] nT×L without the rows where Z it ≠ s, and the truncation term incorporates the identifiability constraint (5) into the splines approximation (6).
+For the smoothing parameters ν sj , we assign a highly dispersed but proper inverse gamma prior as follows:
+where ν 1 and ν 2 are hyperparameters whose values are pre-specified.
+A common choice for these hyperparameters is ν 1 = 1 and ν 2 is small
+We set ν 1 = 1 and ν 2 = 0.005 in the present study.
+For the parameters involved in conditional model (1), conjugate-type priors are assigned as follows: for s = 1, …, S,
+where μ s0 , σ μs0 2 , γ s0 , Σ s0 , α ̃s0 , β ̃s0 , R 0 , and ρ 0 are hyperparameters with preassigned values.
+Finally, for the parameters involved in transition model (4), we consider the following Gaussian priors:
+where ζ us0 , σ ζ0 2 , α 0 , H α0 , τ s0 , and σ τ0 2 are hyperparameters with preassigned values.
+
+Posterior computation
+Let
+, and θ be the vector that includes all the unknown parameters in the proposed model.
+The complete-data log-likelihood function that is used to derive the posterior distributions and compute the model selection criterion is given by
+where
+The Bayesian estimate of θ is obtained by drawing samples from p(θ|Y), which is intractable because of the existence of latent states and random effects.
+We instead work on p(θ, Z, W|Y) and use a Gibbs sampler to implement the posterior simulation.
+Owing to the nonlinearity of the continuation-logit transition model and the existence of the nonparametric functions in the conditional regression, some full conditional distributions, especially those related to the transition model, have complex forms.
+MCMC methods, such as the forward filtering and backward sampling algorithm
+The details are provided in the Appendix.
+With the use of posterior samples, the hidden states can be estimated as follows:
+where Z it (m) denotes the latent allocation of y it at the mth iteration, and
+the posterior mean of the latent allocations of y it drawn from the MCMC iterations.
+
+Determination of the number of hidden states
+In the applications of BMSHM2 to the ADNI dataset, the states of the Markov chain can often naturally be interpreted as proxies for the neurodegenerative states, although a one-toone correspondence between nominal HMM states and the clinical cognitive stages diagnosed by doctors is unnecessary.
+In this regard, a relevant question is how to determine the number of hidden states in the analysis of ADNI data.
+We propose the use of a modified deviance information criteria (DIC) to determine the number of hidden states and choose a plausible model for the ADNI data analysis.
+The modified DIC, which was developed by
+where log p(Y, W, Z|θ) is the complete-data log-likelihood function shown in (11).
+The expectations involved in (
+In model selection, the model with the smallest value of DIC is selected.
+
+Alzheimer's Disease Neuroimaging Initiative Data Analysis
+
+Data description
+The ADNI was launched in 2003 by the National Institute on Aging (NIA), the National Institute of Biomedical Imaging and Bioengineering (NIBIB), the Food and Drug Administration (FDA), private pharmaceutical companies and nonprofit organizations, as a $60 million, 5-year public private partnership.
+The initial goal of ADNI was to recruit 800 adults, aged 55 to 90, to participate in the research -approximately 200 cognitively normal older individuals to be followed for 3 years, 400 people with MCI to be followed for 3 years, and 200 people with early AD to be followed for 2 years.
+We focused on 633 subjects who were all followed up at baseline, 6 months, 12 months, and 24 months.
+For each subject, we included his/her clinical, genetic, and imaging variables at the four time points.
+The clinical characteristics include gender (0 = male; 1 = female), age at baseline, and FAQ score.
+The FAQ score is an assessment of abilities to function independently in daily life and is widely used to monitor the decline of cognitive ability over time.
+The genetic variables include APOE gene because mutations in APOE raise the risk of progression from amnestic MCI to AD
+The APOE SNPs, rs429358 and rs7412 were separately genotyped in ADNI-1.
+These two SNPs together define a 3allele haplotype, namely, the ε2, ε3, and ε4 variants.
+Among these variants, APOE-ε4 has been identified as a risk factor for early onset of AD (e.g.,
+Thus, we considered the presence of APOE-ε4 as a covariate in this analysis.
+APOE-ε4 is coded as 0, 1, and 2, denoting the number of APOE-ε4 alleles.
+Furthermore, the logarithm of the ratio of hippocampal volume over whole brain volume was included as a covariate because published reports
+
+Data analysis
+The aims of this ADNI data analysis are (I) to identify the hidden states of the neurodegenerative pathology on the basis of 633 patients enrolled in the ADNI-1, (II) to reveal a set of potential covariates that influence the between-states transition, and (III) to investigate the linear and/or functional covariate effects on cognitive decline across the hidden states of the AD progression.
+We fitted BMSHM2 with the FAQ score as the response y it , the clinical and genetic variables, gender and APOE-ε4, as covariates in b it , and hippocampus and age at baseline as covariates in x it .
+Three continuous variables, FAQ score, hippocampus, and age, were standardized prior to analysis.
+We first determined the number of hidden states.
+We considered five competing models M k , k = 1, …, 5, where M k represents a BMSHM2 with k states.
+A total of 24 equidistant knots were used to construct cubic P-splines, and the secondorder random walk penalties were used for the Bayesian P-splines to estimate the unknown smooth functions.
+Given the lack of prior information, we assign the hyperparameters in (
+We used the random permutation sampler to search for a suitable identifiability constraint to solve the label switching problem.
+The MCMC algorithm converged within 2,000 iterations for all competing models.
+We collected a total of 10,000 observations after discarding 2,000 burn-in iterations to calculate DIC.
+The DIC values corresponding to M 1 to M 5 were 20,175, 1,823, 1,001, 950, and 1615, respectively.
+Thus, the four-state model M 4 was selected.
+To examine the necessity of the random effects in the proposed model, we considered another competing model M N : a four-state BMSHM2 without random effects.
+The DIC value for M N is 1,122, which suggests an evident advantage of the proposed mixed effect model in the presence of high dependency/heterogeneity in longitudinal observations.
+Thus, M 4 was selected for the subsequent analysis.
+The estimation results obtained under M 4 are reported in Table
+We have the following observations.
+First, μ 1 , μ 2 , μ 3 , and μ 4 are ranked in an ascending order, indicating that patients in state 1 got the lowest score of FAQ, whereas those in state 4 got the highest.
+That is, patients' ability to function independently in daily life steadily deteriorated from state 1 to state 4. According to the existing literature
+Second, the functional effect of hippocampus on FAQ exhibits a descending trend as hippocampus grows regardless of states.
+Specifically, in CN state, people with bigger hippocampus volume tend to have slightly better memory.
+This finding is in line with the common sense that hippocampus plays an important role in the consolidation of information from short-term memory to long-term memory.
+In EMCI and LMCI states, the descending trend of the functional effect of hippocampus on FAQ becomes much more pronounced.
+This result implies that atrophy in hippocampus increasingly impaires patients' cognitive ability.
+The published reports (e.g.,
+In AD state, the effect of hippocampal volume on FAQ is not significant because patients' cognitive ability and memory have already been damaged by serious hippocampus atrophy.
+Third, the effect of age on FAQ is nonsignificant in CN and EMCI states, implying that for those who have cognitive normal function or undergo only EMCI, age may not be a decisive factor for the reduction of cognitive ability.
+On the contrary, age exhibits nonlinear effects on FAQ in LMCI and AD states.
+The age effect is nonsignificant for relatively young patients but becomes significantly positive for elderly patients (say, over 85 years old).
+The positive effect increases with age and gets an even sharper rise in AD state.
+Such age effect was also discovered by previous studies (e.g.
+Fourth, as for the fixed effects of discrete variables, a significantly negative effect of gender on FAQ appears in state 4, which means that male AD patients are in a better condition than females in terms of independent abilities.
+The two APOE-ε4 alleles (b it,1 and b it,2 ) have significantly positive effects on FAQ in state 4 and b it,1 also has a slightly positive effect on FAQ in other states.
+This finding agrees with the newly published clinical research output that the presence of ε4 alleles in the APOE gene is the only genetic variant broadly accepted as increasing risk for late-onset AD dementia
+Fifth, in the transition model, hippocampus positively affects the probability of transitioning from a state to a better one, indicating that controlling loss of hippocampal volume would be beneficial to prevent the deterioration of cognitive ability.
+Similar to previous studies (e.g.,
+Sixth, the variances of the two random effects are significant, reconfirming the necessity of the random effects proposed.
+However, the corvariance between the two random effects is nonsignificant, showing that some omitted clinical or genetic indicators influenced outcomes of the observation process or probabilities of the transition process but did not affect the two processes simultaneously.
+Moreover, we estimated the hidden states of all patients at four time points based on Equation (
+Around 98% posterior transition patterns are from a state to a severer one, which is in line with the common knowledge of irreversibility of AD.
+Table
+For CN, LMCI, and AD states, a majority of the estimated states are consistent with those diagnosed by doctors.
+For EMCI state, however, 835 (67%) EMCI patients diagnosed by doctors were classified into CN state by our procedure.
+Such vague demarcation between CN and EMCI was also found and discussed in the literature (e.g.,
+
+Simulation Study
+We conduct Monte Carlo simulations to assess the empirical performance of the proposed method in estimation of the nonparametric functions and model parameters.
+
+Model setup
+We consider a BMSHM2 with four hidden states (S = 4), a continuous response y it , three discrete covariates (r = 3), and two continuous covariates (q = 2) to mimic the scenario of the ADNI study.
+For i = 1, …, 700 and t = 1, …, 9, b it,1 , b it,2 , and b it,3 are all generated from the Bernoulli distribution with the probability of success 0.5, and x it,1 and x it,2 are generated from U (-1, 1) and N (0, 1), respectively.
+The conditional model is defined as
+where f 11 (x it,1 ) = -1.305+exp(x
+it,1 ), f 12 (x it,2 ) = 0.55+sin(1.5x
+it,2 )+x it,2 , f 21 (x it,1 ) = 0.06-log((1 + x it,1 )/(1 -x it,1 )), f 22 (x it, 2 ) = 0.125 + x it, 2 3 , f 31 (x it,1 ) = -0.05
+-0.8x it,1 , f 32 (x it,2 ) = -0.275
++ cos(2x it,2 ) + 0.5x it,2 , f 41 (x it, 1 ) = -0.13
+-x it, 1 3 and f 42 (x it,2 ) = -0.85
++ 1.5x it,2 .
+The transition model is defined as
+The true population values of the unknown parameters are set as μ = (μ 1 , μ 2 , μ 3 , μ 4 ) = (-5, -1, 3, 7), τ = (τ 1 , τ 2 , τ 3 , τ 4 ) = (0.27, 0.27, 0.23, 0.23),
+, γ 12 , γ 13 ) = (-1, 0.5, 0.5), γ 2 = (γ 21 , γ 22 , γ 23 ) = (1, 1, 0.5), γ 3 = (γ 31 , γ 32 , γ 33 ) = (-0.5,
+-0.5, -0.5), γ 4 = (γ 41 , γ 42 , γ 43 ) = (0.5, -1, -1), α = (α 1 , α 2 , α 3 , α 4 , α 5 ) T = (1, -1, -0.5, 0.5, 1), ψ = (ψ 1 , ψ 2 , ψ 3 , ψ 4 ) = (1, 0.64, 0.36, 0.25), and Φ is a correlation matrix with off diagonal elements -0.5.
+Based on the above setup, we simulate 100 datasets for analysis.
+
+Simulation results
+We used a total of 24 equidistant knots to construct the cubic B-splines of the covariates.
+Again, the second-order random walk penalties were used for the Bayesian P-splines to estimate the unknown smooth functions.
+The prior inputs in (
+We conducted a few test runs to decide the number of burn-in iterations required for convergence and found that the MCMC algorithm converged within 2,000 iterations.
+Therefore, we obtain Bayesian results using 5,000 observations after discarding 2,000 burnin iterations.
+The performance of the Bayesian estimates is assessed through the bias (BIAS) and the root mean square errors (RMSE) between the Bayesian estimates and the true population values of the parameters.
+Table
+The BIAS and RMSE for most of the parameters are close to zero, indicating a satisfactory performance of Bayesian estimation regarding the parametric part.
+Figure
+The posterior means of the nonparametric functions are close to their true curves and all the ranges of the two pointwise quantiles are relatively small, indicating that the estimated functions can correctly recover the true functional relationships between the response and covariates.
+In this simulation, the average of the correct classification rates calculated through Equation (
+Considering the complexity of proposed model, this result is satisfactory.
+To reveal the sensitivity of the Bayesian estimates to the input of priors, we disturbed the prior inputs as follows: μ s0 = ζ us0 = τ s0 = 2, σ μs0 = σ ζ0 2 = σ τ0 2 = 2, α ̃s0 = 3, β ̃s0 = 2, ρ 0 = 4, R 0 = 2I 2 , α 0 and γ s0 are vectors with all elements being two, H α = 2I 5 and Σ s0 = 2I 3 .
+The obtained results are similar and not reported.
+
+Discussion
+The BMSHM2 was developed and successfully applied to the ADNI data analysis.
+Although HMMs and their variants have already been extensively used for longitudinal data analysis, a majority of applications restrict analysis in a parametric framework.
+Nonetheless, examples of using HMMs to classify and characterise the neurodegenerative states of AD pathology are not prevalent, especially in a semiparametric context.
+In this study, we extended parametric HMMs to accommodate the functional effects of hippocampus and age on cognitive decline across four neurodegenerative states, namely, CN, EMCI, LMCI, and AD.
+The functional effect of hippocampus on cognitive function exhibited a descending trend as hippocampus grows regardless of states.
+This descending trend became more pronounced for EMCI and LMCI states than for CN and AD states, implying that atrophy in hippocampal volume had increasingly impaired patients' cognitive ability, especially during the progression from EMCI to LMCI.
+On the contrary, age affected cognitive function mainly in LMCI and AD states.
+Elderly LMCI or AD patients suffered from more increasing neurodegeneration than relatively young patients.
+Our model incorporates correlated random effects to account for individual and/or contextual differences in the progression of cognitive decline and in between-state transition.
+Large inter-individual variability is a prominent feature of the ADNI dataset and many other longitudinal datasets.
+As we demonstrated in the ADNI study, accounting for such differences can dramatically improve model fit, as evidenced by an apparent improvement in DIC value between models with and without random effects.
+In addition, the correlation between the random effects enhances the model capability of accommodating the situation where some omitted covariates influence both the state-dependent observation process and the hidden-state transition process.
+Another appealing feature of this study is that it implements a full Bayesian analysis along with efficient MCMC methods.
+The samplingbased Bayesian approach is not only applicable to the current parameter-rich BMSHM2 but also possesses potential to address highly complex problems with which huge challenges are confronted by ML-based procedures.
+The present study can be extended in several directions: First, we considered the nonparametric modeling only in the conditional model.
+Generalizing the parametric transition model to a semiparametric or nonparametric one can further enhance model flexibility and analytic power.
+However, the statistical analysis of such comprehensive models can be challenging because the computational burden and sample size often limit the complexity of candidate models.
+Thus, the feasibility of this extension requires further investigation.
+Second, in the application to the ADNI dataset, a highly comprehensive characterization of cognitive function is to group the FAQ, Alzheimer's Disease Assessment Scale, and Mini-Mental State Examination into an integrated latent construct through multivariate techniques such as factor analysis (e.g.
+Finally, this study did not consider missing data.
+Given that missingness is very common in longitudinal settings, accommodation of missing responses and/or missing covariates in the context of BMSHM2s is both of scientific interest and of practical value.
+These advances certainly require substantial efforts for further investigation.
+where
+(IV) Full conditional distributions of β sj and θ sj
+where
+T y s * , and y s * = {y it, s * } is an n s × 1 vector with
+According to
+where
+where p itu0 and p itus can be calculated via Equation (
+ADNI-1 data analysis results: estimates of the unknown smooth functions.
+The solid curves represent the pointwise mean curves, and the dashed curves represent the 2.5%-and 97.5%pointwise quantiles.
+line y = 0 has been shown on each picture by red dot-dash to illustrate the range of significant effect for each variable.
+Estimates of the unknown smooth functions in the simulation study: The solid curves represent the true curves, and the dashed curves represent the estimated posterior means and the 2.5%-and 97.5%-pointwise quantiles based on 100 replications, respectively.
+Table
+Gender (Male percentage) 56.2%
+Mean log(hippocampus/whole brain volume) -5.0(0.2)
+Mean FAQ score 4.1(6.5)
+One APOE-ε4 allele carriers 34.6%
+Two APOE-ε4 alleles carriers 9.8%
+The numbers in parentheses are standard deviations.
+Table
+Parameters in conditional regression model Bayesian estimates of the parameters in the simulation study.
+Parameters in conditional regression model
+
+
+
+Figure 1 .
+Figure 1.
+ADNI-1 data analysis results: individual trajectories of FAQ scores for 20 randomly selective samples whose baseline states are CN, MCI, and AD, respectively.
+
+
+Figure 2.
+
+
+Figure 3.
+
+
+
+Table 1

@@ -1,0 +1,305 @@
+Multilevel Feature Representation of FDG-PET Brain Images for Diagnosing Alzheimer's Disease
+Using a single imaging modality to diagnose Alzheimer's Disease (AD) or Mild Cognitive Impairment (MCI) is a challenging task.
+FluoroDeoxyGlucose Positron Emission Tomography (FDG-PET) is an important and effective modality used for that purpose.
+In this paper, we develop a novel method by using single modality (FDG-PET) but multi-level feature, which considers both region properties and connectivities between regions to classify AD or MCI from Normal Control (NC).
+First, three levels of features are extracted: statistical, connectivity and graph-based features.
+Then the connectivity features are decomposed into 3 different sets of features according to a proposed similarity-driven ranking method, which can not only reduce the feature dimension but also increase the classifier's diversity.
+Last, after feeding the 3 levels of features to different classifiers, a new classifier selection strategy, maximum Mean squared Error (mMsE), is developed to select a pair of classifiers with high diversity.
+In order to do the majority voting, a decision-making scheme, a nested cross validation technique is applied to choose another classifier according to the accuracy.
+Experiments on Alzheimer's Disease Neuroimaging Initiative (ADNI) database show that the proposed method outperforms most FDG-PET-based classification algorithms, especially for classifying progressive MCI (pMCI) from stable MCI (sMCI).
+
+I. INTRODUCTION
+Alzheimer's Disease (AD) is a dominant neurodegenerative brain disease and the main cause of dementia in elderly people worldwide.
+It is expected that 115 million people will be affected by this disease in 2050
+The National Institute on Aging and Alzheimer's Association (NIA-AA) criteria distinguish 3 clinical stages: asymptomatic preclinical phase (preclinical stage of AD), amnestic Mild Cognitive Impairment (MCI) phase due to AD, and AD dementia phase
+These criteria introduce the utility of different biomarkers of the pathophysiological process to weight the diagnostic probability of the disease
+One of them is FDG-PET, which is effective in diagnosing AD
+It can reveal pathophysiological changes before irreversible anatomical changes and provide useful information about the cerebral glucose metabolic rate
+Machine learning techniques offer an automatic and objective classification framework for high-dimensional data processing and can learn complex patterns of changes across various imaging modalities
+Computer-Aided Diagnosis (CAD) based on machine learning approaches is a useful method for doctors, and can bring a quantitative evaluation to better detect brain diseases.
+Therefore, developing a method that can be used to distinguish AD and MCI from Normal Control (NC) automatically is important yet challenging.
+In recent papers
+Shi et al
+Liu el al
+There has been a growing interest in using FDG-PET as a single modality to diagnose AD and MCI as well.
+These FDG-PET-based methods can be classified into 2 main categories according to the type of used features: 1) voxel-based methods, which used voxels as features
+But they take only region properties into consideration without connectivities between regions.
+In fact, a human brain is a complex system and multiple regions interact with each other
+Therefore, connectivities between regions are important in AD and MCI diagnosis and cannot be ignored.
+In this study, we investigate the multi-level feature representation for FDG-PET data to diagnose AD and MCI.
+The major contributions can be summarized as three folds: 1) the multi-level feature representation considers not only region properties (1st-Level), but also the connectivity between any pair of regions (2nd-Level) and an overall connectivity between one region and the other regions (3rd-Level); 2) a similarity-driven ranking method is proposed to rank regions from highly affected to slightly affected by the disease, which can decompose the 2nd-level feature, thereby reducing the feature dimension and increasing the classifier's diversity to a certain degree; 3) a classifier selection strategy, maximum Mean squared Error (mMsE), is proposed to choose a pair of classifiers with high diversity to enhance the ensemble effect, especially for the case that sub-classifiers do not perform well.
+The remaining of the paper is organized as follows.
+Section II describes the novel multi-level representation method for diagnosing AD and MCI.
+Section III reports and analyzes the experimental results.
+Finally, a conclusion of this work is given in Section IV.
+
+II. METHODS
+The proposed multi-level feature representation method is described from 3 aspects in details, including feature extraction, feature selection and ensemble classification, as shown in Fig.
+First, after segmenting each subject into 116 Regions of Interest (ROIs) according to an Automated Anatomical Labeling (AAL) atlas
+The 2nd-Level feature, the similarity-based connectivity between any pair of ROIs, is decomposed into 3 sets according to a proposed similaritydriven ranking method.
+The 3rd-Level feature is composed of graph-based features.
+Next, Least Absolute Shrinkage and Selection Operator (LASSO)
+Then different classifiers are trained using different sets of features.
+Final prediction is obtained through an ensemble classifier decided by a proposed maximum Mean squared Error (mMsE) strategy and a nested cross validation technique.
+
+A. Dataset
+Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.edu).
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial MRI, PET, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.
+ADNI provides different imaging modalities, such as structural MRI, functional MRI, Diffusion Tensor Imaging (DTI) and PET, for researchers to develop methods for early detection of AD.
+In this study, we focus on using FDG-PET data to diagnose AD and MCI.
+After having acquired original data, there are usually 3 steps in data processing: spatial normalization, smoothing and intensity normalization.
+In the existing literatures, most researchers do these procedures independently.
+In fact, besides those original data, ADNI also provides processed data.
+There are 2 kinds of FDG-PET data images, pre-processed data and post-processed data.
+Specifically, for the pre-processed data, there are 4 different groups [23], including 1) Co-registered Dynamic; 2) Co-registered, Averaged; 3) Co-reg, Avg, Standardized Image and Voxel Size; 4) Co-reg, Avg, Std Img and Vox Siz, Uniform Resolution.
+The post-processed data was processed on the basis of group 4) data mentioned above and then spatially normalized to MNI template using SPM
+The intensity normalization is done by using the global mean value.
+It should be noted that the reason why we use the post-processed data is to avoid the impact of pre-treatments as far as possible and pay more attention to the influence of features and classification methods on results.
+Therefore, 272 post-processed baseline FDG-PET data were obtained from ADNI, including 94 subjects with AD, 88 subjects with MCI and 90 subjects under NC.
+MCI subjects were clinically further subdivided into 44 progressive MCI (pMCI), who progressed to AD in 24 months, and 44 stable MCI (sMCI), who did not progress to AD. Demographic and clinical information of subjects are provided in Table
+
+B. Feature Extraction
+Before extracting features, each subject is segmented into 116 ROIs using AAL atlas.
+Many methods in the existing literatures used mean gray level intensities of some ROIs as features
+However, only ROI's information is not enough.
+Therefore, in this paper, we explore to expand the feature pool computed on FDG-PET data.
+1) 1st-Level Feature: Since each ROI's mean intensity and standard deviation can reflect the FDG uptake and its corresponding distribution, the 1st-Level feature for the n-th sample can be represented as:
+where r m n and r s n are the mean intensity and standard deviation, respectively, and p is the number of ROIs, here p = 116.
+2) 2nd-Level Feature: The 2nd-Level feature is the similarity-based connectivity between ROIs.
+Hereafter, connectivity is used to refer to similarity-based connectivity.
+First, the 1st-Level feature is used to represent each ROI, and the i-th ROI is represented by:
+then the connectivity between any two ROIs is computed through:
+where w ij is the connectivity of the i-th ROI and the j-th ROI, and the higher the value of w ij , the more similar the two ROIs.
+It should be noted that before computing w ij through (4), each type of the 1st-Level feature is normalized over ROIs.
+The 2nd-Level feature of any subject is:
+where W r is a symmetric matrix.
+The 2nd-Level feature is composed of connectivities between all the 116 ROIs, totally 6670 dimensions (116 × (116-1)/2, only considering the values on the upper triangle).
+Clearly, it is not an optimal dimension for the subsequent classification.
+Therefore, W r is further decomposed into 3 subsets of features according to a proposed similarity-driven ranking method.
+Similar to the way of computing connectivities between ROIs, we can obtain the similarity coefficients between subjects for a specific ROI:
+where u, v stands for the u-th and v-th subjects.
+For any ROI, a symmetric matrix for subjects, s , is obtained from:
+The dimension of W s is determined by the number of subjects, N , in a group (AD, NC, MCI, pMCI and sMCI).
+For example, there are 94 subjects in AD group, so N = 94, then the dimension of W s is 94 × 94.
+Each subject is segmented into 116 ROIs, thus there are 116 matrices like W s .
+If taking NC subjects (including training and testing samples) as a reference, in one hand, for a ROI which is not affected by AD, the similarity coefficients between AD subjects are supposed to be close to those of NC subjects.
+In the other hand, for a ROI affected by AD, the similarity coefficients of AD subjects are different from NC group.
+In order to quantify the difference, we first make a statistic on the upper triangle values of W s to get the frequency distribution histogram of those values.
+Then the cumulative probability curve of similarity coefficients can be obtained, as shown in Fig.
+It can be seen that there is a clear difference between the AD and NC groups in Fig.
+It implies that among the experimental subjects, region Cerebelum 10 R is almost unaffected by AD, while region Angular L has a great chance of getting influenced, therefore region Angular L is ranked before region Cerebelum 10 R, and region Hippocampus L is placed between them.
+The difference between curves is computed through the difference of area under curve, which is denoted ∆S.
+The larger the ∆S, the greater the impact generated by AD for a ROI.
+At last, all the ROIs can be ranked according to ∆S from high to low.
+It should be noted that we highly recommend using a balance number of subjects in 2 groups for the comparison and the more the better.
+After ranking all the ROIs, the similarity matrix W r is recalculated according to the new order of ROIs.
+Then W r is divided into 4 equal parts, as shown in Fig.
+Since W r is symmetric, only upper triangular matrix is taken into consideration, like in Fig.
+Therefore, the 2nd-Level feature W r is divided into 3 sets, and after converting them to vectors, the 2nd-Level feature for the n-th sample is represented as:
+where p h , p m and p l are the dimension of each subset of features.
+p h and p l are the same (red and blue parts in Fig.
+Apparently, compared to 6670 (red, blue and green parts), the dimension is decreased by about 50%-75%.
+3) 3rd-Level Feature: The 3rd-Level feature is extracted from a graph point of view, which stands for an overall connectivity between a ROI and the other ROIs.
+Generally, a graph G = (V, E) consists of a finite set V of vertices and a finite set of edges ⊆ V × V .
+A vertex in a graph is equivalent to a ROI in a brain.
+Therefore, the connectivity between the i-th ROI and the j-th ROI, w ij , can be viewed as the weight of an edge which connects the i-th vertex and the j-th vertex.
+In this paper, we analyze the undirected graph, which means w ij = w ji .
+Then a subject can be represented by a graph, as shown in Fig.
+After constructing a graph for a subject, several graph measures can be computed, such as degree, strength, clustering coefficient, betweenness centrality
+According to
+Specifically, strength: the sum of a vertex's neighboring link weights
+where s i is the strength of a vertex or a ROI.
+clustering coefficient: the geometric mean of all triangles associated with each vertex
+where diag(•) is a operator which takes the diagonal values from a matrix, c is a clustering coefficient vector, and d is a degree vector in which the element d i is,
+where a ij is the connection status between the i-th vertex and the j-th vertex:
+Thus, the 3rd-Level feature consists of 2 sets of features, and each of them for the n-th sample is represented as:
+These features exhibit different ranges of values.
+Thus a procedure of feature normalization is necessary by z-score prior to classification:
+where f nm is the value of the m-th feature of the n-th sample, and f ∈ {r m , r s , w h , w m , w l , g s , g c }, µ m and δ m are the mean value and standard deviation of the m-th feature, respectively.
+Most of f nm values can be transformed to the range [-1, 1] through
+
+C. Feature Selection
+In this paper, there are 3 levels of features.
+For the 1st-Level and 3rd-Level features, the dimension is 116 for each type of feature.
+For the 3 subsets of features in 2nd-Level, the dimension is 1653 (w h ), 3364 (w m ), 1653 (w l ), respectively.
+Therefore, it is necessary to select representative features to reduce the feature dimension.
+A good strategy of feature reduction or selection is to remove irrelevant, redundant and noisy features and meanwhile improve classification performances.
+Least Absolute Shrinkage and Selection Operator (LASSO) is one of the popular techniques for dimension reduction and feature selection.
+It uses l 1 regularization to get a sparsity solution, thereby achieving the goal of feature selection.
+In this paper, feature selection is accomplished by using LASSO.
+
+D. Ensemble Classification
+The support vector machine (SVM) classifier is a popular and effective method in distinguishing subjects with AD or MCI from NC.
+In this study, 3 levels of features, which then are decomposed into 7 types of features, are fed into 7 linear SVMs to train 7 individual models, respectively.
+The motivation of training in this way is to ensure a model focus on one type of feature of the data.
+The margin parameter C of all the SVMs is fixed to 1 for a fair comparison, like
+The effectiveness of an ensemble classifier depends on the number of individual classifiers and the diversity between them.
+The more the number of classifiers and the higher the diversity, the more effective the ensemble classifier is.
+However, if the sub-classifier doesn't perform well (the accuracy is usually between 50% and 60%), the increase of the number of classifiers cannot improve the ensemble classifier's performance, because as the number of classifiers increases, the possibility that misclassified results accounted for the majority also increases.
+Thus, in order to enhance the ensemble effect and meanwhile, avoid misclassified results taken up the majority, a strategy of selecting models, maximum Mean square Error (mMsE), is proposed.
+Let y i and y j denote the output labels of SVM i and SVM j , respectively, then the Mean Square Error (MSE) between y i and y j is computed through,
+where K is the number of the testing samples and each element in y i belongs to {-1, 1}.
+The higher the MSE, the greater the diversity between the outputs of classifiers.
+Then a pair of classifiers with high diversity can be achieved by finding the maximum MSE,
+In addition, another classifier, y k , is determined through nested cross validation on the training set and the one with the highest accuracy is selected.
+Last, the final decision is made through a majority voting of the 3 selected classifiers' outputs:
+where sgn(•) is a sign function.
+Even though the number of classifiers for decision making decreases, the classifiers with high diversity and high accuracy are kept.
+Therefore, the strategy can enhance the ensemble effect, especially in the case where all the classifiers do not have a good performance, since it can avoid misclassified results accounted for the majority.
+
+III. EXPERIMENTS AND RESULTS
+
+A. Experimental Setup
+Experiments are conducted on 3 different kinds of classifications, including 1) AD vs. NC, 2) MCI vs. NC and 3) pMCI vs. sMCI.
+In order to evaluate the performance of the proposed method, 4 different metrics, classification accuracy (ACC), sensitivity (SEN), specificity (SPE), and area under curve (AUC) are used.
+The higher the values are, the better the corresponding method is.
+Specifically, ACC is the proportion of samples that are properly predicted.
+SEN implies the proportion of correctly classified AD or MCI samples.
+SPE means the proportion of NC samples that are correctly classified.
+Because of a limited number of samples, we use a 10-fold cross validation technique to assess the performance, and repeat 10 times to reduce the possible bias.
+The parameter in LASSO, λ, is decided by nested cross validation on the training dataset within the range {10 -5 , 10 -4 , ..., 10 -1 } for the 1st-Level and 3rd-Level features, and {10 -9 , 10 -8 , ..., 10 -1 } for the 2nd-Level feature.
+The parameter is chosen separately, which can help reduce the computation cost in a great extent.
+It should be noted that all the results shown in following parts are obtained after LASSO.
+The whole procedure is shown in Algorithm 1.
+Algorithm 1 Workflow of the proposed method.
+Using the proposed mMsE method and the nested cross validation technique to choose 3 models; 6: Applying the 3 models on testing data and then the evaluation metrics (ACC, SEN, SPE, AUC) can be computed; 7: Returning to step 1, choosing another part as the testing data till all the 10 parts are used for testing; 8: Repeating step 1 to step 7 ten times, then computing the average value of each metric.
+
+B. Single-type Feature Representation Evaluation
+The 3 levels of features are decomposed to 7 different types of features, and the performance of each type of feature is shown in Table
+It can be seen that the 1st-Level feature (either the mean intensity or the standard deviation) outperforms the other 2 levels of features for all the 3 kinds of classifications.
+Even though it doesn't give the best result in classifying AD from NC, the difference from the best one (w m ) is small in terms of ACC and AUC, about 1.39% and 0.04%, respectively.
+Furthermore, the SPE of the feature standard deviation (belongs to 1st-Level feature) is the highest.
+The graph metric, strength, which belongs to the 3rd-Level feature is inferior among all the types of features in AD diagnosis and MCI diagnosis.
+
+C. Feature Concatenation Evaluation
+In this part, the evaluation for different levels of features are given.
+Different types of features within the same level are concatenated to a long vector and the results are shown in Table
+As can be seen, among all the 3 levels of features, the 1st-Level feature is still superior to other features in three tasks.
+In addition, it can be seen from Table
+Concatenation of 2nd-Level features also has some improvements, but concatenation of 3rd-Level features has an inverse effect and all the four metrics are lower than the results obtained using the optimal sub-feature (clustering coefficient) in 3rd-Level.
+In MCI diagnosis, only concatenation of 2nd-Level features improves the classification effectiveness.
+But in classifying pMCI from sMCI, concatenation of sub-features within the same level cannot improve the performance.
+In addition, the performances of concatenating all the 3 levels of features are also shown in Table
+It can be seen that there is a significant improvement only for AD diagnosis, and for MCI diagnosis, the improvement is small.
+For pMCI vs. sMCI, concatenation of 3 levels of features fails to improve the performance.
+It is because that those added features may be effective, or may be redundant.
+Therefore, the strategy of concatenating features is not an effective method to improve the classification performance for the all 3 tasks.
+
+D. Effectiveness of the Similarity-driven Ranking Method
+The similarity-driven ranking method can not only reduce the 2nd-Level feature's dimension, but also improve the classifier's diversity.
+Here, Kappa index
+Figure
+As can be seen, the decomposed features can achieve a higher diversity (a smaller value) than the original 2nd-Level feature for all the 3 tasks, especially for classification of pMCI.
+The higher diversity benefited from the similarity-driven ranking method can ensure the ensemble classifier has a good performance.
+
+E. Ensemble Classification Evaluation
+The increase of the number of classifiers and their diversities can improve the performance of the ensemble classifier in theory.
+Obviously, the maximum number of classifiers (7 classifiers) is fixed in this paper.
+If the sub-classifiers do not perform well and all of them are used to do the final decision through majority voting, there will be a high probability that misclassified results accounted for the majority.
+In order to avoid this situation and enhance the ensemble effect, a strategy of selecting models with high diversity is proposed.
+In this experiment, we compare majority voting using outputs from all the 7 SVMs (noted as 7-Majority Voting) with the proposed method which using 3 selected SVMs' decisions (noted as 3-Majority Voting), and the results are shown in Fig.
+It can be seen that the proposed method outperforms the 7-Majority Voting, specifically, it improves by 1.42% (ACC), 2.20% (SEN), 2.00% (SPE), and 0.03% (AUC) in AD diagnosis and 1.42% (ACC), 3.22% (SEN), 0.67% (SPE), -0.55% (AUC) in MCI diagnosis.
+For pMCI vs. sMCI, the proposed method increases by 6.64% (ACC), 6.44% (SEN), 4.71% (SPE), and 1.93% (AUC).
+Clearly, the proposed method shows an effective improvement for classifying pMCI from sMCI.
+It is because that a single type of feature in the classification of pMCI does not perform well, and the highest accuracy is only 59.85% (Table
+The probability that misclassified results dominate the majority voting will be high, if considering all the 7 classifiers' outputs.
+And another reason is that the improvement of performance in classifying pMCI from sMCI benefits from the increase of diversity brought by the decomposition of 2nd-Level feature.
+
+F. Comparison with the State-of-the-art Methods
+We also compare the classification performance of the proposed method with the state-of-the-art methods, including Hinrichs's method [14], Gray's method
+The results are shown in Table
+It can be seen that our method outperforms the other methods regarding MCI diagnosis and classifying pMCI from sMCI.
+For AD vs. NC, the proposed method is superior to the compared method in terms of ACC and SEN.
+The difference with the best result in respect of SPE is 2.22%, and for AUC, it is 1.02%.
+But our method is inferior to Lu's method
+
+IV. CONCLUSION
+AD and MCI diagnoses under FDG-PET single modality are challenging.
+In this paper, a novel ensemble method which uses multi-level features is proposed to address the problem.
+First, 3 levels of features that represent properties of ROIs and their connectivities are extracted gradually.
+Then a proposed similarity-driven ranking method is applied to decompose the 2nd-Level feature to 3 different sets of features, which reduces the feature dimension to a great extent and increases the classifier's diversity.
+Next, different models are trained by using different types of features.
+In order to enhance the ensemble effect, a pair of models with high diversity are selected through the proposed mMsE method and another model with high accuracy is chosen by nested cross validation.
+The final decision is made through the majority voting of the 3 selected models' outputs.
+According to experiments on the public dataset (ADNI), the proposed method can improve the performance of AD and MCI diagnoses and especially classifying pMCI from sMCI when compared with those state-of-the-art methods developed by using classical machine learning techniques, but our approach does not outperform the deep learning based methods, which will be included in our future work.
+V. ACKNOWLEDGEMENTS
+
+
+
+Fig. 1 .
+Fig. 1.
+The framework of the proposed method.
+
+
+
+Fig. 2 .
+Fig. 2. Statistics of the similarity coefficients between subjects for a certain ROI.
+(a) ROI: Angular L. (b) ROI: Hippocampus L. (c) ROI: Cerebelum 10 R
+
+
+
+Fig. 3 .
+Fig. 3. Instance of the division for a similarity matrix.
+
+
+
+Fig. 4 .
+Fig. 4. Instance of the brain connectivity network from the axial view [26].
+
+
+
+Fig. 5 .
+Fig. 5. Performance evaluation of the similarity-driven ranking method.
+(a) AD vs. NC.
+(b) MCI vs. NC.
+(c) pMCI vs. sMCI.
+
+
+
+Fig. 6 .
+Fig. 6.
+Performance evaluation of the ensemble classification.
+(a) AD vs. NC.
+(b) MCI vs. NC.
+(c) pMCI vs. sMCI.
+
+
+Data collection and sharing for this project was funded by the Alzheimer's Disease Neuroimaging Initiative (ADNI) (National Institutes of Health Grant U01 AG024904) and DOD ADNI (Department of Defense award number W81XWH-12-2-0012).
+ADNI is funded by the National Institute on Aging, the National Institute of Biomedical Imaging and Bioengineering, and through generous contributions from the following: AbbVie, Alzheimer's Association; Alzheimer's Drug Discovery Foundation; Araclon Biotech; BioClinica, Inc.; Biogen; Bristol-Myers Squibb Company; CereSpir, Inc.; Cogstate; Eisai Inc.; Elan Pharmaceuticals, Inc.; Eli Lilly and Company; EuroImmun; F. Hoffmann-La Roche Ltd and its affiliated company Genentech, Inc.; Fujirebio; GE Healthcare; IXICO Ltd.; Janssen Alzheimer Immunotherapy Research & Development, LLC.; Johnson & Johnson Pharmaceutical Research & Development LLC.; Lumosity; Lundbeck; Merck & Co., Inc.; Meso Scale Diagnostics, LLC.; NeuroRx Research; Neurotrack Technologies; Novartis Pharmaceuticals Corporation; Pfizer Inc.; Piramal Imaging; Servier; Takeda Pharmaceutical Company; and Transition Therapeutics.
+The Canadian Institutes of Health Research is providing funds to support ADNI clinical sites in Canada.
+Private sector contributions are facilitated by the Foundation for the National Institutes of Health (www.fnih.org).
+The grantee organization is the Northern California Institute for Research and Education, and the study is coordinated by the Alzheimers Therapeutic Research Institute at the University of Southern California.
+ADNI data are disseminated by the Laboratory for Neuro Imaging at the University of Southern California.
+
+
+2168-2194 (c) 2018 IEEE.
+Personal use is permitted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications_standards/publications/rights/index.html for more information.
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited.
+Content may change prior to final publication.
+Citation information: DOI 10.1109/JBHI.2018.2857217,
+IEEE Journal of Biomedical and Health Informatics Age(Mean ± SD) 75.83 ± 7.37 76.08 ± 5.01 76.71 ± 6.63 75.86 ± 7.37 77.56 ± 5.75 MMSE(Mean ± SD) 23.46 ± 2.14 28.97 ± 1.15 26.92 ± 1.62 26.77 ± 1.78 27.07 ± 1.45
+
+
+
+1 :
+Dividing the dataset into 10 parts, one of them is used as testing data and the remaining parts are for training; 2: Extracting 7 types of features for the training and testing data, respectively; 3: Selecting features by LASSO for each type of features; 4: Training different models using different types of features on training data; 5:
+
+
+
+TABLE II PERFORMANCE
+OF DIFFERENT TYPE OF FEATURE FOR AD VS.
+NC(%)
+
+
+
+TABLE IV PERFORMANCE
+OF DIFFERENT TYPE OF FEATURE FOR PMCI VS.
+SMCI(%)
+
+
+
+TABLE V PERFORMANCE
+OF DIFFERENT LEVEL OF FEATURE FOR AD VS.
+NC(%)

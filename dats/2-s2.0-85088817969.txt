@@ -1,0 +1,356 @@
+Binary Classification of Alzheimer’s Disease Using sMRI Imaging Modality and Deep Learning
+Alzheimer's disease (AD) is an irreversible devastative neurodegenerative disorder associated with progressive impairment of memory and cognitive functions.
+Its early diagnosis is crucial for the development of possible future treatment option(s).
+Structural magnetic resonance images (sMRI) play an important role to help in understanding the anatomical changes related to AD especially in its early stages.
+Conventional methods require the expertise of domain experts and extract hand-picked features such as gray matter substructures and train a classifier to distinguish AD subjects from healthy subjects.
+Different from these methods, this paper proposes to construct multiple deep 2D convolutional neural networks (2D-CNNs) to learn the various features from local brain images which are combined to make the final classification for AD diagnosis.
+The whole brain image was passed through two transfer learning architectures; Inception version 3 and Xception, as well as a custom Convolutional Neural Network (CNN) built with the help of separable convolutional layers which can automatically learn the generic features from imaging data for classification.
+Our study is conducted using cross-sectional T1-weighted structural MRI brain images from Open Access Series of Imaging Studies (OASIS) database to maintain the size and contrast over different MRI scans.
+Experimental results show that the transfer learning approaches exceed the performance of non-transfer learningbased approaches demonstrating the effectiveness of these approaches for the binary AD classification task.
+
+Introduction
+Cognitive decline associated with Alzheimer's disease (AD) is among the prevalent and widely studied phenomenon associated with the death of nerve cells, accumulation of amyloid plaques and neurofibrillary tangles, and loss of tissue throughout the brain that usually starts slowly and worsens over time.Seamless changes in the AD continuum take years if not decades to progress from normal cognition (NC) to mild cognitive impairment (MCI), with gradual evolution of clinically probable AD to confirmed AD
+Early and accurate detection and diagnosis of AD requires careful assessment by a medical domain expert, monitoring of patient history as well as physical and neurological examinations.
+The Mini-Mental State Examination (MMSE), which is a 30-point questionnaire
+Neuroimaging modalities such as structural magnetic resonance imaging (sMRI), functional magnetic resonance imaging (fMRI), and positron emission tomography (PET) are used to provide the evidence that cognitive decline is structurally changing the brain
+They contain detailed information regarding the subcortical structures such as cerebral cortex; amygdala; hypothalamus; cerebellum; occipital, parietal, and frontal lobes; corpus callosum; and thalamus.
+All these substructures of the brain are directly or indirectly involved in the distinctive cognitive and behavioral operations and a defect in their performance augments impaired decision making
+Specifically, it is known that changes including focal lesions and gray matter loss in the lobes can be understood using structural MRI scans
+Machine learning techniques have been widely used over the past decade for the analysis of neuroimaging data.
+Recently, a machine learning framework known as deep learning has received increased attention because of its ability in predicting various clinical outcomes of interest.
+Given the right infrastructure, deep learning algorithms are now arguably the best choice for classification of clinical phenotypes as they have the power to be a superior approach than traditional machine learning models for these tasks.
+Researchers have developed convolutional neural network (CNN) models which efficiently combine a number of approaches for successful pattern recognition and classification.
+CNN models have proven the ability to detect patterns within image data sets for common tasks such as classification with superior accuracy.
+Inside a CNN, a series of filters, with a size equivalent to a miniscule image patch, automatically search through the image to determine spatial patterns in the image.
+These filters can be learned and updated independently to detect critical information.
+Such approaches can be used in a straightforward fashion to train deep learning models on 2D and 3D MRI scans
+The datasets collected in neuroimaging studies are commonly very small, compared to the sizes of image classification datasets that are currently used to train neural networks for object recognition in 2D image analysis.
+To select discriminative features from a multitude of patches in each MR image still remains a challenging problem.
+Hence, in supervised learning setup, it is still incredibly important to be able to build network architectures capable of learning most discriminative features necessary for classification based on small datasets.
+Motivated by the success of deep learning in computer vision and despite extensive research in the use of deep learning-based methods for binary classification of AD using neuroimaging, there is still room for further exploration of these techniques especially for 2D classification architectures.
+In this study, we propose a 2D classification architecture based on the integration of several separable convolutional layers for cross-sectional sMRI brain image classification and disease diagnosis.
+Our architecture was designed and tested while addressing the paucity of data.
+The performance, in terms of binary classification, of the proposed architecture is compared with the existing transfer learning architectures Xception
+We assessed the performances of these architectures on a single modality which allows us to better apprehend its discriminating power.
+We use cross-sectional T1-weighted sMRI images from Open Access Series of Imaging Studies (OASIS) database for all the experiments
+The rest of this paper is organized as follows.
+In Section 2, we present the datasets in detail while the classification architectures are discussed in Section 3. Experiments and results are presented in Section 4 followed by discussion in Section 5. Finally, a conclusion is given in Section 6.
+
+Datasets
+We used OASIS-1 dataset of cross-sectional images to create subsets in all of our experiments.
+This set consists of a cross-sectional collection of 416 subjects aged 18 to 96.
+For each subject, three or four individual T1-weighted magnetization-prepared rapid gradient-echo (MP-RAGE) images obtained in single scan sessions are included.
+The scans were acquired using a 1.5-T vision scanner in a single imaging session.
+The subjects are all right-handed and include both men and women.
+One hundred of the included subjects over the age of 60 have been clinically diagnosed with very mild to moderate AD.
+In this dataset, the diagnosis of AD is based on the clinical information that the subject has experienced gradual onset and progression of decline in memory a n d o t h e r c o g n i t i v e a n d f u n c t i o n a l d o m a i n s .
+Specifically, the clinical dementia rating (CDR)
+A global CDR score is derived from individual ratings in each domain.
+A global CDR of 0 indicates no dementia, and CDRs of 0.5, 1, 2, and 3 represent very mild, mild, moderate, and severe dementia, respectively.
+We use the atlas-registered gain field-corrected images in the dataset for all the experiments in this study.
+We define non-Alzheimer's subject as one with CDR rating of 0, and Alzheimer's subject as one with CDR rating of 0.5, 1, or 2. Random samples of images of the two classes used for the experiments in this study are shown in Figs.
+We used 96 slices for every subject selected visually from a 3D image after ignoring the first and last 40 slices on the basis of the information they contain.
+Details of the datasets used for experiments in this study will be described in the next subsections.
+
+Dataset-1
+There are 90 subjects of both classes in this subset.
+CDR rating of Alzheimer's class instances is 0.5, 1, or 2. There are 60 subjects with CDR rating of 0.5, 28 subjects with CDR rating of 1, and 2 subjects with CDR rating of 2. The demographics of the subjects in this subset are listed in Table
+
+Dataset-2
+We created this subset to study the class imbalance problem.
+There are 84 subjects of non-Alzheimer's class while 30 subjects of Alzheimer's class in this subset.
+The ratio between non-Alzheimer's and Alzheimer's subjects is 2.8:1, respectively.
+CDR
+
+Dataset-3
+We used the dataset from Hon et al.
+As pointed out by Wen et al.
+The type of data leakage could potentially be an absence of an independent test set and a late split.
+The authors
+They used an entropy-based sorting mechanism to pick the most informative 32 slices from each 3D scan.
+That resulted in a total of 6400 images, 3200 for each class.
+Five thousand one hundred twenty images are present in the training subset, and 1280 images are present in the validation subset.
+
+Classification Architectures
+CNNs are at the heart of modern deep learning revolution which has kickstarted after the 2012 ImageNet Large Scale Visual Recognition Challenge (ILSVRC) won by the Alexnet network.
+The core of CNNs is the operation of convolution which learns local translationally invariant patterns in the input feature space.
+CNNs also take advantage of the fact that visual world is fundamentally spatially hierarchical by learning spatial hierarchies of patterns in their layers of which higher layers learn incrementally complex mappings of features learned by the lower layers.
+Transfer learning
+It is a popular way of dealing with problems with comparatively little data.
+In this work, we have used Xception and Inception version 3 neural network models as transfer learning models for the classification of subjects between the Alzheimer's and non-Alzheimer's groups.
+Figure
+We used sigmoid as an activation function to make the final decision based on the previous layers output.
+
+Inception Version 3 Model
+In Inception modules, a convolutional layer attempts to learn filters to simultaneously and separately map cross-channel and spatial correlations.
+
+Xception Model
+Xception model is a novel deep learning neural network model which gets its inspiration from Inception.
+It uses the idea of depth-wise separable convolution which is a spatial convolution not using any non-linearity, independently performed, over channels of an
+
+Custom Model
+We used a custom 2D-CNN model built with the help of depth-wise separable convolution, batch normalization, global average pooling, fully connected, and dropout layer(s) as shown in Fig.
+Our CNN architecture consists of nine depth-wise separable convolutional and batch-normalization layers.
+Rectified linear units (ReLU) were used as activation functions for the convolutional layers.
+There are two fully connected layers.
+The activation function for the second fully connected layer with a single neuron is sigmoid which will classify the target into two categories using a threshold of 0.5.
+Batch normalization is a regularization technique that normalizes the input of a given set of layers (the normalization is done using the mean and standard deviation of a batch).
+This procedure acts as a regularizer and in some cases eliminates the need for the dropout.
+It helps fight the exploding gradient phenomenon and allows using much higher learning rates.
+To some extent, it frees the model from initialization problems.
+Dropout randomly and independently drops neurons, setting their output value to zero along with their connections.
+It aims to make the network less complex and thus less prone to overfitting.
+
+Experiments and Results
+We performed our experiments on dataset-1, dataset-2, and dataset-3.
+We use two-, five-, and ninefold cross-validation procedures to get better approximation of prediction performances on dataset-1.
+We use sixfold cross-validation to study the class imbalance problem on dataset-2.
+Dataset-3 was splitted for fivefolds and studied in the context of the data leakage problem in the neuroimaging studies.
+When working on datasets 1 and 2, as a preprocessing step, we applied width shift, height shift, and horizontal flipping as well as scale normalization to augment the dataset for training and only scale normalization on the validation set.
+When working on dataset-3, we applied scale normalization as a preprocessing step for both training and validation sets.
+For the evaluation of results on dataset-1, we computed the following performance metrics: Accuracy, Sensitivity, Specificity, Precision, F 1 -score, and Matthews correlation coefficient (MCC) defined as under.
+Accuracy = TPþTN TPþTNþFPþFN:
+Here, accuracy is the proportion of correctly classified subjects among the whole population.
+Sensitivity also called recall is the proportion of Alzheimer's class subjects correctly classified among the total number of Alzheimer's class subjects.
+Specificity is the proportion of non-Alzheimer's class subjects correctly classified among the total number of non-Alzheimer's class subjects.
+F 1 -score is the harmonic mean of precision and sensitivity.
+The ideal value of these metrics is 1 and is the target for the models in this study.
+We define true positive (TP) as hit that the model predicted Alzheimer's subject class correctly.
+False positive (FP) also called Type-I error happens when model incorrectly predicts a non-Alzheimer's class instance to be an instance of Alzheimer's class.
+False negative (FN) also called Type-II error happens when model incorrectly predicts an instance of Alzheimer's class to be an instance of non-Alzheimer's class.
+Finally, true negative (TN) occurs when the model predicts an instance of a non-Alzheimer's class correctly.
+In general, we use the models with the best validation set accuracies to compute these metrics.
+We used the best validation set accuracy as the metric for comparing the architectures on the dataset-2 and dataset-3.
+We will now present the details of all experiments accompanied with the results in the following subsections.
+
+Dataset-1 Twofold Cross-Validation Procedure
+For this experiment, we split the dataset into twofolds.
+There are 45 subjects in the training and validation subsets.
+Each class contains 8640 samples, so there are 4320 samples of each class in both training and validation subsets.
+The learning rate for this experiment is set to 10 -4 .
+We use binary cross-entropy as a loss function and stochastic gradient descent (SGD) as the optimization algorithm.
+We set the initial learning rate of SGD to 10 -4 and employed step decay to decrease the learning rate after every epoch.
+We use gradient clipping to clip the values of the gradients above 0.5 and set the clipping norm to a value of 1.
+We train each model for 30 epochs and set the batch size to 16.
+The results of the three models with mean and standard deviation values are given in the Tables
+
+Dataset-1 Fivefold Cross-Validation Procedure
+For this experiment, we split the dataset into fivefolds.
+There are 72 subjects in the training and 18 subjects in the validation subset.
+The learning rate for this experiment is set to 10 -4 .
+We use binary cross-entropy as a loss function and stochastic gradient descent (SGD) as the optimization algorithm.
+We set the initial learning rate of SGD to 10 -4 and employed step decay to decrease the learning rate after every epoch.
+We use gradient clipping to clip the values of the gradients above 0.5 and set the clipping norm to a value of 1.
+We train each model for 30 epochs and set the batch size to 16.
+The results of the three models with mean and standard deviation values are given in the Tables 6, 7, and 8.
+
+Dataset-1 Ninefold Cross-Validation Procedure
+For this experiment, we split the dataset into ninefolds.
+There are 80 subjects in the training and 10 subjects in the validation subset.
+The learning rate for this experiment is set to 10 -4 .
+We use binary cross-entropy as a loss function and stochastic gradient descent (SGD) as the optimization algorithm.
+We set the initial learning rate of SGD to 10 -4 and employed step decay to decrease the learning rate after every epoch.
+We use gradient clipping to clip the values of the gradients above 0.5 and set the clipping norm to a value of 1.
+We train each model for 30 epochs and set the batch size to 16.
+The results of the three models with mean and standard deviation values are given in the Tables 9, 10, and 11.
+
+Dataset-3 Fivefold Cross-Validation Procedure
+For this experiment, the dataset was splitted by the authors
+There are 5120 2-D slices in the training subset and 1280 2-D slices in the validation subset.
+We use binary cross-entropy as a loss function and stochastic gradient descent (SGD) as the optimization algorithm.
+We set the initial learning rate of SGD to 10 -4 and employed step decay to decrease the learning rate after every epoch.
+We use gradient clipping to clip the values of the gradients above 0.5 and set the clipping norm to a value of 1.
+We trained the Xception and Inception version 3 models for 100 epochs and set the batch size to 8. We trained the custom CNN architecture for 60 epochs and set the batch size to 16.
+The best validation set accuracies for the three models in each fold are given in the Tables
+
+Discussion
+The present studies contain two main contributions.
+First, we compared the performance differences among transfer learning and non-transfer learning-based approaches in deep neural networks.
+Second, we study the data imbalance and data leakage problems which are present in the arena of neuroimaging-based studies in AD.
+We have chosen the T1-weighted MRI images for our experiments due to their versatility and ease of availability.
+Apart from T1-weighted MRI imaging modality, Diffusion tensor imaging (DTI) is a recent MRI modality based on the motion of water molecules by quantifying the random water diffusion in cerebral gray and white matters.
+Quantifying the neurodegeneration in the hippocampus area leads to measure the pathological atrophy change and discriminate AD subjects from those with MCI and NC.
+MCI is the prodromal stage of AD, landmarks with group differences between AD and NC subjects are the potential atrophy locations in brain MR images of MCI subjects.
+Shrinkage of hippocampal region which accompanies the development of AD is observable on structural MRI and DTI modalities.
+In essence, the hippocampal region is one of the biomarkers of AD.
+It is worth mentioning that the early stage of AD would induce miniscule structural changes in local brain regions, instead of the whole brain
+Hence, feature representations defined at the Region of Interest (ROI) level or whole-image level may not be effective in characterizing the early AD-related structural changes of the brain
+In addition, alterations in AD are not confined to the hippocampus and extend to other regions in the temporal, parietal, and frontal lobes.
+The progress of the decline can happen in the brain including frontotemporal lobar degeneration associated with language impairment and posterior cortical atrophy relevant to visual impairment
+We realize that the most difficult classification tasks are mild AD vs. severe AD and mild AD vs. NC
+We further verify that to be able to have a classifier that generalizes well enough it has to be trained on a large enough dataset.
+This is especially true for the CNN classifiers
+It is known that the abnormal brain regions relevant to AD might not well fit to the predefined ROIs.
+The 3D voxel-wise features can alleviate this problem, but given their huge dimensionality, far more features than training subjects, they may lead to low classification performances.
+The cortical thickness and hippocampus shape features neglect the correlated variations of the whole brain structure affected by AD.
+In addition, the correctness of extracted features highly depends on image preprocessing steps requiring the domain knowledge of an expert
+We further learned that a successful classification model has to learn both the local information of image patches and the global information of multiple landmarks by assigning the class labels at the subject level.
+Since the structural changes in the brain induced by AD in its early stages could be subtle and distribute in different areas of the brain, we attempt to learn local to global feature representations for the experiments.
+The raw brain images contain a lot of information and noise to be directly used for the task of classification.
+Thus, it is necessary to extract representative features for image classification.
+However, how to select discriminative patches from a large number of patches in each MR image still remains a problem of grand    From the experiments, we learned that CNNs cannot be successfully trained without intensity rescaling.
+In addition, we applied augmentation to improve the classification performances.
+We learned that data imbalance is a critical issue and provides biased performances in favor of a certain class especially after performing the experiments on the dataset-2 as we g o t h i g h e r v a l i d a t i o n a c c u r a c i e s o n t h e n o n -Alzheimer's class in comparison with the Alzheimer's class instances.
+The performance of transfer learning architectures is found to be better on all the metrics on the dataset-1 when compared to the custom CNN architecture.
+However, the losses of training and validating the transfer learning architectures are higher, in general, in comparison with the custom CNN architecture which can be explained by the overfitting problem.
+We further found the biased performances of architectures on dataset-3.
+As mentioned by Junhao Wen et al.
+Due to problems in understanding this phenomenon, the creators of the dataset-3 Hon et al.
+It is not easy to visualize the learned features by the proposed method for interpretation of the brain regions relevant to neurodegenerative disease (i.e.,
+
+Conclusion
+In this work, we compared and contrasted the performance of deep learning architectures on the AD binary classification problem using T1-weighted sMRI images.
+We proposed a custom CNN model built with separable convolutional layers and compared its performance on three datasets with transfer learning architectures Inception version 3 and Xception that are pretrained using the imagenet dataset.
+We found the performance of transfer learning architectures on this task to be better.
+We further studied the class imbalance and data leakage problems and found that they tend towards increasing the classification performance bias.
+This work can be extended in a number of ways.
+As a future work, we will explore other datasets and    imaging modalities such as functional MRI and DTI, and multiclass classification problem of AD comprising of healthy control subjects, mild cognitive impairment (MCI) subjects, and AD subjects with higher CDR rating.
+We will also explore more holistic approaches to this problem such as exploring new network architectures especially 3D architectures as well as getting insights to the learning of neural network a r c h i t e c t u r e s t h r o u g h d i f f e r e n t v i s u a l i z a t i o n approaches.
+
+
+
+Fig. 2
+Fig. 2 Non-Alzheimer subject
+
+
+
+Fig. 1
+Fig. 1 Alzheimer's subject
+
+
+Inception vers i o n 3 u s e s t h e i d e a o f r e p l a c i n g l a r g e s i z e convolutional blocks with smaller sized ones, for example, a 5 × 5 convolution block is replaced by two 3 × 3 convolution blocks which results in the savings of computations.
+It also uses the notion of auxiliary classifiers, acting as regularizers, to combat the vanishing gradients problem by pushing the gradients to the lower layers to make them useful and improve the convergence of the network during training phase.Figure 4 below shows a canonical Inception version 3 module.
+
+
+
+Fig. 3
+Fig. 3 Transfer learning model
+
+
+
+Fig. 5
+Fig. 5 Custom CNN architecture
+
+
+
+Fig. 7 2 Fig. 6 2 Fig. 8 2 Fig. 9 2 Fig. 10 2 Fig. 11
+Fig. 7 Loss plot for the Inception version 3 architecture on dataset-2
+
+
+scale and proportions.
+Most of the existing representations are based on engineered and empirically predefined features independent of subsequent classifier learning procedure.
+Due to the possible heterogeneous nature of features and classifiers, the predefined features may lead to sub-optimal learning performance for brain disease diagnosis.
+Training a classifier independent from the feature extraction process may lead to sub-optimal learning performance, due to the possible heterogeneous nature of classifier and features.
+In this context, CNNs
+
+
+
+Fig. 12 3 Fig. 13 3 Fig. 14 3 Fig. 15 3 Fig. 16
+Fig. 12 Accuracy plot for the custom CNN architecture on dataset-3
+
+
+
+Fig. 17
+Fig. 17Loss plot for the Xception architecture on dataset-3
+
+
+
+3 Fig. 18
+Fig. 17Loss plot for the Xception architecture on dataset-3
+
+
+, 20, 21, 22, 23, 24, and 25.
+
+
+
+Fig. 20
+Fig. 20 First channel of the activation of the fifth layer of the proposed custom CNN model on the AD instance
+
+
+
+Fig. 21
+Fig. 21 First channel of the activation of the first layer of the proposed custom CNN model on the AD instance
+
+
+
+Fig. 22
+Fig. 22 Ninth channel of the activation of the first layer of the proposed custom CNN model on the AD instance
+
+
+
+Fig. 23
+Fig. 23 Pattern that the seventh channel in layer separable_conv2D_16 of the proposed custom CNN model responds to maximally
+
+
+
+Fig. 24
+Fig. 24 Pattern that the zeroth channel in layer separable_conv2D_10 of the proposed custom CNN model responds to maximally
+
+
+
+Fig. 25
+Fig. 25 Pattern that the zeroth channel in layer separable_conv2D_16 of the proposed custom CNN model responds to maximally
+
+
+
+Table 1
+Demographics of subjects in Dataset-1
+
+
+
+Table 2 .
+
+
+
+Table 2
+Demographics of subjects in dataset-2
+
+
+
+Table 10
+Results of Xception architecture on dataset-1 for ninefold cross-validation procedure
+
+
+
+Table 9
+Results of Inception version 3 architecture on dataset-1 for ninefold cross-validation procedure
+
+
+
+Table 7
+Results of Xception architecture on dataset-1 for fivefold cross-validation procedure
+
+
+
+Table 6
+Results of Inception version 3 architecture on dataset-1 for fivefold cross-validation procedure
+
+
+
+Table 5
+Results of custom CNN architecture on dataset-1 for twofold cross-validation procedure
+
+
+
+Table 4
+Results of Xception architecture on dataset-1 for twofold cross-validation procedure
+
+
+
+Table 3
+Results of Inception version 3 architecture on dataset-1 for twofold cross-validation procedure
+
+
+
+Table 11
+Results of custom CNN architecture on dataset-1 for ninefold cross-validation procedure
+
+
+
+Table 15
+Results of Inception version 3 architecture on dataset-3 for fivefold cross-validation procedure
+
+
+
+Table 17
+Results of custom CNN architecture on dataset-3 for fivefold cross-validation procedure

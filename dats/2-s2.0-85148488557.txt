@@ -1,0 +1,509 @@
+Alzheimer's disease (AD) is a neurodegenerative disorder that causes memory degradation and cognitive function impairment in elderly people.
+The irreversible and devastating cognitive decline brings large burdens on patients and society.
+So far, there is no e ective treatment that can cure AD, but the process of early-stage AD can slow down.
+Early and accurate detection is critical for treatment.
+In recent years, deep-learning-based approaches have achieved great success in Alzheimer's disease diagnosis.
+The main objective of this paper is to review some popular conventional machine learning methods used for the classification and prediction of AD using Magnetic Resonance Imaging (MRI).
+The methods reviewed in this paper include support vector machine (SVM), random forest (RF), convolutional neural network (CNN), autoencoder, deep learning, and transformer.
+This paper also reviews pervasively used feature extractors and di erent types of input forms of convolutional neural network.
+At last, this review discusses challenges such as class imbalance and data leakage.
+It also discusses the trade-o s and suggestions about pre-processing techniques, deep learning, conventional machine learning methods, new techniques, and input type selection.
+Conventional machine learning and deep learning in Alzheimer's disease diagnosis using neuroimaging: A review .
+Introduction
+Alzheimer's disease (AD) is a neurodegenerative disease with insidious onset and progressive development.
+Clinically, AD is characterized by memory disorder, aphasia, apraxia, agnosia, visual skill damage, and general dementia with personality and behavior changes.
+However, the cause of the disease remains unknown.
+Currently, there is no accurate diagnosis and validated disease-modifying treatment.
+In addition, since AD symptoms are sudden and severe memory loss, there is a high cost of caring for the patients.
+The high increase in public health needs enormous numbers of budget.
+The socio-economic prices of AD are far more significant than expected.
+As a result, AD brings a massive burden on the patient's family and society.
+According to a recent report by
+So the accurate diagnosis of AD is critical for the patients and society.
+In general, AD has three stages: normal control (NC), mild cognitive impairement (MCI), and Alzheimer's disease (AD).
+In particular, MCI is the early stage of AD, which is defined as the intermedia state between AD and normal control.
+The mark of MCI is loss of memory and poor memory.
+While some MCI patients proceed to AD, some remain MCI.
+Early diagnosis is crucial in effective clinical intervention and alleviating disease progression
+AD/MCI diagnosis is one of the most significant and challenging tasks in AD assessment.
+The accurate classification of AD/MCI determines the follow-up treatment.
+What's more, proper treatment during MCI can reduce or slow down the development to AD.
+So, prediction of conversion from MCI to AD is even more valuable than classification between NC and AD or MCI patients.
+However, the traditional AD diagnosis methods considerably rely on clinical experts' experience and human efforts.
+As the development of computer-aided diagnosis, computer softwares can provide automatic classification and prediction of AD.
+For the reasons mentioned above, computer-aided diagnosis of AD is necessary and significant.
+Artificial intelligence has been thriving in recent years, and researchers and engineers conducted extensive research on ADrelated areas.
+According to the methods utilized, these researches are in two categories: convention machine learning and deep learning.
+Convention machine learning methods contain support vector machine (SVM), random forest, linear regression, naïve Bayesian, artificial neural networks, etc. Deep learning methods include convolutional neural networks, recursive neural networks, etc.
+Many biomarkers, such as genetic, biological, and neuroimaging techniques, including Magnetic Resonance Imaging (MRI), fluorodeoxyglucose positron emission tomography (FDG-PET) imaging, amyloid PET, and diffusion tensor imaging (DTI), are used for AD diagnosis.
+The MRI image is one of the most widely used for the early detection and classification of AD.
+Since MRI provides high-resolution images of brain anatomical structures, researchers can retrieve rich information from MRI images.
+MRI shows the shrinkage of brain tissue, particularly the hippocampus, which confirms the structural change in the brain.
+Moreover, MRI can be used to predict if a patient with MCI will eventually develop Alzheimer's disease since MRI can detect brain abnormalities associated with MCI.
+In recent years, public open-access databases supplied MRI images of AD biomarkers, and the datasets were maintained by updating and adding new data.
+Considerable researchers have conducted their work to analyze AD employing MRI-based biomarkers.
+In this article, we mainly focus on MRIbased applications.
+Some researchers used MRI together with PET, so we also introduced PET.
+MRI and PET data as the 3D image which reveals structural brain atrophy are two of the most frequently used modalities in deep learning areas.
+MRI uses magnetic resonance phenomena to extract electromagnetic signals from the human body and reconstruct a 3D representation of human information.
+MRI can be done without injecting radioactive isotopes, which makes MRI safer.
+PET uses short-lived radionuclides to generate images of the target.
+The PET scanner can detect areas of high radionuclides concentration within the body.
+Both MRI and PET are non-invasive neuroimaging modalities.
+The other two most widely used medical tests that evaluate AD levels are the Mini-Mental State Examination (MMSE) and the Clinical Dementia Rating (CDR).
+Taking the results of MMSE and CDR as the ground truth labels may be incorrect.
+Still, the results of MMSE and CDR remain valuable references due to the limited biomarkers available.
+Multi-modality studies utilize more than one modality of each subject, while single-modality studies use only one modality.
+Using multi-modality is that features extracted from different modalities could contain complementary information.
+MRI, FDG-PET, Cerebrospinal Fluid (CSF), MMSE, and Alzheimer's Disease Assessment Scale-Cognitive Subscale (ADAS-Cog) are often-used modalities.
+Detecting AD remains a challenging task in computer vision areas for a few reasons.
+The image dataset is not large enough compared with other image classification datasets like ImageNet.
+The medical images acquired are usually of low quality, with relatively coarse noise segmentation results.
+Compared with images in other areas, the complexity of medical images is high.
+Images are acquired from different devices with various strengths, leading to more effort spent in pre-processing.
+The distinction between NC and MCI, MCI, and AD are not apparent in computer vision.
+The public open-access databases have extensively helped ADrelated research in artificial intelligence (A.I.).
+In recent years, this field has attracted the attention of a considerable number of researchers, and the number of related papers published each year is also boosting rapidly.
+Therefore, there is a need to analyze and summarize related documents so that researchers can more easily understand the development status of associated fields.
+We aim to help relevant researchers quickly understand the research status and future trends in related fields.
+The objectives of this study are to explore the associated datasets, pre-processing techniques, popular conventional machine learning methods, including SVM and RF, and Deep learning methods, including CNN, autoencoders, transformer, and transfer learning.
+So we examined recent works, compared the trade-off, summarized the current trend, and provided a future guide on computer-aided AD diagnosis using MRI images in the A.I. area.
+This review mainly focuses on the highly cited studies that adopted the most widely used techniques.
+As shown in Figure
+In the Materials Section, we will introduce the public datasets that are often used in related areas.
+In the Methods Section, we will explore our search strategy, the pre-processing techniques, conventional machine learning like Support-vector machine (SVM) and Random forest (RF), convolutional neural network (CNN), autoencoders, transformer, and transfer learning methods.
+In the Challenges and discussion Section, we will discuss the current challenges like class imbalance, data leakage, and trade-offs when designing a proper model with our recommendations.
+
+. Materials . . Datasets
+In recent years, many research centers accumulated plentiful medical and image data and published the data to the public.
+Public data plays a significant role for researchers in research and developing AI on AD.
+The online datasets make biomarker information like neuroimaging modalities, genetic and blood information, and clinical and cognitive assessments.
+Most pervasively used datasets include Alzheimer's Disease Neuroimaging Initiative (ADNI)
+ADNI is notable for being a longitudinal and multicenter study.
+It is the most common dataset.
+The objective of ADNI is to investigate if the combination of MRI, PET, other biological markers, and clinical and neuropsychological assessment could measure the progression of MCI and early AD.
+ADNI-1, ADNI-GO, ADNI-2, and ADNI-3.
+The following collections are the supplement and improvements of previous ones.
+Moreover, some studies use the datasets above along with their own datasets.
+For instance,
+They named their dataset as "Milan" dataset.
+
+. Methods
+This section reviews a few classical conventional machine learning and deep learning methods.
+Firstly, we introduce the search strategy for our review.
+Secondly, we will examine two traditional machine learning methods: Support-vector machine and random forest.
+Thirdly, we will review the convolutional neural network, including popular CNN backbones and different input types of CNN.
+Fourthly, we will discuss autoencoders in AD detection.
+Fifthly, we talk about transformer.
+At last, we will briefly introduce the application of transfer learning.
+
+. . . Databases and keywords of search
+We searched Scopus, one of the largest abstract and citation databases of peer-reviewed literature: scientific journals, books, and conference proceedings.
+We selected research papers regarding Alzheimer's disease diagnosis using AI techniques from 2013 to 2022.
+Scopus searches within the article title, abstract, and keywords.
+The papers will not be selected if the search documents only appear in the text or figure caption.
+
+. . . . Inclusion keyword groups
+Inclusion Keyword group 1: "Alzheimer's disease" OR "AD" OR "dementia" OR "mild cognitive impairment" OR "MCI."
+Inclusion Keyword group 2: "Artificial intelligence" OR "AI" OR "machine learning" OR "deep learning" OR "computer-assisted diagnosis" OR "computer assisted diagnosis" OR "CAD" OR "Neural network" OR "convolutional neural network" OR "CNN" OR "recurrent neural network" OR "RNN" OR "random forest" OR "support vector machine" OR "SVM."
+Inclusion Keyword group 3: "Magnetic Resonance Imaging" OR "MRI" OR "Structural Magnetic Resonance Imaging" OR "sMRI" OR "Functional Magnetic Resonance Imaging" OR "fMRI."
+
+. . . . Exclusion keyword groups
+Exclusion Keyword group 1: "Schizophrenia" OR "depression" OR "major depressive disorder."
+Exclusion Keyword group 2: "Computed tomography" OR "CT" OR "Positron Emission Tomography" OR "PET" OR "amyloid-β."
+Exclusion Keyword group 3: "REVIEW."
+Initially, the search result contained 2,561 documents in total.
+Then we filtered the document type as article (1,712 documents) and source type as "journal" (1,705 documents).
+At last, we gave up those documents written in languages other than English (1,678 documents).
+The criteria above generated a collection of 31 articles in total for in-depth reviewing as shown in Figure
+
+. Pre-processing
+The size of the training set highly impacts classification performance.
+In all datasets introduced above, the numbers of image scans retrieved from AD and MCI subjects are limited.
+In most studies, pre-processing must be done before manipulating the data.
+Pre-processing is a set of image processing tasks performed on the acquired image scans.
+Some MRI software packages like FreeSurfer
+Pervasively used pre-processing techniques include registration, normalization, smoothing, segmentation, skull-stripping, noise removal, temporal filtering, covariates removal, etc.
+This review will introduce intensity normalization, registration, skull-stripping, tissue segmentation, and class balancing.
+
+. . . Intensity normalization
+Intensity normalization, known as field correction or intensity inhomogeneity correction, refers to rescaling the intensities of each pixel to a normalized intensity.
+In the process of MR image acquisition, various scanners or parameters will scan distinct subjects or the same subject at different times, which may cause significant intensity changes.
+Large intensity changes will significantly affect the performance of subsequent pre-processing like registration and segmentation.
+
+. . . Registration
+Registration is a method to spatially align image scans to ensure the correspondence of anatomy across modalities, individuals, and studies.
+Registration is also used in multi-modality tasks for co-registration.
+The most commonly used templates are
+They utilized multiple templates for feature extraction, selected the most representative features of each template, trained multiple SVM classifiers, and ensemble the results of all classifiers to generate the result.
+However, multiple templates lead to high computational costs, especially in image registration.
+
+. . . Skull-stripping
+Skull-stripping or brain extraction means removing the nonbrain tissues like skull, fat, eyes, etc., and remaining gray matter (GM), white matter (WM), Cerebrospinal fluid (CSF), etc. in the brain scan.
+
+. . . Tissue segmentation
+Tissue segmentation means partitioning the image scan into segments corresponding to various tissues.
+The volume of tissues is a measurement often used after tissue segmentation.
+GM probability maps are a popular input form in classification tasks.
+Usually, Preprocessing techniques like intensity normalization and registration need to be done.
+
+. . . Data augmentation
+Data augmentation is a way to solve the limitation on the number of subjects in a dataset.
+It is a technique to enlarge the dataset without collecting new data by generating new data samples from the existing data.
+Data augmentation techniques have been used, including cropping, reflection, random translation, gamma correction, scaling, random rotation, elastic transform, vertical flip, horizontal flip, and different types of blurring.
+Moreover, new synthesis techniques like autoencoders and generative adversarial networks are also used in data augmentation.
+However, synthesis techniques need more proof of the effectiveness of the generated images in AD-related classification and prediction tasks.
+
+. . Conventional machine learning
+Support-vector machines (SVMs) are supervised learning methods in conventional machine learning and are often used to solve classification and regression problems.
+SVMs map the input to points in multidimensional space to maximize the margin between hyperplanes of different data types.
+A kernel function, for example, Gaussian or polynomial function, maps the current multidimensional space into a higher-dimensional space.
+SVMs can be used alone and work with other methods for both conventional machine learning and deep learning methods.
+Since SVMs can achieve a relatively good performance and the principles of SVMs work are clear and understandable, SVMs are extensively applied in industrial and scientific areas.
+Although multi-kernel SVM has shown excellent performance in many tasks, efficiency is the most significant bottleneck for developing multi-kernel SVM.
+The computational complexity and difficulty of multi-kernel SVMs are much more significant than single kernel SVM.
+In terms of space, the multikernel SVM algorithms need to calculate the kernel combination coefficients corresponding to each kernel matrix, so multi-kernel matrices must participate in the operation.
+In other words, multikernel matrices need to be stored in memory simultaneously.
+If the number of samples is too large, the dimension of the kernel matrix will be huge.
+If the number of kernels is also too large, it will undoubtedly occupy colossal memory space.
+In terms of time, training of multi-kernel SVM is time-consuming.
+The high time and space complexity are one of the main reasons the multi-kernel SVM algorithms cannot be widely used.
+Random forest (RF) is an ensemble algorithm.
+Each decision tree is a classifier.
+Multiple decision tree classifiers form the random forest.
+Individual decision trees are trained in parallel.
+Random forest integrates all classification voting results and assigns the category with the most votes as the final output.
+Random forest is a flexible and practical method.
+It works well on a large dataset.
+It can handle thousands of input variables without dimension reduction.
+It estimates the significance of different variables in a task.
+Calculating many trees and integrating their outputs can consume many computing resources.
+
+. . Convolutional neural network
+Deep learning is a subset of machine learning techniques in which the learning process is performed through a hierarchical and deep structure.
+Deep learning techniques have received significant attention in the last few years and have been used widely in different brain studies.
+One of the most successful deep learning methods is the convolutional neural network.
+Convolutional Neural Networks (CNN) are artificial neural networks that use convolution operations to filter the input data and extract useful features.
+Research on CNN has emerged and thrived swiftly.
+CNN has attracted widespread attention from researchers and achieved state-of-the-art results on various tasks in detection, classification, and segmentation problems in different domains, including medical imaging, natural language processing, etc.
+The tremendous success CNN achieved in the classification and segmentation of realistic images has promoted the development and application of CNN in the medical area.
+In recent years, CNN has performed well in organ segmentation and disease detection tasks.
+The classic CNN structure consists of a series of convolutional layers, pooling layers, activation layers, and fully connected layers.
+A SoftMax function is applied to classify the input image with probabilistic values between zero and one.
+The convolutional layer contains concepts of local receptive fields, shared weights, filters, stride, and padding.
+A filter contains unknown parameters that will be learned during training.
+The convolution is the process by which a filter slides across the whole image from top-left to bottom-right and convolves with the input image to calculate the weighted sum.
+The stride refers to the step size that a filter moves in per slice.
+However, the edges' pixels will never be in the center of a filter, and a filter cannot extend beyond the edge region.
+After each convolution between the input and the filter, only part of the pixels is detected at the edge, and information at the image boundary is lost.
+Padding is designed to overcome this issue.
+Padding means filling in some values along the input boundaries to increase the input size.
+Usually, the values filled are zeros.
+Padding is needed when it is necessary to keep the dimensions constant before and after convolution to avoid information loss.
+The size of the filters determines the receptive field in the convolutional layers.
+The convolutional layers are excellent feature extractors for images since images contain massive spatial redundancy, and convolutional layers solve this characteristic of images with shared weights.
+After reducing spatial redundancy, the feature vector that the convolution layers output stands for the image's content.
+The pooling layer is the dimension reduction operation on the feature maps.
+It helps reduce the number of parameters to train and accelerates the training process.
+The most widely used pooling layers are max pooling, average pooling, and global pooling.
+Max pooling outputs the maximum value within the region of the feature map covered by the filter.
+Average pooling calculates the average value of the elements presented within the feature map region covered by the filter.
+Global pooling reduces each channel in the input to a single value.
+The activation layer provides a non-linear mapping to the output of the convolutional layer.
+The calculations in a convolutional layer are linear.
+The non-linearity provided by activation layers enhanced the reasoning ability of the network.
+The most pervasively used activation functions include ReLU, Sigmoid, Tanh, etc.
+The fully connected layer takes the feature extractor's inputs and predicts the correct label with probabilities.
+CNN can be used as the feature extractor and classifier or only feature extractor.
+Some researchers use CNN to extract features and adopt the conventional machine learning method for classification.
+They replaced SoftMax with an SVM as the classifier, and this 3D-CNN-SVM model achieved better classification performance than 2D-CNN and 3D-CNN.
+With the thriving of CNN in computer vision, researchers contribute several CNN backbones that achieve state-of-the-art performance in many tasks.
+When comparing conventional machine learning and deep learning methods in AD-related areas, we can conclude that: in general, deep learning methods achieve better performance than conventional machine learning methods.
+The proper size of the training samples should be no <1,000.
+A dataset containing over five thousand samples can be considered sufficient to train a deep learning model that achieves high accuracy
+
+. . . CNN backbones
+CNN backbones refer to the feature extracting networks or feature extractors.
+In this section, we will introduce classic CNN backbones that are pervasively used in AD diagnosis tasks.
+
+. . . . AlexNet
+A significant architecture after LeNet
+A Rectified Linear Unit (RELU) was used as the activation function.
+Besides, the author introduced a way to train the networks using multiple GPUs.
+. . . .
+VGG
+A stack of 3 × 3 convolution filters was used to replace large convolution filters like 5 × 5, 7 × 7, 9 × 9, or 11 × 11 convolution filters.
+A stack of small convolution filters for a given receptive is better than one large convolution filter.
+The use of small filters results in fewer parameters and deeper networks which will help train a more complex model in a shorter time.
+The feature extractor in this work was VGG16 which was pre-trained on ImageNet.
+They converted 3D MRI images to 2D slices, selected the most informative 32 slices in pre-processing, and then fed the slices into VGG16, followed by fully connected layers.
+Although their dataset had MRI images of 150 subjects from ADNI, the model achieved an accuracy of 99.14, 99.30, and 99.22% for AD vs. CN, AD vs. MCI, and MCI vs. CN classifications.
+Even though the classification accuracy was high for all binary tasks, the generality of the proposed model was highly doubted since the dataset was too small.
+They trained the CNN from scratch and pre-trained VGG-16 and ResNet-50 on the ImageNet database.
+VGG achieved the best performance with an accuracy of 83.90%, precision of 82.49%, recall of 83.90%, and F1-score of 83.19%. . . . .
+ResNet
+Before ResNet came into being, a network could not be designed as deep since the gradient vanishes quickly as the network goes deeper.
+The network can extract more complex feature patterns when increasing the number of network layers.
+Theoretically, when a model becomes deeper, better results should be obtained.
+However, the network accuracy becomes saturated or even decreases as the network depth increases.
+ResNet solves this issue by adding shortcut connections that skip one or more layers.
+The accumulation layer only does the identity mapping when the residual is zero.
+At least the network performance will not decline.
+The residual will not be zero, enabling the accumulation layer to learn new features based on the input features.
+Usually, the residual will be relatively small, so the model is easy to train.
+They took 3D gray matter images as the input to train the model for MCI detection first, then utilized transfer learning to transfer the trained model to the domain of NC and AD classification.
+Both networks worked well to classify AD and NC but failed to separate AD and NC from MCI.
+. . . .
+DenseNet
+Two main approaches to improving neural effects are going deeper and becoming more expansive.
+On the contrary, DenseNet connects all layers directly.
+In other words, the input for each layer is derived from the output for all previous layers.
+By doing so, DenseNet mitigates vanishing gradient and makes the best use of features to improve the effect.
+At the same time, the number of parameters is reduced to some extent.
+Each 3D DenseNet is initialized and trained separately.
+A voting system is adopted to integrate the probabilistic scores generated from independent classifiers.
+The model is trained on images of 833 subjects in the ADNI dataset.
+In detail, the multi-task deep CNN extracted the features for segmentation and classification, and a 3D DenseNet learned the features for disease classification.
+At last, the model integrated the features learned from the multi-task CNN and DenseNet models to make the classification.
+They adopted DenseNet due to the issue of limited data and trained a few 3D-DenseNets with varying hyperparameters.
+The final result is generated with the weighted sum of each base 3D-DenseNets, and the model achieved an accuracy of 97.19%.
+The hypothesis here is useful features for classification or prediction tasks can be extracted from 2D slices.
+A common way to extract 2D slices from a 3D image is to project the whole brain scan to the sagittal, coronal, and axial planes.
+Sometimes the sagittal, coronal, and axial planes are also called the median, frontal, and horizontal planes.
+The center part of the brain is usually more informative than the parts on the edges.
+The information entropy of the images in the center part is larger than the rest.
+As a result, not all slices will be used during training.
+Slices of sagittal, coronal, and axial views contain complementary information.
+Some studies integrate features extracted from sagittal, coronal, and axial views.
+It is easy to obtain large numbers of samples when using 2D slices.
+A deep learning model with 2D CNN usually contains fewer parameters and needs a shorter training time than a 3D model.
+The disadvantage of slice-based approaches is that 2D slices of a brain image lose the spatial information between each other since each 2D slice is processed independently.
+They adopted the VGG-16 pre-trained on ImageNet as the feature extractor.
+They trained the CNN as the feature extractor to input 2.5D patches, adopted PCA and Lasso to reduce the dimensions, and selected the most informative features.
+At last, fed the features to an extreme learning machine to make the classification.
+Furthermore, they tested the features generated from FreeSurfer together with the CNN-based features, and it turned out that using both features can generate better performance than using solely CNN-based or FreeSurfer-based features.
+
+. . . . D patch
+3D patch-based approaches are like 2D slide-based methods, but instead of sampling the projections of particular planes cutting, the 3D brain scan into a set of 3D patches with stride as a hyperparameter.
+The sample size is larger after cutting.
+The 3D patch-based methods compensate for the loss of spatial information compared with 2D slice-based methods, but patches are often used independently during training.
+3D patch-based methods need low memory when a model uses the same network for each patch.
+If training an independent network for each patch separately and then using an assemble architecture to integrate the results from previous independent networks, the complexity of the whole network will be high.
+Challenges in the 3D patch-based method are to choose the informative patches from the brain scan and select the most discriminative features.
+. . . .
+D ROI 3D ROI-based methods pay attention to specific regions which have been proved to be related to AD clinically.
+Images of ROI represent the 3D image of a segmented brain region.
+The selected regions, for example, gray matter volume, hippocampal volume, cortical thickness, etc., are usually informative.
+Using an ROI-based method will not lead to overfitting easily.
+The model interpretability is excellent since a human can see the contribution of each region in the model.
+The shortage of ROI-based methods is the prerequisite knowledge of the regions to select in AD.
+Since a patient only provides one sample at a time, the sample size is too few compared with the number of subjects in popular datasets.
+Consequently, the risk of overfitting is high when using 3D subjectbased methods.
+MRI scans are globally similar.
+Minor changes are not easily recognized in MRIs.
+
+. . Autoencoder
+An autoencoder (AE) is an artificial neural network in which the input and learning objectives are almost the same.
+Autoencoders aim to learn hidden representations of the input in an unsupervised manner.
+An autoencoder consists of an encoder and a decoder.
+Given input space and feature space, an autoencoder solves the mapping between the input and output to ensure the reconstruction error of the input feature is minimized.
+In other words, the latent layer feature, the encoded feature generated by the encoder, can be regarded as a representation of the input data.
+The representational ability of an AE is limited.
+Stacked AEs are a combination of a series of AEs stacked together.
+In Stacked AEs, the output of hidden units of an AE is used as the input of another AE in the deeper layer.
+As the stacked AEs become deeper, the representational power increases.
+Stacked AEs can also be used in transfer learning.
+Stacked AEs as self-supervised learning can effectively extract the latent representation of input data.
+So stacked AEs can be used as a feature extractor.
+Train the AE with the training set, then replace the decoder with a classifier for classification purposes.
+The latent representation extracted in the AE can be used in pre-training.
+In tasks lacking datasets like AD classification and prediction, stacked AEs are pervasively used.
+SVM is used as the classifier to process the features to make the classification.
+The 3D approach provided a boost in performance compared to the 2D method.
+
+. . Transformer
+The utilization of state-of-the-art models of other computer vision tasks significantly improves the performance of AD classification and prediction.
+Integrating the latest model into AD-related studies is always a good idea.
+The next possible candidate to improve AD performance may be the attention mechanism.
+The attention mechanism proposed by
+Although the nature of the transformer is nothing but a weighted sum, the performance of the transformer is unbelievable and fabulous in a wide range of areas.
+The vision transformer (Vit) proposed by
+As a new type of feature extractor, Vit focuses on patch-level attention instead of focusing on pixel-level attention.
+Vit achieves better than CNN in the various task in computer vision.
+If Vit is successfully used in AD diagnosis, the interpretability of the model will be increased since Vit depicts the importance of each area.
+The shortage of Vit is the dimension of the input feature is too large as most AD-related tasks use 3D images.
+Using Vit to handle such input with such a large dimension is unrealistic.
+Since 3D images contain much more spatial redundancy than 2D images and texts, it is necessary to reduce the duplication before processing.
+With the great success of masked language models like Bidirectional Encoder Representations from Transformers (BERT)
+Masked Autoencoder (MAE), proposed by
+Language is concrete and has high sematic information density, while vision is a continuous signal that contains duplication in space.
+Masked parts are more likely to be recovered in a vision task.
+An original image can be reconstructed based on the given partial observation information.
+
+. . Transfer learning
+Humans can utilize existing knowledge of one area to accelerate solving problems in another area.
+In many studies, researchers train their deep learning models from scratch.
+However, it is often inefficient since the training process is time-consuming, and a dataset of adequate size up to millions of images is required.
+Because of the high cost of learning directly from scratch, researchers expect to use existing knowledge to assist in learning new knowledge faster and better.
+Transfer learning means transferring knowledge learned from one domain to another.
+The source domain is defined as the domain that contains existing knowledge, while the target domain is the one to which the current knowledge is transferred.
+Since the most pervasively used backbone networks like LeNet, AlexNet, VGGNet, ResNet, DenseNet, and GoogLeNet are all trained on ImageNet, ImageNet has become the most common source dataset for transfer learning
+Researchers use transfer learning to pre-train their deep learning algorithms to solve the problem of scarcity of data samples.
+Fine-tuning means applying a pre-trained model and using the weights of the pre-trained model to initialize the new model that will train.
+Fine-tuning helps to save a lot of time for training since a model does not need to train from scratch.
+Researchers can choose to freeze, fine-tune, and randomly initialize parts of the pre-train model.
+According to
+The prediction for MCI conversion is more challenging than the classification between AD and HC because the brain structural changes of MCI may be very subtle.
+However, since the classification task between AD and HC is highly correlated with the task of MCI prediction, researchers often transfer the weights learned from the AD classification to initialize the parameters of the network for MCI classification.
+Their transfer learning strategy they deployed was to fine tune with layer-wise tuning which meant only a predefined group of layers were trained while other layers stayed frozen.
+The GoogLeNet achieved a slightly higher performance since it contains deeper layers and more convolutions than AlexNet.
+They utilized a pre-trained ResNet18 network as the source domain and unfroze all the layers to update the parameters of the network.
+Similarly,
+
+. Challenges and discussion
+This article still contains some limitations.
+The papers we reviewed are mostly papers with high citations per year, which is not fair for newly published ones.
+The document and source types are strictly limited to "article" and "journal."
+Furthermore, we only reviewed articles written in English.
+We mainly reviewed papers on Alzheimer's disease diagnosis using MRI as the data type.
+Neuroimaging of other forms, genetic, biological, voice-based, text-based, etc., may be reviewed in separate papers.
+The multimodality models that can fuse information from different modalities usually outperform the models with only one modality since various modalities may contain complementary information.
+Artificial intelligence, especially conventional machine learning and deep learning methods, is thriving in AD-related tasks.
+However, there are still some challenges.
+The datasets in the AD area are still small compared with datasets in computer vision tasks because of the privacy of medical data.
+Given the complexity of AD-related tasks, a large-scale dataset is a must for a researcher to develop more effective and powerful models.
+Currently, researchers mainly focus more on AD, MCI, and NC classification than prediction.
+The early detection of AD remains a challenging issue.
+Performance between each proposed model is hard to compare due to using different numbers of samples, modalities, pre-processing techniques, feature extractors, classifiers, etc.
+
+. . Class imbalance
+Class imbalance is a common issue in datasets.
+Usually, images in some classes may be far more than those in others in a dataset.
+Increasing the number of images that is fewer than other classes or reducing the number of images that is more than other classes are two methods to solve the imbalanced data issue.
+Synthetic Minority Oversampling Technique (SMOTE) technique is used to address the class imbalance problem in the dataset is by randomly duplicating the minority class of images in the dataset to minimize the overfitting problem
+Data augmentation is one way to handle imbalanced data by enlarging the number of samples in the rare class.
+Reducing the number of images from the over-sampled class makes the dataset smaller.
+However, using a balanced dataset can improve the performance even if the dataset becomes smaller due to dataset balancing
+A balanced dataset is preferable.
+Another way of solving imbalanced class issues is by reconstructing medical images.
+They used the new reconstructed images to augment the imbalanced dataset.
+They trained two 3D densely convolutional connected networks with the raw dataset and the fresh balanced and tested the performance of these two networks.
+The neuroimages generated from the GAN helped improve classification accuracy from 67 to 74%.
+
+. . Data leakage
+Data leakage refers to the use of testing data during training
+Four main reasons that lead to data leakage are: incorrect data split, late split, improper transfer learning, and no independent test set.
+The late split occurs using data augmentation techniques before splitting the dataset into training, test, and validation sets.
+As a result, the images generated from the same source can be split into different datasets, leading to a biased evaluation.
+Incorrect data split means images of a subject at multiple time points are split into different training, test, and validation sets.
+Incorrect data split may occur when using 2D slices and 3D patches as deep learning input.
+The proper split should happen at the subject level.
+Prejudice transfer learning happens if the source and destination domain of transfer learning overlap.
+Different source and destination datasets are excellent ways to avoid prejudice transfer learning.
+No independent validation set exists in research in which the dataset is split into only training and test set.
+The test set should only be used for evaluation and never use the test set for hyperparameter optimization.
+A separate validation set that does not overlap with the test set can be used to optimize the hyperparameter of the model.
+
+. . Trade-o discussion
+In the reviewed articles of this paper, most authors utilized preprocessing techniques.
+Even though deep learning requires less preprocessing of data, for instance,
+A recommend standard preprocessing pipeline includes: intensity correction, skull-stripping, registration, normalization, and tissue segmentation.
+In the reviewed papers, SVM is the most pervasively utilized.
+However, the trend in recent years is that CNN will surge in popularity.
+Deep learning approaches achieved better performance in diagnostic tasks than conventional methods.
+A significant drawback of deep learning is it lacks interpretability and transparency.
+The deep learning models are in a black box state, and the internal operating mechanism is challenging to comprehend.
+Moreover, compared to conventional machine learning, deep learning techniques usually requires higher-performance graphics processing units, an enormous amount of storage, and more time to train.
+Most of the research is conducted using one dataset.
+However, some researchers use more than one dataset for specific purposes.
+For instance,
+A few researchers use multiply datasets for different stages.
+Cutting the 3D image from various perspectives can generate 2D slices.
+2D slice-based is a cheap method since the 2D image is much easier to process than 3D.
+In addition, slicing helps enlarge the sample size of the dataset.
+Usually, the 2D slices in the center with larger entropy will be selected, so the input dimension is further reduced.
+However, when using the slices of one 3D image independently, the interrelationship information may be lost through slicing.
+We recommend that researchers who do not have hardware support concentrate on designing a small architecture to try 2D slice-based data as the input form.
+Like the 2D slice-based methods, 3D patch-based methods provide a large dataset.
+The 3D patch compromises the 2D slice and the 3D subject image.
+However, the network should have to train a classifier for a patch.
+As a result, there will be too many classifiers to train.
+Extracting discriminative features and selecting the most informative ones from all the 3D patches is tough.
+Although the ROIs are usually informative, only one or a few regions will be considered in a model.
+However, AD often covers multiple brain regions.
+For researchers who comprehend how to define and use Region-of-Interests 3D ROI-based method may be a suitable solution with adequate interpretability.
+Subjectlevel methods contain only one sample per patient, so subject-level methods usually contain too few samples for a complicated task like AD detection.
+There is no fixed answer to determining a suitable backbone or an input form.
+In general, larger and more complex models have a greater chance of yielding higher performance.
+According to
+The complexity of AlexNet is over ten times higher than ResNet-101.
+However, their top-1 error rates are 25.02% and 19.87%, which means fourteen times the complexity in exchange for a 5.15% reduction in the top-1 error rate.
+Compared with CNN, one of the most significant advantages of the autoencoders is that it is an unsupervised learning method, and CNN must utilize marked data to work.
+However, autoencoders learn to capture as much information as possible, but the captured information may not be relevant to the specific task.
+If the information most pertinent to an issue makes up only a tiny part of the input, the autoencoders may lose much of it.
+Vision transformers outperform CNNs in some image classification tasks.
+However, Vision transformers need costly pre-training on large datasets.
+Researchers must choose the most suitable model based on their hardware conditions and specific application requirements, balancing performance and complexity.
+
+
+
+FIGURE
+FIGUREMind map of this paper.
+
+
+From patients, ADNI researchers collect several data types, including clinical, genetic, MRI, PET images, and biospecimen.
+ADNI-1 contains 200 NC, 400 MCI, and 200 AD.
+ADNI-GO adds 200 MCI on ADNI-1.
+ADNI-2 extends ADNI-1 and ADNI-GO with 150 NC, 100 early MCI, 150 late MCI, and 150 AD.
+ADNI-3 expands existing ADNI-1, ADNI-GO, and ADNI-2, adding 133 NC, 151 MCI, and 87 AD.
+AIBL collects imaging and medical data from 211 individuals with AD, 133 individuals with MCI, and 768 healthy individuals without cognitive impairment.
+OASIS aims to share neuroimaging brain data sets with researchers in related areas.
+OASIS has three releases: OASIS-1 contains 434 MRI scans from 416 subjects.
+OASIS-2 contains 373 MRI scans from 150 subjects.
+OASIS-3 contains 2,168 MRIs and 1,608 PET scans from 1,098 subjects.
+The MIRIAD dataset contains 708 MRI scans from 46 AD patients and 23 NC volunteers.
+
+
+This paper is conducted by following the PRISMA 2020 guidelines(Page et al., 2021).
+
+
+
+FIGURE
+FIGUREPaper search flowchart.
+
+
+used a linear SVM classifier, and
+
+
+. . . .
+LeNet
+The basic concepts of convolutional, pooling, and fully connected layers are introduced in one architecture.
+It also introduces the idea of local receptive fields within CNN.
+These concepts are the fundamentals of the other deep learning module.
+They take PET images of 350 subjects who are MCI from ADNI.
+The model achieves sensitivity and specificity of 91.02 and 77.63% in MCI transformation prediction.
+
+
+. . . .
+GoogLeNet
+Instead of choosing whether we should use 3 × 3, 5 × 5, or 7 × 7 filters manually, the inception structure automatically makes the network learn how to find a proper structure.
+Batch normalization introduced in inception v2 reduces internal covariate shift, which is generated after convolution operations.
+The consistency of statistical characteristics of data is maintained during training.
+Inception v3 further replaces the large convolution kernel with the small convolution kernel.
+A convolution kernel of n × n is cracked into a stack or parallel form of 1 × n and 1 × n convolution kernel.
+General network design principles suggested in inception v3 are slowly reducing the information's dimension to the desired extent.
+They collect 2,109 PET images of 1,002 patients from ADNI as their dataset.
+
+
+, Wang S. H. et al. (2018), and
+
+
+took the 3D ROI-based input and extracted features in Stacked sparse AEs.
+Li et al. (2015) adopted 3D ROI-based input in their model and used an SVM classifier. . . . .
+D subject
+
+
+also proposed their network using 3D DenseNet.Usually, training a deep learning model like DenseNet with such a small dataset usually results in a high risk of overfitting.The voting strategy help compensates for this fault.However, training multiple deep learning models from scratch is time-consuming and inefficient.Transfer learning may be a good choice.. ..Input types managementCNN is a powerful tool that can process features in different sizes and dimensions.Based on four different input types, four main categories of methods are pervasively used in CNNs: 2D slice-based, 3D patch-based, 3D region-of-interest-based (ROI-Based), and 3D subject-level.Table1presents comparisons among recent works.
+
+
+TABLE Comparison among papers with high citations in AD diagnosis.

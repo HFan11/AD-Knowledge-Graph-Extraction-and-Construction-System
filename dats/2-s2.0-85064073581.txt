@@ -1,0 +1,258 @@
+Machine learning based hierarchical classification of frontotemporal dementia and Alzheimer's disease
+Background: In a clinical setting, an individual subject classification model rather than a group analysis would be more informative.
+Specifically, the subtlety of cortical atrophy in some frontotemporal dementia (FTD) patients and overlapping patterns of atrophy among three FTD clinical syndromes including behavioral variant FTD (bvFTD), nonfluent/agrammatic variant primary progressive aphasia (nfvPPA), and semantic variant PPA (svPPA) give rise to the need for classification models at the individual level.
+In this study, we aimed to classify each individual subject into one of the diagnostic categories in a hierarchical manner by employing a machine learning-based classification method.
+Methods: We recruited 143 patients with FTD, 50 patients with Alzheimer's disease (AD) dementia, and 146 cognitively normal subjects.
+All subjects underwent a three-dimensional volumetric brain magnetic resonance imaging (MRI) scan, and cortical thickness was measured using FreeSurfer.
+We applied the Laplace Beltrami operator to reduce noise in the cortical thickness data and to reduce the dimension of the feature vector.
+Classifiers were constructed by applying both principal component analysis and linear discriminant analysis to the cortical thickness data.
+For the hierarchical classification, we trained four classifiers using different pairs of groups: Step 1 -CN vs. FTD + AD, Step 2 -FTD vs. AD, Step 3 -bvFTD vs. PPA, Step 4 -svPPA vs. nfvPPA.
+To evaluate the classification performance for each step, we used a10-fold cross-validation approach, performed 1000 times for reliability.
+Results: The classification accuracy of the entire hierarchical classification tree was 75.8%, which was higher than that of the non-hierarchical classifier (73.0%).
+The classification accuracies of steps 1-4 were 86.1%, 90.8%, 86.9%, and 92.1%, respectively.
+Changes in the right frontotemporal area were critical for discriminating behavioral variant FTD from PPA.
+The left frontal lobe discriminated nfvPPA from svPPA, while the bilateral anterior temporal regions were critical for identifying svPPA.
+Conclusions: In the present study, our automated classifier successfully classified FTD clinical subtypes with good to excellent accuracy.
+Our classifier may help clinicians diagnose FTD subtypes with subtle cortical atrophy and facilitate appropriate specific interventions.
+
+Background
+Frontotemporal dementia (FTD) is one of the leading causes of early-onset degenerative dementia
+The clinically defined syndromes within the FTD spectrum include three variants: the behavioral variant FTD (bvFTD), which is associated with early behavioral and executive deficits; semantic variant primary progressive aphasia (svPPA), which is associated with semantic anomia and impaired comprehension; and non-fluent/agrammatic variant primary progressive aphasia (nfvPPA), which is a progressive disorder of speech, grammar and word output.
+With the rapid development of neuroimaging analysis, we can automatically analyze cortical atrophy.
+In this regard, a previous study suggested that FTD syndromes are characterized by cortical atrophy in the frontal, anterior temporal and frontoinsular regions
+The relative involvement patterns of frontotemporal structures in FTD also vary among clinical syndromes.
+That is, patients with bvFTD had cortical atrophy in the anterior cingulate and frontal insular cortices, most prominently early in the course of the disease
+Conversely, studies in patients with nfvPPA indicate cortical atrophy in the left frontal area, especially the inferior frontal gyrus, pars triangularis, Rolandic operculum and precentral gyrus with left predominance.
+The subtlety of cortical atrophy in early-stage FTD patients and overlapping characteristics of atrophy patterns among the FTD clinical syndromes, Alzheimer's disease (AD) and normal aging give rise to the need for an automated image analysis procedure which can be used at the individual level.
+Specifically, considering that different forms of dementia correlate with different underlying neuropathologies,
+In this study, we therefore aimed to classify each individual subject into one of the diagnostic categories in a hierarchical manner by employing a machine learning-based classification method using surfacebased cortical thickness data.
+The hierarchical scheme of our classification algorithm was designed based on the clinical decision process.
+In clinical practice, after noticing that a patient has abnormal findings that cannot be explained by normal aging, a clinician has to rule out AD first since it is the most common cause of degenerative dementia.
+If the patient has behavioral or language problems that suggest FTD, the clinician will determine which clinical syndrome it is.
+To emulate this process, first, we discriminated the dementia group (FTD and AD groups combined) from the cognitively normal (CN) group.
+Subsequently, the dementia group was classified into FTD and AD groups.
+Afterwards, subjects from the FTD group were classified into bvFTD and PPA groups.
+Finally, the PPA group was further classified into nfvPPA and svPPA groups.
+Our algorithm used a Laplace Beltrami operator to reduce noise, followed by linear discriminant analysis (LDA) in combination with principal component analysis (PCA).
+
+Methods
+
+Participants
+We consecutively recruited 143 patients with FTD who visited the dementia clinic of Samsung Medical Center (Seoul, Korea) from September 2007 to March 2017.
+All FTD patients who were enrolled in this study met the diagnostic criteria for FTD clinical subtypes proposed by
+All patients were evaluated by comprehensive interviews, neurological examinations, and neuropsychological assessment.
+In brief, caregivers were interviewed in depth by neurologists and neuropsychologists.
+Blood tests to exclude secondary causes of dementia included a complete blood count, blood chemistry tests, vitamin B12/folate, syphilis serology, and thyroid function tests.
+Conventional brain MRI scans confirmed the absence of structural lesions such as tumors, traumatic brain injuries, hydrocephalus, and severe white matter hyperintensities.
+Thirty-four out of 143 FTD patients underwent 18 F-florbetaben or 18 F-flutemetamol amyloid positron emission tomography (PET) scanning and four of them had significant amyloid deposition.
+A committee that included 5-10 dementia specialists held a quarterly meeting to review the clinical histories and brain imaging results of all cases enrolled in this study, and to reach a consensus regarding clinical diagnosis.
+We also recruited 50 age-matched AD dementia patients and 146 CN subjects from an in-house registry of individuals who underwent amyloid PET scanning ( 18 F-florbetaben or 18 F-flutemetamol) from August 2015 to July 2017 and performed the same clinical assessments and imaging studies.
+All AD dementia patients met the criteria for probable AD dementia with evidence of the AD pathophysiological process proposed by the National Institute on Aging-Alzheimer's Association
+The CN group consisted of cognitively normal subjects without amyloid deposition on 18 F-florbetaben PET.
+
+Ethics statement
+The institutional review boards at all participating centers approved this study, and informed consent was obtained from the patients and caregivers.
+
+PET image acquisition and analysis
+We used 18 F-florbetaben PET or 18 F-flutemetamol PET to detect amyloid in the brain.
+PET images were dichotomized as either amyloid positive or negative using visual reads.
+We defined 18 F-florbetaben PET as positive when a score of 2 or 3 was assigned during visual assessment on the brain Aß plaque load (BAPL) scoring system.
+If any one of the brain regions systematically reviewed for 18 F-flutemetamol PET was positive in either hemisphere, the scan was considered positive.
+
+MR image acquisition
+All subjects underwent a three-dimensional (3D) volumetric brain MRI scan.
+An Achieva 3.0-Tesla MRI scanner (Philips, Best, the Netherlands) was used to acquire 3D T1 Turbo Field Echo (TFE) MRI data using the following imaging parameters: sagittal slice thickness, 1.0 mm with 50% overlap; no gap; repetition time of 9.9 ms; echo time of 4.6 ms; flip angle of 8°; and matrix size of 240 × 240 pixels reconstructed to 480 × 480 over a field of view of 240 mm.
+
+Image preprocessing
+For automated surface modeling and measurement of each subject's cortical thickness, we applied the FreeSurfer (version 5.1) pipeline to the T1 weighted MR image (
+Fig.
+The first step segments the T1 weighted image based on signal intensity, which includes motion noise correction, space transformation, normalization and skull stripping.
+Afterwards, we employed the CIVET pipeline for additional correction of the skull-stripped image.
+Subsequently, the cortical surfaces were constructed for both white and gray matter boundaries.
+The gray and white matter surfaces were then used for calculating cortical thickness.
+To achieve correspondence between subjects, the mesh vertices were resampled to have the same number (40,962) of vertices for each hemisphere.
+Finally, the cortical thicknesses were defined at every vertex as the distance between two corresponding vertices of the gray and white matter surfaces.
+Throughout the whole image preprocessing pipeline, a neuroanatomist visually checked images, and corrected image processing errors manually.
+In particular, the image segmentation was carefully examined and corrected manually in subjects with atrophy: for example, svPPA patients often have anterior temporal lobe atrophy to such a degree that Free-Surfer processing may initially fail to detect the gray matter.
+Of the initial 339 subjects, eight subjects were excluded due to errors in preprocessing: FreeSurfer failed to produce results in seven subjects, and one subject had an overestimation error which could not be corrected manually.
+Therefore, MRI scans of 331 subjects (48 AD, 48 bvFTD, 50 svPPA, 39 nfvPPA and 146 CN subjects) were analyzed in this study.
+
+Hierarchical classification based on cortical atrophy
+For hierarchical classification, we used four different pairs of groups for each classifier step.
+Fig.
+First, we trained a classifier using the CN and Dementia (FTD + AD) groups (Step 1).
+Subsequently, another classifier was trained using the FTD and AD groups (Step 2).
+Next, the FTD classifier was trained using the bvFTD and PPA groups (Step 3).
+Finally, the PPA classifier was trained to distinguish between svPPA and nfvPPA (Step 4).
+The hierarchical classification was performed with these four classifiers.
+Specifically, a single subject was classified using the Step 1 classifier.
+If the subject was classified as a patient, the subject was then tested using the Step 2 classifier.
+Again, if the subject was classified as an FTD patient, then Step 3 classifier was applied.
+This hierarchical process was performed consecutively through the entire tree until the subject was finally classified into one of the final clinical labels.
+Using the cortical thickness data of each subject, we applied the Laplace Beltrami operator for noise removal (Fig.
+This scheme transforms the cortical thickness data from the geometrical domain into frequency space, and represents the original data using oscillations of alternating thin and thick cortices across the cortical surface.
+For each subject, the original cortical thickness data was sampled at 81,924 vertices, which was then transformed to about 250-dimensional frequency domain.
+The detailed process of noise removal was described in our previous work.
+PCA was applied for the purpose of dimension reduction, which transforms the 250-dimensional feature data to much lower dimensional space.
+The detailed information on the feature transformation was described in Supplementary Table
+Finally, the individual cortical thickness data that was not included in the training data set was tested to obtain a prediction label (Fig.
+For comparison purposes, two additional experiments were performed.
+First, classification using a single, five-label LDA classifier employing the same learning procedure (Fig.
+Additionally, pairwise classifications without the use of the Laplace-Beltrami operator were conducted to evaluate how much this noise-removal step contributed to our classification performances.
+In order to evaluate the classification performance, we used a k-fold cross-validation (CV) approach (Fig.
+For each classification step in the hierarchical tree, the set was randomly split into k = 10 independent subsets.
+Nine subsets were used for training, and the remaining subset was used for testing.
+We performed the cross-validation 1000 times for reliability and calculated the mean accuracy, sensitivity and specificity.
+
+Discriminative region analysis
+We extracted the discriminative regions for our classifiers, which provided topographic patterns representing the contribution of each brain region to the discriminability between the two groups being compared.
+We obtained the discriminative regions for each classification by visualizing the weight vector of the classifier similarly to the method of Haufe et al.
+Since, in our approach, we used additional steps for noise removal and PCA dimension reduction, the weight vector was defined by multiplication between the PCA matrix and the LDA matrix (w = M PCA × M LDA ).
+Additionally, X is the filtered feature in the frequency domain.
+We then obtained the discriminate pattern (D freq ) on frequency space as:
+This discriminative pattern on frequency domain was projected back into the surface domain by shifting back D freq using the center (PCA mean ) and MHT (M MHT ).
+Finally, the discriminated region (D surface ) on the surface was obtained as:
+For visualization, we colored D surface on the template surface, and the warm/cool color represents the importance of the feature for each group, with darker colors indicating greater importance.
+
+Statistics
+We compared the demographic and clinical data among groups using one-way analysis of variance (ANOVA) tests.
+Continuous variables were expressed as mean ± standard deviation (SD).
+Statistical analyses were performed using R version 3.5.0.
+
+Results
+
+Clinical characteristics
+As shown in Table
+The mean age of subjects in the FTD group was 65.5 ± 11.8 years (bvFTD: 62.4 ± 9.4, svPPA: 65.6 ± 7.9, and nfvPPA: 68.9 ± 8.6).
+The interval between the onset of symptoms and MRI acquisition was 3.4 ± 2.4 years.
+There were no differences in age, years of education, and time from symptom onset to MRI among groups.
+There was no difference in mini-mental status examination (MMSE) score among FTD subtypes and the AD group.
+
+Classification performance
+The results from classification using the entire hierarchical tree showed that each subject was classified into one of the five clinical labels with 75.8% accuracy.
+(Tables
+Within the confusion matrix, the numbers in the boxes located diagonally from the top-left corner to the bottom-right corner indicate the cumulative accuracies per diagnostic subgroup (CN 89.3%, AD 73.1%, bvFTD 57.2%, nfvPPA 51.9%, and svPPA 75.6%).
+Table
+In step 1, the accuracy in discriminating between CN subjects and Dementia (FTD + AD) patients was 86.1%.
+In step 2, AD and FTD patients were classified with 90.8% accuracy.
+Within the FTD group, the classifier discriminated between bvFTD and PPA patients with 86.9% accuracy (step 3).
+The accuracy in discriminating between PPA clinical syndromes was 92.1% in step 4. The receiver operating characteristic (ROC) curves for steps 1 to 4 are shown in Supplementary Fig.
+The areas under the ROC curves for steps 1 to 4 were 0.917, 0.955, 0.865, and 0,955, respectively.
+For comparison with the hierarchical classifier, the classification performance of a single, multi-label classifier which does not use the hierarchical scheme is shown in Table
+This classifier demonstrated an accuracy of 73.0%.
+The confusion matrix of this multi-label classifier is shown in Supplementary Fig.
+Supplementary Table
+In the overall hierarchical steps, we obtained 3-4% improvements in accuracies by using the operator to reduce noise components in the cortical thickness data.
+Fig.
+For classification between Dementia and CN groups, the left frontoparieto-temporal areas, right anterior temporal area, and right superior frontal gyrus distinguished demented subjects from cognitively normal subjects.
+In step 2, the bilateral precuneus and lateral parietal, right posterior temporal and lateral occipital, and left frontal regions Abbreviations: N = number, FTD = frontotemporal dementia, bvFTD = behavioral variant frontotemporal dementia, svPPA = semantic variant primary progressive aphasia, nfvPPA = non-fluent/agrammatic variant primary progressive aphasia, AD = Alzheimer's disease, CN = cognitively normal, K-MMSE = Korean minimental state examination.
+† p < 0.05.
+Accuracies for pairwise classifiers were shown with 95% confidence intervals in brackets.
+Abbreviations: AUC = Area under receiver operating characteristic curve, FTD = frontotemporal dementia, bvFTD = behavioral variant frontotemporal dementia, PPA = primary progressive aphasia, svPPA = semantic variant primary progressive aphasia, nfvPPA = non-fluent/agrammatic variant primary progressive aphasia, AD = Alzheimer's disease, CN = cognitively normal.
+distinguished AD from FTD, while the bilateral anterior temporal, anterior cingulate and right frontal regions distinguished FTD from AD.
+The left frontotemporal region and left inferior parietal lobule distinguished PPA from bvFTD, while the right frontotemporal regions significant influenced the in discrimination of bvFTD from nfvPPA (Step 3).
+For distinguishing svPPA from nfvPPA, the bilateral anterior temporal regions and left anterior cingulate cortex were of significantly influential in identifying svPPA, whereas the left frontal lobar regions were significant for identifying nfvPPA (Step 4).Abbreviations: FTD = frontotemporal dementia, bvFTD = behavioral variant frontotemporal dementia, PPA = primary progressive aphasia, svPPA = semantic variant primary progressive aphasia, nfvPPA = non-fluent/agrammatic variant primary progressive aphasia, AD = Alzheimer's disease, CN = cognitively normal
+
+Post-hoc assessment for misclassified subjects
+We further performed a post-hoc assessment for misclassified subjects.
+A total of 89 out of 742 pairwise classifications did not match the clinical diagnosis.
+In a visual review of these scans, 22 of them only had subtle atrophy which were not suggestive of a single clinical diagnosis (Fig.
+Nine scans showed significant atrophy but the spatial pattern of cortical atrophy was shared by more than one clinical diagnosis (Fig.
+For the remainder of the misclassified subjects, it was not obvious from visual review why misclassification occurred.
+There were subjects who were misclassified in multiple steps.
+Fourteen subjects were misclassified in two steps, and one subject was misclassified in three steps (Supplementary Table
+
+Discussion
+We developed a machine learning-based automated classifier for differential diagnosis of FTD clinical syndromes.
+We included carefully phenotyped FTD patients, for whom precise clinical diagnoses were made through a consensus decision, for the development of our classifier.
+This classifier was successful in discriminating among CN, AD, and FTD subtypes using MRI-based cortical thickness data.
+Since AD is the most prevalent cause of dementia and the most important etiology to be considered for patients with cognitive decline, we also included AD patients in our classification model.
+Methodologically, the proposed method based on the Laplace operator removed high-frequency components of cortical thickness data as noise, which made the classification more sensitive.
+This was possible because we were able to overcome the spatial variance due to noise while maintaining significant differences of shape especially in FTD and AD groups.
+Thus, we believe that one advance of our study was the application of a Laplace Beltrami operator to the cortical thickness data, which allowed us to reduce the contribution of noise to the classification.
+Moreover, visualization of discriminative regions was possible by transforming the discriminative patterns in the frequency domain to that in the surface domain.
+Therefore, our study clearly shows that the classifier models discriminate each patient group with relative importance weights distributed across multiple brain regions.
+Furthermore, automated classifiers are expected to help in the clinical diagnosis of patients with subtle cortical atrophy.
+While a clinician might be biased to look for only a few well-known structural changes in structural MRI, our automated classifier can identify minute changes in co-varying regions.
+For example, in svPPA, clinicians may only pay attention to the anterior temporal lobe, while our study demonstrates that the anterior cingulate cortex also has significance in discriminating svPPA from nfvPPA (Fig.
+Compared with previous classifier studies, we used more diverse diagnostic categories of neurodegenerative dementia.
+Previous studies introduced classifiers discriminating AD patients from cognitively normal subjects,
+Other studies demonstrated classifiers for individual level classification of PPA subtypes.
+We achieved good to excellent accuracies for classification between groups, especially between dementia groups.
+In discriminating FTD from AD, our classifier had an accuracy of 90.8%, demonstrating similar performance compared to literature reporting 72% to 89.2% accuracies.
+The patterns of discriminative regions for our classifiers are similar to previously known cortical atrophic patterns in each clinical syndrome.
+Although the discriminative regions of a certain group can vary depending on the combinations of groups compared, they generally reflect the structural changes occurring in that group.
+Compared with PPAs, the bvFTD group's discriminative regions showed right frontal predominance.
+This may have been influenced by the cortical atrophy pattern of bvFTD, which is known from past studies.
+The four steps of our hierarchical classifier emulate the clinical decision process for diagnosing FTD patients.
+First, it is important to determine whether the patient's complaints are due to normal aging.
+(step 1) When the patient seems to have behavioral or language symptoms that cannot be considered as changes of normal aging, the physician still has to rule out AD (step 2) since the prevalence of AD is much higher than FTD, and AD patients can show similar symptoms.
+If the patient's symptoms and signs suggest FTD, the clinician tries to determine which clinical subtype is the most likely (steps 3-4).
+The classification accuracy of step 4 was highest among the four steps, probably due to the distinctiveness of the cortical atrophy pattern in svPPA patients.
+For example, it is sometimes difficult to determine whether a patient's behavioral symptoms suggest bvFTD or AD with prominent frontal dysfunction.
+Additionally, it is often hard to tell which type of PPA a patient with mild language dysfunction has.
+In these cases, individual classifiers can be used selectively.
+We found that about 12% of classifications did not match the clinical diagnosis.
+This might be related to subtle atrophy or diffuse severe atrophy at the individual level.
+In our experiments, many of the misclassified patients (about 23%) had subtle cortical atrophy, which made it difficult for the classifier to capture the characteristic atrophy pattern.
+Indeed, such subtle changes in the cerebral cortex were barely detectable even in visual assessment performed by an expert neurologist.
+Another main reason for misclassification stems from the shared spatial pattern of cortical atrophy across multiple clinical diagnoses.
+As the supervised learning proposed in this study tries to detect different cortical atrophy patterns in two clinical diagnoses, similar atrophy patterns between them could lead to a misclassification.
+This issue is a well-known overfitting problem in supervised learning, and has been a major obstacle to the application of computer-aided diagnosis to medical images due to limited numbers of patients.
+Once we have more data, we believe this overfitting problem could be resolved, resulting in an improved performance for classification.
+This study has several limitations.
+First, we did not have pathological diagnoses for most FTD patients, although we included carefully phenotyped patients.
+It is important for a subject's clinical syndrome and underlying disease to be distinguished, as not only could patients with clinical AD dementia potentially have underlying frontotemporal lobar degeneration, but patients with FTD clinical syndromes could also have AD pathology.
+The purpose of this study was to predict clinical syndromes rather than underlying diseases.
+However, to enhance the homogeneity within the groups, we used the results of amyloid PET scans for inclusion of AD and CN subjects.
+Second, four FTD patients were amyloid (+) on PET, which leaves open the possibility that frontal variant AD might be included in the FTD group.
+However, since we diagnosed FTD patients through a consensus decision committee, amyloid (+) in these patients might be incidental findings.
+In fact, the prevalence of amyloid (+) in the FTD group seemed to be similar to that of cognitively normal individuals.
+Fourth, because we developed the classifier using carefully phenotyped subjects, performance may not be as high when applied to patients in the early stages of these diseases whose clinical phenotypes are not conclusive yet.
+In future studies, it would be meaningful to conduct similar analysis using MRI scans acquired in the early stage of the clinical course from subjects who were later carefully phenotyped.
+Finally, there may be a concern for overfitting when training an LDA classifier with a relatively small number of data samples.
+We indeed compared the classification performance by incorporating additional regularization terms for the LDA classifier, which unfortunately could not improve the 10-fold CV performances.
+Our future studies will focus on developing computationally more generalizable methods with comparable or better classification accuracy using an external dataset for validation if possible.
+
+Conclusion
+With our fully automated classifier, cortical thickness data alone could classify FTD clinical subtypes and AD with good to excellent accuracy.
+Our classifier may help clinicians to diagnose FTD subtypes with subtle cortical atrophy and facilitate the selection of appropriate interventions.
+Supplementary data to this article can be found online at
+
+
+
+Fig. 1 .
+Fig. 1.
+Overview of the proposed cortical atrophy pattern-based classification method.
+(A) Image preprocessing and cortical thickness extraction.
+(B) Noise removal based on the Laplace Beltrami operator.
+(C) Cortical atrophy pattern-based classification including a training step and a testing step.
+
+
+
+Fig. 2 .
+Fig. 2. Schematic view of (A)hierarchical and (B)non-hierarchical classification.
+
+
+
+Fig. 3 .
+Fig. 3. Discriminative regions for each step.
+Each discriminative area corresponds to the group written in the same color.
+
+
+
+Fig. 4 .
+Fig. 4. Examples of misclassified subjects.
+(A) The MRI scan shows no definite atrophy.
+(B) The MRI scan shows significant atrophy in the bilateral frontotemporal areas.
+The atrophy is slightly worse on the left side, which might have led to the misclassification.
+
+
+
+Table 1
+Clinical characteristics of participants.
+
+
+
+Table 2
+Classification performances.

@@ -1,0 +1,359 @@
+A high-generalizability machine learning framework for predicting the progression of Alzheimer’s disease using limited data
+Alzheimer's disease is a neurodegenerative disease that imposes a substantial financial burden on society.
+A number of machine learning studies have been conducted to predict the speed of its progression, which varies widely among different individuals, for recruiting fast progressors in future clinical trials.
+However, because the data in this field are very limited, two problems have yet to be solved: the first is that models built on limited data tend to induce overfitting and have low generalizability, and the second is that no cross-cohort evaluations have been done.
+Here, to suppress the overfitting caused by limited data, we propose a hybrid machine learning framework consisting of multiple convolutional neural networks that automatically extract image features from the point of view of brain segments, which are relevant to cognitive decline according to clinical findings, and a linear support vector classifier that uses extracted image features together with non-image information to make robust final predictions.
+The experimental results indicate that our model achieves superior performance (accuracy: 0.88, area under the curve [AUC]: 0.95) compared with other stateof-the-art methods.
+Moreover, our framework demonstrates high generalizability as a result of evaluations using a completely different cohort dataset (accuracy: 0.84, AUC: 0.91) collected from a different population than that used for training.
+
+INTRODUCTION
+Alzheimer's disease (AD) is a progressive disorder that causes brain cells to degenerate, and its symptoms, such as memory impairment, greatly impact the activities of daily living of affected patients.
+As of 2019, there were an estimated 5.8 million patients with AD, and this number is expected to grow to 13.8 million by 2050 in the USA alone
+On the other hand, AD has few available treatments, and there has been a high rate of failure in AD drug development programs
+New drug development remains challenging, and a large number of such drugs aim to slow the progress of AD at an early stage
+Participants with mild cognitive impairment (MCI) who are considered to be in the prodromal stage of AD are generally involved in clinical trials.
+For such trials, it is important to recruit participants with MCI who are likely to progress to AD, because only 20% of patients with MCI are subsequently diagnosed with AD within 1.5-2 years, while the other 80% remain unchanged or even revert to normal
+Therefore, an algorithm that can classify stable MCI (sMCI) and progressive MCI (pMCI) is needed to indicate that a patient with MCI will progress to AD within a certain period.
+Various machine learning models for predicting the progress of AD have been proposed, and the most frequently utilized dataset, which includes brain images and cognitive test scores, is from the North American Alzheimer's Disease Neuroimaging Initiative 6 (NA-ADNI).
+Among these models, some
+A summary of related works is provided in Supplementary Table
+Because most of these models are implemented using deep learning, which requires training of a considerable number of parameters, a large number of training samples is desirable to achieve good generalization performance
+Even though the classification accuracies of sMCI and pMCI have reached 75% to 86%, two problems have yet to be solved.
+The first problem is that the limited data in the NA-ADNI tend to induce overfitting.
+Compared with ChestX-ray
+The second problem is that, because of the participants' biases, the actual ability of an artificial intelligence (AI) model trained and evaluated based on the NA-ADNI needs to be tested on a completely different dataset.
+One of the important biases is that the NA-ADNI participants are primarily enrolled in Caucasian populations
+Because differences in cortical structure have been reported between Caucasian and East Asian adults
+To the best of our knowledge, no such evaluations using cross-cohort datasets have been conducted.
+The present study focuses on solving the above two problems based on information that can easily be obtained with relatively low invasiveness and cost, such as magnetic resonance imaging (MRI) images, which are used as brain imaging biomarkers; information such as positron emission tomography (PET) images is not adopted.
+Here, we propose a hybrid machine learning framework (Fig.
+In the IFEP, a convolutional neural network (CNN)
+In the APPP, a linear support vector machine (SVM) classifier was used to make the final predictions.
+In the IFEP, to suppress the overfitting of deep learning, we introduced prior brain imaging studies
+To improve the performance and generalizability of our CNNs, mechanisms such as data augmentation
+A linear SVM tends to have higher generalizability compared with nonlinear classifiers
+Therefore, in the APPP, we selected it for the final predictions using both the image features extracted in the IFEP and the non-image information, including cognitive scores, age, and genetic apolipoprotein E (APOE) types.
+The contribution of this study is that we investigated a hybrid approach consisting of a deep CNN for automatic image feature extraction from cognitive decline-related segments and a linear SVM for final prediction using both automatically extracted image features and non-image information to tackle the problem of predicting MCI progress, which has traditionally been difficult in machine learning because of the lack of sufficient training data.
+Our study also showed that such a hybrid approach could achieve prediction accuracies of 88% (area under the curve [AUC]: 95%) for the NA-ADNI and 84% (AUC: 91%) for the J-ADNI, thereby outperforming previous works.
+The most important point of our study is that such a hybrid approach can be more practically applicable for predicting the progress of MCI because of its high generalizability for different cohorts.
+
+RESULTS
+
+Training, validation, and test settings
+The training, validation, and test datasets are shown in Fig.
+In the tenfold stratified cross-validation and test, the whole dataset was randomly split and stratified by class labels into 10 subsets.
+In each cross-validation and test, eight subsets were used for training; the remaining two were used for validation and test, respectively.
+The cross-validation and test were repeated 10 times by shifting the start subset of cross-validation and test setting to the next subset, so that each sample of all the datasets was used for test only once.
+The mean accuracy for all test subsets was calculated to evaluate our model in regard to the NA-ADNI dataset.
+For the evaluation of the J-ADNI dataset, the 10 models obtained in the above repeated 10-fold cross-validation and test were used, and the mean output probabilities of the models were used to classify each patient as sMCI or pMCI with a fixed threshold of 0.5.
+
+Comparison with previous studies
+A comparison of our results with those from previous studies is shown in Table
+Because the same NA-ADNI dataset was used, the prediction performance was basically comparable, despite differences such as the follow-up periods used to define sMCI and pMCI, input information, and evaluation methods (validation, k-fold cross-validation, and k-fold cross-validation and test).
+For the case of using only brain images as input, our model (M2 in Supplementary Table
+Multiple CNN-based image feature extractors with the same structure were trained on each brain segment, that is, the hippocampus and anterior temporal lobe in our study, to extract image features automatically.
+The CNN-based image feature extractor consists of a multi-layer convolutional neural network (CNN) block, a self-attention (SA) block, and an auto-encoder (AE) block.
+The feature vectors after the global average pooling (GAP) layer that encodes image features are passed to the PCA for dimensionality reduction.
+Finally, a linear SVM uses the low dimensional image features together with nonimage information to make a final prediction.
+task definition (accuracy: 79%, AUC: NA, sensitivity: 75%, specificity: 82%), but was inferior to a DNN 7 using MRI and PET images (accuracy: 83%, AUC: NA, sensitivity: 80%, specificity: 84%) and a DNN 10 using mixed groups of cognitively normal (CN) + sMCI and pSMI+AD groups for training (accuracy: 83%, AUC: 88%, sensitivity: 76%, specificity: 87%).
+For the case of using not only images, but also non-image information, the performance of our model (M5 in Supplementary Table
+Considering that the state-of-the-art methods were evaluated only by validation datasets (not test datasets), the potential superiority of our model should be greater (see Supplementary Table
+The experimental results indicated that our framework outperformed previous models and worked well on cross-cohort datasets, as shown in Table
+
+Cross-cohort evaluation results
+Because only the NA-ADNI dataset obtained primarily using Caucasian populations was used for training our AI model, a non-Caucasian dataset was preferred for testing cross-cohort performance.
+The J-ADNI
+As a result, J-ADNI participants are East Asian.
+By using J-ADNI as the test dataset, we evaluated the cross-cohort performance of our AI model.
+The receiver operating characteristic (ROC) curve evaluated using the J-ADNI is shown in Fig.
+The M5 model (Supplementary Table
+Although the AUC of the J-ADNI was 0.91 and 4% lower than the NA-ADNI, the performance (Supplementary Table
+Fig.
+We extracted data for training, validation, and test from the longitudinal datasets ADNI1, ADNI-GO, and ADNI2.
+If a participant was diagnosed as MCI and both the MRI T1-weighted images and other non-image information used in our model were available, we selected the related data as a candidate for this study.
+We evaluated our model in the following two ways: first, as in previous studies, we tested the model trained based on the NA-ADNI dataset using repeated 10-fold cross-validation and test; in each iteration, 80% of the samples were used for training, 10% for validation, and 10% for test; second, to evaluate generalization across cohorts, we tested the model, which was trained based on the ADNI dataset using a totally "unknown" J-ADNI dataset.
+Relatively small datasets compared with the NA-ADNI were also used for both training and evaluation.
+b Follow-up periods used for sMCI are longer than that of pMCI (5 years in DNN [9] and 4 years in SVM [13]).
+e Tenfold cross-validation accuracy.
+f Tenfold cross-validation accuracy, much higher accuracy of 91% on a small hold out test set.
+
+Visualization of our framework
+First, to investigate which region the CNNs focused on in the IFEP, SmoothGrad 35 visualization was used.
+As shown in Supplementary Table
+The reason for this is shown in Fig.
+The samples from S1 to S4 were selected from Fig.
+On the other hand, as shown in Fig.
+Second, to investigate the effectiveness of the features extracted by our model (M5 in Supplementary Table
+Because we wanted to see the global structure in the features, the value of the parameter "n_neighbors" was set to 50, which is bigger than the default value of 15.
+The input for UMAP involves 10-dimensional features obtained just after the "Quantile normalization" shown in Fig.
+The 10 dimensions consist of four from the hippocampi and anterior temporal lobes (left and right), four from different cognitive scores, one from age, and one from APOE type.
+A blue "•" represents sMCI, which was correctly classified as sMCI by our model, and a blue "x" represents sMCI, which was wrongly classified as pMCI.
+A red "•" represents pMCI, which was correctly classified as pMCI, and a red "x" represents pMCI, which was wrongly classified as sMCI.
+Despite a small number of misclassification errors, most training samples were appropriately distributed, which suggests that effective features for classifying sMCI and pMCI were extracted successfully, and that a linear SVM is appropriate for classification tasks.
+
+DISCUSSION
+One main challenge of this study is how to extract meaningful features from images effectively by using a CNN with a limited number of training samples.
+CNNs are considered a powerful method that can automatically extract more effective features from images than manually designed.
+To realize this, CNNs require a huge dataset for training a large number of parameters.
+However, in the present study, while the number of available samples was relatively small (in the hundreds), the dimension of input images for each sample is huge (millions of voxels).
+In this case, a CNN can easily find a local optimal solution for its parameters.
+As a result, trained CNN models with local optimal solutions tend to lack the generalization of unknown datasets.
+To extract robust image features from limited data, we introduced prior knowledge of brain imaging studies that investigated the correlation between brain segments and the progression of AD.
+In the IFEP, instead of one CNN for the whole brain, multiple CNNs were trained for different brain segments cropped from the whole brain images.
+Hippocampi and anterior temporal lobes (left and right) were finally selected experimentally.
+By adopting the brain segments, the dimension of input images for each sample was reduced to less than one-tenth of the whole brain.
+Moreover, each CNN was forced to learn image features from only the regions that were highly correlated with the progression of AD.
+The gradient maps shown in Fig.
+In our experiment, as shown in Supplementary Table
+The other challenge is what kind of classifier should be used to make a final prediction based on not only the features extracted in the IFEP but also the non-image information, including cognitive scores, age, and genetic APOE type.
+As described previously, the visualized feature distribution of sMCI and pMCI shown in Fig.
+In the APPP, to restrain the overfitting induced by the limited data, instead of an E2E deep neural network, a linear SVM
+The experimental results, in which the SVM model (M5, Supplementary Table
+In addition, our framework selected information that is relatively easy to be obtained as input.
+For example, even though PET imaging and cerebrospinal fluid (CSF) examinations are very useful for AD diagnosis, they were not selected because of their high cost and invasiveness.
+Furthermore, because the total processing time for predicting one case is about 30 seconds on a CPU-based PC, the hurdle to integrate our AI model into a practical clinical trial is low.
+Successful and failure cases selected from the same UMAP visualization as that in Fig.
+The "score" with a range from 0.0-1.0 is the output of the SVM; "0.0" and "1.0" represent the highest probability of sMCI and pMCI, respectively.
+The threshold for classification is 0.5.
+The samples S1-S6 shown in Supplementary Fig.
+S1 and S5 were selected from the cluster of sMCI samples.
+S1 is an sMCI case and was correctly classified as sMCI with a very low score of 0.15.
+S5 is a pMCI case and was classified wrongly as sMCI with a very low score of 0.09.
+Hippocampus atrophies of S5 are somewhat more progressive than S1, and cognitive scores are also slightly worse.
+However, because the score of S5 is lower than S1, our AI model shows that S5 has a lower probability to progress to AD.
+Note that the older population tends to have more progressive degradation of both hippocampus atrophies and cognitive scores caused by normal aging.
+The lower score of S5 might be affected by the fact that the age of S5 is 15 years older than that of S1.
+S2 and S3 were selected from the boundary between the sMCI and pMCI clusters.
+S2 is an sMCI case and was classified correctly as sMCI with a low score of 0.30.
+S3 is a pMCI case and was classified correctly as pMCI with a score of 0.55, which is slightly higher than 0.5.
+Hippocampus atrophies of both S2 and S3 were unremarkable.
+On the other hand, the cognitive scores of S3 were slightly worse than those of S2.
+The difference in cognitive scores might have caused the different classification results.
+S4 and S6 were selected from the cluster of pMCI samples.
+S4 is a pMCI case and was classified correctly as pMCI with an extremely high score of 0.95.
+S6 is an sMCI case and was classified wrongly as pMCI, also with a high score of 0.97.
+Regarding hippocampus atrophy, S4 is a little progressive and S6 is very progressive.
+Regarding cognitive scores, both are poor.
+Both the obvious hippocampus atrophy and the poor cognitive scores indicate the reason S6 was misclassified as pMCI.
+The strength of deep learning models, but also one of their vulnerabilities, is the ability to discern patterns in training data that humans cannot
+Sometimes, the vulnerability is striking, especially where there are biases in the training dataset.
+For
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+Compared with the whole brain, the CNNs based on brain segments consistently focused on the hippocampi and amygdalae.
+example, unintended effects caused by cohort (North America and East Asia) and gender biases have been reported in gender recognition systems
+As mentioned previously, because our AI model was trained based on the NA-ADNI dataset, which has a relatively small number of samples, mainly Caucasian, it is necessary to evaluate the trained model using a completely different dataset.
+In the present study, we evaluated its performance using the J-ADNI dataset, which consists of East Asian samples and was totally unknown to our AI model.
+Figure
+Furthermore, as shown in Table
+The high performance shows the potential of our AI model to be incorporated in a practical clinical trial.
+A previous SVM study
+Supplementary Table
+AE contributed the most in the NA-ADNI dataset, whereas SA contributed the most in the J-ADNI dataset.
+The final DenseNet model with both SA and AE showed stable performance for both the NA-ADNI and J-ADNI datasets.
+Supplementary Table
+Compared with Supplementary Table
+Generally, an end-to-end deep learning classification mode often suffers from overfitting when the dataset is small, and replacing classification layers in the end-to-end model with a linear SVM can improve its robustness against overfitting.
+We investigated the difference in accuracies between the validation dataset, which was used to select the best parameters for a model, and the test dataset, to which the selected model was applied.
+The lower difference of the two accuracies suggests higher model generalizability.
+Supplementary Table
+A similar tendency was also seen in the models using images only (M2 and M6).
+Supplementary Table
+This strongly implies the existence of bias when a small, randomly-selected evaluation subset is used, and repeated 10-fold stratified cross-validation and test is desirable to evaluate a developed model objectively.
+The first limitation of this study is that, even though the ADNI dataset, which is the largest worldwide regarding AD, was used in this study, the size was still relatively small.
+Therefore, we proposed the hybrid model to suppress overfitting.
+The second limitation is that, because we aimed at contributing to clinical trials, only the baseline data were used as input.
+To extend its application to common clinical diagnoses, where longitudinal data are usually available, there is room for improvement by utilizing not only the baseline data, but also the whole longitudinal data.
+The third limitation is that our hybrid model showed superiority to end-to-end models using DenseNet as a backbone when the available dataset was limited.
+However, end-to-end models, including those using other state-of-the-art architectures such as vision transformer
+In this paper, we proposed a hybrid machine learning framework to overcome the lack of training samples in the field of AD progression prediction.
+The experimental results showed that it worked well, even on different cohorts.
+Utilizing this framework to stratify patients with MCI who have higher risk of progression to AD might improve the success rate in future clinical trials of drugs for treating AD.
+To achieve this goal, the most important future tasks are to conduct retrospective evaluations based on previous trial data involving drug efficacy and to demonstrate the benefits of integrating AI quantitatively.
+In addition, as recent studies have shown that new biomarkers such as plasma phospho-tau are also effective for prediction
+Training samples were plotted after the dimensions of their image and non-image features were reduced to 2 by using UMAP.
+Blue dots represent sMCIs that were correctly classified as sMCIs by our model, and blue "xs" represent sMCIs that were incorrectly classified as pMCIs.
+Red dots represent pMCIs that were correctly classified as pMCIs by our model, and red "xs" represent pMCIs that were classified incorrectly as sMCIs.
+Samples S1 to S4 were selected for CNN visualization in Fig.
+
+METHODS
+
+Datasets used in the study
+The data used for training, cross-validation, and test in our study were obtained from the ADNI1, ADNI-GO, and ADNI2 datasets in the NA-ADNI database (
+The NA-ADNI is a cohort study launched in 2003 as a public-private partnership, led by principal investigator Michael W. Weiner M.D., and carried out across 55 research centers in the USA and Canada.
+The clinical coordination center of NA-ADNI established a network of clinical sites and developed a plan for the recruitment and retention of subjects, and furthermore prepared the final clinical protocol and informed consent, which is distributed to the sites for local institutional review board (IRB) approval
+Over 2000 participants with normal cognition and patients with MCI or AD were recruited for the present study.
+The first cohort, referred to as ADNI-1, consists of 800 individuals: 200 CN individuals, 400 with late MCI, and 200 with mild dementia.
+ADNI-GO, the second cohort, included about 200 additional individuals with early MCI.
+In ADNI-2, more participants at different stages of AD were recruited to monitor the progression of AD.
+ADNI-3, which is presently enrolling additional CN individuals and patients with MCI and dementia, was not included in our study, because no diagnosis information is currently available.
+Longitudinal data for each participant were examined, and the samples used in our study were selected as follows.
+From the longitudinal data, we first identified candidate baseline points at which the participant was diagnosed as having MCI and both T1-weighted MRI images and other non-image information used in our model were available.
+The non-image information includes cognitive test scores on the Mini-Mental State Examination (MMSE), Functional Activities Questionnaire (FAQ), Clinical Dementia Rating (CDR) Sum of Boxes score, and Alzheimer's Disease Assessment Scale Cog-11 (ADAS), APOE type, and demographic information, such as gender and age.
+If the participant progressed to AD within 2 years from the baseline point, we labeled that participant, in association with the T1-weighted MRI images and non-image information at baseline, as a pMCI sample; otherwise, as an sMCI sample.
+There were 399 sMCI and 430 pMCI samples extracted for the training, validation, and test of our prediction model in this experiment.
+The same procedure was applied to the J-ADNI dataset, which was collected at the 38 participating clinical sites using the same protocol as that for the ADNI, but from population of East Asian adults and in a shorter period (3 years).
+Approval for the J-ADNI study protocol was obtained from the local ethics committees or institutional review committees at the 38 participating clinical sites, including the principal investigator's site (The University of Tokyo).
+Informed written consent was obtained from all the participants at each clinical site
+In total, 80 stable and 118 progressive MCI samples were extracted from the J-ADNI dataset for the evaluation of our trained model.
+Detailed information of the NA-ADNI and J-ADNI datasets is shown in Supplementary Table
+
+Image shape normalization
+The 3D T1-weighted MRI images used in our study were first transformed into Montreal Neurological Institute (MNI)
+The template images of the MNI152 NLIN 2009a atlas
+To align robustly and accurately T1-weighted MRI images, which were obtained under protocols used in NA-ADNI or J-ADNI studies, to the template images of the atlas, which were created in MNI space, a coarse-to-fine approach containing landmarkbased and image registration-based alignment steps was developed.
+In the landmark-based alignment step, six locations in the brain with distinct local anatomic structures were selected as landmarks to be used for robustly aligning T1-weighted MRI images to the atlas template images.
+Landmarks specified manually for the atlas template images are shown in Extended Fig.
+These landmarks are the left and right eyes, body of fornix (front), midbrain (center), 4th ventricle (center), and corpus callosum (top).
+A region-based CNN (R-CNN)
+We trained the R-CNN with 290 cases collected from multiple datasets, including the NA-ADNI dataset, OASIS Brains dataset
+Landmarks of training images were specified manually under the supervision of a radiological technologist.
+When landmarks of T1-weighted MRI images were detected by the trained R-CNN, we set the center point of each landmark detected from each T1-weighted MRI image to correspond with that of the same landmark manually specified in the atlas template image.
+Using six pairs of corresponding central points of the landmarks in the T1-weighted MRI and atlas template images, we identified a linear transform, including 3D rotation, translation, and scaling, by minimizing the total error between the transformed central points of the landmarks detected from the T1weighted MRI images and that of the atlas template images as follows:
+where P i and Q i are the central points of the ith landmark in the atlas template and T1-weighted MRI images, respectively.
+S, R, and T denote 3D scaling, rotation, and translation, respectively.
+We used a linear transform with 9 degrees of freedom, called a similarity transform, instead of an affine transform because we only wanted to normalize the location, orientation, and size of the T1-weighted MRI images, not change the internal detail anatomic structures.
+In the image registration-based alignment step, the initial similarity transform obtained from the landmark-based alignment was further refined by using an image registration technique that utilizes mutual information as an image similarity metric
+In this study, a brain mask of the atlas template images, which is available together with the atlas, was also used to ensure that the image registration was only performed on the brain region.
+The image registration technique used in this study was implemented based on the open-source Insight Tool Kit (ITK) image registration framework
+
+Image intensity normalization
+As T1-weighted MRI images acquired in different sites with different equipment may have different biases in terms of intensity distribution, the normalization of image intensity is an important pre-procession for many image analysis tasks, and many methods have been proposed in the past
+In the present study, we adopted a similar example-based intensity normalization approach that uses patches in the T1-weighted MRI images and atlas template images, which contain patches of the acquired and tissue contrasts desired
+Supplementary Fig.
+Using the similarity transform obtained above, the T1-weighted MRI images were transformed to shape-normalized images to align to the atlas template images.
+Then, an augmented example-based image intensity normalization was applied to the shapenormalized images, the details of which are described below.
+To ensure that the corresponding patches in the shape-normalized and atlas template images used for intensity normalization contained the same tissue, we performed nonlinear image registration between the shapenormalized and atlas template images.
+Nonlinear image registration was also implemented based on ITK
+Similar to what was done in the shape normalization, the brain mask of the atlas template image was also used to ensure that the nonlinear image registration was only performed on brain regions.
+Using the B-spline transform obtained in the nonlinear registration, the shape-normalized images were transformed nonlinearly to the atlas template images, called the warped images, as follows:
+where I n and I w denote the shape-normalized and warped images, respectively, and T B X; φ ð Þ is the B-spline transform between the shapenormalized and atlas template images with parameters of φ.
+In the warped images I w , tissues in the normalized image I n were nonlinearly deformed to align to those in the atlas template images.
+Using the brain mask of the atlas template images, we calculated the minimal box that contained the brain region, and divided the minimal boxes of both warped images I w and atlas template images I a into 8 × 8 × 8 blocks.
+For each pair of blocks in the warped and atlas template images at the same location, we calculated intensity histograms for both blocks of the pair and normalized the histogram range of the warped image block to that of the atlas template image block.
+Again, the brain mask of the atlas template image was used to exclude the voxels outside of the brain region based on the intensity histogram calculation.
+We normalized the histogram range instead of the histogram itself
+On the other hand, the histogram range, the lower and upper bounds of which stand for the intensities of CSF and white matter, respectively, is more stable.
+For each block B k , let u a k and u w k be the upper bounds and l a k and l w k be the lower bounds of the intensity histogram of the block in the atlas template images I a and the warped images I w .
+We defined a linear intensity transform for block B k as follows:
+where I W k ; k ¼ 1; Á Á Á ; N denotes the intensity of voxels in block k of the warped images I w , and I w k is its normalized intensity.
+To obtain a continuous intensity transform over the whole images, we regarded Eq. (
+Using the gravity center X w k of block B k and its intensity transform parameters a k and b k , we calculated two continuous parameter maps a w X w ð Þ and b w X w ð Þ of the intensity transform using a kernel function, defined as follows:
+where p stands for parameters a or b and X w stands for the 3D coordinate of each voxel in the warped image I w .
+GðX; XÞ is defined as
+, where s x , s y , and s z are the block sizes.
+N is the number of blocks.
+Using the parameter map, we can normalize intensities in the warped image I w voxel-wise.
+As Eq. (
+where X n stands for the 3D coordinate of each voxel in the shapenormalized images I n and p stands for parameters a or b.
+By applying the back-projected intensity transform parameters to the shape-normalized images I n , we can obtain an intensity normalization.
+
+Brain segment extraction
+After the intensity normalization was carried out, a skull-stripping process was performed on the shape-normalized images to extract the brain region.
+To achieve this, we trained a V-net
+The V-net was trained using the same dataset as that used for the landmark detection.
+The ground truth of the brain regions of the training data was obtained by manual editing under the supervision of the radiological technologist.
+The segmentation results were generated automatically by an image registration method, which further included diffeomorphic image registration 54 implemented in ITK.
+From the normalized (in shape and intensity) and skull-tripped image, brain segments of hippocampi (left and right) and anterior temporal lobes (left and right) were extracted.
+The locations of these segments were identified in the atlas template image manually and their sizes were fixed to 64 × 64 × 64 voxels, which was large enough to contain each segment of interest with a necessary margin in the normalized image.
+For each sample, four brain segments, which contained hippocampi and anterior temporal lobes, both left and right, at the same locations specified in the atlas template images, were extracted from its normalized image, respectively.
+
+Image feature extraction
+A densely connected convolutional network (DenseNet)
+As shown in Supplementary Fig.
+Supplementary Table
+The size of the first convolution layer was also changed to a smaller one because of the smaller size of the brain segment images.
+Between the last dense block and the classification layer of the original DenseNet-121, an SA layer was inserted.
+While DenseNet is a method used to extract local relationships from images hierarchically, the SA highlights important positions in a feature map and helps to extract a global relationship.
+In our model, by adding an SA layer just after the DenseNet backbone, we could extract features representing both the local and global relationships.
+Beside the classification task, in which an inputted brain segment was classified to sMCI or pMCI classes, another task of the AE, which recovers the imputed brain segment image from the image features, was added to the DenseNet backbone.
+By introducing the AE task, which was considered more robust than classification with a small number of samples, the robustness of the entire architecture was expected to be improved.
+For the decoder, we employed a simple five-layer network consisting of deconvolution and up-sampling layers, the details of which are shown in Supplementary Table
+To optimize the multi-task architecture, a mixed loss function of the two tasks was defined as follows:
+where L class represents the classification error function for prediction defined by cross-entropy loss, L AE denotes the AE error function defined by smooth L1 loss, and α is a hyper-parameter that controls the effect of the AE, which is set to 0.8 empirically.
+The two networks with the same architecture shown in Supplementary Fig.
+Because the left and right segments of brain are basically symmetrical, images of the left hippocampus were flipped horizontally and then used with images of the right hippocampus to train the hippocampus network; this process was also applied to the anterior temporal lobe segment.
+The output of the global average polling of the trained network was extracted as image features and used with other nonimage features for final classification, as described below.
+The intensity of all images for training and testing were normalized to [0, 1] by a fixed maximum intensity of 400 in advance.
+Because the number of samples was small, we also augmented the training images before they were inputted to the network.
+The following augmentations were carried out for each training image:
+1.
+A similarity transform with random rotations ranged from -2.0 to 2.0 degrees, scaling factors from 0.95 to 1.05, and translation from -4.0 to 4.0 voxels, around or along the x, y, and z axes, respectively.
+2. A linear gray scale transform with a random slope from 0.95 to 1.05 and a random shift from -0.05 to 0.05, where the gray value of the images was normalized to [0, 1].
+To avoid the influence of the outside border generated by the random similarity transform augmentation, the augmented images were cropped into a 48 × 48 × 48 voxel size, and the cropped images were used as the input for our network.
+
+Linear SVM classification
+Because the number of training samples is limited in the machine learning field of AD progression prediction, we adopted a linear SVM instead of E2E deep learning as the final predictor to improve generalizability.
+After a 128dimensional image feature was extracted from each brain segment by CNNs, principal component analysis was used to reduce the dimension to 1 for each segment.
+We also attempted to reduce the dimension to 2 or 3 for each brain segment, but there were almost no changes in accuracy.
+Then, non-image information, including cognitive scores (MMSE, FAQ, CDR, and ADAS), age, and APOE type, was combined with the reduced image features of the four segments as the SVM input.
+Here, we transformed APOE type to a value representing AD risk based on the following rules:
+Because the distributions of these multimodal inputs differ greatly, quartile normalization
+For validation and test, the same quartile normalization used for training was applied to the combined features.
+
+End-to-end (E2E) classification
+We also implemented two E2E models using the same backbone architecture shown in Supplementary Fig.
+For the model that uses both image and non-image information, bilinear fusion
+The same AE as shown in Supplementary Fig.
+In the architecture, two image feature extraction modules were configured in parallel to extract image features from the images of the hippocampi and anterior temporal segments, and the extracted image features were concatenated together.
+For the model using both image and non-image information, the non-image features were first embedded and then extended to the same dimension of the image features.
+Bilinear fusion was then applied to the image features and extended non-image features to generate the multimodal features for classification.
+In our experiments, although the E2E model achieved high validation accuracy, a relatively large decline in test accuracy (from 87% to 83%) was observed.
+On the other hand, only a slight decline in test accuracy was seen (from 89% to 88%) for our proposed architecture, which combined image and non-image features with a linear SVM, while it achieved the highest validation accuracy.
+This observation may imply that a simpler combination of multimodal features may be more stable than an E2E deep learning approach when the number of samples available is relatively small.
+
+
+
+c
+Trained with mixed groups of NC+sMCI and pSMI+AD.
+d twofold validation accuracy.
+
+
+
+Fig. 3
+Fig. 3 Cross-cohort evaluation results.
+ROC curves for both the NA-ADNI and J-ADNI are shown.
+The AUCs of the NA-ADNI and J-ADNI are 0.95 and 0.91, respectively.
+
+
+
+Fig. 4
+Fig. 4 Gradient maps of CNNs. a Gradient maps of CNNs of the whole brain.
+CNN visualization results of M1 (Supplementary Table2) based on the whole brain.
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+b Gradient maps of CNNs of brain segments.
+CNN visualization results of M2 (Supplementary Table2) based on brain segments.
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+Compared with the whole brain, the CNNs based on brain segments consistently focused on the hippocampi and amygdalae.
+
+
+
+2
+Fig. 4 Gradient maps of CNNs. a Gradient maps of CNNs of the whole brain.
+CNN visualization results of M1 (Supplementary Table2) based on the whole brain.
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+b Gradient maps of CNNs of brain segments.
+CNN visualization results of M2 (Supplementary Table2) based on brain segments.
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+Compared with the whole brain, the CNNs based on brain segments consistently focused on the hippocampi and amygdalae.
+
+
+Fig. 4 Gradient maps of CNNs. a Gradient maps of CNNs of the whole brain.
+CNN visualization results of M1 (Supplementary Table2) based on the whole brain.
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+b Gradient maps of CNNs of brain segments.
+CNN visualization results of M2 (Supplementary Table2) based on brain segments.
+Red represents a high contribution ratio, and blue represents a low contribution ratio.
+Compared with the whole brain, the CNNs based on brain segments consistently focused on the hippocampi and amygdalae.
+
+
+
+Fig. 5
+Fig. 5 Visualization by UMAP (10 ) 2 dimensions).Training samples were plotted after the dimensions of their image and non-image features were reduced to 2 by using UMAP.
+Blue dots represent sMCIs that were correctly classified as sMCIs by our model, and blue "xs" represent sMCIs that were incorrectly classified as pMCIs.
+Red dots represent pMCIs that were correctly classified as pMCIs by our model, and red "xs" represent pMCIs that were classified incorrectly as sMCIs.
+Samples S1 to S4 were selected for CNN visualization in Fig.4.
+
+
+
+Table 1 .
+Comparison with previous studies.

@@ -1,0 +1,272 @@
+Aberrant White Matter Microstructure as a Potential Diagnostic Marker in Alzheimer's Disease by Automated Fiber Quantification
+Neuroimaging evidence has suggested white matter microstructure are heavily affected in Alzheimer's disease (AD).
+However, whether white matter dysfunction is localized at the specific regions of fiber tracts and whether they would be a potential biomarker for AD remain unclear.
+By automated fiber quantification (AFQ), we applied diffusion tensor images from 25 healthy controls (HC), 24 amnestic mild cognitive impairment (aMCI) patients and 18 AD patients to create tract profiles along 16 major white matter fibers.
+We compared diffusion metrics [Fractional anisotropy (FA), mean diffusivity (MD), axial diffusivity (DA), and radial diffusivity (DR)] between groups.
+To assess the diagnostic value, we applied a random forest (RF) classifier, a type of machine learning method.
+In the global tract level, we found that aMCI and AD patients showed higher MD, DA, and DR values in some fiber tracts mostly in the left hemisphere compared to HC.
+In the point-wise level, widespread disruption were distributed on specific locations of different tracts.
+The point-wise MD measurements presented the best classification performance with respect to differentiating AD from HC.
+The two most important variables were localized in the prefrontal potion of left uncinate fasciculus and anterior thalamic radiation.
+In addition, the point-wise DA in the posterior component of the left cingulum cingulate displayed the most robust discriminative ability to identify AD from aMCI.
+Our findings provide evidence that white matter abnormalities based on the AFQ method could be as a diagnostic biomarker in AD.
+
+INTRODUCTION
+Alzheimer's disease (AD), the most common type of dementia in the elderly, is a growing global public health concern with enormous implications for individuals, families and society
+Due to the distribution of its hallmark pathological changes [amyloid plaques
+In recent years, neuroimaging studies have suggested that in addition to the features of neuronal loss, white matter alterations may be the important pathophysiological characteristics of AD
+However, our knowledge about white matter degeneration in AD is still limited compared to what we know about gray matter atrophy
+In particular, whether the patterns of white matter changes are different across fiber tracts and whether they would be a promising biomarker for AD remain largely unknown.
+Diffusion tensor imaging (DTI) has been a widely-used tool to detect microstructural integrity of white matter.
+Fractional anisotropy (FA) and mean diffusivity (MD) are two common quantitative metrics of DTI that detect the directionality and displacement of water diffusion.
+Several DTI analytical approaches, including regions of interest (ROI)-based analysis, voxel-based morphometry (VBM), and tract-based spatial statistics (TBSS) have been used in AD-related studies.
+A cross-sectional study have reported that AD patients experienced significantly lower FA and higher MD in the regions of splenium and fornix compared with either normal elderly or mild cognitive impairment (MCI, the early stage of dementia) by the ROI-based method
+Results from VBM analysis have shown that AD patients with a high Braak NFT stage had significantly elevated MD values in the crus of fornix, precuneus, cingulum, and temporal white matter
+In fact, these research have not derived consistent results, which may be caused by different analytical methods.
+However, we couldn't draw conclusion directly about diseaserelated white matter abnormalities by simply applying ROI-wise or voxel-wise comparison.
+The ROI-based method is subject to theoretical hypotheses of regions of pathologic damage, making localization difficult
+Note that the VBM method does not have sufficient precision, particularly for patient populations at the individual level due to varied shapes of longrange fiber bundles among subjects
+By contrast, TBSS, a skeleton-based approach, was proposed to reduce effects of local misregistration.
+Nevertheless, this method couldn't completely overcome the cross-subject co-registration problem
+Furthermore, tissue diffusion properties may change along each tract because diseases can strike at different local positions within the bundle
+Thus, an ideal method of the localization-specific properties along each fiber tract at the individual level may provide more detailed information about white matter abnormalities.
+Automated fiber quantification (AFQ) is a new analyzing method that applies a deterministic tractography approach to recreate whole-brain white matter tracts and estimate point-wise diffusion parameters aimed at the specific tract
+Recently, AFQ has been successfully applied to research on other neuropsychiatric diseases
+Consequently, AFQ may provide a promising strategy to investigate whether white matter microstructural integrity is abnormal along the entire tract or at the specific location on a tract in the progression of AD.
+In this study, we aimed to utilize AFQ tractography method to explore the altered pattern of white matter fiber tracts across AD and amnestic MCI (aMCI, the prodromal stage of AD) compared with healthy controls (HC).
+Furthermore, we combined white matter diffusion metrics with a machine learning algorithm, random forest (RF), to make predictions for HC, aMCI, and AD at the individual level.
+We hypothesize that white matter disruption may vary along fiber tracts in different patterns, which is associated with AD-related cognitive impairment, and may provide potential candidate hallmarks for its early diagnosis.
+
+MATERIALS AND METHODS
+
+Participants
+Eighty-one elderly subjects (right-handed) participated in this retrospective study, including 26 aMCI patients, 30 AD patients and 25 HC.
+The aMCI and AD patients were recruited from the Memory Clinic of the Neurology Department, Nanjing Drum Tower Hospital and the demographically matched HC were recruited from the local community.
+This research was approved by the Ethics Committee of Nanjing Drum Tower Hospital, and informed consents were obtained from all participants.
+All participants underwent a complete neurological evaluation, standard laboratory tests, neuroimaging examination, and an extensive battery of neuropsychological assessments.
+The possible or probable AD was diagnosed based on the National Institute of Neurological and Communicative Disorders and Stroke and the AD and Related Disorders Association (NINCDS-ADRDA) and the Diagnostic and Statistical Manual of Mental Disorders IV criteria (DSM-IV) guidelines
+The aMCI patients included in this study were diagnosed according to the recommendations of Petersen and described as follows
+(3) clinical dementia rating (CDR) score = 0.5; (4) the scores for the Mini-Mental State Examination (MMSE) ≥ 24; and (5) not sufficient to dementia according to NINCDS-ADRDA and DSM-IV.
+More detailed information about the criteria of aMCI has been described in our previous study
+The HC subjects were required to have MMSE scores ≥ 26 and CDR score of 0. In addition, participants with a history of other psychiatric or neurological disease (e.g., stroke, depression, traumatic brain injury, and others) were excluded in the current study.
+
+MRI Scanning
+
+Neuropsychological Measurement
+All participants underwent the standardized neuropsychological assessments performed by an experienced neuropsychologist
+General cognitive functioning was evaluated by MMSE.
+The multiple cognition domains including episodic memory, executive function, language, information processing speed, and visuospatial function were also evaluated.
+The detailed neuropsychological battery consisted of AVLT-DR, Wechsler Memory Scale Visual Reproduction-delayed recall (WMS-VR-DR), Boston Naming Test (BNT), Category Verbal Fluency (CVF), Visual Reproduction-copy (VR-C), Clock Drawing Test (CDT), Stroop Color and Word Tests A, B, and C (Stroop A, B, and C) and Trail Making Test-A and -B (TMT-A and TMT-B).
+The raw scores were Z-transformed in order to calculate the composite score of each cognitive domain.
+
+Magnetic Resonance Image
+Pre-processing DWI DICOM images were converted to NIfTI images using the dcm2nii tool in MRIcron (
+DTI data were then preprocessed using the the FMRIB Software Library (FSL) version 5.0.9 (
+First, the DWI volumes (b1000) were co-registered to the non-DWI image (b0) using an affine alignment.
+Then, DTI images were resampled to 2-mm isotropic voxels with eddycurrent and motion correction using a rigid body alignment.
+Brain extraction tool (BET, in the FSL software) was used to remove the non-brain tissue.
+The diffusion tensor model was applied to estimate voxel-wise eigenvalues and eigenvectors and then to calculate the diffusion measures: FA, MD, axial diffusivity (DA), and radial diffusivity (DR) by DTIFIT tool (in the FSL software).
+
+Automated Fiber Quantification Procedure
+We identified whole-brain white matter tracts (including 20 major fiber tracts), and further calculated the diffusion measurements along the tract fiber by utilizing the AFQ script (
+A brief description of the processing steps is as follows: (1) the deterministic tractography with the thresholds of FA > 0.2 and turning angle < 30 • ; (2) the waypoint ROI-based tract identification as described in the previous research
+(5) quantification of the diffusion metrics along each fiber tract at 100 equidistant nodes.
+The identified 20 white matter tracts are listed in Table
+Since AFQ uses the strict criterion for tract segmentation, it is possible not to identify all 20 fiber tracts in each subject
+We excluded 4 fiber tracts (the arcuate fasciculus and bilateral bilateral cingulum hippocampus) which were difficult to be identified than the others (Supplementary Table
+Table
+
+Statistical and Machine Learning Analyses
+Demographic characteristics (e.g., age, gender, and years of education), vascular risk factors (hypertension, diabetes, and hypercholesterolemia) and cognitive performance were compared using the Chi-squared (χ2) test, two-sample t-test or one-way analysis of variance (ANOVA) in SPSS software Version 22 (IBM Corp., Armonk, New York).
+The significant threshold was set at P < 0.05.
+To examine between-group difference in the global tract level, we calculated DTI measurements of 16 fiber tracts and performed the ANOVA.
+Age, gender and years of education were controlled as confounding covariates.
+Then, the point-wise analyses were conducted by "Randomize" command of FSL software.
+Age, gender and years of education were included as confounding covariates in the general linear model (GLM).
+The false discovery rate (FDR) correction was used to determine the significance for p-values (p < 0.05) and only ≥ 3 adjacent nodes were reported
+To explore the relationship between white matter microstructural integrity and cognition, partial correlation analyses were performed by SPSS while controlling for age, gender, and years of education.
+Finally, we applied the random forest (RF) classifier to identify the white matter diffusion metrics that best predicted the disorder diagnosis.
+Only those features significantly different between groups were considered in this analysis.
+In our research, RF was constructed with 500 trees
+Every decision tree was built by a bootstrap sample from the training data.
+The out-of-bag (OOB) performance was predicted to obtain the unbiased estimation of the misclassification.
+Then, the RF framework estimated the importance of a variable by seeking how much the classification errors increased when the OOB data for that variable were permuted while all others were left unchanged.
+Furthermore, we ranked the variables' importance by assigning a score to each covariate based on the ability to classify correctly the dependent label.
+Due to the limited number of included subjects, we applied the leave-one-out cross-validation to assess the classification performance.
+The diagnostic ability of the neuroimaging features was evaluated according to accuracy, sensitivity and specificity.
+Accuracy is defined as (TP + TN)/(TP + TN + FN + FP), sensitivity is defined as TP/(TP + FN) and specificity is defined as TN/(FP + TN), where TN is the number of true negatives, TP is the number of true positives, FN is the number of false negatives, and FP is the number of false positives.
+
+RESULTS
+
+Demographic and Clinical Characteristics
+Demographic and clinical information for the HC, aMCI and AD in which AFQ successfully identified all 16 fiber tracts were provided in MD.
+In the fiber tract level, the left anterior thalamic radiation (ATR), ILF, corticospinal tract (CST), cingulum cingulate (CC), inferior fronto-occipital fasciculus (IFOF), superior longitudinal fasciculus (SLF), and forceps minor exhibited the significant difference between HC, aMCI, and AD (Table
+The further analysis indicated that the AD patients showed significantly increased MD in these fiber tracts compared to HC and aMCI group.
+However, no significant alteration was observed between HC and aMCI.
+In the point-wise comparison, significantly altered locations of fiber tracts (FDR correction, p < 0.05) were as follows: (
+The further post-hoc comparisons were showed in Table
+In the point-wise level, the AD patients showed significantly increased MD in these locations of the fiber tracts compared to HC and aMCI group.
+It should be noted that aMCI obtained significantly higher mean MD values compared to HC in the frontal lobe portion of the left UF (nodes 75-100).
+DA. Supplementary Table
+The left ATR, bilateral CST, forceps minor, left IFOF, left ILF, left SLF, and left UF displayed significant differences between HC, aMCI, and AD.
+The further post-hoc analyses were also listed in Supplementary Table
+Significant alterations in the point-wise comparison (FDR correction, p < 0.05) were mainly located in these tracts as follows: (
+DR. Supplementary Table
+The further multiple comparisons were showed in Supplementary Table
+In point-wise comparison, significantly altered locations of fiber tracts (FDR correction, p < 0.05) were as follows: (1) the anterior component of the left ATR (nodes 1-9); (2) the anterior component of the right ATR (nodes 1-3); (3) the anterior component of the left CC (nodes 77-81); (4) the posterior component of the right IFOF (nodes 1-6); (5) the frontal lobe portion of the left UF (nodes 91-100); (6) the frontal lobe portion of the right UF (nodes 78-91) (Supplementary Figure
+The further post-hoc analyses were showed in Table
+For the altered fiber tracts and point-wise location, we found no significant correlation between diffusion metrics and cognitive performance in aMCI or AD.
+
+Discrimination Analysis
+Table
+Among these results, we only focused on the classification where accuracy was over 70%.
+The tract-level MD profile could be applied to distinguish aMCI from HC with the highest discrimination ability (accuracy = 75.51%;
+sensitivity = 80.00%; specificity = 80.83%).
+Furthermore, the analysis of the variable importance showed that the left IFOF was the most important tract contributing to HC VS. aMCI classification (Figure
+With respect to differentiating AD from HC, the point-wise MD measurements presented the best classification performance (accuracy = 86.05%;
+sensitivity = 92.00%;
+specificity = 77.78%).
+The two most important variables were localized mainly in tracts along the left UF (nodes 75-100) and left ATR (nodes 1-13) (Figure
+In addition, the point-wise DA measurements had a significant role in the aMCI VS.
+AD classification (accuracy = 77.78%;
+sensitivity = 66.67%; specificity = 61.11%),
+where the posterior component of the left CC (nodes 1-10) was the most important variable (Figure
+Other results about the variable importance differentiating AD from HC was presented in Supplementary Figure
+
+DISCUSSION
+In this study, we applied a precise method of fiber-tract segmentation (AFQ) to identify the localized significance of aberrant white matter microstructure and further investigate their role in the diagnosis of AD.
+To be noted, we found the following points: (1) The left-sided microstructural vulnerability in the white matter fiber tract level in AD;
+(2) The frontal lobe portion of left UF and ATR playing the critical role in the  diagnosis of AD;
+(3) The posterior component of the left CC may be as a neuroimaging marker of monitoring disease progression.
+In our research, only DA, DR, and MD values of white matter in the entire fiber tract or point-wise level exhibited the significant alterations.
+The DA indicates the diffusion coefficient parallel to the principal eigenvector and DR reflects the average diffusivity along the secondary axes, whereas MD is calculated as an average rate of all three diffusion axes.
+Higher MD values often imply impaired white matter integrity
+It has been proposed that DA is more sensitive to axonal damage while RD is more sensitive to myelin loss
+However, no significant alterations in FA (an index of the directionality of water diffusion) along fiber tracts were observed in our study.
+As reviewed by Amlien and Fjell, the increased DA could contribute to reduce betweengroup differences in FA, and MD and DR may thus be as more sensitive neuroimaging biomarkers of white matter damage in AD
+This similar pattern has also been demonstrated by a cross-sectional and longitudinal study, which revealed that increased MD and DA were the first abnormalities to occur in the early phase of AD
+
+The Leftward White Matter Microstructural Vulnerability in the Fiber Tract Level
+In the fiber tract level, these significantly altered fiber tracts (e.g., the left IFOF, ATR, CC, ILF, SLF, UF, and CST) were mostly located in the left hemispheric.
+Previous studies have revealed that AD may appear to begin with or be characterized by the asymmetric left lateralized pattern of neurodegeneration.
+Earlier researches concerning brain metabolism in AD or individuals at risk for AD showed asymmetric cerebral glucose metabolic deficits detected with fludeoxyglucose F18, predominantly in parts with left hemispheric hypometabolism
+Recently, the longitudinal analysis using fludeoxyglucose positron emission tomography further demonstrated that Aβ positive patients with MCI indicated regional brain metabolic rate of glucose declines mainly located in the left temporal cortex, correlated with cognitive decline
+From the perspective of brain morphometry, asymmetric patterns of brain atrophy with a left lateralized pronunciation (particularly located in the left parietal and temporal lobe) have been reported in early stage of AD.
+As the disease progresses, gray matter loss becomes more symmetrical
+In addition, a meta-analyses focusing on hippocampal volume determined a left-less-than-right atrophy pattern in MCI and AD comparing to normal aging and MCI patients shown the strongest effect sizes
+However, previous DTI studies based on TBSS or VBM haven't yielded the consistent result, possibly due to the difference of analytical approach.
+So far, no clear-cut mechanism has been proposed to explain why left hemispheric fiber tracts could be more susceptible in the progression of AD. Specific focus was given to the amyloid deposition showing a left laterality (mainly in dorsal frontal cortex and sensory-motor area) in MCI subjects
+Combining the white matter damage hypothesis in AD mentioned earlier, we infer that the left lateralized gray matter atrophy and amyloid deposition have a synergistic effect with the leftward white matter microstructural vulnerability in the fiber tract level.
+It should be noted that the highest discrimination ability in identifying aMCI or AD from the normal elderly was obtained by the diffusion metrics of left IFOF among white matter tractography measures.
+The IFOF is a long corticocortical association tract that connects the orbitofrontal, posterior temporal, and the occipital areas.
+Remarkably, the left IFOF has been regarded as the ventral pathway involving semantic processing and executive function
+Analysis of the white matter microstructure in preclinical phases of AD has revealed that the cognitively normal elderly with positive Aβ-42 show increased DA in the left IFOF compared to the aged with negative Aβ-42
+Moreover, the macroscopic research of white matter injury in AD also provided the evidence that the volume of white matter hyperintensity within IFOF was the highest among all fiber tracts and correlated with decreased functional connectivity in IFOF-connected areas of default mode network
+Therefore, the above findings indicated that left-sided white matter microstructural integrity in the fiber tract level may be more vulnerable and the left IFOF may be a potential biomarker for the early identification of AD.
+
+The Frontal Lobe Portion of Left UF and ATR Playing the Important Value in the Diagnosis of AD
+The AFQ technique can provide more information about white matter damage which is not obvious from the entire fiber bundles because the tissue properties of a fiber tract may change along the trajectory of the bundle.
+In point-wise comparison of MD profiles, twelve segmental components of eight fiber tracts displayed significant increased MD values in AD patients compared to HC.
+These altered metrics showed the best classification performance (accuracy = 86.05%)
+with respect to differentiating AD from HC.
+Moreover, the frontal lobe portion of left UF and ATR play the most critical role in the identification of AD.
+The UF is a ventral long-range fiber tract that connects the lateral orbitofrontal cortex with the anterior temporal lobe, and is correlated with the formation and retrieval of episodic memory and other cognition
+A meta-analysis examining white matter microstructural disruption concluded that a large effect size was detected in the UF, while a small effect size was showed in occipital white matter in the comparison of AD with normal aged
+According to the retrogenesis model, the white matter deterioration in AD is the reverse of processing of myelogenesis
+Early-myelinated projection fibers such as the corticospinal tracts are affected last and least, whereas latemyelinated cortico-cortical association tracts are affected early in AD
+The UF is one of the latest myelinated fasciculus, and continues maturing until the third decade of life
+This might help explain why the UF is more susceptible to degeneration in AD.
+However, previous DTI studies have reported inconsistent findings in AD with some researches suggesting relatively lower FA and higher MD in the left UF
+Our results further demonstrated that AD patients exhibited the increased MD in the frontal lobe portion of bilateral UF rather than in the entire fiber tract of UF and the frontal lobe portion of left UF in diagnosis of AD was relatively more important.
+The potential pathophysiological mechanism of the vulnerability in the frontal lobe portion of the left UF still needs to be investigated by further studies.
+Another specific anatomical localization of the fiber tract contributing to determining AD patients from the elderly is the frontal lobe portion of left ATR.
+The ATR consists of nerve fibers connecting anterior and mediodorsal thalamic nuclei to the anterior cingulate cortex and prefrontal cortex, and has been regarded as the important structural pathway of cognition and behavior
+Our result is partially consistent with a previous study in which the individuals with subjective cognitive impairment have presented disrupted white matter integrity in the left ATR, indicating that the left ATR may serve as early marker of AD spectrum
+Additionally, the macroscopic white matter research found a strict relationship between the presence of white matter lesions in the ATR and the severity of apathy (a risk factor of conversion to dementia) in aMCI
+The imaging genetics studies suggested that the genetic variant (e.g., superoxide dismutase 2 and catalase genes and the human neuregulin-1 gene) may mediate cognitive and behavioral abnormality through their effects on brain structure in the ATR
+The evidence that Aβ and NFT deposition preferentially occurred in the prefrontal may provide the potential mechanism of the ATR's prefrontal portion as a diagnostic biomarker
+
+The Posterior Component of the Left CC May Be as a Neuroimaging Marker of Monitoring Disease Progression
+Sexton et al. reviewed AD-related DTI studies and proposed that integrity difference varied along the CC and the largest effect size was in the posterior portion
+This pattern was similar to our result that the point-wise DA measurements had a significant role in differentiating the AD from aMCI, where the posterior component of the left CC was the most important variable.
+Although the left IFOF, UF and ATR played the critical role in identifying aMCI or AD from normal controls as mentioned above, the posterior component of left CC was relatively more important in the aspect of monitoring disease progression.
+The neuronal cell bodies of the CC are located mainly in the posterior cingulate cortex (PCC) and the posterior component of the CC is adjacent to the PCC.
+Despite structural neuroimaging researches have consistently suggested the earliest gray matter atrophy in the medial temporal lobe (e.g., entorhinal cortex and hippocampus) in AD spectrum
+The PCC functional deficit has been hypothetically explained by direct effect of AD-related pathological deposition and PCC atrophy and the indirect effect of medial temporal lobe atrophy
+Thus, according to the Wallerian-like degeneration, the posterior CC dysfunction may be secondary to PCC functional deficit in AD
+It still needs additional confirmation by longitudinal follow-up studies.
+There were several potential limitations to this research.
+First, these observations in our cross-sectional study were made in a relatively small sample and still require further investigation by prospective studies on large populations.
+Second, the AD and aMCI diagnosis was not based on AD-related biomarkers but only the neuropsychological assessments.
+This might cause imprecise diagnosis.
+Third, due to the strict criterion in the fiber tracking, the fiber tracts like bilateral arcuate fasciculus and bilateral cingulum hippocampus tracts were failed to track in some subjects.
+Fourth, due to the internal associations among MD, DA and DR, we did not combine these measurements to assess the classification performance, which need to be further investigated.
+Fifth, we did not explore the effect of vascular risk factors on our result.
+Finally, association analyses showed that cognitive performance in aMCI or AD was not correlated with any of the significantly changed DTI metrics.
+This might result from our small sample size and the loss of multiple neuropsychological scores in AD patients.
+
+CONCLUSION
+Combining a tractography approach with RF analyses, our study indicated abnormal tissue diffusion measures of global and local fiber tracts and their powerful diagnostic ability in aMCI and AD patients.
+We found that the left-sided microstructural integrity was vulnerable in the white matter fiber tract level in AD.
+Furthermore, the frontal lobe portion of left UF and ATR and the posterior component of the left CC played the critical role in the diagnosis and surveillance of AD.
+Our findings lent support to the viewpoint of white matter abnormalities as a diagnostic biomarker and provided deeper understanding of white matter changes in AD.
+
+
+All of the subjects were examined on a 3.0T MRI scanner (Philips Medical Systems).
+The protocol included the diffusion-weighted imaging (DWI) sequence [echo time (TE) = 55 ms, repetition time (TR) = 9,154 ms, FOV = 224 × 224 mm 2 , acquisition matrix = 112 × 112, voxel size = 2 × 2 × 2.5 mm 3 , thickness = 2.5 mm, 32 gradient directions (b = 1,000 s/mm 2 ) and 1 b0 image], the high-resolution T1-weighted imaging [TE = 4.6 ms, TR= 9.8 ms, flip angle (FA) = 8 • , FOV = 250 × 250 mm 2 , acquisition matrix = 256 × 256, number of slices = 192, thickness = 1.0 mm] and the FLAIR sequence [TE = 333 ms, TR = 4,500 ms, time interval (TI) = 1,600 ms, voxel size = 0.95 × 0.95 × 0.95 mm 3 , number of slices = 200, acquisition matrix = 270 × 260].
+
+
+) the anterior component of the left ATR (nodes 1-13); (2) the anterior component of the right ATR (nodes 1-8); (3) the intermediate and posterior component of the left CC (nodes 1-6; nodes 28-36; nodes 64-69); (4) the widespread distribution of the forceps minor (nodes 1-8; nodes 43-50; nodes 95-100); (5) the anterior component of the left IFOF (nodes 66-69); (6) the posterior component of the right IFOF (nodes 1-7); (7) the frontal lobe portion of the left uncinate fasciculus (UF, nodes 75-100); (
+
+
+) the anterior component of the left ATR (nodes 1-27); (2) the anterior component of the right ATR (nodes 1-9); (3) the superior portion of the left CST (nodes 71-100); (4) the superior portion of the right CST (nodes 80-88; nodes 92-100); (5) the posterior component of the left CC (nodes 1-10); (6) the widespread distribution of the forceps minor (nodes 1-12; nodes 43-53; nodes 92-100); (7) the anterior and posterior component of the left IFOF (nodes 5-10; nodes 65-69; nodes 93-100); (8) the anterior component of the right IFOF (nodes 85-89); (9) the frontal lobe portion of the left UF (nodes 75-91) (Supplementary Figure 1).
+The further post-hoc comparisons were listed in Table
+
+
+
+FIGURE 1 |
+FIGURE 1 | Significantly altered MD values in point-wise of fiber tracts (FDR correction, p < 0.05).
+Yellow color in the white matter tracts represents significantly altered locations.
+Red color in the white matter tracts represents other locations with no statistical significance.
+HC, health control; aMCI, amnestic mild cognitive impairment; AD, Alzheimer's Disease; MD, mean diffusivity.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The variable importance of disease diagnosis.
+(A) The tract-level MD profile distinguished aMCI from HC with discrimination ability (accuracy = 75.51%;
+sensitivity = 80.00%; specificity = 80.83%).
+The left IFOF was the most important tract contributing to HC VS. aMCI classification.
+(B) With respect to differentiating AD from HC, the point-wise MD measurements presented the best classification performance (accuracy = 86.05%;
+sensitivity = 92.00%;
+specificity = 77.78%).
+The two most important variables were localized mainly in tracts along the left UF and ATR.
+(C) The point-wise DA measurements distinguished AD from aMCI with discrimination ability (accuracy = 77.78%;
+sensitivity = 66.67%; specificity = 61.11%),
+where the posterior component of the left CC was the most important variable.
+HC, health control; aMCI, amnestic mild cognitive impairment; AD, Alzheimer's Disease; MD, mean diffusivity; DA, axial diffusivity; ATR, anterior thalamic radiation; CST, corticospinal tract; CC, cingulum cingulate; IFOF, inferior fronto-occipital fasciculus; ILF, inferior longitudinal fasciculus; SLF, superior longitudinal fasciculus; UF, uncinate fasciculus; R, right; L, left.
+
+
+
+TABLE 1 |
+Demographic and neuropsychological data.
+
+
+
+Table 1 .
+There
+
+
+
+TABLE 2 |
+Mean MD (× 100) of 16 fiber tracts for HC, aMCI, and AD.
+
+
+
+TABLE 3 |
+The location of tracts showing significant group differences in diffusion measures (× 100) between HC, aMCI, and AD.
+
+
+
+TABLE 4 |
+Discrimination results derived from the RF between HC, aMCI, and AD.

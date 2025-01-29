@@ -1,0 +1,415 @@
+Interpretable classification of Alzheimer’s disease pathologies with a convolutional neural network pipeline
+Neuropathologists assess vast brain areas to identify diverse and subtly-differentiated morphologies.
+Standard semi-quantitative scoring approaches, however, are coarse-grained and lack precise neuroanatomic localization.
+We report a proof-of-concept deep learning pipeline that identifies specific neuropathologies-amyloid plaques and cerebral amyloid angiopathy-in immunohistochemically-stained archival slides.
+Using automated segmentation of stained objects and a cloud-based interface, we annotate > 70,000 plaque candidates from 43 whole slide images (WSIs) to train and evaluate convolutional neural networks.
+Networks achieve strong plaque classification on a 10-WSI hold-out set (0.993 and 0.743 areas under the receiver operating characteristic and precision recall curve, respectively).
+Prediction confidence maps visualize morphology distributions at high resolution.
+Resulting network-derived amyloid beta (Aβ)-burden scores correlate well with established semiquantitative scores on a 30-WSI blinded hold-out.
+Finally, saliency mapping demonstrates that networks learn patterns agreeing with accepted pathologic features.
+This scalable means to augment a neuropathologist's ability suggests a route to neuropathologic deep phenotyping.
+
+E
+xtracellular deposition of amyloid-beta (Aβ) plaques is a pathological hallmark of Alzheimer's disease (AD)
+Aβ plaques have a diverse range of morphologies and neuroanatomic distributions
+The current consensus criteria for a neuropathological diagnosis of AD
+More precise measures of plaque morphologies (such as cored, neuritic, and diffuse) can serve as a basis for understanding disease progression and pathophysiology, providing guidance and insight into disease mechanisms
+For neuropathologic diagnosis, established semi-quantitative scales are used to assess plaque burden (Fig.
+The standard semi-quantitative criteria put forth by the Consortium to Establish a Registry for Alzheimer's Disease (CERAD) based on the manual assessment of the highest density of neocortical neuritic plaques
+Diffuse plaques, which may be the initial morphological type of Aβ
+Furthermore, data on anatomical location (i.e., Thal amyloid phase) are based on the presence of plaques regardless of type or density
+The potential for neuropathologic deep phenotyping efforts that account for anatomic location, diverse sources of proteinopathy, and quantitative pathology densities motivates the development of effective and scalable quantitative methods to differentiate pathological subtypes
+Existing quantitative methods, such as positive pixel count 20 algorithms, typically rely on human-defined
+Manual counts or stereological
+Consequently, studies using limited-range scores or overall pathology burden
+New methods introducing detailed and sensitive quantification of pathologies would reduce the burden placed on pathologists, increase reliability, and enable studies at a scale that is currently prohibitive.
+Deep learning has transformed medical image analysis
+Convolutional neural networks (CNNs) have achieved expertlevel performance in complex visual recognition tasks, including the diagnosis of skin
+These flexible models learn to recognize intricate patterns directly from visual data without the need for manually-defined image features or expert-delineated templates, and can account for non-trivial variations in image quality and color.
+In neuropathology, deep learning approaches have been reported for the classification of AD pathophysiology in magnetic resonance and positronemission tomography images
+We hypothesized deep learning methods could augment neuropathological whole slide image (WSI) analysis
+Despite their strong predictive power, deep learning models have been criticized for their poor interpretability and reliance on massive annotated datasets
+At the outset, we recognized these factors represented significant challenges in the development of useful tools for neuropathology.
+An approach tailored to neuropathology would require (1) careful delineation of the machine learning task; (2) construction of a curated image dataset with highresolution annotations by experts; and (3) extensive model interpretability.
+As a proof of concept, we posited CNN models could be employed for recognition and classification of Aβ pathologies, especially plaques, with the downstream goal of providing reliable, scalable, and interpretable measures based on neuroanatomical location.
+To develop a useful tool to aid
+
+Computational processing
+Fig.
+a Current protocols for neuropathological assessment of WSIs typically rely on comparatively coarse-grained semi-quantitative scoring such as CERAD
+b We report an automated computational approach to process entire digitized immunohistochemical stained archival slides, leveraging convolutional neural networks for amyloid plaque classification and localization neuropathologists, we deemed it critical that predictive performance should result from learning meaningful patterns within the images
+In this study, we present a pipeline for the neuropathological analysis of Aβ pathologies in WSIs generated by digitizing glass microscope slides of temporal gyri of the human brain (Fig.
+We describe an end-to-end pipeline for image processing, a custom web interface for rapid expert annotation, and training of CNN models that result in high performance multi-task classifiers capable of distinguishing Aβ pathologies in the form of cored plaques, diffuse plaques, and cerebral amyloid angiopathy (CAA).
+We demonstrate how prediction confidence maps visualize distributions as an interpretable and complementary means to understand Aβ burden.
+Finally, we provide visual evidence that these models are interpretable, using deep learning introspection methods to show that trained models learn relevant features of each of these Aβ pathology classes.
+To the best of our knowledge, these studies constitute the first report of CNNs for Aβ pathology analysis.
+
+Results
+A platform to rapidly annotate 77,000 plaque candidates.
+CNNs operate most effectively when trained on datasets exceeding tens of thousands of example images
+Indeed, we found that 43 digitized glass microscope slides (WSIs, see Supplementary Table
+We set out to build a dataset of approximately 50,000 annotated images for model training (Fig.
+Manual annotation at this scale would have been a daunting task through conventional, hand-drawn bounding boxes on a standard ~700 micron visual field.
+Using open-source image analysis tools (see Methods), we developed an automated preprocessing procedure (Fig.
+As the native resolution of a WSI is too large (typically 50,000 by 50,000 pixels at ×20 magnification) to use as the direct input for CNNs, we designed the dataset to contain uniform 256 × 256 pixel tiles centered on individual plaque candidates.
+We created a simple web interface to rapidly annotate Aβ pathology-candidate image tiles and deployed it on the Amazon Web Services Elastic Beanstalk
+An expert neuropathologist annotator used unique credentials and a rapid keystroke-entry format to annotate the tiles, which were stored in a standardized query language (SQL) database (see Supplementary Fig.
+Using this platform, candidate images were annotated at rates up to 2500 tiles per hour into three major categories-cored plaques, diffuse plaques, or CAA.
+Additional categories such as not sure or flag denoted uncertainty, image segmentation failures, or other special cases (Supplementary Fig.
+The dataset was then built in three phases (Table
+In Phase I, 55,001 images were expert-labeled using the web application.
+The majority of candidate images were annotated as diffuse plaque morphologies (84.8% of the annotations), with cored plaques (2.2%) and CAAs (1.1%) making up the minor classes (Table
+Furthermore, of the CAA annotated images, a second annotation step divided the group into capillary (36.3%) and non-capillary (63.7%).
+As class balance typically improves machine learning model performance, we sought to enrich the minority classes in a second phase.
+We trained an intermediate CNN to classify objects based on the Phase I dataset, then used its predictions to prioritize an additional set of 101,671 unprocessed tiles in favor of cored plaques and CAAs for manual annotation (see Supplementary Fig.
+Thus in Phase II, an additional 11,029 tiles were annotated, having been evaluated in rank-order of their predicted likelihood to contain either of the minority-class plaques.
+In Phase III, we annotated an additional 10,873 candidate tiles extracted from a separate hold-out test set of 10 WSIs not in the original 33-WSI collection, without any prioritization procedures.
+We performed manual annotation using the web application for all phases.
+CNNs effectively discriminate among Aβ morphologies.
+We trained CNNs to classify tiles as containing cored plaque, diffuse plaque, and/or CAA.
+At ×20 magnification, a single 256 × 256 pixel tile (128 microns) could contain more than one object, so we trained a multi-task CNNs for multi-label classification: CNNs were asked to determine the presence or absence of all morphologies in each tile.
+We combined the Phase I and Phase II datasets, then randomly split the resulting 70,000 tiles (66,030 annotated and 3970 IHC-negative) into training (from 29 WSIs) and validation (from 4 WSIs) sets, while stratifying by case (i.e., WSI source) to ensure that models generalize to new cases.
+A search of CNN architectures identified a six-layer convolutional architecture with two dense layers (Fig.
+Using subsequent hyperparameter optimization we found data augmentation
+For completeness, we also recapitulated the analyses without WSI color normalization, but saw no substantive change in performance (Supplementary Fig.
+The resulting CNN model trained on 61,370 example tiles achieved validation set performance of 0.983 area under the receiver operator characteristic (AUROC) (Supplementary Fig.
+On the strict hold-out (Phase III) test set, the model likewise generalized well to unseen decedent cases (AUROC = 0.993, AUPRC = 0.743, Fig.
+CAA prediction performance was also strong on the validation set (Supplementary Fig.
+The overall classification accuracy was 0.973 on the validation set and 0.987 on the hold-out test set (Supplementary Tables
+Notably, model performance was achieved using fewer than 2000 training examples of each minority class (cored plaques and CAAs).
+Representative accurate (Fig.
+Performance improves nonlinearly with training example count.
+To determine whether similar performance could be achieved with fewer manual annotations, we performed two retrospective studies to investigate the effect of training dataset size.
+In the first study, we randomly selected subsets of the 61,370-example training dataset, maintaining stratification by case (i.e., WSI source), and plotted model performance as a function of the number of training examples (Fig.
+Each random selection was repeated five times, and a fresh model trained each time, for a total of 90 independently trained and evaluated CNN models with identical architectures.
+All models were benchmarked against the same hold-out (Phase III, as in Fig.
+In the second study, we investigated model performance as a function of the chronological dataset growth during the project, where training examples were included in the order of original expert annotation (Fig.
+Model performance at 15 experthours fell short of model performance at 50% of dataset size (Fig.
+Accordingly, the goal of this second study was to determine whether annotation chronology played a role in CNN training.
+As above, performance steadily increases as the annotated dataset grows.
+However, performance trends between the studies differed in two ways.
+Chronologically-trained models did not converge in AUPRC performance as early as the equivalent-sized random-subset-trained models benefitting from later annotations did.
+Second, the chronology study shows a distinct AUPRC boost in Phase II, illustrating the positive effect of enriching for cored-plaque prevalence.
+Prediction confidence maps show plaque localization.
+To visualize the distribution and neuroanatomic location of Aβ pathologies in a broader context, we applied a sliding window approach
+These heatmaps plot the confidence and location of each prediction by the CNN, which may then be visualized from the subtile resolution (Fig.
+By progressively zooming in from larger anatomical views, the visualization shifts from the broad distribution of plaques to their detailed ×20 morphology.
+A single cored plaque can be distinguished from a dense region of neighboring diffuse plaques (Fig.
+In this cohort, diffuse plaques are densely distributed across the gray matter, whereas cored plaques are predominantly located in deeper and lower cortical layers, in accordance with known neuroanatomic distributions
+Furthermore, CAA predictions predominantly appear proximal to the cortical surface where leptomeninges are present
+These maps highlight other locational aspects of the plaques, such as their presence in the white matter immediately beneath the gray matter
+Classification performance does not vary by tissue landmark.
+The CNNs perform classification (e.g., Fig.
+Human experts typically assess larger fields of view such as ~700 microns viewed at ×10 magnification when conducting semi-quantitative plaque scoring.
+To visualize prediction performance in this context, we also assessed cored-plaque agreement maps on contiguous 6-by-6 tile (768 micron) regions (Fig.
+In the leftmost column, a green box surrounds the cored plaque within the tile, as labeled by a neuropathologist during the Phase-III dataset annotation (Fig.
+The middle column overlays the prediction map (as in Fig.
+Finally, the rightmost column summarizes agreement between the expert label and the prediction, with blue and cyan representing correct prediction areas, while red and orange denote misclassification
+For this analysis, we used a CNN prediction confidence threshold of 0.90.
+A more permissive threshold would decrease false negatives (red) at the cost of more false positives (orange).
+Interestingly, this agreement-map highlights the limitations of bounding-box annotations, such that the correct cored-plaque prediction shown is nonetheless penalized by this view (red halo) for accurately predicting the rounded boundaries of the actual plaque instead of anticipating its square ground truth boundingbox.
+Stepping further out to regions of 3840 microns (Fig.
+The model reliably rejects background tissue and diffuse plaque deposits, while accurately identifying most cored plaques.
+Model performance does not change based on the nearby neuroanatomic architecture in these examples, although occasional clusters of co-localized false-positive (orange) cored plaque predictions can appear (e.g., Supplementary Fig.
+Introspection studies identify salient plaque features.
+To investigate the CNN model's internal logic, we performed two studies to determine the importance of morphology features contributing to accurate predictions (Fig.
+In the first, we applied guided gradient-weighted class activation mapping (Guided Grad-CAM)
+Guided Grad-CAM follows the CNN's gradient flow from individual tasks back onto the original image tile to establish an activation map, highlighting the input features most relevant to each CNN prediction.
+Figure
+Consistent with human expertise, Guided Grad-CAM activation maps predominantly highlight regions of the tiles corresponding to IHC-stained Aβ pathologies.
+For instance, in Fig.
+By contrast, the CAA activation map highlights the periphery of the image, much as CAA often forms a ring within vessels, although none could be found.
+In Fig.
+The CAA activation map in Fig.
+Lastly Fig.
+Crucially, Guided Grad-CAM activation mapping may highlight certain image features as salient because they help determine that an object is not present in the image: Despite strong localized activation for cored and diffuse maps in Fig.
+Whereas Guided Grad-CAM provides a fine-grained view of feature salience, it does not differentiate features indicative of a plaque from those that contradict its presence.
+To complement the analysis, we performed a feature occlusion study
+Guided Grad-CAM activation maps identify salient pixels for plaque classes independently, whereas occlusion maps highlight the interplay of features among classes.
+For example, in occlusion maps, occluding the leftmost plaque decreases diffuse-task confidence (Fig.
+In the corresponding Guided Grad-CAM activation maps for the diffuse-task, however, features specific to the diffuse plaque are predominant.
+Together, these complementary maps visualize the features within images that motivate the CNN's plaque predictions.
+To compare with manual semi-quantitative approaches such as Consortium to Establish a Registry for Alzheimer's Disease (CERAD), we developed a preliminary neural-network derived score for Aβ pathologies at a global WSI level.
+For the CNN-based score, we calculated a count of each predicted Aβ pathology across an entire WSI by segmenting its prediction heatmap (e.g., Fig.
+The resulting CNN-based scores correlated strongly across the total dataset of 62 WSIs (Supplementary Tables
+CNN-based scores for Aβ pathologies significantly differentiated WSIs by CERADlike categories (e.g., moderate versus frequent), especially for cored plaques (Fig.
+For instance, CNN-based WSI scores between none versus frequent CERAD-like categories were exponentially separated.
+To better assess generalization, we collected a further set of 20 WSIs (Supplementary Table
+Combined with the 10 separate hold-out WSIs from Phase III, we found this 30-WSI blinded hold-out set demonstrated strong correlation between the automated and manual scoring approaches, such that CNN-based scores significantly discriminated existing semi-quantitative categories (Fig.
+
+Discussion
+We report a scalable, quantitative, and interpretable approach to identify neuropathologies for three classes of Aβ pathologies, motivated by the method's downstream application to statistically powerful correlative analyses and neuroanatomical localization of AD pathologies.
+In practice, such deep-phenotyping techniques will have limited utility if their underlying predictions cannot be interpreted, critiqued, and refined by expert neuropathologist supervision.
+Consequently, to establish the feasibility and limitations of this approach, we considered multiple challenges when adapting CNNs to WSIs of archival human brain samples
+This pipeline performs color normalization
+The logic behind stain detection was two-part: Stained objects inhabit a delimited brown hue range and objects comprise coherent contiguous regions exceeding a minimum size.
+We then generated image tiles centered on each candidate (Fig.
+Thus, 43 WSIs containing Aβ IHC-stained temporal gyri yielded nearly 500,000 raw candidate tiles at ×20 resolution (details in Supplementary Table
+The next step was image annotation for supervised machine learning.
+Although web-based histopathological annotation tools exist
+For instance, subsequent studies may investigate a broader field of view for annotation context or introduce checks on intra-rater reliability by re-presenting tiles to annotators in different orientations.
+Given the scope of the annotation task, we incorporated several aspects of gamification theory
+Using this tool, we observed sustained annotation rates reaching 1.44 s per tile.
+The second challenge was in determining the necessary training dataset size.
+Having manually annotated 66,030 candidate tiles from 33 WSIs in two annotation phases (Table
+For this analysis, we randomly split the tiles into train and validation sets, such that train and validation tiles never shared the same WSI source.
+In addition, as a strict hold-out test set (Phase III) and to investigate the role of nearby neuroanatomic landmarks on prediction, we annotated larger contiguous tissue regions corresponding to 5× the standard dimensions, for 10 previously unseen WSIs (Supplementary Fig.
+Note this Phase III dataset differed from the Phase I + II train and validation datasets in that the latter's 70,000 labeled tiles were randomly selected; there was no guarantee that tiles and their resulting expert plaque annotations would be contiguous or comprehensively labeled for any local region of tissue.
+We trained multi-task CNNs on all 61,370 training tiles, evaluated multiple CNN architectures and hyperparameter choices, and found that a relatively simple model design (Fig.
+Given the substantial time investment, we asked whether similar performance could have been achieved with fewer training tiles.
+We evaluated this retrospectively, by progressively decreasing the training dataset size in two different ways (Fig.
+In the first study, we selected a progression of training data subsets randomly and repeated the training process five times per subset size (Fig.
+In the second study, we maintained the chronology of the project instead, and plot a natural history of the annotation process.
+Intriguingly, these performance evaluations highlighted two annotation regimes (Fig.
+As expected, increasing training example counts improved model performance.
+Less anticipated was that chronologicallyearly annotations appeared to be less effective for model training (Fig.
+From a practical perspective, the steepest performance gains were achieved within the first 15 h of expert labeling, suggesting a reduced dataset may be pragmatically sufficient for classification of cored and diffuse plaques.
+Significantly, models trained using a comparatively small investment of a neuropathologist's time can assist with new cases and   potentially reduce overall expert burden.
+Subsequent refinements to the model, particularly in reinforcement feedback on incorrectly-classified examples encountered during the model's use (e.g., Fig.
+The third challenge was human interpretability.
+We posited that visualizing the CNN model's predictions as comprehensive confidence maps from the whole-slide level down to a focused plaque-level field (20×) would aid interpretability by a trained neuropathologist, given the importance of local tissue and neuroanatomic context.
+On a neuroanatomic level, most predicted plaques are located within gray matter (Fig.
+Despite their primary localization within gray matter, studies have reported plaques within white matter
+Furthermore, the maps predict cored plaques' propensity for deeper and lower cortical layers, consistent with their known neuroanatomic distribution
+We were likewise gratified to observe that individual cored plaques stand out from dense neighborhoods of diffuse plaques (Fig.
+There were caveats, however, when clusters of diffuse plaques having staining halos were misclassified as CAAs (Fig.
+This was not entirely surprising as the project focused on cored plaques, so the CAA dataset was comparatively small; a larger CAA dataset containing the full spectrum of its morphologies may be a useful subject of further projects.
+Indeed, CAAs can be delineated into various staging schemes, such as by their location within the media of the vessel and vessel integrity
+Using Phase III's larger field-of-view (3840 microns) hold-out regions, the overlays of CNN prediction confidence maps onto ground-truth annotations highlighted cases and context of prediction success and disagreement (Fig.
+Nonetheless, accurate predictions alone do not guarantee meaningful learning or that the model will be applicable to new scenarios or populations
+Plaque morphology can differ by neuroanatomic location-a CNN model developed from temporal gyri plaques may not be translatable to plaques in other anatomic areas, such as the striatum
+Although an explicit evaluation of all confounders is outside the scope of this work, the feature saliency and occlusion map studies (Fig.
+Guided Grad-CAM techniques near-exclusively highlighted the IHC stained regions, in patterns characteristic of the pathologies (Fig.
+Complementarily, feature occlusion studies illustrated that the central amyloid core is the most discerning feature of a cored plaque's correct identification, and that its occlusion transforms a CNN model's classification to diffuse plaque.
+Importantly, the crucial features emerging from these machine learning introspection techniques -dense compact Aβ centers for cored plaques, ill-defined amorphous Aβ deposits for diffuse plaques, and Aβ within the media of the cortical vessels for CAAs-all agree with key features used by experts
+We finally evaluated whether CNN models could automatically quantify Aβ burden on a whole-slide level in a way that would correlate with standard semi-quantitative methods for plaque assessment (i.e., CERAD neuritic plaque scores).
+As true neuritic plaques are not distinguishable using Aβ-selective IHC stains, we leveraged CERAD-like manual scores (none, sparse, moderate and frequent) specific to each amyloid class.
+We found that a preliminary WSI-level CNN-based score we developed (Methods) correlated strongly with manual CERAD-like scores (Fig.
+CNN-based scores from one CERAD-like category were significantly different from WSIs in other categories (for cored plaque, p < 0.01, using two-sided Student's t-tests).
+Beyond its overall correspondence with CERAD, the finer-grained CNNbased metric captured subtle variations of Aβ burden within each CERAD category.
+The more detailed and sensitive measurement of Aβ burden, after appropriate validation in further studies, may strengthen statistical power for clinicopathological correlations
+Automated scores of this nature might be applied across entire archives of stained tissue from diverse anatomic regions, or aid in studies focused on evaluating burden specific to certain neuroanatomic locales or other local landmarks.
+Several caveats, however, merit mention.
+Foremost among them is the intentional restriction of this proof-of-concept study's scope to annotations made by a single expert neuropathologist on a single immunohistochemical stain within a single anatomic region.
+Differences in experience and annotation criteria will likely result in individual expert variation among ground truth labels.
+The goal and intent of this project were therefore to establish the potential to extend an individual neuropathologist's plaque-identification capabilities in the context of their normal workflow.
+Furthermore, all data used in this study were from a single brain bank and retrieved and digitized under the same conditions; more diverse datasets from multiple sources will yield more robust and reliable models.
+We noted also that when the same hold-out set (Phase III) was annotated by web platform (Fig.
+Future work may build on these foundations to investigate cross-neuropathologist plaque labeling, differing stains, anatomic regions, or collection centers, as well as region-level scoring systems to quantify bulk Aβ pathology burdens.
+Taken together, the present study demonstrates a deep learning approach that can augment the expertize and analysis of an expert neuropathologist.
+Approximately 30 h of expert labeling yield a highly scalable and reusable CNN model capable of novel inference on unseen WSIs-going forward, 15 h may be sufficient to create new visualizations and understandings of Aβ pathology distribution.
+CNNs automatically learn relevant features from immunohistochemical image data and to exploit Alzheimer's disease pathological features in agreement with humaninterpretable neuropathology.
+Significantly, CNN-based Aβ pathology burden agrees with CERAD-like scoring.
+Many brain banks have archival materials of stained slides arising from neuropathological diagnosis; models such as these may capitalize on such materials to help quantify pathologies providing pathological deep phenotyping in a scalable way.
+We anticipate collecting annotated datasets from multiple sources and experts will improve recall, sensitivity, and accuracy of the resulting neural network models and support training of more sophisticated model architectures.
+We hope this proof of concept motivates further work in this field, where automated pathology classification could have far-reaching impact; to this end, we make the CNN model code and dataset openly available to the community (see Data Availability).
+
+Methods
+Ethics approval and consent to participate.
+These studies utilized only human post-mortem tissues.
+Only living subjects are defined as Human Subjects under federal law (45 CFR 46, Protection of Human Subjects).
+All participants or legal representative signed informed consent during the life of the participant as part of the University of California Davis Alzheimer's Disease Center program.
+All human subject involvement was overseen and approved by the Institutional Review Board (IRB) at the University of California, Davis.
+All data followed current laws, regulations, and IRB guidelines (such as sharing de-identified data that does not contain information used to establish the identity of individual deceased subjects).
+De-identified data do not contain personal health information (PHI) like names, social security numbers, addresses, and phone numbers.
+Data were shared with a randomly generated pseudo-identification number.
+Case cohort.
+All samples were retrieved from archives of the University of California, Davis Alzheimer's Disease Center (UCD-ADC) Brain Bank.
+Archival samples analyzed in this study were 5 μm formalin fixed, paraffin embedded, sections of the superior and middle temporal gyrus.
+The tissue had been previously stained with an Aβ antibody (4G8, recognizing residues 17-24, dilution 1:1600, BioLegend (formally Covance), catalog number SIG-39200) that were first pretreated with formic acid to rid samples of endogenous protein.
+All slides were digitized using an Aperio AT2 up to ×40 magnification.
+Supplementary Table
+Procedures were in accordance with ethical standards of the Helsinki Declaration.
+Operations of the University of California Davis Alzheimer's Disease Center was approved by the Institutional Review Board (IRB) of the University of California Davis, and written consent for autopsy was obtained for each participant during life.
+Details of this program have been previously published
+Dataset splitting.
+A total of 33 WSIs corresponding to 33 separate decedent cases, spanning all clinicopathologically-assigned NIA Reagan criteria, and possessing a variety of CERAD scores (see Supplementary Table
+An additional 10 WSIs were selected by an expert neuropathologist (BD) as a held-out test set and were not released until the model development phase of the study had been completed.
+Finally, a further 20 blinded WSIs were collected solely for use in the CERAD-like scoring comparison study and combined with the 10 test WSIs for the 30-WSI analysis reported in Fig.
+CERAD-like scores were available for all but one of the 63 WSIs used in this study; thus Fig.
+Image preprocessing.
+All initial image preprocessing was performed in the opensource library PyVips 68 .
+Images were loaded at ×20 magnification, corresponding to a resolution of 0.5 microns per pixel (MPP).
+Slide color normalization was performed by the method of Reinhard et al.
+The resulting WSIs were regularly tiled to 1536 × 1536 pixel tiles, corresponding to 768 × 768 micron regions of tissue for further analysis, resulting in a total of 33,111 tiles for the training set.
+Image segmentation.
+Image segmentation was performed using the open-source library OpenCV
+Immunohistochemically-stained entities including cored plaques, diffuse plaques, and CAA appeared in the brown hue-region and segmentation was performed in the HSV colorspace utilizing a permissive colormask.
+For expert annotation, intracellular amyloid precursor protein (as denoted by cytoplasmic staining) was considered negative.
+Morphological opening and closing operations were performed to smooth the binary masks, and a standard blobdetection procedure was applied to isolate candidate objects.
+These unique components were center-cropped to a fixed size (256 × 256 pixels), corresponding to a region of 128 × 128 microns.
+This procedure resulted in nearly 500,000 images.
+Noisy background deposits were eliminated through a minimum stained area threshold of 1500 pixels (375 square microns), resulting in a total of 206,888 tiles.
+Plaque-labeling web interface.
+To allow for the rapid and efficient annotation of the dataset, we developed a custom Python Flask web application that we deployed on Amazon Web Services Elastic Beanstalk
+The web-based interface allowed for remote login by the expert labeler, and enables fast, multi-label annotation of images using individual keystrokes.
+In the interface, images corresponding to 128 × 128 microns regions were shown to the annotator.
+A bounding box in the image specified which specific candidate object was to be labeled.
+Several elements of gamification, such as leveling, achievement badges (crown icon), and progress bar filling (green bar) were incorporated to motivate and track annotation task progress.
+A timestamp function was implemented to record the number of images per hour annotated by the expert (BD).
+All labels were stored in a SQL database using the Amazon Relational Database Service.
+All images were annotated by a single neuropathologist (BD) and labeling of the image data proceeded in three phases: (1) In an initial phase, 55,000 images stemming from 3811 unique tiles were labeled; (2) In the second phase, images containing the minor classes of interest (cored plaques and CAAs) were enriched by running the CNN model built from the first-phase dataset on the remaining 101,671 images.
+These images were ranked by their predicted likelihood of containing cored plaques or CAA.
+We then chose the top 11,029 images for labeling.
+The labeled data from Phase I and Phase II were combined as the entire dataset (Phase I + II) for model training and evaluation.
+(3) In the third phase, two test sets were constructed with the same data but two distinct labeling methods.
+A 7680 × 7680 pixel (0.5 MPP) region was selected within each of the 10 hold-out test set WSIs by an expert neuropathologist as the area of interest.
+For the first test set, 10,873 candidate object tiles extracted from these 10 regions were labeled using the image-labeling web interface.
+For the second test set, the cored plaques and CAA were directly marked by a neuropathologist on the selected region at a standard 10 × (768 microns) visual field.
+Model development and training.
+All neural network models were trained in the open-source package PyTorch 71 on four NVIDIA GTX 1080 or Titan X graphics processing units.
+Our optimized model used a simple convolutional architecture for image classification, consisting of alternating (3 × 3) kernels of stride 1 and padding 1 followed by max pooling (Fig.
+All neural network models were trained using backpropagation.
+The optimized training procedure used the Adam 72 optimizer with a multi-label soft margin loss function with weight decay (L2 penalty, 0.008) and dropout (probability 0.5 for the first two fully connected layers and probability 0.2 for all convolutional layers).
+Training proceeded with mini-batches of 64 images with realtime data augmentation including random flips, rotations, zoom, shear, and color jitter.
+When calculating the classification accuracy, a threshold of 0.91, 0.1, and 0.85 was used for cored plaque, diffuse plaque, and CAA prediction, respectively.
+Predictions with confidence above the threshold were considered to be positives.
+Prediction confidence heatmaps.
+A sliding window approach
+At each step, the CNN model took a 256 × 256 pixel region as input and generated a prediction score for cored plaques, diffuse plaques, and CAAs.
+By systematically sliding the input region across the entire image, the prediction scores were plotted as prediction confidence heatmaps.
+The color represented the CNN's prediction confidence for the presence of cored plaques, diffuse plaques, and CAAs in the corresponding region, with yellow being the most confidence, and purple the least.
+We used a stride of 16, 4, and 1 for Fig.
+Guided gradient-weight class activation maps.
+Guided gradient-weighted class activation mapping (Guided Grad-CAM)
+The saliency map is a pointwise multiplication of guided backpropagation and Grad-CAM.
+Guided backpropagation produces a pixel-space gradient map of predicted class scores with respect to pixel intensities of the input image.
+Guided Grad-CAM produces a more class specific map which is the dot product of the feature map of the last convolutional layer and the partial derivatives of predicted class scores with respect to the neurons in the last convolutional layer.
+We employed an open-source implementation of Guided Grad-CAM by Ozbulak
+Feature occlusion studies.
+Feature occlusion studies
+The occlusion map was computed by replacing a 16 × 16 pixels region of the image with a pure white patch and generating a prediction on the occluded image.
+As systematically sliding the white patch across the whole image (stride = 1 pixel), the prediction score on the occluded image was recorded as an individual pixel of the corresponding occlusion map.
+The color represented the CNN's prediction confidence for the presence of cored plaques, diffuse plaques, and CAAs of the occluded image, with red being the most confidence, and blue the least.
+Segmentation on prediction heatmaps and CNN-based scoring.
+Prediction confidence heatmaps were segmented using the open-source library OpenCV
+First, a CNN confidence threshold was applied to the heatmaps, with only prediction confidences higher than the threshold retained, indicating the positive predictions of plaques.
+Morphological opening and closing operations were then performed to smooth the binary masks, and prediction areas exceeding a second threshold set to eliminate CNN-noise.
+Application of a standard blob-detection algorithm predicted discrete counts of the Aβ pathologies by the CNN model, which were then normalized by tissue area to provide CERAD-like scores.
+These hyperparameters, CNN confidence threshold (cored plaque: 0.1; diffuse plaque: 0.95; CAA: 0.9) and size threshold (cored plaque: 100; diffuse plaque: 1; CAA: 200 pixels), were optimized by statistical analysis on the training and validation sets.
+Tissue segmentation.
+Tissue areas from WSIs were calculated using the opensource libraries PyVips and OpenCV.
+Tissue segmentation against the slide background was performed by applying a color mask in the lightness-chroma-hue (LCH) colorspace.
+Morphological opening and closing operations were performed to smooth the binary mask, and the tissue areas were calculated as the pixel sum of the refined mask.
+Statistical analyses.
+Statistical analyses were performed using the open-source library SciPy (
+Spearman rank-order correlation coefficient was calculated between CNN-derived scores and CERAD categories for the superior and middle temporal gyrus.
+A two-sided Student's t-test was used to test the null hypothesis that two independent samples have identical expected values.
+CNN scores of WSIs from different CERAD categories were used for the test.
+Data were presented as box plots overlaid with individual data points.
+Box plots showed interquartile range (top and bottom of the box), median (central band), and outliers (points beyond the whiskers).
+Individual data points were shown as specific points.
+p ≥ 0.05 was considered not significant (ns); *p < 0.05, **p < 0.01, ***p < 0.001.
+Reporting summary.
+Further information on research design is available in the Nature Research Reporting Summary linked to this article.
+
+
+
+Fig. 2
+Fig. 2 Creation of an annotated plaque and CAA dataset for machine learning.
+a Summary of the image processing pipeline, including color normalization, IHC stain segmentation, and extraction of candidate objects (red boxes), followed by rapid expert annotation using a cloud-based web application.
+b Examples of extracted cored plaques (top row), diffuse plaques (middle), and CAA (bottom) and their surrounding tissue area.
+Rectangles shown in red bound the candidate object during the labeling process.
+Scale bar = 25 μm.
+c A custom web interface allows for the rapid annotation of plaques by mouse or keystroke, with visualization of raw (without color adjustments) and normalized images, showing the object bounding boxes around which the tile is automatically centered and cropped
+
+
+
+Fig. 3
+Fig. 3 CNN models identify three Aβ deposit types in image tiles.
+a The optimized CNN model architecture contained six convolutional layers and two dense layers, using exclusively 3 × 3 kernels and alternating max-pooling layers.
+b Examples of correct CNN predictions.
+The ground truth expert label row indicates the pathologies that had been manually found within the tile image.
+The predicted row shows corresponding model confidences for cored plaque (yellow arrow), diffuse plaque (red), and CAA (blue) classes (from left to right).
+Model predictions range from 0.00 to 1.00, where a higher score indicates higher predicted confidence by the CNN for that plaque class (e.g., the 1.00 corresponds to 100% model confidence that a cored plaque is present in the leftmost panel).
+c Examples of CNN predictions that do not agree with the expert manual annotation.
+Incorrect model predictions are indicated by light orange backgrounds in the predicted column; green backgrounds correspond to correct predictions.
+Scale bar = 25 μm for all images
+
+
+
+Fig. 4
+Fig. 4 Predictive performance on the held-out Phase-II test set (n = 10,873).
+a Receiver operator characteristic (ROC) and b Precision-recall curves (PRC) for cored (magenta lines) and diffuse (blue lines) plaques.
+The blue star marks the best trade-off point where prediction confidence threshold equals 0.91.
+c Summarized areas under the ROC and PRC (AUPRC and AUROC) of independently-trained CNNs (n = 5 per point) for the task of cored plaque classification, as a function of training dataset size.
+Dataset was randomly subsetted at each point independent of the date of tile annotation.
+Error bars represent s.d.
+d AUPRC and AUROC of CNNs for the same task of cored-plaque classification, as a function of chronological dataset growth by annotation timestamp, over the course of the project, showing chronology-dependent dataset effects.
+Source data are provided as a Source Data file
+
+
+on the same examples.
+In this experiment, a small occlusion patch (shown in Fig.7a, black box) is systematically moved across the image, and the model makes a prediction on the occluded image at each increment.
+Blue-to-yellow-to-red colors indicate increasing CNN prediction confidence from 0.0 to 1.0.
+Consequently, color shifts in occlusion maps show which image features, when occluded, change prediction confidence.
+When the patch occludes an important feature such as the amyloid core of a cored plaque (Fig.7a, yellow arrow), the model fails to predict the object correctly: cored-task confidence drops to zero (blue dot on red background, yellow arrow).
+Occluding less cored-task-relevant regions such as within the off-center diffuse stain (red arrow) have little effect, indicated by the solid red coloring in the coredtask's confidence map for this area.
+Conversely, confidence maps may also show where occlusion of a critical feature makes an alternative class more likely.
+If the amyloid core in Fig.7ais occluded, diffuse plaque prediction becomes likely (signified by yellow arrow).
+
+
+
+Fig. 5
+Fig. 5 Prediction confidence heatmaps for cored plaques, diffuse plaques, and CAA. a Whole slide overview visualization, revealing broad amyloid distribution patterns.
+Scale bar = 3 mm.
+b Higher magnification (×4) view of the blue-boxed region from panel a.
+Scale bar = 750 μm.
+c Higher magnification (×20) view of the blue-boxed region from panel b. Green box marks cored plaque manual annotation.
+Scale bar = 150 μm.
+Confidence scales for each panel were bottom-capped to aid visualization, such that only confidence scores ≥ 0.8 are plotted, with yellow being the most confidence, and purple the least.
+Approximate (hand-drawn) boundaries of gray versus white matter (dotted line) and tissue boundaries (solid lines) are overlaid for reference
+
+
+
+Fig. 6
+Fig. 6 Visualization of a representative example from the cored-plaque classification tests plotted in Fig. 4. a CNN model prediction confidence maps (middle panel, as in Fig. 5c) overlaid onto the original slide tile.
+Bounding boxes mark cored-plaque expert annotations (left panel, green box).
+The combined map (right panel) assesses agreement between the model's predictions and the expert labels, where pixels are colored by a semi-transparent overlay as true positive (blue), false positive (orange), true negative (cyan), and false negative (red) areas.
+Scale bar = 150 μm.
+b Prediction-versusannotation agreement map generated as in a, but with a larger field for greater tissue and plaque clustering context.
+Scale bar = 750 μm.
+Confidence scales for middle panel are bottom-capped to aid visualization, such that only confidence scores ≥ 0.8 are plotted, with yellow being the most confident and purple the least
+
+
+
+Fig. 7
+Fig. 7 Model interpretability studies using machine-learning introspection techniques.
+a A cored plaque example (top row, yellow arrow).
+For the task of cored-plaque prediction, the activation map (by Guided Grad-CAM; left, second row) and the feature occlusion map (right, second row) identify the amyloid core (yellow arrow) as the defining morphological feature.
+By contrast, the diffuse stained region (red arrow) only arises as a salient feature during diffuse-plaque and CAA prediction tasks (third and fourth rows, respectively).
+b Diffuse plaque example where activation and feature occlusion maps focus on ill-defined amorphous amyloid contours for diffuse-plaque classification task (third row).
+c CAA example, where the CAA task's activation and feature occlusion maps (fourth row) highlight amyloid ring pixels within the media of the cortical vessel (blue arrow), while for cored and diffuse tasks the small punctate IHC staining is considered salient (red arrow; second and third rows).
+d Example containing both diffuse (red arrow) and cored (yellow arrow) plaques in the same tile illustrate the difference between activation and feature occlusion maps.
+Confidence scales for feature occlusion maps represent the CNN's prediction confidence on the occluded image, with red being the most confident and blue the least.
+Scale bar = 25 μm
+
+
+Correlation between CNN-based and CERAD-like manual scoring.
+Entire dataset of 62 WSIs Combined blinded hold-out sets of 30 WSIs
+
+
+
+Fig. 8
+Fig. 8 Comparison of CNN-based Aβ-burden scores versus manual CERAD-like semi-quantitative scores at a whole-slide level for each pathology.
+a The automatic and manual scores correlate well across the entire dataset of 62 independent WSIs, comprising the original Phase I-III slide set plus 20 additional blinded WSIs.
+b Correlations assessed on the 20 blinded WSIs not used in any previous step of the study combined with the 10 WSIs from the original hold-out set, for a total of n = 30 individual cases.
+Box plots show median (center line inside the box), interquartile range (IQR, bounds of box), minimums and maximums within 1.5 times the IQR (whiskers), and outliers (points beyond the whiskers), with a dot per WSI.
+p ≥ 0.05 was considered not significant (ns); *p < 0.05, **p < 0.01, ***p < 0.001.
+Matrices in the second row of each panel exhaustively plot p-values of CNN-based score distributions between all pairs of CERAD-like categories for the corresponding box plot, where squares are colored in log scale by p < 1e-4 (blue) to p = 0.05 (gray) to p = 1 (red; insignificant) using two-sided Student's t-tests.
+Source data are provided as a Source Data file
+
+
+) test set.
+As expected, model performance positively tracked with the total number of training examples.
+Notably, models trained on a 50% smaller training set size still achieved an
+
+
+
+Table 1
+Summary of annotated object tile dataset by project phase
+
+
+
+Table 2
+Annotated object dataset distribution by class and model performance

@@ -1,0 +1,314 @@
+BMNet: A New Region-Based Metric Learning Method for Early Alzheimer's Disease Identification With FDG-PET Images
+18F-fluorodeoxyglucose (FDG)-positron emission tomography (PET) reveals altered brain metabolism in individuals with mild cognitive impairment (MCI) and Alzheimer's disease (AD).
+Some biomarkers derived from FDG-PET by computer-aided-diagnosis (CAD) technologies have been proved that they can accurately diagnosis normal control (NC), MCI, and AD.
+However, existing FDG-PET-based researches are still insufficient for the identification of early MCI (EMCI) and late MCI (LMCI).
+Compared with methods based other modalities, current methods with FDG-PET are also inadequate in using the inter-region-based features for the diagnosis of early AD.
+Moreover, considering the variability in different individuals, some hard samples which are very similar with both two classes limit the classification performance.
+To tackle these problems, in this paper, we propose a novel bilinear pooling and metric learning network (BMNet), which can extract the inter-region representation features and distinguish hard samples by constructing the embedding space.
+To validate the proposed method, we collect 898 FDG-PET images from Alzheimer's disease neuroimaging initiative (ADNI) including 263 normal control (NC) patients, 290 EMCI patients, 147 LMCI patients, and 198 AD patients.
+Following the common preprocessing steps, 90 features are extracted from each FDG-PET image according to the automatic anatomical landmark (AAL) template and then sent into the proposed network.
+Extensive fivefold cross-validation experiments are performed for multiple two-class classifications.
+Experiments show that most metrics are improved after adding the bilinear pooling module and metric losses to the Baseline model respectively.
+Specifically, in the classification task between EMCI and LMCI, the specificity improves 6.38% after adding the triple metric loss, and the negative predictive value (NPV) improves 3.45% after using the bilinear pooling module.
+In addition, the accuracy of classification between EMCI and LMCI achieves 79.64% using imbalanced FDG-PET images, which illustrates that the proposed method yields a state-of-the-art result of the classification accuracy between EMCI and LMCI based on PET images.
+
+INTRODUCTION
+Alzheimer's disease (AD), a brain degenerative disorder, is harming the health of thousands of old people now, and its rate of prevalence is expected to increase rapidly in the coming decades
+Mild cognitive impairment (MCI) is considered to be a preclinical precursor of AD, but it is difficult to predict whether it will convert to AD or not
+Considering the unpredictable process of MCI, it is crucial to develop relevant methods for diagnosing the early MCI and AD.
+18F-fluorodeoxyglucose (FDG)-positron emission tomography (PET) can reveal altered brain metabolism in individuals with MCI and AD
+Various recent studies have proved that biomarkers derived from FDG-PET by computer-aideddiagnosis (CAD) technologies of machine learning and deep learning can accurately diagnose NC, MCI, and AD
+They decomposed 3D images into 2D slices to learn the intra-slice and inter-slice features and achieved a promising classification performance of AUC of 83.9% for MCI vs. NC classification.
+To solve the multimodal data missing problem,
+Many studies have achieved good performance on the classification of NC, MCI, and AD based on FDG-PET images.
+However, when it comes to the more refined task like classification of early MCI (EMCI) and late MCI (LMCI), the studies with FDG-PET images are still insufficient.
+By comparison, based on fMRI and DTI images,
+With MRI images,
+To sum up, the refined classification performance for early AD based on FDG-PET images still has some room for improvement.
+One of the reasons might be that existing classification methods based on FDG-PET have not fully explored the inter-region representation among different brain regions.
+For example, based on fMRI, there are many methods like Pearson's correlation and sparse representation for functional brain network (FBN) estimation
+However, several studies have proved that brain metabolism connectivity has value in the diagnosis of early AD
+In addition, another reason might be that the number of PET images is generally much more than that of fMRI images in most researches.
+The bigger dataset might increase the variety of individuals and the probability of special samples which are hard to distinguish, thus causing complexity of the problem for classification tasks.
+Considering these two limitations, we propose a novel bilinear pooling and metric learning network (BMNet) for early Alzheimer's disease identification with FDG-PET images, especially for the classification task between EMCI and LMCI.
+Our main contributions are as follows: (1) We propose a shallow convolutional neural network model to achieve the classification;
+(2) We introduce a bilinear pooling module into the model for exploring the inter-region representation features in the whole brain; (3) We introduce the deep metric learning to help model learn the hard samples in the embedding feature space; (4) We conduct our method on the dataset collected from the publicly released ADNI database and obtain a state-of-the-art result of the classification between EMCI and LMCI based on PET images.
+The rest of this paper is organized as follows.
+In section "Materials and Methods, " we present details of the materials and the proposed methods.
+Section "Results" presents the results of the experiments on the public ADNI database.
+Finally, we provide the discussions and conclusion of this paper in section "Discussion and Conclusion."
+
+MATERIALS AND METHODS
+
+Image Acquisition and Preprocessing
+In this work, we use the data in the publicly released Alzheimer's Disease Neuroimaging Initiative (ADNI) database
+We collect a cohort of subjects with FDG-PET images from the ADNI databases.
+The ADNI cohort includes FDG-PET images from 898 subjects, including 263 NC, 290 EMCI, 147 LMCI, and 198 AD participants.
+Table
+We choose FDG-PET images which are in a state of rest with 30-35 min with 185 ± 18.5 MBq FDG, and details of acquisition can be obtained from the study protocols in the ADNI database.
+Firstly, we normalize the images based on the template of the Montreal Neurological Institute (MNI).
+Then, we perform the smoothing with a Gaussian filter of 8 mm fullwidth at half-maximum (FWHM)
+Finally, to verify the effectiveness of the proposed method, we do the main experiments using two different brain atlas.
+Based on the automated anatomical labeling (AAL)
+Similarly, based on the
+We perform all preprocessing steps by Statistical Parametric Mapping software (SPM12)
+
+Methods
+
+Overview of the Proposed Network
+Figure
+The left box is the preprocessing step of FDG-PET images, in which the left image is the raw PET image of the brain, and the right one is the AAL template.
+Then 90 features extracted based on the AAL template are input into the subsequent model.
+The model consists of two convolution layers, a bilinear pooling layer, and two fully connected layers.
+After extracting the first-order features through two convolution layers, the bilinear pooling module is used to further extract the inter-region-based features.
+Finally, the metric learning loss is added to the classification loss to strengthen the ability to learn hard samples of the proposed model.
+
+Baseline Model
+We construct a shallow neural network as the Baseline model, including two convolution blocks and three fully connected layers.
+Each convolution block includes a convolution layer, a batch normalization layer, and a Rectified Linear Unit (ReLU) activation layer.
+Given a set of nodes (regions) R = {r1, r2, r3}, and the features of each region is denoted as X i .
+Each convolution block is defined as: Where the f represents the convolution process, BN represents the batch normalization process, σ represents the activation process.
+
+Generating Inter-Region Representation via Bilinear Pooling Module
+In this section, we propose to use a bilinear pooling module to further generate second-order features which may represent inter-region features among whole brain regions.
+Bilinear pooling is an effective feature fusion method, which has been widely used in various computer vision and machine learning tasks
+Bilinear pooling captures the high-order statistical information of features by matrix operations and then generates an expressive global representation
+In the research of DTI and fMRI, this method is also used to extract connectivity-based features between brain regions
+In theory, by using these features, the inter-region representation among the whole brain regions in FDG-PET images could be exploited to some extent, as the functional brain network of fMRI.
+In this work, we introduce a new factorized bilinear pooling method
+This new bilinear pooling method simplifies the complexity of calculation, reduces heavy computational redundancy issues.
+Based on factorized bilinear coding, it is proved that bilinear features are rank-one matrices whose rank is one.
+The bilinear features could be extracted by factorizing dictionary atoms into low-rank matrices and Hadamard product, instead of massive matrix operations, reducing the dimension of matrices and computational burden.
+The main operations of bilinear features are as follows
+where B represents the bilinear features, and Y represents the input feature, U T , V T and P T are learnable parameters of the dictionary, • represents Hadamard product.
+The low-rank matrix U and V are used to approximate W, and the operation is simplified.
+Matrix P is used to control the length of the output.
+In the network, three fully connected layers are used to learn U T , V T and P T .
+Then, we use an average pooling layer to diminish the feature dimension and obtain the global information.
+Finally, the feature map is flattened to onedimensional and a fully connected layer is used to diminish the feature dimension to facilitate subsequent learning processes.
+We use this bilinear pooling method to capture inter-region representation with FDG-PET images.
+The homogeneous features achieve interaction of the whole brain by the bilinear pooling module, which needs complex and expensive computation before.
+
+Distinguishing Hard Samples in Embedding Space by Metric Learning
+In this section, we introduce the deep metric learning strategy into the classification of different stages of AD.
+Metric learning is widely utilized with deep neural networks in classification tasks, especially in problems affected by large intra-class sample changes
+Deep metric learning loss maps features to the embedded space, which is conducive to learning difficult samples and can effectively deal with the imbalance of data
+Inspired by these, we argue that deep metric learning might be suitable for our classification task.
+Thus, in this paper, we employ deep metric learning for the diagnosis of AD to help distinguish hard samples in the embedding space.
+In deep neural networks, the loss function is a manifestation of metric learning, and there are a variety of different metric learning loss functions.
+In this paper, we employ two deep metric learning loss functions for automatic diagnosis of early AD, including contrastive loss and triplet loss, which are widely used in recent studies
+Contrastive loss employs a pair of positive and negative samples for each training iteration.
+The contrastive loss function is measured by the Euclidian distance between two vectors in embedding space.
+The contrastive loss function is given as
+where y i = 0 for two positive vectors and y i = 1 for negative pairs, b 1,i , b 2,i is the training input from two classes, f 1,i , f 2,i represents the embedding vector of each training input generated by the network, N is the number of input samples, and m is the margin, usually set to 1.0.
+When the input is a positive sample pair, d 1,2 decreases gradually, and the same kind of samples will continue to form clusters in the feature space.
+On the contrary, when the network inputs a negative sample pair, d 1,2 will gradually rise until it reaches the set m.
+By minimizing the loss functions, the distance between positive sample pairs can be gradually reduced and the distance between negative sample pairs can be gradually increased, to meet the needs of the classification task.
+Triplet loss is a widely used measure of metric learning loss, which is the basis of a large number of metric learning methods.
+Unlike contrastive loss, triplet loss requires three input samples including two positive samples and a negative sample This triplet loss function simultaneously penalizes a short distance d a,n between an anchor and a negative sample and a long distance d a,p between an anchor and a positive sample, and is defined as
+where b a i , b p i , b n i is the input from two training groups, N represents the number of samples, and m is the margin, usually set to 1.0.
+represents the vector of training input in embedding space.
+As shown in Figure
+Finally, samples with the same class form feature clusters and embedding space to improve the performance of the classification tasks.
+
+Loss Functions
+In addition, we use cross-entropy loss L C for the classification task.
+Therefore, the final loss function includes a joint loss function L total that contains metric loss L M for the embedding space and cross-entropy loss for the classification task.
+Where y i represents the label of the sample i, where p i represents the probability that the sample i is projected to be a positive class, λ represents the coefficient which we define as 0.05 by experience.
+
+Performance Evaluation
+We adopt six commonly used evaluation metrics to evaluate the performance of the models objectively, including accuracy (ACC), sensitivity (SEN), specificity (SPE), positive predictive value (PPV), negative predictive value (PPV), F1 score (F1), area under the receiver operating characteristic curve (AUC).
+
+Implementation Details
+We implement the proposed network based on the public platform PyTorch 1.8 and Intel Core i5-9400 CPU with 16 GB memory.
+Besides, we adapt stochastic gradient descent (SGD) to optimize the model, in which momentum and weight decay are set to 0.9 and 0.001 respectively.
+
+Validation Strategies and Statistic Analysis Methods
+To evaluate the effectiveness of the proposed model, we conduct a fivefold cross-validation strategy in all ablation and comparative experiments based on the AAL atlas.
+For each experiment, we divide data into five groups, and each group maintains the same proportion of two classes.
+In each fold experiment, four groups are used as train groups and another group is used as the test group.
+The detailed classification results on the ADNI database are summarized in section "Ablation Experiments."
+In addition, we apply independent testing set strategy in the experiments based on
+
+RESULTS
+
+Ablation Experiments
+To verify the effect of the bilinear pooling module and the metric learning loss on the performance of the proposed model, we remove the bilinear pooling module and the metric learning mechanism loss from the proposed BMNet, respectively.
+In the first experiment (i.e., our method without a bilinear pooling module), we directly use a fully connected layer to replace the bilinear pooling module.
+In the second experiment (i.e., our method without metric learning losses), we just use the cross-entropy loss function.
+The details are as follows and the results are shown in Tables
+
+The Ablation Experiments of the Bilinear Pooling Module
+
+The Ablation Experiments of Metric Learning Losses
+In this sub-section, we perform comparative experiments in terms of metric learning losses, including the triplet loss (Tri-loss) and the contrastive loss (Con-loss).
+We use two kinds of metric learning losses respectively, and the results illustrate that the two metric learning losses are both effective in different experiments.
+Specifically, in the classification experiments between EMCI and LMCI, ACC increases by 2.07% after adding the contrastive loss, which is a little higher than that of triplet loss.
+Similarly, in the classification experiments between NC and AD, ACC increases by 3.89%.
+In the classification experiments between NC and LMCI, the results of triplet loss improve more than these of contrastive loss, and ACC reaches 0.8049.
+On the contrary, in the classification experiment between LMCI and AD, the results of contrastive loss are better, where ACC reaches 0.8177 and AUC reaches 0.8297.
+Finally, we use the t-test to measure the statistical significance comparing AUCs and the results are shown as p-value in Tables
+We can see that most results of the two final models (Con-loss + BP and Tri-loss + BP) are statistically significant.
+In addition, we can also see that most F1 scores of the two final models are higher than these of other models in Figure
+
+Experiments on Different Atlases
+In this section, we evaluate the performance of our method (Conloss + BP) based on the
+We conduct two groups of experiments for EMCI vs. LMCI classification and NC vs. AD classification and the results are shown in Table
+
+Comparison With Other Methods
+In this section, we compare the performance of our method (Tri-loss + BP) with that of several recent representative methods.
+In addition, we apply the least absolute shrinkage and selection operator (LASSO) feature selection method and support vector machine (SVM) method for the contrast experiments.
+From Table
+Specifically, the proposed
+Based on a similar dataset, the proposed method still has better performance than the methods proposed by
+In addition, compared with the method proposed by
+Compared to the results of the fusion of PET and MRI
+Besides, our method gets a comparable performance compared to the methods based on fMRI and DTI adapted by
+Similarly, from Table
+Specifically, compared with the method proposed by
+Besides, our method gets a comparable performance compared to the methods based on other modalities
+ACC, SEN, SPE, AUC of our method based on PET images improve 10.76%, 4.69%, 16.83%, and 2.82% than those of their method based on fMRI.
+While SEN and AUC are slightly lower, ACC and SPE based on PET images improve 7.1% and 19.11% than those based on DTI.
+In addition, we conduct the classification experiments between NC and LMCI, LMCI and AD, and the results compared with other methods are shown in Tables 9, 10 respectively, to further validate the effectiveness of our method.
+From those experiments above, we can see that our classification results between EMCI and LMCI have exceeded those of the existing methods overall based on FDG-PET images.
+In addition, our results are also comparable with those based on fMRI and DTI images.
+
+DISCUSSION AND CONCLUSION
+
+Comparison of Different Coefficients in Loss Functions
+To select the proper coefficient of loss functions, we compare several numbers of coefficient λ in Equation
+We conduct the ablation experiments based on methods in section "Experiments on Different Atlases" and the corresponding AUCs are shown in Figure
+It can be seen that the AUC turns out to be the highest when coefficient is around 0.05 and keep at a relatively high level in the range from 0.05 to 0.08.
+Therefore we set coefficient λ as 0.05 in most experiments.
+
+Comparisons With Previous Researches
+In general, there are three major advances between the proposed method and previous methods.
+Firstly, current PET-based methods are deficient in extracting representation features among different brain regions, incurring poor performance for the classification of early AD.
+The proposed BMNet introduces a bilinear pooling module into the model to explore the inter-region representation features and get a good classification performance.
+Secondly, there are few methods to study hard samples to improve the classification results in the brain disorder analysis.
+By comparison, we apply two metric learning losses to our model which has been proved useful for hard samples classification and they both get a good performance in the experiments.
+Thirdly, brain metabolism is very important for AD diagnosis and can only be obtained by PET images.
+Based on PET images, the proposed method could extract region-based features which represent the brain metabolic connectivity network, excavate the potential of PET images, and improve the diagnosis performance.
+This is the main superiority of interregion-based methods with PET images compare with other modalities.
+In addition, the proposed PET-based method is comparable to other modalities in classification tasks between EMCI and LMCI.
+
+Potential Applications in Other Modalities
+Considering the good performance based on FDG-PET images, the proposed BMNet including the bilinear pooling module and the metric learning loss functions also has the potential capability of diagnosis for other neurological diseases with other kinds of brain images.
+Besides, the proposed method only requires features of each brain region as the input.
+This lightweight characteristic allows the model to be easily applied to fMR and DTI images.
+We will try to explore more applications of the proposed method in future work.
+
+Limitations and Future Works
+While the proposed BMNet achieves good results for the diagnosis of early AD, there are still some limitations.
+Firstly, considering the characteristics of the convolution neural network, the models and results are hard to be interpreted and the inter-region representation of the brain regions is hard to be visualized.
+Secondly, the proposed method focus on region-based features, which are lightweight but only utilize the metabolism of brain regions, limiting the ability of the network.
+In future work, we will try to integrate whole 3D PET images into the network to achieve joint feature extraction and classification.
+Finally, there is still some potential in exploiting methods that can extract brain inter-region representation features based on FDG-PET images.
+In the future, we will try to design methods that could extract inter-region representation features more effectively.
+In addition, the proposed method directly combined the contrastive loss and triplet loss with the entropy loss to better distinguish the hard samples.
+In the future, we will some novel designs of these losses based on domain knowledge.
+
+Conclusion
+We propose a novel neural network method for the diagnosis of early AD with FDG-PET.
+We firstly construct a shallow neural network as the Baseline model.
+Then we introduce a bilinear pooling module into the network to try to extract inter-region representation features among the whole brain.
+We also apply the deep metric learning losses into the final loss function to help distinguish hard samples in the embedding space.
+Finally, we conduct the BMNet on the ADNI database and the results show that our method yields comparable classification performance with several representative methods.
+Especially, we get a satisfying classification performance in the experiment between EMCI and LMCI, which is the state-of-the-art result with FDG-PET.
+
+
+
+FIGURE 1 |
+FIGURE 1 | The architecture of the proposed bilinear pooling and metric learning network (BMNet) for MCI diagnosis using PET images.
+There are four modules in our framework (i.e., images preprocessing module, convolutional feature-extraction module, bilinear pooling module, and the metric learning module).
+
+
+. The three samples are named as fixed sample (anchor) b a , positive sample (positive) b p and negative sample (negative) b n respectively.
+b a and b p form positive sample pairs, and b a and b n form negative sample pairs.
+
+
+
+Firstly
+, we conduct the experiments based on the Baseline model.
+Then we conduct the experiments of adding a bilinear pooling (BP) module to the Baseline model.
+According to the results, after the BP module is added, the four groups of classification experimental results have been improved to a certain extent.
+Specifically, in classification experiments between EMCI and LMCI, ACC increases by 2.74%, and AUC increases by 2.97%.
+In classification experiments between NC and AD, the results are the best, where ACC increases by 3.69% and AUC increases by 2.12%.
+In addition, we also conduct experiments in the classification between NC and LMCI, LMCI, and AD.
+The results illustrate that the BP module has a good generalization ability in the different classification tasks.
+Furthermore, we conduct comparative experiments to verify the effectiveness of the BP module based on metric learning loss.
+For example, in the classification experiments of EMCI and LMCI, after adding the BP model to the triplet loss (Tri-loss), ACC increases by 2.29%, and AUC increases by 1.74%.
+
+
+
+Figure 3 .
+FIGURE 3 | Receiver operating characteristic (ROC) curves of experiments for EMCI vs. LMCI classification and the ROC of experiments for NC vs. AD classification based on the Schaefer et al. (2018) atlas.
+TPR, true positive rate; FPR, false-positive rate; AUC, area under the receiver operating characteristic curve.
+Please see the web version for the complete colorful picture.
+
+
+
+FIGURE 4 |
+FIGURE 4 | The AUCs of ablation experiments loss functions for EMCI vs. LMCI classification and NC vs. AD classification based on the Schaefer et al. (2018) atlas.
+AUC, area under the receiver operating characteristic curve.
+
+
+
+TABLE 1 |
+Demographic characteristics of the subjects in the ADNI database.
+
+
+atlas.
+We divide the collected dataset from the ADNI database into a training set (80%), validation set (10%), and testing set (10%).
+The corresponding detailed classification results are summarized in sections "Experiments on Different Atlases."
+Similarly, to evaluate the effectiveness of the proposed model, we use two methods to validate the statistical significance including the t-test and DeLong test.
+In the experiments on the AAL atlas, we use the t-test.
+In the experiments on Schaefer et al. (2018) atlas, we use the DeLong test.
+
+
+
+TABLE 2 |
+Results of the ablation studies of BP module and metric learning losses for EMCI vs. LMCI classification (Mean ± Standard Deviation).
+
+
+
+TABLE 3 |
+Results of the ablation studies of BP module and metric learning losses for NC VS.
+AD classification (Mean ± Standard Deviation).
+
+
+
+TABLE 4 |
+Results of the ablation studies of BP module and metric learning loss for NC VS.
+LMCI classification (Mean ± Standard Deviation).
+
+
+
+TABLE 5 |
+Results of the ablation studies of BP module and metric learning loss for LMCI vs. AD classification (Mean ± Standard Deviation).
+
+
+
+TABLE 6 |
+Schaefer et al. (2018)udies based on theSchaefer et al. (2018)atlas.The bold values represent the highest number.
+The asterisk represents the results have the statistical significance.
+
+
+
+TABLE 7 |
+Comparison of the performance of different model algorithms in experiments for EMCI vs. LMCI classification with the related works.
+
+
+
+TABLE 8 |
+Comparison of the performance of different model algorithms in experiments for NC vs. AD classification with the related works.
+
+
+
+TABLE 9 |
+Comparison of the performance of different model algorithms in experiments for NC vs. LMCI classification with the related works.
+
+
+
+TABLE 10 |
+Comparison of the performance of different model algorithms in experiments for LMCI vs. AD classification with the related works.

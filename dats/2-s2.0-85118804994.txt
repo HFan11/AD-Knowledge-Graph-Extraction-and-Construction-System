@@ -1,0 +1,293 @@
+Deep-Learning Radiomics for Discrimination Conversion of Alzheimer's Disease in Patients With Mild Cognitive Impairment: A Study Based on 18F-FDG PET Imaging
+Objectives: Alzheimer's disease (AD) is the most prevalent neurodegenerative disorder and the most common form of dementia in the older people.
+Some types of mild cognitive impairment (MCI) are the clinical precursors of AD, while other MCI forms tend to remain stable over time and do not progress to AD.
+To discriminate MCI patients at risk of AD from stable MCI, we propose a novel deep-learning radiomics (DLR) model based on 18 F-fluorodeoxyglucose positron emission tomography ( 18 F-FDG PET) images and combine DLR features with clinical parameters (DLR+C) to improve diagnostic performance.
+Methods: 18 F-fluorodeoxyglucose positron emission tomography (PET) data from the Alzheimer's disease Neuroimaging Initiative database (ADNI) were collected, including 168 patients with MCI who converted to AD within 3 years and 187 patients with MCI without conversion within 3 years.
+These subjects were randomly partitioned into 90 % for the training/validation group and 10 % for the independent test group.
+The proposed DLR approach consists of three steps: base DL model pre-training, network features extraction, and integration of DLR+C, where a convolution network serves as a feature encoder, and a support vector machine (SVM) operated as the classifier.
+In comparative experiments, we compared our DLR+C method with four other methods: the standard uptake value ratio (SUVR) method, Radiomics-ROI method, Clinical method, and SUVR + Clinical method.
+To guarantee the robustness, 10-fold cross-validation was processed 100 times.
+Results: Under the DLR model, our proposed DLR+C was advantageous and yielded the best classification performance in the diagnosis of conversion with the accuracy, sensitivity, and specificity of 90.62 ± 1.16, 87.50 ± 0.00, and 93.39 ± 2.19%, respectively.
+In contrast, the respective accuracy of the other four methods reached 68.38 ± 1.27, 73.31 ± 6.93, 81.09 ± 1.97, and 85.35 ± 0.72 %.
+These results suggested the DLR approach could be used successfully in the prediction of conversion to AD, and that our proposed DLR-combined clinical information was effective.
+Zhou et al.
+Conclusions: This study showed DLR+C could provide a novel and valuable method for the computer-assisted diagnosis of conversion to AD from MCI.
+This DLR+C method provided a quantitative biomarker which could predict conversion to AD in MCI patients.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common type of dementia.
+Alzheimer's disease is an irreversible, progressive neurological brain disorder expected to increase significantly in the coming years due to aging and improvement in general health care
+Because mild memory decline and cognitive deficits appear before AD clinical manifestation
+As a preclinical stage of AD, MCI is a board and heterogeneous phenotypic spectrum that has no evident cognitive behavioral symptoms, but can show subtle prodromal signs of dementia
+Because of its heterogeneous presentation
+Therefore, it is crucial to exploit specific risks factors and biomarkers that can predict the progression to AD from MCI.
+Currently, structural and functional neuroimaging modalities, such as magnetic resonance imaging (MRI) and positron emission tomography (PET), have been used to develop biomarkers for prediction conversion to AD in patients with MCI
+Numerous studies using 18 F-fluorodeoxyglucose positron emission tomography ( 18 F-FDG PET) have shown that there are metabolic alterations detected in MCI patients
+Furthermore, FDG PET was found to be the only technique that can significantly improve the predictive value of demographic covariates regarding the development of AD.
+It further proved to be a better predictor of conversion than MRI
+Specifically, FDG PET alone has shown accuracies in predicting the progression of MCI to AD ranging between 70 and 83%
+For example,
+The aforementioned methods retain some limitations, however.
+Radiomics based on ROI depend mostly on prior knowledge.
+The voxel-level analysis considered information across the whole brain, but modeling based on each voxel inevitably results in heavy computing workload.
+Further, although ICA eliminates the need for a priori knowledge of the effects on underlying brain anatomy and uses whole-brain data, instead of a region-of-interest approach, it requires hand-coding and tedious designing processes, which is analogous to the radiomics method and voxel-level analysis.
+Deep-learning radiomics (DLR), a newly developing method, can provide quantitative and high-throughput features from medical images by supervised learning
+This algorithm implemented via deep neural networks automatically embeds computational features to yield end-to-end models that facilitate discovery of relevant highly complex feature, avoiding hand-coding, and a priori knowledge.
+Moreover,
+This methodology has recently extended to other medical applications, such as neurodegenerative diseases
+However, when applied to analyze medical images, there is a scarce-sample problem with DLR.
+Therefore, in this study we hypothesized that the DLR method might be effective in the diagnosis of conversion to AD in patients with MCI, and DLR+C might be able to provide more valuable information and improve identification of patients likely to convert to AD.
+We proposed a novel computer-aided diagnosis approach for the conversion to AD from MCI, based on DLR and evaluated the diagnostic performance of DLR features combined clinical information.
+
+METHODS AND MATERIALS
+The framework of this study, comprising six steps, is shown in Figure
+First, we preprocessed the collected PET data, mainly including partial volume effects (PVE) correction, normalization, and smoothing.
+Then, several deep learning (DL) models were pre-trained to select the optimal Base DL model for DLR feature extraction.
+Subsequently, DLR+C were employed to classify MCI converters (MCI-c) and MCI non-converters (MCI-nc) using the Support vector machine (SVM).
+Simultaneously, we also designed a comparative experiment for analysis.
+The details are described in subsequent sections.
+
+Subjects
+The FDG-PET image data used in the preparation of this study were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+Alzheimer's Disease Neuroimaging Initiative was launched in 2003 by the National Institute on Aging, the National Institute of Biomedical Imaging and Bioengineering, the Food and Drug Administration, private pharmaceutical companies, and non-profit organizations, as a $60 million, 5-year publicprivate partnership.
+The primary goal of ADNI has devoted to test whether serial MRI, PET, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild MCI and early AD.
+Up-to-date information is provided on
+In this study, we collected 168 MCI-c and 187 MCI-nc PET Scan data from ADNI 1, ADNI 2, and ADNI GO cohorts in the ADNI database.
+Eligible participants with MCI underwent FDG-PET scanning and clinical cognitive evaluations at the baseline and were clinically followed-up during at least 36 months.
+Detailed eligibility criteria for these participants are as follows:
+(1) For MCI-nc, participants were evaluated for at least 3 years (including a 3 year time point) from the time of initial data collection.
+Scan data for MCI-nc were collected at baseline 3 and these participants did not convert to AD during the 3 years follow-up period.
+(2) For MCI-c, the evaluation time may be less than 3 years.
+Scan data for MCI-c were not all collected at the baseline.
+Participants with a bidirectional change of diagnosis (MCI to AD, and back to MCI) within the follow-up period were excluded.
+All subjects were divided into two groups, a Training & Validation Group and an independent test group.
+Our Training & Validation Group contained 152 subjects with MCI-c, and 169 MCI-nc subjects.
+We used the FDG-PET scan data from this group to establish and test the validity of our predictive models.
+Our test group consisted of 16 MCI-c subjects and 18 MCInc subjects, and it was used to evaluate the diagnostic value of the predictive models.
+Demographic data including age, gender, sex, education, and neuropsychological cognitive assessment tests including the dementia rating scale (CDRSB), as well as the apolipoprotein E (APOE) ε4 genotyping characteristics of the dataset, are shown in Table
+
+FDG-PET Images Acquisition and Preprocessing
+The PET acquisition process is detailed in the online information of the ADNI project.
+In 290 cases, dynamic 3D scans with six 5min frames were acquired 30 min after injection of 185 ± 18.5 MBq FDG, and all frames were motion-corrected to the first frame and then summed to create a single image file.
+In the remaining cases (n = 65), patients were scanned for a static 30-min acquisition period.
+Individual PET scan preprocessing
+First, PET images were co-registered with their corresponding T1weighted images and then corrected for PVE based on the Muller-Gartner algorithm, where PVE correction was applied to the images to minimize the PVE on PET measurements
+Thereafter, through linear and non-linear 3D transformations, the images were spatially normalized to a PET template in the Montreal Neurological Institute (MNI) brain space.
+The normalized PET images were then smoothed by a Gaussian filter of 8 mm full-width at halfmaximum (FWHM) over a 3D space to blur the individual
+
+Deep-Learning Radiomics Model
+Figure
+The method is composed of three steps: (1) Base DL model pretraining, where we pre-trained several DL models and chose the optimal as the final DL model, to extract high-throughput DLR features of PET images;
+(2) Feature Fusion; and (3) Classification.
+Based on aforementioned DLR fusion features, SVM was used as the classifier to discriminate conversion to Alzheimer's disease in patients with MCI.
+Detailed technical demonstrations are described in the following sections.
+
+Base DLR Model Pre-training
+The Base DLR model acts as a feature encoder, which has a significant impact on classification.
+In this study, five convolutional neural networks (CNNs) namely AlexNet, ZF-Net, ResNet18, InceptionV3, and Xception, were introduced for pre-training to find the most suitable model for identifying conversion to AD from stable MCI patients.
+In general, the complexity of the CNNs depends on two factors, namely "depth" and "width."
+The advantage of DL is that it can learn more representative features with the help of its neural network with numerous layers and broad width.
+But DL is flawed with highly dependence on data.
+Consequently, deeper networks do not necessarily reach better performance.
+This is mainly because the multi-layer back propagation of the error signal can easily lead to the gradient "dispersion" or the gradient "disappears"
+Especially for the sparse sample characteristics of medical images, the deeper network performs poorly, leading to overfitting.
+Considering above factors, to compare model performance, we introduced five CNNs, specifically AlexNet and ZF-Net with simple network structures, ResNet18, InceptionV3, and Xception with more network layers.
+AlexNet, containing five convolutional layers and three fully-connected layers with learnable weights, competed in the ImageNet challenge in 2012 and achieved a top-five error of only 15.3%
+There are several advanced techniques in AlexNet compared with traditional neural networks, including employing the rectified linear unit (ReLU) function and a pool operation.
+ZF-Net is based on AlexNet with only some changes in the convolutional kernel and step size, with no significant breakthrough in the network structure.
+Instead, based on the traditional CNN framework, the network structure of InceptionV3, Xception, and ResNet18 are more complex and deeper, and have their own unique network characteristics.
+The greatest advantage of the ResNet framework lies in adding identity mapping that is performed by the shortcut connections, the outputs of which are added to the outputs of the stacked layers
+Therefore, the ResNet addressed the degradation problem and added neither extra parameters nor computational complexity.
+The advantage of Google's Inception structures is that there are good performance especially under strict constraints on memory and complexity of computational problems
+For example, GoogLeNet
+For this, Inception networks are always chose when a huge of data need to be processed at reasonable time and computational cost.
+And Inception V3 is one version of attempts to scale up deep networks, in which the fully connected layer of the auxiliary classifier is also-normalized based on Inception V2.
+In addition, Xception is an improved model based on Inception V3, whose main improvement is to use depth wise separable convolution to replace the Inception module.
+There were two steps included in the entire training process, the forward computation and the backward propagation.
+Before modeling, the three-dimensional PET image of each subject was sliced and tiled into two-dimensional images, then being resized to 224 × 224 pixels and normalized.
+The pathology type was encoded to one hot, which was the label.
+Thereafter, in the training stage, data was fed into the network to update model parameters via backward propagation with the SGD algorithm, a first-order gradient-based optimization algorithm that has been proven to be computationally efficient and appropriate for training deep neural networks.
+The outputs of the network were used as classification results, and the cross-entropy of the outputs was calculated as the loss function.
+More specifically, the output of the network for each individual PET image could be a binary value, in which one represented the highest probability of being MCI-c subjects, while zero represented highest probability of being MCI-nc subjects.
+We employed several DL frameworks in this study.
+In the pre-training, we set the learning rate into 1e-2 and applied the SGD optimizer to update model parameters with a batch size of 8.
+The maximum number of iterations was set into 100.
+Note that we used Dropout and Early Stopping in this step to alleviate overfitting of our models, and we also adopted a learning rate decay strategy, setting the learning rate decay step to 10. Furthermore, a strategy called online data augmentation was used to prevent overfitting of small datasets, which meant horizontal flipping and Gaussian noise addition for input images in the training/validation group.
+Above all, pre-training of deeplearning models was processed on a GPU (graphics processing unit, GTX 1080 Ti acceleration of PyCharm 3.5).
+
+DLR Features
+Contrasting with hand-crafted and engineered features designed in previous medical experiences, DLR learned the highthroughput image features in a supervised manner, which could make full use of embedded information in PET images.
+After screening the optimal Base DL model, we replaced the FC layer with an SVM as classifier and fused the clinical information and network features to collaboratively make decisions.
+Specifically, to obtain DLR features, the feature maps were first extracted from the last convolution layer of the convolution network, and they were transformed to raw values by taking the maximum values of each feature map with global max pooling.
+Afterwards, these extracted features, defined as DLR features, were combined with clinical parameters (CDRSD, Age, MMSE, etc.) as input data for future classification.
+
+Classification
+In this study, the enrolled subjects were randomly divided into one training/validation group and one independent test group at a ratio of 9:1, as shown in Table
+The training group was then used to optimize the model parameters.
+We also randomly chose 10% of the training group to form a validation group to guide the choice of hyper parameters.
+We conducted training of several deep-learning models, including AlexNet, ZF-Net, ResNet18, InceptionV3, and Xception, and compared the classification performance for screening the optimum DLR.
+To evaluate classification performance, we repeatedly conducted 10-fold cross-validation in the training group.
+Subsequently, the extracted DLR features were combined with clinical scales, which were together named as DLR+C features serving as input.
+SVM served as a classifier to perform the classification.
+The training/validation group was used to train and validate the model, while the test group was used as an independent test dataset to verify the predictive performance of our proposed DLR+C approach.
+The model was trained and validated with 10-fold cross-validation 100 times.
+The linear kernel function was used to detect feature generalization ability and classification reliability.
+The mean [± standard deviation (SD)] accuracy, sensitivity, and specificity were used to evaluate the results.
+The mathematical expression of the three parameters was as follows:
+where Tn, Tp, Fn, and Fp denote true negatives, true positives, false negatives, and false positives, respectively.
+Simultaneously, a receiver operating characteristic (ROC) curve was produced to intuitively compare the results of the different approaches, and the area under the curve (AUC) of the ROC was computed to quantitatively evaluate classification performance.
+
+Comparative Experiment
+To verify the superiority of the proposed DLR+C method in this research, we deployed the following four comparative experiments.
+They were all built with SVM classifiers, but with different input data.
+(1) Radiomics method: radiomic features of ROI in the brain (Supplementary Material 1,
+(3) Clinical method: Demographic data, neuropsychological cognitive assessment tests, as well as the APOE ε4 genotyping characteristics of all subjects.
+(4) SUVR + Clinical method.
+Likewise, during the comparative experiments, the 10-fold cross-validation was performed in the training/validation group with 100 repetitions with the linear kernel.
+The test group was used to independently verify the generalization ability of the above model.
+
+Decision Score
+To more efficiently describe the discrimination ability of our proposed DLR+C method, we conducted a statistical analysis of the decision scores.
+A decision score could be output after the SVM model decision analysis to represent the class scores of MCI-nc or MCI-c.
+In the experiment, we calculated separately the decision scores of MCI-nc and MCI-c subjects of the test group.
+We used the scores to perform the t-test between MCI-nc and MCI-c to observe intergroup differences.
+
+Statistical Analysis
+Demographic and clinical characteristics were compared between groups using a two-sample t-test or the chi-square test.
+All statistical analyses were performed using SPSS Version 22.0 software (SPSS Inc., Chicago, IL, USA) and Matlab2016b (Mathworks Inc., Sherborn, MA, USA).
+All p-values < 0.05 were considered significant.
+
+RESULTS
+
+Base DLR Model Selection
+To find the suitable Base DLR model for MCI-c vs. MCI-nc classification, the performances of AlexNet, ZF-Net, ResNet18, InceptionV3, and Xception in classifying MCI categories were compared.
+The classification performances on AlexNet, ZF-Net, ResNet18, InceptionV3, and Xception models are summarized in Table
+Specially, the accuracy, sensitivity, specificity, AUC, and execution time of the ZF-Net were 74.12 ± 2.32, 70.63 ± 3.02, 77.22 ± 4.10%, 0.756, and 231.20 s, respectively.
+Finally, among these five models, the ZF-Net model proved to be the suitable model which not only had the best classification performance in the independent test group, but also had a shorter model training time.
+Therefore, ZF-Net was selected as the basic model to extract DLR features for further study.
+The ROC curves of the DLR pre-training models in the classification of MCI-c and MCI-nc were presented in Figure
+
+Clinical Information Integration
+When ZF-Net was selected as the Base DLR model with the best performance, clinical information was added to the diagnostic model.
+Consistently with the method described above, the model incorporating clinical information was called ZF-Net + C, where C represents clinical information.
+The method of adding clinical information was to directly fuse clinical information with the extracted DLR features from the last convolution layer of the convolution network.
+Thereafter, the fused features were fed into the SVM classifier.
+The ZF-Net + C, which integrated the deep features and clinical information offline, proved to be the best in terms of classification performance.
+Detailed results are summarized in Table
+
+Classification Performance
+Table
+Among five methods, the DLR+C method showed the best performance with accuracy of 90.62 ± 1.16%, sensibility of 87.50 ± 0.00%, and specificity of 93.39 ± 2.19% in the independent test group.
+The performance of the SUVR method, radiomics method, clinical method, and SUVR+Clinical method were all poorer than our proposed method, with accuracies of 68.38 ± 1.27, 73.31 ± 6.93, 81.09 ± 1.97, and 85.35 ± 0.72% in the independent test group, respectively.
+Figure
+The average AUCs (±SD) of SUVR method, Clinical method, SUVR+Clinical method, and DLR+C method were 0.68 ± 0.01, 0.81 ± 0.02, 0.85 ± 0.01, and 0.90 ± 0.01, respectively, in the independent test group.
+
+Decision Score
+In our proposed DLR+C method, the performance of the output decision scores with the SVM linear kernel classification in the test group is shown in Figure
+The results indicate that decision scores from the SVM output could effectively classify MCI-c and MCInc with significant differences, and could be used as a quantitative biomarker for classification between MCI-nc and MCI-c groups.
+
+DISCUSSION
+In this study, we proposed and applied a DLR+C method based on 18 F-FDG PET images to predict conversion to AD from stable MCI.
+Compared with other four traditional methods including Radiomics-ROI method, Clinical model or the voxellevel analysis, our proposed DLR+C model showed significant superiority in classification of MCI-nc and MCI-c subjects, demonstrating that the DLR+C model can be used for effectively  learning superior feature representation from small neuroimging data and avoid hand-coding and ROI segmentation based on a prior knowledge.
+Further, we validated that DLR+C had the potential to serve as a quantitative biomarker through the statistical analysis of decision scores.
+Overall, DLR+C might have possibility to provide clinicians with directions for the diagnosis of conversion to AD from stable MCI.
+
+Base DLR Model Selection
+As an emerging technique for image quantitative analysis, the DLR method represents a combination and development of DL and radiomics.
+The DLR method can automatically learn a large number of features including a neural network's hidden layers according to input images, and this process do not require object segmentation and hard-coded feature extraction
+This has been successfully applied to oncology and cancer diagnosis at the present
+In this study, DLR adopted CNN frameworks and was completely established on the analysis of 2D-slice FDG PET images.
+To construct a DLR feature encoder, we compared the performance of several CNN models, including AlexNet, ZF-Net, ResNet18, InceptionV3, and Xception.
+As shown in Table
+Further, in the process of training the model, with its simple network structure and fewer model parameters, the ZF-Net model exhibited a significantly shorter training time than other models, which was what we expected.
+Therefore, we chose ZF-Net as the final DLR model and feature encoder.
+The classification result was consistent with that of
+It was worth nothing that Yee et al. enrolled 871 MCI-nc and 362 MCI-c participants, but participants in our study were much fewer and also achieved the same performance.
+Besides, there are indeed advantages about  the ResNet18, InceptionV3, and Xception networks.
+But their classification results were still poor when the execution time became longer, which was not what we expected.
+We speculated it might be due to too few subjects in our study which did not matched with deeper network structures and led to overfitting.
+In addition, the above process about Base DLR model selection was also repeated when not resizing images after standard preprocessing.
+We found similar classification performance, but the later has heavier GPU load.
+Therefore, the results based on sliced and resized 224 * 224 images were taken as final.
+
+Clinical Integration and Classification Performance
+One issue is that a data scarcity problem remains when DLR is applied in medical databases
+Insufficient inputs proved incapable of training effective network parameters, and thus the optimal model becomes elusive.
+Considering this, we proposed the DLR+C method, providing complementary information to improve the diagnosis of conversion to AD.
+According to the classification results of Table
+Hence, the 18 F-FDG PET images after integrating with standard cognitive tests (CDRSB), demographic information (age, gender, education, and MMSE), and APOEε4 genetic status indeed represented more valuable information and thus improved the diagnostic performance.
+Further, as discussed in the study of
+Hence, to validate the superiority of our DLR+C method, we designed comparative experiments at three levels in turn: the voxel-based, radiomics, and the clinical.
+As shown in Table
+The Clinical method obtained a mean accuracy of 81.09%, and the SUVR+Clinical method had an accuracy of 85.35%.
+These results were consistent with previously relevant publications, where data were collected from the ADNI database
+Moreover, the results of our clinical method were coherent with those in
+Nonetheless, it is deserving to clarify that the outcome of our proposed DLR+C method is optimal.
+In summary, the above results sufficiently illustrated the superiority of our DLR+C method.
+DLR avoided the need for prior knowledge and hard-coded feature extraction, while clinical parameters provided more complementary and valuable information.
+
+Decision Score
+To better demonstrate the discriminability of the proposed DLR+C method, we conducted a statistical analysis of decision values.
+As the distribution of decision scores in Figure
+Thus, it could be used as a quantitative biomarker for classification between the MCI-nc and MCIc groups.
+
+LIMITATIONS
+Although the DLR+C method enhanced the performance of discrimination of conversion to AD in patients with MCI, some limitations must be addressed.
+First, we need more available data to verify the generalizability and robustness of the proposed method.
+In this study, a small number of subjects were collected only from the ADNI database.
+Although the final DLR+C model performed excellent diagnostic performance, there is still potential to improve the representation of our Base DL model, where the accuracy only reached 74.12% in the independent test group and did not exceed those of
+Therefore, it is possible to improve the performance of our DLR+C method when comprehensive and homogeneous databases are developed and become available.
+Secondly, in this study, the DLR+C method was focused on the single image modality of 18 F-FDG PET.
+Whether multi-modalities of 18 F-FDG PET combined MRI can improve the classification performance of DLR+C method is to be explored in a further study.
+Third, the proposed method can provide a prediction whether MCI subjects would convert to AD, but it cannot decide when the conversion occurs in the future.
+To enroll longitudinal data to determine the severity of MCI-c subjects may well be of interest in our following studies.
+
+CONCLUSION
+We developed a DLR+C method for the 18 F-FDG PET modality in an effort to perform the diagnosis of MCIc and MCI-nc subjects.
+This study demonstrates that the proposed DLR+C method can improve the diagnostic performance and provide a quantitative biomarker for predicting conversion to AD in MCI patients.
+Future, the DLR+C model holds potential to become a practical method for the computer-assisted diagnosis of conversion to AD. Prospective multi-modalities research is expected to apply our proposed DLR+C method and acquire more reliable evidence in predicting the conversion of MCI to AD.
+
+
+
+FIGURE 1 |
+FIGURE 1 | (A) Collection of images and clinical scales.
+(B) Image preprocessing.
+(C) Base DL model pre-training.
+(D) Feature extraction and fusion.
+(E) Classification based on SVM.
+(F) Comparative experiment.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The overall pipeline of DLR model.
+The pre-trained ZF-Net model acted as an feature encoder of the input images.
+Then the DLR features combined clinical parameters were classified by a SVM classifier.
+
+
+FIGURE 3 | ROC curve comparison in classification of MCI-c and MCI-nc.
+(A) ROC curve of five different Base DL pre-training models.
+(B) ROC curve of four different comparative experiments.
+
+
+
+FIGURE 4 |
+FIGURE 4 | The distribution of decision score of MCI-c and MCI-nc subjects.
+
+
+
+TABLE 1 |
+Demographic and statistics of clinical assessments at time of data collection.
+
+
+
+TABLE 2 |
+Performance of different classification approaches in mutiltasking classification.
+
+
+
+TABLE 3 |
+Performance of different classification approaches in mutiltasking classification.
+The methods are conducted with cross-validation and their results are given as mean ± standard deviation.
+DLR+C, Deep learning radiomics combined Clinical parameters; ROI, regions of interest.
+Bold values represent the classification performance of the proposed DLR+C method.

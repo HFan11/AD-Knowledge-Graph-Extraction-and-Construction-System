@@ -1,0 +1,200 @@
+Machine Learning-Based Framework for Differential Diagnosis Between Vascular Dementia and Alzheimer's Disease Using Structural MRI Features
+The experimental results demonstrate that the SVM with RBF achieved an encouraging performance with sensitivity (SEN), specificity (SPE), and accuracy (ACC) values of 82.65%, 87.17%, and 84.35%, respectively (AUC = 0.861, 95% CI = 0.820-0.902),
+for the differential diagnosis between VaD and AD.
+The proposed computer-aided diagnosis method highlights the potential of combining structural MRI and machine learning to support clinical decision making in distinction of VaD vs. AD.
+Background and Objective: Vascular dementia (VaD) and Alzheimer's disease (AD) could be characterized by the same syndrome of dementia.
+This study aims to assess whether multi-parameter features derived from structural MRI can serve as the informative biomarker for differential diagnosis between VaD and AD using machine learning.
+Methods: A total of 93 patients imaged with brain MRI including 58 AD and 35 VaD confirmed by two chief physicians were recruited in this study from June 2013 to July 2019.
+Automated brain tissue segmentation was performed by the AccuBrain tool to extract multi-parameter volumetric measurements from different brain regions.
+Firstly, a total of 62 structural MRI biomarkers were addressed to select significantly different features between VaD and AD for dimensionality reduction.
+Then, the least absolute shrinkage and selection operator (LASSO) was further used to construct a feature set that is fed into a support vector machine (SVM) classifier.
+To ensure the unbiased evaluation of model performance, a comparative study of classification models was implemented by using different machine learning algorithms in order to determine which performs best in the application of differential diagnosis between VaD and AD.
+The diagnostic performance of the classification models was evaluated by the quantitative metrics derived from the receiver operating characteristic curve (ROC).
+
+INTRODUCTION
+Dementia is a typical clinical syndrome of cognitive decline that interferes with the ability to perform daily activities
+It is a progressive disease, indicating that it gets worse over time in terms of memory loss, cognitive dysfunction, and behavior.
+It is reported that the number of patients affected by dementia is believed to be close to 60 million people in 2018, and this number will almost reach 75 million in 2030 and triple with 130 million in 2050.
+Alzheimer's disease (AD) and vascular dementia (VaD) are the first and second most common forms of dementia, respectively
+They have several symptoms, pathophysiology, and comorbid clinical manifestation that overlap that make them difficult to distinguish.
+At present, the differential diagnosis between AD and VaD is still largely based on clinical guidelines with the exception of the exclusion of other diseases that are able to result in dementia.
+VaD is usually diagnosed through the combination of neurological examination, cognitive functioning tests, and brain scanning techniques
+AD is often diagnosed by excluding other causes rather than being able to pinpoint the diagnosis through imageological or biochemical examination
+Conventional magnetic resonance imaging (MRI) could only discover certain clinical entities such as vascular changes and stroke or ischemic attack occurring in a specific area of brain
+Molecular neuroimaging technique plays an important role in the diagnosis of dementia
+However, as is the case with AD, a definite diagnosis of VaD can only be made by brain autopsy.
+Although some similar cognitive examinations are employed to evaluate brain function
+Under attack by AD, the structure changes of temporal lobe, hippocampus, and entorhinal cortex may be changed firstly
+Hill et al.
+Moreover, several machine learning-based studies have successfully classified and predicted AD and mild cognitive impairment (MCI) using structural MRI features
+It indicates that the changes of structural MRI are sensitive indicators for dementia, but there were no previous studies referring to the distinction between VaD and AD.
+A series of studies mentioned above suggest that volumetric measurements of brain MR images are generally a significative type of biomarker.
+However, to our knowledge, whether multiparameter structural MRI features can serve as the informative biomarker to detect the differences between VaD and AD is unknown, and little work has been done on machine learning to distinguish VaD from AD.
+Therefore, despite recent developments in the detection of AD, differential diagnosis between AD and VaD is still challenging and requires further investigation.
+It is critically important to find a way to be potentially capable of differentiating VaD from AD.
+In this study, we present a support vector machine (SVM)-based machine learning framework in combination with a range of volumetric measurements of different brain tissues to provide clinical information for differential diagnosis between VaD and AD (Figure
+
+MATERIALS AND METHODS
+
+Subjects and Inclusion Criteria
+This retrospective study was approved by the Ethics Committee of the First Affiliated Hospital of Chongqing Medical University.
+The written full informed consents were obtained from all subjects.
+From June 2013 to July 2019, 122 patients imaged with brain MRI who were hospitalized in the First Affiliated Hospital of Chongqing Medical University were recruited for this study.
+The diagnosis was confirmed by two chief physicians.
+VaD patients fulfilled the criteria of NINDS-AIREN (3) and AD patients fulfilled the criteria of NINCDS-ADRDA
+Exclusion criteria are as follows: (1) patients have both AD and VaD (n = 8); (2) patients with suboptimal image quality because of head motion or susceptibility artifacts (n = 14); and (3) the areas of hyperintensities are so large that they have little influence on the segmentation accuracy of AD and VaD (n = 7).
+Finally, 58 AD patients and 35 VaD patients were enrolled and the demographic data are summarized in Table
+Sex ratio and age distribution did not differ significantly between both groups (χ 2 test, P = 0.73 and Wilcoxon rank-sum test, P = 0.24).
+
+MRI Acquisition
+All subjects underwent multisequence imaging protocol on a 1.5-T MRI scanner (MAGNETOM ESSENZA, Siemens Healthineers, Germany and Signa HDxt, GE Healthcare, USA).
+For each patient, two sequences were collected in our study: (1) T1weighted spin-echo (T1W) image: repetition time/echo time (TR/TE) = 1800/22 ms; matrix size = 512 × 512; field of view (FOV) = 240 × 240 mm 2 ; slice thickness = 3 mm; gap = 1.5 mm; (2) T2 fluid attenuated inversion recovery (T2 FLAIR) image: TR/TE = 8000/120 ms; matrix size = 512 × 512; field of view (FOV) = 240 × 240 mm 2 ; slice thickness = 3 mm; gap = 1.5 mm.
+
+Image Pre-processing
+Firstly, T1W and T2 FLAIR images are skull-stripped, performed using the FMRIB software library (
+Then, the skull-stripped T2 FLAIR images were aligned and registered to T1WI images using SPM12 based on rigid transformation and normalized mutual information
+After the above operations, N4 bias correction was performed on T1W and T2 FLAIR images to remove low-frequency intensity non-uniformity (
+
+MRI Structure-Based Feature Extraction and Selection
+In our study, multi-parameter structural MRI indexes were used as the feature set to train and test machine learning model.
+A reliable and robust automated software AccuBrain (BrainNow Medical Technology Limited, Hong Kong, China) performs brain structure and tissue segmentation to obtain multiple volumetric measurements of different brain substructures and subcortical tissues
+It could provide the quantitative volumetry of memory-related cerebral areas in a fully automatic mode.
+After feature extraction, the next step is construction of the optimal feature subset.
+As feature selection is an important problem for pattern classification that has become an apparent need in machine learning, the effectiveness of features is directly associated with the performance of classifier.
+Firstly, normality and homogeneity of variance have been examined by Kolmogorov-Smirnov test and Levene test, respectively, and features with skewed distribution or normal distribution have been compared using the Mann-Whitney U test or independent Student t test to select certain volumetric indexes with significant difference (P < 0.05) as the representative features
+Then, the least absolute shrinkage and selection operator (LASSO) method was used for the selected features to form the fusion feature signature (feature subset).
+The feature selection methods were performed with the R software (version 3.5.1;
+
+Machine Learning Modeling and Performance Evaluation
+The typical kernel algorithms in machine learning such as SVM were employed to identify VaD from AD.
+Based on structural risk minimization, SVM classifier finds an optimal separating hyperplane with maximum margin to distinguish VaD from AD in the corresponding high-dimension feature space mapped by the input feature subset
+In this study, we used the LibSVM toolbox (version 3.22) for the implementation of SVM classifier with linear and radial basis kernel functions
+In addition, genetic algorithm (GA) was conducted to select the optimal parameters of the LibSVM classifier.
+For performance   comparison of classification, we have adopted different machine learning algorithms such as K-nearest neighbor (KNN), logistic regression (LR), and random forest (RF) to test which model performs best in differentiating between VaD and AD, compared with SVM.
+A brief overview about the corresponding parameters of the classifiers is given in Table
+In this study, the dataset was divided into two portions called training set and testing set, 70% of which were used as training set, and the remaining 30% were used as test set.
+In the training set, we used the 10-fold cross-validation (CV) to train and tune the model.
+The training set was divided into 10 subsets, each as a verification set for monitoring and tuning the parameters of training process, and the other 9 subsets was used for training the model.
+The test set was used only to assess the performance of the model.
+In addition, a bootstrap resample method (1,000 times) was used to decrease the bias of overfitting and evaluate the robustness of each diagnostic model.
+Hence, the accuracy (ACC), sensitivity (SEN), specificity (SPE), and area under the curve (AUC) of model are calculated by taking the average of the results of 1,000 times tests.
+The detailed procedure of parameter tuning and performance testing is shown in Figure
+
+RESULTS
+This section presents the experimental results obtained through the quantitative volumetry of structural MRI using AccuBrain software on T1W and T2 FLAIR imaging, as efficient biomarkers  disclosing the significant change of volumes in the memoryrelated cerebral areas between VaD and AD.
+On the other hand, the classification performance obtained with or without the feature selection method was compared and analyzed.
+
+Differences in the Volumetric Features of Different Brain Tissues Between VaD and AD
+The result presentation of quantitative volumetry in structural MRI was reported for the following cases: (1) volume differences of memory-related cerebral areas between patients who suffer from VaD and AD, (2) symmetry of brain substructures between the patients with VaD and AD, and (3) volume atrophy differences between VaD and AD (Table
+The structural changes of memory-related cerebral areas were obvious and significant between the patients with VaD and AD, while volume differences could have potential to differentiate VaD from AD.
+When compared to the AD patients, the VaD patients show significantly higher volume values (P < 0.05) in brain parenchyma, hippocampus, amygdala, and accumbens nucleus, and significantly lower volume values (P < 0.05) in pallidum.
+The significant difference for the symmetry of certain brain substructures has also been observed between VaD and AD such as hippocampus, amygdala, caudate, pallidum, and accumbens nucleus (P < 0.05).
+The group comparison reveals a significant decline in the volume values of bilateral frontal lobe, occipital lobe, temporal lobe, and parietal lobe as well as significant volume atrophy differences in occipital lobe and parietal lobe in the patients with AD (P < 0.05).
+
+Performance Comparison of Machine Learning Models for Differential Diagnosis
+This section presents the results of comparing differential diagnosis between VaD and AD obtained by the different machine learning models.
+The 20 significantly different features (Table
+Then, five top-ranked features were selected as the input of machine learning model (Figure
+GA was employed to find the global optimum solution of SVM, the parameters of which were set as follows: population size = 50, iteration times = 1,000, probability of crossover = 0.6 and probability of mutation = 0.1.
+
+DISCUSSION
+Many recent neuroimaging studies have focused on the use of advanced machine learning algorithms to solve problems in differential diagnosis, especially cases in the combination of medical science and engineering, such as the identification of the early stage of AD
+VaD characterized by the syndrome of intellectual disability such as hypomnesia and impairment of daily activities or living is very similar to AD.
+Therefore, accurate differential diagnosis is essential to receive timely clinical treatment that delays the progression of disease
+Research on the biomarkers for differential diagnosis between VaD and AD mainly includes biochemical, genomics, proteomics, and neurophysiology markers such as neurofilament light unit and neurofilament protein levels
+Moreover, another critical requirement for clinical application is in the pursuit of neuroimaging biomarkers.
+In our study, a machine learning model derived from an RBF SVM classifier combined with LASSO and GA has been proposed for the differential diagnosis between VaD and AD.
+To our knowledge, this study is a unique combination of structural MRI biomarkers and machine learning for the differentiation of VaD vs. AD not used before.
+Abrigo et al.
+The present result indicates that the symmetry differences and volume differences of hippocampus, amygdala, accumbens nucleus, and pallidum could have potential to differentiate VaD from AD
+We found that the involvement of brain regions is a relevant association between the volumetric change or atrophy identified in AD vs. VaD and that identified in AD vs.
+MCI
+Because VaD is one of the main categories of senile dementia, the brain structure changes in the patients with VaD are similar to those with AD, which is in accordance with our current findings.
+Cuingnet et al.
+Our study indicates that the structural MRI measurements could be considered as core biomarkers for the differentiation of not only MCI vs. AD but also VaD vs. AD, combined with other researches
+It is manifested that the volumetric MRI studies of cerebral areas related with learning and memory such as hippocampus, amygdala, and accumbens nucleus are associated with neurodegeneration and shown to be sensitive to dementia severity
+The hippocampus is the top-ranked effective indicator for differential diagnosis, which is in agreement with a previous study on the correlation between hippocampal volume and severity degree of dementia
+Tondelli et al.
+However, it seems possible to detect a similar distribution of brain atrophy accompanied by cognitive disorder caused by alternative VaD or AD.
+This could potentially explain why many VaD patients were misdiagnosed as AD subjectively by young physicians in the clinic.
+VaD could be easily confused with AD, especially in the early stages
+It is believed that the combination of such diverse structural MRI biomarkers containing more of the information in MR scanning contributes to an accurate differentiation between VaD and AD, in comparison with a single biomarker.
+Machine learning algorithms have been validated to overcome this obstacle.
+SVM outperforms all other classification methods such as KNN, LR, decision-making trees, and RF in small-sample research.
+Our results point in the same direction, since the input measures used are very small datasets.
+In our experiment, the diagnostic performance of SVM classifier is superior to that of the other machine learning models.
+This is probably because SVM is trained based on a convex optimization problem so as to obtain a global optimum solution
+Compared with RF, it is more likely to model more functions with the kernel-based method and reach an optimal separating structure in a small sample training set as well as avoiding suffering from local minimum mistakes and overfitting.
+In addition, KNN tends to perform very well with a lot of data points and RF is inherently suited for multiclass problems, while SVM is intrinsically constructed for binary classification, and the latter is more suitable to the task of this study.
+Compared with LR, SVM minimizes hinge loss while LR minimizes logistic  loss.
+This makes LR more sensitive to outliers because logistic loss diverges quicker than hinge loss.
+Besides, even though the data are distinguished sufficiently confidently, logistic loss does not reach zero.
+This might give rise to minor degradation in accuracy.
+The factors mentioned above support the fact that SVM outperforms the other classifiers in our study.
+Some limitations in this study should be considered.
+First, our study only involved single-center data, and the small sample set was used, especially for VaD data.
+Transfer learning is an alternative method for the problem of lack of data
+It is regarded as the use of a pre-trained model as a feature extractor, and then training and testing the classifier using the features that can be derived from fine-tuning the pre-trained model using source data.
+This will take the place of AccuBrain software as feature extractor.
+However, one of the purposes of the present study is to confirm that the AccuBrain software could effectively and reliably provide volumetric measurements of structural MRI as independent indicators, which helps to quantify the architectural differences and facilitates computeraided diagnosis between AD and VaD.
+So, for this purpose, we did not consider using transfer learning in this study.
+Nevertheless, further expanding samples and launching multi-center studies in future work, transfer learning could be the best choice.
+Second, only the indicators from structural MRI are used.
+Next, a larger number of datasets including multi-center data could be applied to extend our study by combining other MRI-based biomarkers, such as functional parameters (DTI metrics), radiomics features, and brain connectome, which target subtler information.
+We have reasons to believe that the combination of structural MRI-based volumetric measurements and other markers would improve the degree to which structural features are sensitive to differentiation between VaD and AD.
+
+
+
+FIGURE 1 |
+FIGURE 1 | The pipeline of proposed framework for the distinction of VaD vs. AD.
+
+
+ClassifiersParameter setting KNN 20 different values of number of neighbors range from 2 to 21 LR Penalty: L1, Tol = 0.0001, C = 1.0,
+Max_ iteration = 500 RF Ntree = {100, 200, 300, 400, 500}, Mtr = [2:2:50] SVM Population_size = 50, Iteration = 1,000, Pc = [0.4,
+0.99], Pm = [0.0001,
+0.1], Kernel parameter = {10 -2 , 10 -1 , 10, 10 2 } KNN, K-nearest neighbor; LR, logistic regression; RF, random forest; SVM, support vector machine.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Structure of the nested 10-fold cross-validation for evaluating the performance of machine learning models.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Plot of coefficients-lambda obtained by LASSO.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Model performance presentation.
+(A) ROC curves for different machine learning models and (B) performance comparison for SVM with linear and radial base function (RBF) kernels on the raw and optimized datasets.
+
+
+
+TABLE 1 |
+Demographic information.
+
+
+
+TABLE 2 |
+The implementation details of the different classifiers.
+
+
+
+TABLE 3 |
+The structural MRI features with statistical differences between patients with VaD and AD.
+
+
+
+Table 4
+
+
+
+TABLE 4 |
+The result of different machine learning models in training, verification, and test set.
+
+
+
+TABLE 5 |
+The confusion matrix of SVM model in a single experiment.

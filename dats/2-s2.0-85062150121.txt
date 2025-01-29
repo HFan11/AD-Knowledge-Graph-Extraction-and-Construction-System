@@ -1,0 +1,281 @@
+Connectome-wide network analysis of white matter connectivity in Alzheimer's disease
+A multivariate analytical strategy may pinpoint the structural connectivity patterns associated with Alzheimer's disease (AD) pathology in connectome-wide association studies.
+Diffusion magnetic resonance imaging data from 161 participants including subjects with healthy controls, AD, stable and converting mild cognitive impairment, were selected for group-wise comparisons.
+A multivariate distance matrix regression (MDMR) analysis was performed to detect abnormality in brain structural network along with disease progression.
+Based on the seed regions returned by the MDMR analysis, supervised learning was applied to evaluate the disease predictive performance.
+Nine brain regions, including the left orbital part of superior and middle frontal gyrus, the bilateral supplementary motor area, the bilateral insula, the left hippocampus, the left putamen, and the left thalamus demonstrated extremely significant structural pattern changes along with the progression of AD.
+The disease classification was more efficient when based on the key connectivity related to these seed regions than when based on whole-brain structural connectivity.
+MDMR analysis reveals brain network reorganization caused by AD pathology.
+The key structural connectivity detected in this study exhibits promising distinguishing capability to predict prodromal AD patients.
+
+Introduction
+Alzheimer's disease (AD) is a leading cause of dementia, causing progressive loss of memory and cognition and affecting 46.8 million people globally
+The amyloid cascade hypothesis
+Since these pathological hallmarks can appear years before the onset of evident symptoms, it is now accepted that therapeutic interventions targeted at the preclinical or prodromal stage of AD may delay the disease progression
+Mild cognitive impairment (MCI) has been widely considered as a prodromal phase of AD, with an annual conversion rate to AD of about 8-15%
+Various neuroimaging techniques allow more accurate prediction of this conversion, indicating a great potential to evaluate AD risk at an early stage
+Unfortunately, extensive treatment strategies to removing or modify amyloid-β peptides have failed to restore the cognition of AD patients
+A growing understanding of neural circuit dysfunction in AD suggests that long-range network dysfunction plays a key role in memory loss and cognition impairment in AD patients
+Similar to converging evidence demonstrating
+Received 6 October 2018; Received in revised form 4 January 2019; Accepted 25 January 2019 the vulnerability of brain functional connectivity in AD using functional magnetic resonance imaging (fMRI)
+Additionally, tractography technique on diffusion MR images enables researchers to investigate individual brain structural network in vivo
+Given that many of these studies focusing on brain structural networks have utilized seed-based or network-based approaches with nodes defined a priori, we aim to perform connectome-wide association (CWAS) studies in a data-driven manner, to avoid potentially biased assumptions in understanding of how the underlying neuroanatomy is altered due to AD.
+An intuitive analytical approach in data-driven CWAS studies is mass univariate testing on an individual basis.
+However, this approach may not offer sufficient statistical power when every connection comprising the network is tested independently
+When research of interests is associated with global network properties, two main strategies in CWAS studies have been proposed to quantify structural networks as a continuum: dimensionality reduction and graph analysis.
+In the first, key components can be selected from an individual network matrix by different approaches, including principle component analysis
+In the second, high-level graph metrics, such as small-world, nodal degree, and clustering coefficient, can be derived
+Previous tractography studies using graph theory have reported abnormalities among MCI and AD populations in several brain areas, including the frontal
+While both strategies have reported abnormalities in structural networks in AD
+In particular, dimensionality reduction approaches are not fully exploratory because substantial information is lost by data reduction, and graph metrics are not specific to any one graph (e.g.
+different graphs can have identical network centrality).
+In contrast, exploratory multivariate analysis can complement graph theory for more detailed characterization of connectome variations without sacrificing connectome dimension, thus showing more promising for discovering the substrate of the specific structural connectivity patterns associated with AD pathology.
+In this study, we sought to examine the unique pattern alterations in WM structural connectivity networks during the progression of AD.
+Multivariate distance matrix regression (MDMR) proposed by
+This datadriven statistical approach has been recently employed to examine the overall pattern of functional or grey matter structural connectivity associated with various clinical phenotypes, such as anhedonia
+Inspired by this statistical framework, we applied MDMR to compare WM structural connectivity patterns among cognitively normal (CN) subjects, stable MCI (sMCI), MCI converting to AD (cMCI) patients, and AD patients.
+The connectome reorganization in AD progression (especially in early phase) identified by MDMR may allow for effective risk prediction of AD, as well as aid clinicians to develop a precise intervention for disconnected neural circuits.
+
+Materials and methods
+
+Study cohort
+The current study obtained MR images from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database, where participants were recruited from over 50 institutions across U.S. and Canada.
+Currently, around 1500 adults have been recruited in different ADNI initiatives, ages 55 to 90 years.
+The follow-up duration for all participants is specified in the protocols for ADNI-1, ADNI-2 and ADNI-GO (further information in www.adni-info.org).
+In this cross-sectional study, we select subjects according to the label that is available for each subject for most of the visits: CN (cognitively normal), MCI and dementia from ADNI-2 dataset.
+After the initial search from ADNIMerge file (
+Then 29 subjects were excluded for a nonmonotone diagnosis, for example converting from MCI to dementia to MCI again.
+38 subjects were further excluded for those where the last visit has no diagnosis available, as these subjects are considered unclear to belong to either the cMCI or the sMCI group.
+15 subjects were removed for high levels of MR artifacts due to head-motion or magnetic susceptibility distortion.
+Explicitly, the failed quality measures due to head-motion were detected using an automated inspection tool DTIprep
+A final subject sample of 161 participants was analyzed, including three groups that were matched for age and sex: 46 in CN, 48 in sMCI, 27 in cMCI, and 40 in AD.
+All participants had provided informed written consent before recruitment and filled out questionnaires approved by the respective Institutional Review Board (IRB).
+
+Image acquisition, pre-processing and tractography
+MR scanning of all subjects in this study followed the ADNI acquisition protocol (
+Diffusion weighted images from axial DTI scans and T1 weighted (T1W) images from sagittal inversion recovery-prepared spoiled gradient-echo scans were collected.
+DTI images were acquired with the following parameters: 59 slices with thickness of 2.7 mm with no gap between slices, repetition time/echo time = 9 s/60 ms, 256 × 256 matrix with a field of view of 35 cm, and flip angle = 90.
+Forty-one diffusion weighted images (b = 1000 s/mm 2 ) with noncollinear directions and one volume without diffusion weighting (b = 0 s/mm 2 ) were obtained.
+Pre-processing of diffusion weighted images included image denoising
+All pre-processing steps were performed within MRtrix3 (www.mrtrix.org),
+which included scripts that interfaced with external packages such as the FSL (
+After pre-processing, 4D diffusion weighted images were applied to estimate the diffusion tensor model for each voxel by a probabilistic fiber tracking algorithm
+Specifically, 10,000 seeds were randomly distributed with a brain mask with fractional anisotropy (FA) values > 0.1, and streamlines that were tracked with a step size of 0.1 × voxel size along the orientation of the principle eigenvector of the fitted tensor from each seed were terminated by the default configuration in MRtrix3 (curvature threshold = 0.02, 2000 steps maximum).
+It has been well recognized that deterministic tractography
+The probabilistic approach was used here because it shows higher anatomical reproducibility than the deterministic approach in terms of connectivity calculation
+
+Definition of WM structural networks
+Following the tractography steps, we co-registered the FA images derived from the 4D diffusion weighted images to their corresponding T1W images by affine transformation.
+Based on the next non-linear registration from native T1W images to the ICBM152 template, we obtained an inverse warping transformation from the Automated Anatomical Labeling (AAL) atlas
+Therefore 90 brain regions not including the cerebellum were defined as WM structural network nodes, following the labels of the AAL atlas.
+The construction of edges within a structural network, namely the brain WM connectivity, depends on the tractography performed before
+A 5% density threshold was applied to retain the strong edge (95th percentile) weights for the connectivity matrix of each subject.
+We further defined the edge weight by the number of connections per unit surface between the end-nodes using a correction term of edge length, as first introduced by
+Here, the strength of structural connectivity is better represented as the probability of a given brain region to be connected with another, rather than the strength of the underlying physiological WM fibers in neuronal pathways.
+In this way, a 90 × 90 symmetric connectivity matrix was obtained for each subject.
+
+Multivariate distance matrix regression
+To more comprehensively characterize the altered connectivity pattern caused by AD, advanced statistical methods should be applied.
+Recently, the multivariate distance matrix regression proposed by
+In brief, the connectivity patterns between subjects, rather than individual local connections, were modeled as a marker of disease progression.
+We describe MDMR implementation in detail below.
+We applied MDMR to test the variation of distance in connectivity patterns between groups.
+First, a distance matrix in the subject space was calculated for each region.
+Within each distance matrix, the distance between connectivity patterns for every possible subject pair among all groups related to region i was calculated by
+where r uv is the Pearson correlation coefficient between connectivity vectors of subject u and v.
+Here the connectivity vector of one subject refers to the connection of the given brain region to the rest 89 regions.
+Next, we performed MDMR to yield a pseudo-F estimator for the crossgroup analysis, by measuring the significance of between-group variation as compared to within-group variations
+Specifically, the total sum of squares for region i was calculated by
+with n = n 1 + n 2 being the total number of subjects in the case of two groups.
+Likewise, the within-group sum of squares was represented by
+where n 1 and n 2 denote the number of the first and second group respectively, ε uv a equals 1 if subjects u and v belong to the first group and zero otherwise, and similarly ε uv b equals 1 if subjects u and v belong to the second group and zero otherwise.
+Given the between-group variation denoted by
+, we could calculate the pseudo-F statistic by
+By randomly shuffling the subject indices, a p value was calculated by counting the pseudo-F statistics from permutated values greater than those derived from the original data.
+Age, sex and APOE-4 level were incorporated in this model as covariates.
+Finally, the same procedure was repeated for i = 1, 2, • • • , 90 brain regions defined in the AAL atlas.
+The false discovery rate correction was applied to control for type I errors due to 90 comparisons.
+The workflow of MDMR analysis is shown in Fig.
+We performed MDMR for both the two-group (CN vs. sMCI, CN vs. cMCI and CN vs. AD) and three-group (CN, cMCI and AD) comparisons.
+
+Post-hoc analysis
+While the overall connectivity pattern of a single node of the wholebrain network associated with AD progression can be identified by MDMR, it is often a substantive interest to describe which specific connectivity pattern is primarily driving this association.
+Recently the δ statistic was proposed to measure the univariate effect size on a particular response variable by a randomization procedure [see
+For the post-hoc analysis, we used this statistic to identify the top five connected network nodes with the greatest effect size for each seed region returned by MDMR on the three-group comparison and examined the alteration in the connectivity pattern in those five pairwise connections for each seed region.
+Note that this post-hoc analysis subsequent to MDMR was conducted descriptively, as the seed regions were selected based on the significance (p < .001)
+from the MDMR results.
+
+Group-wise comparison of the overall connectivity strength
+To examine whether the amplitude of the structural connectivity related to local regions was altered, we compared the overall connectivity strength of each node, i.e., the sum of the absolute value over all entries of the connectivity matrix for each individual, from the same seed regions returned by MDMR analysis.
+A general linear model was employed to compare the overall connectivity strength between groups, using the same covariates as those listed above in MDMR analysis.
+A post-hoc permutation test was further performed to evaluate the difference between each two-group pairs.
+A p-value of 0.05 was set as the threshold to determine significance.
+
+Classification based on structural connectivity
+In order to measure the predictive performance of the key structural connectivity revealed by MDMR and post-hoc analysis, we further use a supervised learning algorithm to predict the cMCI and AD patients based on all the connectivity features with the greatest effect size.
+Partial least squares discrimination analysis (PLS-DA) was selected as the classifier here to reduce chances of overfitting.
+PLS-DA is the least restrictive extension of the multiple linear regression model, thus can increase the potential for generalization of the results and be of direct importance for clinical guidance.
+Our subject samples were randomly divided into training set (n = 129) and test set (n = 32).
+To reduce the variability in the classification results from the random partition of the subject samples, we repeated this procedure for five times.
+The structural connectivity with the greatest effect size in the post-hoc analysis based on the training set were selected as features for learning.
+The initial hyperparameters were determined using default settings in R's caret package, and then model tuning was performed to construct the final model.
+We performed binary classification for the two-group pairs (i.e.
+CN vs. cMCI, CN vs. AD) and five-fold cross validation within the training set to ensure generalization.
+Additionally, we tested the predictive performance of the full connectivity of the brain (90 × 89/2 = 4005 pairs) for comparison, with statistical inferential assessments of model performance using diff.resamples
+function in R's caret package
+The classification performance was evaluated by sensitivity, specificity, and Receiver Operating Characteristic (ROC) curve on the test set, and Area Under Curve (AUC) of ROC was also calculated.
+All statistical analyses and classifications in our study were performed in R (
+
+Results
+
+Demographic and clinical information
+Table
+No significant differences in age (p = .62),
+sex (p = .31),
+or education (p = .20)
+were present among subject groups.
+Montreal Cognitive Assessment (MoCa) scales, Rey Auditory Verbal Learning Test (RAVLT) scales and Everyday Cognition in different domains, which are cognitive functions questionnaire filled out by patients (EcogPt) significantly decreased from CN to MCI stage to AD stage (p ≤ 0.001).
+Cerebrospinal fluid biomarkers including Aβ 1-42 and tau level at baseline, as well as ApoE-4 genetic phenotypes also showed significant variations among the four subject groups.
+
+Brain regions with altered connectivity
+The results returned by MDMR analysis are included in Table
+In brief, only one brain region (i.e. the right medial orbital part of superior frontal gyrus) was observed with significant difference in terms of connectivity patterns between the CN and sMCI groups.
+13 brain regions mainly including frontal, temporal lobes, limbic areas and basal ganglia structures were observed with significantly different connectivity patterns between the CN and cMCI groups.
+As the disease progressed, significantly different connectivity patterns were found in 33 brain regions between the CN and AD group.
+The full names of all AAL brain region abbreviation are listed in Supplemental Table
+1.4 ± 0.4 1.9 ± 1.7 1.8 ± 0.6 1.9 ± 0.8 6.70 a < 0.001 EcogPt visuospatial abilities 1.2 ± 0.4 1.4 ± 0.6 1.6 ± 0.7 1.9 ± 0.8 10.06 a < 0.001 EcogPt planning 1.2 ± 0.4 1.4 ± 0.5 1.5 ± 0.6 1.9 ± 0.9 9.35 a < 0.001 EcogPt divided attention 1.5 ± 0.5 1.9 ± 0.8 2.0 ± 0.8 2.1 ± 0.9 a F statistic obtained by using one-way analysis of variance.
+b χ 2 statistic obtained using the χ 2 test.
+
+Connectivity patterns for seed regions
+From the three-group comparisons based on MDMR analysis, nine seed regions showed significant structural pattern changes were adopted as seed regions for further analysis, including the left orbital part of superior and middle frontal gyrus, the bilateral supplementary motor area, the bilateral insula, the left hippocampus, the left putamen, and the left thalamus (p < .001,
+Supplemental Table
+The comprehensive connectivity patterns for all seed regions identified from the post-hoc analysis are qualitatively demonstrated in Fig.
+All network nodes defined in AAL are shown, where some seed regions are represented in red and others in blue.
+The edges with top five greatest connectivity strength for each seed region are displayed in black.
+We further applied radar charts to quantitatively characterize the connectivity patterns for those seed regions (Fig.
+The progressive decline of single structural connectivity strength along with the progression of AD was observed particularly in pairs between the left putamen and the left orbital part of middle frontal gyrus and pairs between the left hippocampus and middle temporal pole.
+Although the areas within the pentagon in the radar chart for the CN group appeared generally larger than in the AD and cMCI groups, the shapes at different disease stages evolved irregularly, especially for connectivity patterns relating to the left thalamus.
+When comparing the overall connectivity strength of the nine seed regions between groups, we found four regions showing significantly decreased amplitude in patient groups, including the left orbital part of superior frontal gyrus (p = .008
+for cMCI vs. CN; Fig.
+for AD vs. CN and cMCI vs. CN; Fig.
+for AD vs. CN, and p = .023
+for cMCI vs. CN; Fig.
+for AD vs. CN, and p = .032
+for cMCI vs. CN; Fig.
+
+Classification performance
+The two-group PLS-DA classification performance based on the structural connectivity (CN vs. cMCI and CN vs. AD) is demonstrated in Table
+In brief, the prediction of cMCI individuals from the CN group exhibited the most accurate performance (AUC = 0.862 for key structural connectivity) among all combinations.
+Furthermore, the prediction of cMCI individuals from the CN group based on the key structural connectivity returned from MDMR analysis achieved significantly better performance than the full structural connectivity in the whole brain (p = .045
+for sensitivity and p = .042
+for AUC).
+
+Discussion
+This study aimed to identify pattern changes in brain structural connectivity caused by AD pathology.
+For this purpose, we employed DTI tractography to establish individual-based connectivity networks in CN, sMCI, cMCI, and AD groups and applied MDMR with post-hoc analysis to detect network abnormalities between different phases of disease severity in a comprehensive way.
+The multi-variate data-driven analytical framework employed in this study included no a priori knowledge for seed nodes, while demonstrated capability to efficiently detect the local connection that mostly contributing to the abnormal topology of the brain network.
+This approach improves our understanding of the association between brain structural connectivity and AD progression in several ways: 1) extensive disruption of structural connectivity occurs in both prodromal and clinical stage of AD; 2) despite the contribution of amplitude changes, the connectivity pattern alteration implies potential roles for the complex circuit dysfunction underlying AD pathophysiology; and 3) several key structural disrupted connections demonstrate a promising distinguishing capability for predicting MCI individual converting to AD.
+Taken together, these findings delineate the extensive reorganization of brain structural connectivity across clinical diagnostic categories.
+Detecting abnormal connectivity patterns of structural brain networks is a central aim of MDMR analysis.
+We first revealed abnormalities during the conversion from CN to cMCI stage in 13 brain regions encompassing the default mode network (DMN), including the superior temporal pole and hippocampus; the sensory-motor network, including supplementary motor areas; the orbitofrontal cortex, the insula, and the striatum.
+Our findings are consistent with the reported dysregulation of multiple functional networks in prodromal and clinical AD patients using fMRI techniques
+Given that a strong correlation between structural and functional connectivity has been recently verified in brain networks, including the DMN, the identified structural disconnection revealed by MDMR analysis may reflect the underlying connectivity changes induced by functional disorders.
+In contrast to these 13 regions showing significant network pattern difference between cMCI and CN groups, only one region with significant difference was observed between sMCI and CN groups, indicating potential to distinguish different disease trajectories in early stage.
+Additionally, the disconnection pattern was more extensive between CN and AD subjects, highlighting the remarkable disruption of structural networks in the clinical stage of AD.
+The identified 33 regions, widely distributed in frontal, temporal, occipital, and limbic areas, with significant connectivity differences between CN and AD subjects, are largely consistent with those reported in a number of previous studies
+We speculate that these disconnection patterns may explain the worsening of several cognitive functions, including episodic memory
+The follow-up analysis subsequent to MDMR explicitly described which specific patterns of structural connectivity were responsible for the significant results.
+Notably, we found that the intrinsic connectivity patterns among the nine seed regions with structural connectivity alterations vary differently as AD pathology progresses.
+For the bilateral supplementary motor area and left insula, the major pattern changes caused by AD were reflected as a progressive connectivity decline along with some specific axes in the radar chart, while the connectivity strength along with other axes generally remained integral.
+In particular, the connectivity between the bilateral supplementary motor area in cMCI and AD subjects exhibited reduced strength, consistent with the overall connectivity decline.
+The overlapping connectivity abnormalities between amplitude and pattern analysis is mainly associated with the well-known impairment of movement blindness
+Moreover, this finding may reflect the impaired underlying commissural fibers in AD progression, as supported by numerous DTI studies focusing on the disrupted integrity of the corpus callosum in MCI and AD patients
+The remarkable connectivity reduction between the insula and the orbital part of inferior frontal gyrus in the left hemisphere is congruent with previous studies reporting that the insular cortex undergoes substantial pathological changes in AD
+Since the insula plays a key role in multiple regulatory mechanisms, its disconnection could be associated with autonomic dysfunction, which could trigger the leading causes of death in AD patients, including cardiac failure and bronchopneumonia
+Furthermore, the frontoinsular cortex, as one of the integral hubs in the salience network, is involved in attentional processing and cognitive control
+Thus, the observed disconnection between the left insula and the inferior frontal gyrus provides more evidence to the theory that the structural impairment of the salience network emerges in AD progression
+We also found similarly diminished connectivity between the left hippocampal formation and temporal pole.
+The connected brain regions with the greatest effect size contributing to pattern alterations along with AD progression were basically areas strongly connected to the hippocampus anatomically, including limbic (amygdala, parahippocampus, fusiform) and paralimbic structures (temporal pole).
+Regions distributed in the limbic-temporal module were also reported to show altered structural connectivity in both late MCI and AD patients
+Considerable reductions in metabolic glucose
+While the mechanism underlying the occurrence of both decreased connectivity and the paradoxical slight increase within the limbic network, e.g. in the hippocampal-thalamic connectivity, remains an open question, the disruption of the Papez circuit
+Therefore, we speculate that this structural reorganization of the limbic network may account for the memory deficits observed among cMCI and AD patients.
+In addition, the overall reduced connectivity related to the orbitofrontal cortex in cMCI and AD patients indicates an important role for this region in AD progression.
+This observation is largely congruent with prior studies reporting that orbitofrontal cortex can be damaged conspicuously by neurofibrillary tangle (NFT) pathology in prodromal AD
+Regarding the left thalamus, the right insula, and the left putamen, the occurrence of both decreased and paradoxically increased connectivity within each nodal network across diagnostic categories highlights the irregular connectivity patterns developing with AD progression.
+In contrast, the aberrantly increased connectivity between the bilateral thalamus pair, Fig.
+Nine nodes with significant differences in connectivity patterns in the three-group comparison were selected for the post-hoc analysis.
+For each seed region returned by MDMR, the top five connections with the greatest effect size are represented as axes in the radar chart.
+ORBsup: orbital part of superior frontal gyrus; ORBmid: orbital part of middle frontal gyrus; SMA: supplementary motor area; INS: insula; HIP: hippocampus; PUT: putamen; THA: thalamus; L, left; R, right.
+the left putamen and the supplementary motor area pair and the right insula and the superior parietal cortex pair in patients is difficult to interpret, and caution is needed to avoid ambiguity regarding the interpretability of these structural connections.
+Since the magnitude of structural connectivity strength can be influenced by several physiological and methodological factors
+The individual classification in cMCI groups based on the connectivity features returned from the MDMR exhibited significantly better discriminative performance than the full whole-brain connectivity (p = .045
+for sensitivity and p = .042
+for AUC), suggesting the power of connectivity features identified by MDMR to characterize the prodromal AD category.
+These structural connectivity features and the corresponding topological alterations found in our study may yield insights into neural circuit-damaging processes before onset of evident symptoms.
+Although the pathological mechanism of AD remains unclear, emerging evidence from CWAS studies shift the etiological focus of AD from a single-target to an integrated outlook, which highlights the disruption of neural circuits
+Recent studies suggest that the progressive aggregation of amyloid-β peptides and tau levels may be induced by local circuit dysfunction in brain networks, further contributing to the subsequent abnormal activity of downstream targets
+As the amyloid plaques and NFT propagate with the aberrant structural connectivity, brain network reorganization could explain the cognitive decline.
+Another important finding of our study is the fair classification performance (AUC = 0.862) achieved on prodromal patients using supervised learning, which indicates the promising predictive ability of AD conversion for the individual at risk.
+Although the sensitivity is not remarkably high, the identified abnormal connectivity patterns during disease progression will facilitate potential interventions to alter disease trajectory or restore memory and cognition in early AD patients.
+The multi-variate analytical approach performed in this study seems an idea data-driven strategy to localize the pattern changes of an individual brain region in a brain network associated with disease progression.
+The mass-univariate statistical models utilized in brain network studies have suffered from less reproducibility of significantly disrupted connectivity, increasing the risk of exaggerated scientific results
+Furthermore, the mass-univariate statistical approaches tend to ignore concurrent contributions from all entries within a connectivity matrix
+Therefore, the multi-variate nature of MDMR allows to overcome the drawbacks above in CWAS studies.
+To the best of our knowledge, only one study has investigated the AD progression in diffusion-tensor brain network consisting of 20 modules by MDMR
+In contrast, our study explicitly illustrated the anatomical brain structures with altered connectivity in a finer manner, and evaluated the predictive performance of the connectivity returned from MDMR.
+Several limitations of this study should be noted.
+First, the optimal tractography method to sensitively detect AD effects on structural networks remains a controversial issue.
+The two main tractography approaches (e.g.
+deterministic and probabilistic) have their own respective merits; the deterministic approach is advantageous for tracking long fiber tracts, while the probabilistic approach exhibits more reliable performance
+A recent study comparing nine different tractography algorithms to detect network abnormalities caused by AD also indicated no universally optimal methods
+In this study, the probabilistic approach was selected to construct the structural networks for two reasons: 1) the probabilistic approach has been reported as more effective against fiber-crossing issues
+Second, as discussed above, the biological interpretability of structural connectivity is challenging.
+Novel techniques on diffusion MR data, such as pixel-based analysis, offering greater anatomical specificity, can possibly explain whether the degeneration of WM tracts in AD patients is mainly due to axonal loss or demyelination
+Thirdly, while the motivation of this study was to distinguish structural connectivity abnormalities in cMCI and AD patients, future work is undoubtedly necessary to probe the association between network changes and specific clinical manifestations.
+Finally, the cross-sectional dataset with a small sample size employed in our study may bias the MDMR results.
+Longitudinal investigations on bigger cohorts will be helpful to validate our connectivity results.
+
+Table 3
+The classification performance comparison between features from whole-brain connectivity and key connectivity from three-group MDMR analysis.
+This study stresses the value of implementing MDMR to investigate the topological properties of structural networks on an individual basis.
+While sMCI patients do not exhibit global connectivity alterations, an extensive reorganization of structural networks among cMCI and AD patients occurs in a number of cortico-subcortical regions.
+The aberrant pattern of structural connectivity is consistent with circuit dysfunction and functional connectivity damage reported in previous studies and supports current theories on brain network disruptions caused by AD.
+The impaired key structural connections that we identified demonstrate the promising distinguishing capability of MDMR to predict prodromal AD patients.
+
+Disclosures
+The authors report no biomedical financial interests or potential conflicts of interest.
+The data contained in the manuscript being submitted have not been previously published, have not been submitted elsewhere and will not be submitted elsewhere while under consideration at Neurobiology of Aging.
+All authors have reviewed the contents of the manuscript being submitted, approve of its contents and validate the accuracy of the data.
+
+
+
+Fig. 1 .
+Fig. 1.
+Schematic flowchart of multivariate distance matrix regression analysis based on tractography of diffusion tensor images and parcellation of 3D T1-weighted (T1W) images.
+DWI: Diffusion weighted imaging; AAL, automated anatomical labeling; FDR, false discovery rate.
+
+
+
+Fig. 2 .
+Fig. 2. Comprehensive connectivity patterns for all seed regions identified by the post-hoc analysis.
+All network nodes defined in the Automated Anatomical Labeling atlas are shown, where some seed regions are represented in red and others in blue.
+The edges with top five greatest connectivity strength for each seed region are displayed in black.
+ORBsup: orbital part of superior frontal gyrus; ORBmid: orbital part of middle frontal gyrus; SMA: supplementary motor area; INS: insula; HIP: hippocampus; PUT: putamen; THA: thalamus; L, left; R, right.
+
+
+
+Fig. 4 .
+Fig. 4. Comparison of the overall connectivity strength between groups.
+*, p < .05. **, p < .01. ***, p < .001.
+ORBsup: orbital part of superior frontal gyrus; ORBmid: orbital part of middle frontal gyrus; SMA: supplementary motor area; INS: insula; HIP: hippocampus; PUT: putamen; THA: thalamus; L, left; R, right.
+
+
+
+Table 1
+Demographic and clinical information across groups.
+
+
+
+Table 2
+Brain regions with significantly altered connectivity patterns returned from two-group MDMR analysis.

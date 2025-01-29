@@ -1,0 +1,355 @@
+Cyclic multiplex fluorescent immunohistochemistry and machine learning reveal distinct states of astrocytes and microglia in normal aging and Alzheimer’s disease
+Background: Astrocytes and microglia react to Aβ plaques, neurofibrillary tangles, and neurodegeneration in the Alzheimer's disease (AD) brain.
+Single-nuclei and single-cell RNA-seq have revealed multiple states or subpopulations of these glial cells but lack spatial information.
+We have developed a methodology of cyclic multiplex fluorescent immunohistochemistry on human postmortem brains and image analysis that enables a comprehensive morphological quantitative characterization of astrocytes and microglia in the context of their spatial relationships with plaques and tangles.
+Methods: Single FFPE sections from the temporal association cortex of control and AD subjects were subjected to 8 cycles of multiplex fluorescent immunohistochemistry, including 7 astroglial, 6 microglial, 1 neuronal, Aβ, and phospho-tau markers.
+Our analysis pipeline consisted of: (1) image alignment across cycles; (2) background subtraction; (3) manual annotation of 5172 ALDH1L1+ astrocytic and 6226 IBA1+ microglial profiles; (4) local thresholding and segmentation of profiles; (5) machine learning on marker intensity data; and (6) deep learning on image features.
+Results: Spectral clustering identified three phenotypes of astrocytes and microglia, which we termed "homeostatic, " "intermediate, " and "reactive.
+" Reactive and, to a lesser extent, intermediate astrocytes and microglia were closely associated with AD pathology (≤ 50 µm).
+Compared to homeostatic, reactive astrocytes contained substantially higher GFAP and YKL-40, modestly elevated vimentin and TSPO as well as EAAT1, and reduced GS.
+Intermediate astrocytes had markedly increased EAAT2, moderately increased GS, and intermediate GFAP and YKL-40 levels.
+Relative to homeostatic, reactive microglia showed increased expression of all markers (CD68, ferritin, MHC2, TMEM119, TSPO), whereas intermediate microglia exhibited increased ferritin and TMEM119 as well as intermediate CD68 levels.
+Machine learning models applied on either high-plex signal intensity data (gradient boosting machines) or directly on image features (convolutional neural networks) accurately discriminated control vs. AD diagnoses at the single-cell level.
+Conclusions: Cyclic multiplex fluorescent immunohistochemistry combined with machine learning models holds promise to advance our understanding of the complexity and heterogeneity of glial responses as well as inform
+
+Background
+Reactive astrocytes and microglia are prominent features of the Alzheimer's disease (AD) brain landscape, typically decorate dense-core neuritic amyloid-β (Aβ) plaques throughout the cortex, and represent a phenotypic change of existing homeostatic glial cells rather than proliferation of glial progenitors
+Reactive astrocytes have traditionally been depicted with immunohistochemistry for glial fibrillary acidic protein (GFAP), whereas reactive microglia have often been demonstrated with cluster differentiation 68 (CD68) or major histocompatibility complex II (MHC2, also known as HLA-DP-DQ-DR), but this classic approach obviates the complexity and heterogeneity of the changes that these glial cell types undergo in the vicinity of Aβ plaques and neurofibrillary tangles (NFTs)
+Although this complexity is currently emerging with the advent of singlenuclei and single-cell RNA sequencing (snRNA-seq and scRNA-seq)
+While the spatial resolution of tissue-based spatial transcriptomics and proteomics techniques is rapidly improving
+In this study, we developed a novel protocol of cyclic multiplex fluorescent immunohistochemistry in formalin-fixed paraffin-embedded (FFPE) sections followed by a quantitative image analysis pipeline including machine learning, both of which allowed a thorough phenotyping of astrocytes and microglia in postmortem control (CTRL) and AD brains at single-cell resolution.
+Using this methodology, we tested the hypothesis that diverse astrocytic and microglial phenotypes populate the cerebral cortex of cognitively healthy and AD subjects, and that AD-associated glial reactions are heterogeneous.
+We identified at least three distinct phenotypes of both astrocytes and microglia, which we termed homeostatic, intermediate, and reactive, and that imply both functional gains and losses.
+We also demonstrate that reactive and, to a lesser extent, intermediate glial cells are spatially associated with AD pathological hallmarks.
+Finally, machine learning models classified astrocytes and microglia as CTRL vs. AD with high accuracy, suggesting that biomarker profiling of glia has diagnostic predictive value.
+
+Methods
+
+Brain specimens
+Eight-micron-thick FFPE sections from the temporal lobe pole of CTRL (n = 7, age [mean ± SD] 86.0 ± 2.5 years, sex 4M/3F) and AD (n = 7, 76.7 ± 11.2 years, 3M/4F) donors were obtained from the Massachusetts Alzheimer's Disease Research Center (MADRC) Brain Bank.
+AD subjects met the clinical and neuropathological criteria for AD with NIA-AA scores of A3B3C2 or A3B3C3
+Demographic, clinical, and pathological characteristics of these cases are described in Table
+All subjects or their next of kin had given written informed consent for the brain donation and the study was approved under the MADRC Brain Bank Institutional Review Board.
+The temporal pole was selected because the temporal association cortex in this region is an area of early and abundant Aβ plaque and NFT deposition in AD
+
+Cyclic multiplex fluorescent immunohistochemistry protocol
+We performed multiplex fluorescent immunohistochemistry in single FFPE sections by combining the Opal method
+Briefly, fluorescent immunohistochemistry was performed with primary antibodies and speciesappropriate fluorescently-labeled secondary antibodies in each cycle as usual, but each imaging session was followed by antibody denaturation (by heating sections in the microwave as in the Opal method) and fluorescence quenching (as in the t-CyCIF protocol).
+With this protocol, we assayed a total of 16 markers distributed across 8 cycles of immunohistochemistry, including 7 astrocytic markers (aldehyde dehydrogenase 1 L1 [ALDH1L1], glutamine synthetase [GS], the glutamate transporters excitatory amino acid transporter 1 [EAAT1, also known as GLAST-1] and excitatory amino acid transporter 2 [EAAT2, also known as GLT1], GFAP, vimentin
+Three distinct phenotypes emerged with our combination of markers, thus expanding the classic binary "homeostatic vs. reactive" classification to a third state, which could represent "transitional" or "resilient" glia.
+Keywords: Alzheimer's disease, Amyloid plaques, Astrocytes, Immunohistochemistry, Microglia, Neurofibrillary tangles, Neuropathology, Tau protein 119 [TMEM119], and the 18 kDa translocator protein [TSPO]), 1 neuronal marker (Hu-antigen C/D [HuC/D]), and Aβ and PHF1 (paired helical filament tau phosphorylated at Ser396 and Ser404) as markers of AD neuropathological changes (see Table
+Specifically, the protocol consisted of the following steps (Fig.
+11.
+Imaging: Sections were scanned in a VS120 Olympus microscope (Olympus, Tokyo, Japan).
+12. Removal of coverslips from sections by immersion in TBS with Tween20 0.05%.
+13.
+Antibody denaturation and stripping: Sections were microwaved again in boiling citrate buffer 0.01 M pH 6.0 with Tween20 0.05% at 95 °C for 20 min followed by cooling at 4 °C for ∼ 45 min.
+
+Fluorescent microscopy
+Sections were imaged on an Olympus VS120 virtual slide scanner with the 40× objective.
+To maintain consistency across sections, each marker was imaged at the same exposure time in all sections.
+The appropriate exposure times were decided based on pilot studies.
+
+Image alignment and segmentation
+Image segmentation was performed with the FIJI distribution of the open-source Java-based image analysis program ImageJ
+Unless otherwise indicated, all other computational and statistical analyses were performed in R (version 4.1.0).
+Our image segmentation pipeline consisted of the following steps (Fig.
+1. Cortical layer selection: The six cortical layers were identified using the HuC/D neuronal staining; then, full-width 1 mm-long rectangular sections were cropped from each cortical layer to new images using cellSens image analysis software (Olympus, Tokyo, Japan).
+Because layer I astrocytes, also called subpial or interlaminar astrocytes, are substantially different in morphology and function relative to those from deeper layers, only layers II to VI were included in the analysis.
+2. Image alignment across cycles: Layer-specific crops from all 8 cycles of immunohistochemistry (for a total of 17 channels: 16 primary antibodies plus DAPI) were aligned using the "Alignment module" of cellSens with the DAPI and GFAP images included in each round as reference.
+3. Image blinding: Image files were each assigned a random alphanumeric code so that subsequent steps in image segmentation were blind to diagnosis (CTRL vs. AD) and donor identity.
+4. Background subtraction: To minimize background differences across sections, we performed regional background subtraction in all images using the rolling ball algorithm in ImageJ with a radius of 200 pixels
+In this algorithm, a local background value is determined for every pixel by averaging over a large radius (i.e., 200 pixels) around the pixel, and this value is then subtracted from the original image to remove spatial variations in the background intensities
+ALDH1L1 and IBA1 were selected as constitutive markers of astrocytes and microglia because our prior stereology-based study in this same brain region showed no significant differences in the number of ALDH1L1+ astrocytes and IBA1+ microglial cells between CTRL and AD subjects
+ALDH1L1+ profiles consisted of astrocyte somas, including cell bodies and the stump of their primary branches, whereas IBA1+ profiles consisted of microglial cells (i.e., the cell body with all processes present) or processes (when the cell body was not visible).
+VIA annotations were subsequently parsed in R.
+
+Machine learning Spectral clustering
+To identify diverse phenotypes or states of astrocytes and microglia within our highly multiplexed data set at single-cell resolution, we applied spectral clustering on the normalized MGI z-scores using the SNFtool package in R
+Spectral clustering is a graph-based, unsupervised machine learning approach which performs dimensionality reduction and partitions the data into network clusters based on similarity.
+Specifically, after creating a pairwise similarity matrix (where local affinity was defined by the scaled exponential similarity kernel as described in
+By recovering network connectivity, spectral clustering often outperforms traditional clustering algorithms (e.g., k-means, hierarchical)
+The optimal number of clusters was assessed with two independent methods: (1) the eigengap heuristic, which is based on the connectivity of the network as judged by the ranked eigenvalues of the Laplacian matrix, and (2) rotation cost, which is based on the structure of the eigenvectors of the Laplacian matrix.
+Both approaches discarded n = 1 and n = 4 clusters, and subsequent visual inspection of the heatmaps favored n = 3 over n = 2 clusters as the best fit for both astrocyte and microglia MGI data (not shown).
+After clustering ALDH1L1+ astrocytes and IBA1+ microglia profiles separately, the normalized MGI z-scores of the profiles of the resulting clusters were visualized via heatmaps (where rows were scaled to compare the relative expression between markers) and box and whisker plots.
+
+Gradient boosting machine (GBM) models
+To determine whether the combinations of astrocytic or microglial markers discriminate between CTRL and AD diagnoses as well as the relative contribution of each marker to the CTRL vs. AD classification, we built stochastic gradient boosting machine (GBM) models using the caret and gbm packages in R
+GBM is a supervised machine learning method that constructs an ensemble of additive, shallow decision trees
+Briefly, the data set of MGI z-scores was partitioned by stratified random sampling into training/cross-validation (80%) and hold-out test (20%) sets.
+Then, the hyperparameters of each model (i.e., number of trees and interaction depth) were optimized using 10-fold cross-validation on the training set.
+Next, the model performance was evaluated on the hold-out test set at the accuracy-maximizing thresholds and 95% confidence intervals were estimated by bootstrapping across 500 iterations.
+Next, the astrocytic or microglial markers were ranked by their variable importance scores for the classification, which were obtained by computing the differences in prediction accuracy before and after permuting each predictor variable (i.e., each astrocytic or microglial marker), then summing the importance scores over each boosting iteration.
+Finally, analogous GBM models were constructed to discriminate between the glial states identified by spectral clustering (i.e., separate astrocytic or microglial profiles by phenotype rather than diagnosis) with the goal of determining the most relevant markers for this phenotypic classification.
+
+Convolutional neural networks (CNNs)
+Model architecture To investigate whether our highly multiplexed images of astrocytes and microglia can discriminate between CTRL and AD based not only on marker signal intensity (i.e., log-normalized MGI z-scores) but by all image features (e.g., pixel subcellular localization, cellular morphology, etc.), we designed deep learning models with convolutional neural networks (CNNs) using the PyTorch open-source deep learning library in the Python programming language (version 3.8.5)
+The 80/20 data partitions into training/test sets for the GBM models (see above) were also used for these CNNs.
+Each segmented profile was interpolated to 64 × 64 pixels and normalized by computing the channel-level z-score per image.
+For both astrocyte and microglia CNNs, the model architecture was similar.
+Briefly, we implemented four convolutional layers, each followed by the rectified linear activation unit (ReLU).
+The first three convolutional layers were each followed by max pooling to create a downsampled feature map, and then by a dropout layer for regularization.
+After the fourth convolutional layer, the feature vector was collapsed and passed to a fully connected neural network with three hidden layers.
+Finally, the softmax normalized exponential function was used to determine the classification probabilities.
+
+Hyperparameter optimization
+The cross-entropy loss function was used.
+Other model hyperparametersincluding the number of input and output channels, probabilities of each dropout layer, choice of optimizer (between Adam
+The Optuna optimizer maximized the out-of-sample area under the receiver operating characteristic (ROC) curve (AUC), which in turn was determined by 3-fold cross-validation using the scikit-learn cross-validator within the 80% training set for each Optuna trial (i.e., Bayesian meta-optimization)
+Early stopping was applied within each fold if the validation loss failed to decrease after 10 epochs
+After cross-validation, each model was retrained on the full training data set (within each Optuna trial).
+The astrocyte and microglia CNNs were both optimized for 100 or more trials, after which the best performing model (based on average cross-validation AUC) was selected.
+Models were trained on a GPU workstation with two NVIDIA Quadro RTX 8000 graphics cards.
+Model performance After model training, model performance was evaluated on the hold-out test set at the accuracy-maximizing thresholds and 95% confidence intervals were estimated by bootstrapping across 500 iterations.
+Both accuracy and AUC were computed as the primary outcomes reflecting the discriminatory power of the CNN between CTRL and AD astrocytes and microglia.
+Model performance was visualized via ROC curves, while the test set classification probabilities were visualized via histograms.
+Model interpretability To investigate how the CNN model makes its classification decision-namely, whether this decision could be ascribed to pixels in specific subcellular locations and/or specific markers of each astrocyte or microglia image-we applied attribution functions of the Captum library for model interpretability in PyTorch
+Specifically, saliency maps
+
+Interrogation of public single-nuclei RNA-seq-derived astrocytic and microglial subclusters
+To determine whether the markers selected for our cyclic multiplex fluorescent immunohistochemistry are relevant to discern between homeostatic and reactive states of astrocytes and microglia, we interrogated the astrocytic and microglial subclusters from three published snRNA-seq studies on human AD and CTRL brains
+Mathys et al.
+ddnet bio.
+com, and Leng et al.
+org (syn21788402).
+The Seurat R package was used for all snRNA-seq analyses.
+These consisted of the following steps:
+
+Statistical analyses
+To determine whether individual astrocytic and microglial markers differ in signal intensity between CTRL and AD or across the phenotypic clusters obtained from the spectral clustering, we compared the MGI z-scores for each marker across groups.
+Because MGI data from astrocytes and microglia belonging to the same individual are not independent observations, we applied mixed effects regression models with diagnosis (CTRL vs. AD) or state (homeostatic vs. intermediate vs. reactive) as fixed effect, respectively, and subject ID as random effect in both cases, using the restricted maximum likelihood (REML) method in the lmer package in R
+The p-values of the pairwise comparisons were obtained using the Satterthwaite approximation with CTRL and homeostatic state as reference levels, respectively
+Differences in proportions of the astrocytes and microglia phenotypes (resulting from the spectral clustering) between CTRL and AD were tested with Chi-square (χ 2 ) test for trend in GraphPad Prism version 9.1.0
+(216) (GraphPad Software, La Jolla, CA).
+Significance level was set at a p-value < 0.05.
+
+Results
+
+Development of a cyclic multiplex fluorescent immunohistochemistry protocol for glial phenotyping
+We developed a cyclic multiplex fluorescent immunohistochemistry protocol that allows the staining of the same FFPE section with up to 16 "off-the-shelf " primary antibodies distributed across 8 cycles of immunohistochemistry (Fig.
+Antibodies were selected to represent commonly used markers of homeostatic (astrocytes: ALDH1L1, EAAT1, EAAT2, GS; microglia: IBA1 and TMEM119) and reactive (astrocytes: GFAP, TSPO, VIM, YKL-40; microglia: CD68, FTL, MHC2, TSPO) glia
+Moreover, we confirmed that these combinations of astrocytic and microglial genes helped discriminate across astrocytic and microglial subclusters in published snRNA-seq studies on human AD and CTRL brains
+In each cycle, the microwaving of the sections in citrate buffer denatures and strips a large portion of both secondary and primary antibodies, while largely preserving or even retrieving some antigens
+The treatment of the sections with an oxidizing alkaline solution is known to quench the fluorescence emitted by any remaining fluorophore-conjugated secondary antibodies
+The sequence of primary antibodies was carefully determined by pilot studies and held constant for CTRL and AD sections: first, crossreactivity of each cycle's secondary antibodies with the primary antibodies used in the prior cycle was monitored by alternating the host species of the primary antibody and the target cell type (e.g., using a rabbit primary antibody for astrocytes and a mouse primary antibody for microglia in one cycle followed by a mouse primary antibody for astrocytes and a rabbit primary antibody for microglia in the next cycle); second, we attenuated crossreactivity by ordering the sequence of cyclic immunohistochemistry with easier-to-strip antibodies in the first cycles (e.g., TSPO, TMEM119, MHC2, and CD68) and harder-to-strip antibodies in the later cycles (IBA1, GS, and Aβ and phospho-tau in AD samples).
+To facilitate the alignment of scanned images across cycles, we decided to immunostain for GFAP in every cycle because the repeated DAPI staining tended to become fainter after several cycles of immunohistochemistry, while GFAP immunohistochemistry is known to benefit from antigen retrieval with microwaving
+other cell type-specific markers (i.e., EAAT1, EAAT2, GFAP, GS, TSPO, VIM, and YKL-40 for astrocytes, and CD68, FTL, MHC2, TMEM119, and TSPO for microglia) were measured and normalized.
+TSPO signal was measured in both ALDH1L1+ astrocytes and IBA1+ microglia because it is expressed by both glial cell types
+
+Cyclic multiplex fluorescent immunohistochemistry followed by quantitative imaging analysis reveals complex phenotypic changes in
+Box and whisker plots in Fig.
+Compared to CTRL astrocytes, AD astrocytes had higher levels of the reactive markers GFAP, YKL-40, and TSPO, slightly higher VIM and lower GS levels, and similar EAAT1 and EAAT2 levels (Fig.
+Mixed effects regression models controlling for correlation within subjects confirmed statistically significant differences between CTRL and AD astrocytes for GFAP (p = 0.025) and YKL-40 (p = 0.027), whereas the differences for EAAT1, EAAT2, GS, and VIM were not statistically significant (see Table
+Inspection of possible layer-specific effects revealed that the increase in GFAP and YKL-40 levels in AD vs. CTRL astrocytes was evident throughout all cortical layers analyzed (II through VI), whereas VIM and TSPO were clearly increased only in AD astrocytes from layers V and VI, GS was clearly reduced only in AD astrocytes from layers II to IV, and EAAT1 and EAAT2 exhibited a mixed trend depending on the cortical layer (see Fig.
+Similarly, compared to CTRL microglia, AD microglia appeared to exhibit higher levels of CD68, FTL, and TSPO, and slightly higher levels of MHC2 and TMEM119 (Fig.
+Box and whisker plots to visualize changes within AD microglia across cortical layers showed trends towards an increase in MHC2 and CD68 levels in layers III to V; TSPO in layers II and V; TMEM119 in layer III and, to a lesser extent, IV, V, and VI; and FTL in layers II, III, V, and VI (see Fig.
+
+Spectral clustering of signal intensity data from thousands of single-cell high-plex images unveils three distinct astrocyte and microglia phenotypes across the normal aging to AD continuum
+We next asked whether the combinations of these astrocytic and microglial markers allow the identification of more than two glial phenotypes.
+To this end, we performed spectral clustering on the log-normalized MGI z-scores.
+Spectral clustering is a graph-based, unsupervised machine learning technique that can outperform other clustering methods
+Spectral clustering identified three distinct clusters of astrocytes and microglia, which we termed "homeostatic, " "intermediate, " and "reactive" (Figs.
+Examples of these distinct phenotypes or states of astrocytes and microglia can be found in Figs.
+Of note, homeostatic and reactive astrocytes were clearly predominant in CTRL and AD subjects, respectively, whereas intermediate astrocytes were more evenly distributed across CTRL and AD individuals (see annotation bar in Fig.
+Specifically, 49.5% of CTRL astrocytes were classified as homeostatic, 33.1% as intermediate, and 17.5% as reactive, whereas the reverse (19.6%, 36.2%, and 44.2%) was true for AD astrocytes.
+In other words, 65.6% of all homeostatic astrocytes belonged to CTRL subjects and 77.0% of all reactive astrocytes belonged to AD individuals, whereas 59.1% of intermediate astrocytes corresponded to AD and 40.9% to CTRL subjects (Fig.
+These phenotypic differences between CTRL and AD groups were statistically very significant (χ 2 for trend = 624.2,
+df = 1, p < 0.0001).
+Compared to their homeostatic counterparts, reactive astrocytes were characterized by a substantial increase in GFAP and YKL-40, a modest elevation of VIM and TSPO as well as EAAT1, and reduced expression of GS.
+Intermediate astrocytes were defined by a marked increase in EAAT2 and a modest increase in GS, with GFAP and YKL-40 levels between those of homeostatic and reactive astrocytes (Fig.
+Mixed effects models controlling for correlation within subjects and with homeostatic state as reference revealed that these differences between homeostatic vs. intermediate and reactive phenotypes were also statistically highly significant (Table
+No clear layer-specific effect was evident in these trends for any of the astrocyte markers by visual inspection of the data (see box and whisker plots in Fig.
+Box and whisker plots depict the distribution (box: median and interquartile range [IQR]; whiskers: 1.5 × IQR) of mean gray intensity (MGI) z-scores for (a) each astrocytic marker and (b) each microglial marker across the CTRL and AD groups.
+Statistical comparisons between diagnostic groups are available in Table
+Additional file 2 and cortical layer annotation bar above heatmap in Fig.
+Similarly, homeostatic was the predominant phenotype among CTRL microglia (44.5%), followed by intermediate (32.3%) and reactive (23.2%), whereas reactive microglia represented the majority among AD microglia (50.1%), followed by intermediate (28.4%) and homeostatic (21.5%).
+In other words, 66.3% of homeostatic microglia belonged to CTRL subjects and 69.5% of reactive microglia to AD subjects, whereas 51.9% of intermediate microglia corresponded to CTRL subjects and 48.1% to AD individuals (Fig.
+Again, these phenotypic differences between CTRL and AD groups were statistically very significant (χ 2 for trend = 559.9,
+df = 1, p < 0.0001).
+Compared to homeostatic microglia, reactive microglia showed increased expression of all markers, including surprisingly the purported homeostatic marker TMEM119, whereas intermediate microglia exhibited increased FTL and TMEM119 as well as intermediate levels of CD68 (Fig.
+Mixed effects models controlling for within-subject correlations and with homeostatic state as reference revealed highly significant increases for MHC2, CD68, TMEM119, and FTL for both intermediate and reactive phenotypes, whereas TSPO was only statistically significantly increased in reactive vs. homeostatic, but not in intermediate vs. homeostatic (p = 0.483) (Table
+Again, the marker profiles defining homeostatic, intermediate, and reactive microglia were essentially applicable in all cortical layers (II through VI), with no evident layer-specific differences (see Fig.
+
+Effect of proximity to AD neuropathological changes on astrocyte and microglia phenotypes
+AD neuropathological changes, especially Aβ plaques but also NFTs, are thought to trigger astrocytic and microglial reactions
+Thus, we asked whether the above three phenotypes differed by their proximity to Aβ plaques and PHF1+ NFTs.
+Histograms in Fig.
+Indeed, an effect of proximity to AD pathology was noted with relatively higher proportions of reactive astrocytes and microglia located within 50 μm of an AD lesion.
+Since two of the seven CTRL subjects had abundant Aβ plaques in their temporal neocortex, we asked whether an effect of proximity to Aβ plaques was already discernible in these cases.
+We observed that, although reactive astrocytes and microglia tended to reside within 50 μm of an Aβ plaque, significant proportions of homeostatic astrocytes and microglia were also located within that plaque boundary, suggesting less toxicity of Aβ plaques in CTRL vs. AD brains (Fig.
+Indeed, plaques from these two CTRL subjects had less neuritic changes in the PHF1 immunostaining (Fig.
+
+Gradient boosting machine models on signal intensity data from thousands of single-cell high-plex images accurately predict AD diagnosis
+Next, we aimed to develop a supervised machine learning algorithm to predict the diagnosis of CTRL vs. AD based on the intensity profile of high-plex astrocyte or microglia profiles with the hypothesis that the phenotypic characterization of these glial cells could have diagnostic value.
+To this end, we trained stochastic gradient boosting machine (GBM) models on the normalized MGI values of either astrocytic or microglial markers.
+GBM is a supervised machine learning method that uses decision trees to perform classification tasks (see Methods and Table
+The astrocyte GBM model performed with an accuracy of 86.57% (95% CI [84.
+and an AUC of 0.9320 (95% CI [0.9157-0.9462]),
+with a p-value of accuracy better than the no-information rate (ACC > NIR) of < 2e-16 (Fig.
+Similarly, the microglia GBM model performed with an accuracy of 77.19% (95% CI [75.
+and an AUC of 0.8448 (95% CI [0.8233-0.8666],
+with a p-value (ACC > NIR) < 2.2e-16 (Fig.
+Notably, both models outperformed GBM algorithms trained using only MGI values from one of the classic markers of reactive We also sought to determine the relative contribution of each marker to the classification of astrocytes and microglia as CTRL vs. AD.
+Interestingly, the relative variable importance scores indicated that the reactive markers GFAP and TSPO were most determinant for the CTRL vs. AD classification of astrocytes, followed by EAAT2, YKL-40, EAAT1, VIM, and GS (Fig.
+Likewise, the classifier ranked MHC2 as the most important marker for the CTRL vs. AD classification of microglia, followed by FTL, CD68, TSPO, and TMEM119 (Fig.
+Thus, of all markers analyzed, the Fig.
+Receiver operating characteristic (ROC) curves demonstrate the high discriminative power of the gradient boosting machine (GBM) models to discern between CTRL and AD (a) astrocytes and (b) microglia based on mean gray intensity (MGI) data from thousands of high-plex single-cell profiles.
+Compare with the performance of GBM models trained on single marker intensity data, namely (a) GFAP and (b) MHC2 or CD68.
+Rankings of the variable importance scores shown in the horizontal bar plots reveal the most relevant markers for each classification task, respectively classic reactive markers GFAP and MHC2 (rather than CD68) are the most predictive to discriminate CTRL vs. AD astrocytes and microglia, respectively.
+Furthermore, we asked whether the supervised GBM models could also predict the phenotypic classification rendered by the unsupervised spectral clustering.
+To this end, we constructed additional GBM models on the normalized MGI z-scores for both astrocytes and microglia using the classification labels "homeostatic, " "intermediate, " and "reactive" assigned by spectral clustering.
+The astrocyte GBM model had an accuracy of 96.52% (AUC = 0.9983, p-value [Acc > NIR] < 2e-16) to classify homeostatic, intermediate, and reactive astrocytes (Fig.
+Remarkably, the ranking of variable importance scores indicated that the marker EAAT2 was the most influential marker for this phenotypic classification, followed by the reactive markers GFAP and YKL-40 and, with much lower importance, GS, TSPO, VIM, and EAAT1 (Fig.
+Regarding microglia, TSPO and FTL were most determinant for their classification in homeostatic, intermediate, or reactive, followed by MHC2, TMEM119, and CD68 (Fig.
+
+Convolutional neural networks accurately classify CTRL and AD astrocytes and microglia
+Finally, we sought to test whether a deep learning classifier could effectively distinguish between CTRL and AD astrocytes or microglia based on all image features (e.g., pixellevel subcellular location, cell morphology, etc.) rather than solely on MGI.
+To this end, we created convolutional neural networks (CNNs) to classify astrocytes and microglia as CTRL vs. AD.
+The model architecture is shown in Fig.
+In both cases, the most important hyperparameter to tune with respect to the objective value (i.e., the cross-validation AUC) was the learning rate.
+The astrocyte CNN performed on the hold-out test set of 1035 astrocytic profiles with an accuracy of 87.44% (95% CI [85.
+and an AUC of 0.9444 (95% CI [0.9318-0.9561])
+(Fig.
+Meanwhile, the microglia CNN performed on the hold-out test set of 1245 microglial profiles with an accuracy of 80.56% (95% CI [78.
+and an AUC of 0.8856 (95% CI [0.8684-0.9032])
+(Fig.
+To facilitate CNN model interpretability, examples of saliency, integrated gradient, and GradCAM pixel maps are shown in Figs.
+S9 and S10: Additional file 2 for correctly classified astrocytes and microglia, respectively.
+Taken together with the GBM classifier, this deep learning approach supports the idea that profiling the complexity of glial reactions discerns CTRL from AD brains with high accuracy.
+
+Discussion
+We have developed a novel protocol of cyclic multiplex fluorescent immunohistochemistry on human postmortem FFPE sections followed by single-cell segmentation and machine learning-based classification to better characterize glial responses in AD.
+Our methodology consists of an iterative 3-plex fluorescent immunohistochemistry with primary antibodies and fluorophoreconjugated secondary antibodies in each cycle.
+After every cycle, sections are scanned, their coverslips are carefully removed with little or no damage to the tissue, and two procedures incorporated from other methods are performed: an antibody denaturation/stripping step by microwaving sections in citrate buffer as in the Opal method
+Since most primary antibodies used here are not commercially available in directly fluorophore-conjugated versions, and fluorophore labeling kits are expensive and may cause non-specific staining artifacts, we decided to use commercial unconjugated primary antibodies followed by fluorophore-conjugated secondary antibodies.
+Because most reliable primary antibodies are made in mouse or rabbit, careful testing and ordering of the sequence of immunohistochemistry cycles was required to detect and prevent cross-species reactivity of the secondary antibodies.
+We found that some primary antibodies are easier to strip from the FFPE sections (e.g., CD68, MHC2, and TMEM119) than others (e.g., Aβ and PHF1), and that alternating the host species of primary antibodies for microglia vs. astrocytes in consecutive cycles minimized the chances of cross-species reactivity; therefore, both factors were considered in the final sequence of immunostainings.
+Selected antibodies included a combination of homeostatic and reactive markers.
+For astrocytes, we selected the glutamate transporters EAAT1 and EAAT2 as well as GS as homeostatic markers, because one of the main functions of cortical protoplasmic astrocytes is the uptake and recycling of the glutamate released by the excitatory neurons to the synaptic cleft.
+Conversely, GFAP, VIM, and YKL-40 are well-established markers of reactive astrocytes
+For microglia, CD68 and MHC2 are widely used as reactive microglia markers indicative of phagocytosis and antigen presentation
+TMEM119 was first described as a homeostatic microglial marker in wild-type mice
+Ferritin is an iron-binding protein involved in iron homeostasis, although some researchers have linked it with a dystrophic and/or senescent microglial phenotype that is increased in AD
+TSPO is expressed by both microglia and astrocytes and is a target for PET radioligands of reactive glia
+Spectral clustering of signal intensity data from the combination of available markers discriminated at least three states in both glial cell types, suggesting that the qualifiers "homeostatic" and "reactive" alone may be insufficient to describe the heterogeneity of these glial cells in the healthy and AD brains
+Compared to the homeostatic state, the reactive astrocyte phenotype had expectedly high levels of all the aforementioned reactive markers but also lower levels of the homeostatic marker GS.
+By contrast, the intermediate astrocyte phenotype had intermediate or high (GFAP, TSPO, VIM) levels of reactive markers and remarkably high levels of EAAT2.
+SLC1A2 and GLUL transcripts, encoding for EAAT2 and GS, respectively, are downregulated in AD astrocytes in snRNA-seq studies
+Conversely, EAAT1 levels are thought to be preserved
+Hence, the high EAAT2 and GS expression in intermediate astrocytes could represent a mechanism of resilience to the neuronal glutamate excitotoxicity induced by the presence of AD neuropathological changes, as has been described in the entorhinal cortex
+Similarly, relative to the homeostatic state, the reactive microglial phenotype exhibited high levels of all reactive markers and, surprisingly, also of the homeostatic marker TMEM119, whereas the intermediate microglia phenotype had intermediate (CD68) or low (MHC2, TSPO) levels of reactive markers, and intermediate levels of TMEM119.
+These findings are consistent with a snRNA-seq study reporting an upregulation of the TMEM119 transcript in human AD microglia
+Finally, the high levels of FTL in the intermediate phenotype suggests a compensatory mechanism against iron accumulation and subsequent generation of toxic reactive oxygen species in microglia
+Glial reactions initially occur within the vicinity of Aβ plaques, which is thought to be a toxic microenvironment.
+Indeed, our prior stereology-based spatial quantitative postmortem studies with a single marker demonstrated an accumulation of GFAP+ astrocytes as well as CD68+ and MHC2+ microglia within 50 μm from both the plaque edge and, to a lesser extent, NFTs
+In the present study, the more complex reactive phenotypes described here with multiple markers also predominated in the proximity of Aβ plaques and NFTs in AD subjects, whereas in the two CTRL subjects with abundant Aβ plaques many of the astrocytes and microglial cells within that boundary were still homeostatic.
+This finding was likely related to the lesser neuritic component of their plaques but warrants further confirmation in brains of individuals resilient to high levels of AD pathology (so-called high-pathology controls, mismatch AD, or asymptomatic AD)
+While various spatial -omics methods are currently attempting to link complex cellular phenotypes with pathological features of brain tissue, our immunohistochemistry-based approach was particularly adept at this task thanks to its single-cell resolution, allowing us to better understand the relationship between the pathognomonic lesions of AD and these cellular changes in astrocytes and microglia.
+Prior studies have applied various machine learning methods to segment and quantify IBA1+ microglia
+Here, we built upon these methods by taking advantage of our large data set of 8-plex astrocyte and 6-plex microglia images to investigate whether machine learning algorithms can accurately predict the diagnosis of CTRL vs. AD and the classification in three phenotypes or states developed with unsupervised clustering of the signal intensity data.
+Indeed, GBM classifiers applied on the same signal intensity data were highly accurate at classifying CTRL vs. AD glia and, based on the expression levels of the markers used here, lent additional support to the existence of three distinct phenotypes of astrocytes and microglia.
+Interestingly, these models also determined that the classic reactive markers GFAP and MHC2 are the most influential in the CTRL vs. AD classification of astrocytes and microglia, respectively, whereas EAAT2 and TSPO are the most important for their phenotypic classification.
+Finally, deep learning of highplex images of thousands of individual glial profiles via CNNs also enabled a highly accurate classification of CTRL vs. AD membership for both astrocytes and microglia at the single-cell level, with AUCs of 0.94 and 0.89, respectively.
+Since CNN models learn all image features (rather than just mean pixel intensity) to infer a classification probability, our CNN classifiers provide an unbiased confirmation of the profound changes that astrocytes and microglia undergo in the AD brain.
+Furthermore, the high predictive power of the CNNs described here suggests that these deep learning models could be used to assign scores (i.e., classification probabilities) of disease association at the single-cell level, which could be combined across brain regions for staging of glial responses to AD neuropathology.
+
+Conclusions
+In summary, cyclic multiplex fluorescent immunohistochemistry allows the thorough phenotyping of individual glial cells in postmortem brain specimens to identify distinct states in health and disease.
+Besides the homeostatic and reactive, we identified a novel "intermediate" state of both astrocytes and microglia, which may represent a resilience mechanism or, alternatively, a transitional state between homeostatic and reactive.
+We were also able to demonstrate the spatial relationships between the classic AD lesions and these glial phenotypes, an aspect of analysis that is difficult to achieve at this resolution with other methods.
+This and similar methods could help understand the heterogeneity of glial responses in AD and other neurodegenerative diseases, validate clusters derived from snRNA-seq and scRNA-seq studies while placing those changes into the appropriate spatial context, and inform ongoing biomarker discovery efforts.
+Columns 1 and 5 show DAPI and all astrocyte markers of the high-plex image of a single astrocyte cell body from a CTRL and an AD subject, respectively, after performing the CNN normalization steps described (i.e., segmentation, interpolation, channel-level z-score).
+Hence, the signal intensity is represented by dynamic range rather than by pixel intensity.
+Columns 2-4 and 6-8 show the saliency (2 and 6), integrated gradient (3 and 7), and GradCAM (4 and 8) maps, which illustrate the pixels of each marker that the CNN considered most important for the classification of these two astrocytes as CTRL or AD. Figure
+Application of deep learning model interpretability functions to microglia with extreme classification probabilities.
+Description: Examples of the convolutional neural network (CNN) model interpretability functions applied to microglia with extreme classification probabilities (i.e., confident and correct predictions).
+Columns 1 and 5 show DAPI and all microglial markers of the high-plex image of a single microglial cell from a CTRL and an AD subject, respectively, after performing the CNN normalization steps described (i.e., segmentation, interpolation, channel-level z-score).
+Hence, the signal intensity is represented by dynamic range rather than by pixel intensity.
+Columns 2-4 and 6-8 show the saliency (2 and 6), integrated gradient (3 and 7), and GradCAM (4 and 8) maps, which illustrate the pixels of each marker that the CNN considered most important for the classification of these two microglia as CTRL or AD.
+Additional File 3: Movie S1.
+High-plex images of representative astrocytes from the "homeostatic, " "intermediate, " and "reactive" clusters.
+Description: Scale bar: 5 µm.
+Additional File 4: Movie S2.
+High-plex images of representative microglia from the "homeostatic, " "intermediate, " and "reactive" clusters.
+Description: Scale bar: 5 µm.
+
+
+
+1 .Fig. 1
+Fig. 1 Workflow of cyclic multiplex fluorescent immunohistochemistry and machine learning-based quantitative image analysis.
+a Schematic of the cyclic multiplex fluorescent immunohistochemistry protocol, where (1) antibodies were denatured by microwave treatment in boiling citrate buffer for 20 min and (2) fluorophores were quenched by immersion in an oxidizing alkaline solution for 30 min (see details in Methods).
+b Flowchart of the quantitative image analysis and machine learning pipeline
+
+
+Alzheimer's disease astrocytes and microglia at single-cell resolution Our cell profile segmentation workflow (see Methods and Fig. 1b) on the temporal neocortex of n = 7 CTRL and n = 7 AD subjects rendered a total of 5172 ALDH1L1+ astrocytes (CTRL: 320 [194-552]; AD: 355 [258-747], median [range]) and 6226 IBA1+ microglial profiles (CTRL: 407 [227-716]; AD: 484 [146-663], median [range]), which were included in subsequent analyses.
+The mean gray intensity (MGI) values for all
+
+
+
+Fig. 3 (Fig. 4
+Fig. 3 Unsupervised spectral clustering of astrocyte profiles reveals three distinct phenotypes.
+a Heatmap depicts the unsupervised spectral clustering of 5172 ALDH1L1+ astrocyte cell bodies based on their mean gray intensity (MGI) for the other 7 astrocytic markers.
+Note that MGI z-scores were scaled from 0 to 100 to facilitate comparison across markers.
+Three clusters are evident, which we termed "homeostatic, " "intermediate, " and "reactive.
+" b High-plex images from representative astrocytes of each of these clusters.
+Scale bar: 5 µm.
+c Stacked bar graphs show the proportions of astrocytic states by diagnosis and the proportions of diagnoses by astrocytic state.
+d Box and whisker plots illustrate the distribution (box: median and interquartile range [IQR]; whiskers: 1.5 × IQR) of MGI z-scores for each astrocytic marker across the homeostatic, intermediate, and reactive phenotypes.
+Statistical comparisons between states are available in Table S3, Additional file 1 (See figure on next page.)
+
+
+
+Fig. 5
+Fig. 5 Effect of proximity to AD neuropathological changes (Aβ plaques or PHF1+ NFTs) on astrocytic and microglial phenotypes from AD subjects.
+a Representative high-plex image of astrocytes from an AD subject.
+For clarity, only ALDH1L1, EAAT2, and GFAP markers are shown together with Aβ.
+Scale bar: 100 µm, insets a1-a3: 10 µm.
+b Histograms show the proportion of each astrocytic phenotype with respect to all AD astrocytes as a function of the distance (µm, x axis) to the nearest Aβ plaque or PHF1+ NFT.
+Reactive astrocytes were relatively more closely associated with AD neuropathological changes than intermediate astrocytes, and these more than homeostatic astrocytes.
+c Representative high-plex image of microglia from the same field of the same AD subject.
+For clarity, only IBA1, TMEM119, and CD68 markers are shown together with Aβ.
+Scale bar: 100 µm, insets c1-c3: 10 µm.
+d Histograms indicate the proportion of each microglial phenotype with respect to all AD microglial profiles as a function of the distance (µm, x axis) to the nearest Aβ plaque or PHF1+ NFT.
+Reactive microglia were relatively more closely associated with AD neuropathological changes than intermediate microglia, and these more than homeostatic microglia (See figure on next page.)
+
+
+
+Fig. 7 30 Fig. 7 (
+Fig.
+a Architecture of the convolutional neural networks (CNNs) used for deep learning of image features from astrocyte and microglial profiles (see details in Methods section).
+Receiver operating characteristic (ROC) curves demonstrate the performance of the CNN model to predict the diagnosis of CTRL vs. AD based on the features of (b) astrocytic or (d) microglial high-plex images.
+Histograms show the within-group proportions of (c) astrocytes or (e) microglia as a function of the AD classification probability stratified by their true label (i.e., CTRL or AD).
+Note that both CTRL astrocytes and CTRL microglia (blue bars) tend to have a probability of AD diagnosis closer to zero, whereas AD glia (red bars) tend to be correctly classified as AD (See figure on next page.)
+
+
+range [IQR]; whiskers: 1.5 × IQR) of mean gray intensity (MGI) z-scores for each astrocytic (a) or microglial (b) marker across the three phenotypes by cortical layer.
+Only layers II to VI were included in this study.
+Figure S6.
+Effects of proximity to AD neuropathological changes on astrocytic and microglial phenotypes from two CTRL subjects with abundant Aβ plaques.
+Description: (a) Representative high-plex image of astrocytes from a CTRL subject with abundant Aβ plaques; note the differences with AD astrocytes in Fig. 5a.
+For clarity, only ALDH1L1, EAAT2, and GFAP markers are shown together with Aβ.
+Scale bar: 100 µm, insets a1-a3: 10 µm.
+(b) Histograms show the proportion of each astrocyte phenotype in n=2 CTRL subjects with abundant Aβ plaques relative to all their astrocytes as a function of their distance (µm, x axis) to the nearest Aβ plaque.
+Note that there are equal numbers of astrocytes within 25 µm from the nearest Aβ plaque classified as homeostatic, intermediate, or reactive.
+(c) Representative high-plex image of microglia from the same field of the same CTRL with abundant Aβ plaques; note the differences when compared to AD microglia in Fig. 5c.
+For clarity, only IBA1, TMEM119, and CD68 markers are shown together with Aβ.
+Scale bar: 100 µm, insets c1-c3: 10 µm.
+(d) Histograms indicate the proportion of each microglial phenotype in n=2 CTRL subjects with abundant Aβ plaques relative to all their microglial profiles as a function of their distance (µm, x axis) to the nearest Aβ plaque.
+Note that most microglia in the vicinity of Aβ plaques were classified as homeostatic, suggesting that their phenotypic transition to intermediate and reactive had not yet occurred.
+
+
+
+Figure S7 .
+Differences in neuritic component of Aβ plaques from CTRL and AD subjects.
+Description: Representative images of Aβ and phospho-tau (PHF1) immunohistochemistry corresponding to the same fields of the AD and CTRL subjects shown in Fig. 5 and Fig. S6, respectively.
+Note the differences in the PHF1+ neuritic changes between CTRL and AD Aβ plaques.
+Scale bar: 100 µm, insets a1 and b1: 10 µm. Figure S8.
+Gradient boosting machine models accurately discriminate between glial phenotypes.
+Description: Receiver operating characteristic (ROC) curves demonstrate the high discriminative power of the gradient boosting machine (GBM) models to discern between states (i.e., homeostatic vs. intermediate vs. reactive) of (a) astrocytes and (b) microglia based on mean gray intensity (MGI) data from thousands of high-plex single-cell profiles.
+Rankings of the variable importance scores shown in the horizontal bar plots reveal the most relevant markers for each classification task, respectively.
+Figure S9.
+Application of deep learning model interpretability functions to astrocytes with extreme classification probabilities.
+Description: Examples of the convolutional neural network (CNN) model interpretability functions applied to astrocytes with extreme classification probabilities (i.e., confident and correct predictions).
+
+
+creation of Seurat objects: Seurat objects from Mathys et al. and Grubman et al. data sets were generated based on the counts, UMAP coordinates, and cell metadata, while the SingleCellExperiment objects provided by Leng et al. were converted to Seurat objects; (2) data normalization: for Mathys et al. and Grubman et al. data sets, we obtained the log-transformed expression measurements normalized by the total expression of each cell and scaled to 1 × 10 4 , whereas Leng et al. data were already normalized; and (3) bubble plot generation: finally, we generated bubble plots illustrating the relative expression of genes of interest (z-scores) across astrocytic and microglial subclusters.

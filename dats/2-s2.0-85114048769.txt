@@ -1,0 +1,234 @@
+A transcriptome-wide association study of Alzheimer’s disease using prediction models of relevant tissues identifies novel candidate susceptibility genes
+Background: Genome-wide association studies (GWAS) have identified over 56 susceptibility loci associated with Alzheimer's disease (AD), but the genes responsible for these associations remain largely unknown.
+Methods: We performed a large transcriptome-wide association study (TWAS) leveraging modified UTMOST (Unified Test for MOlecular SignaTures) prediction models of ten brain tissues that are potentially related to AD to discover novel AD genetic loci and putative target genes in 71,880 (proxy) cases and 383,378 (proxy) controls of European ancestry.
+We identified 53 genes with predicted expression associations with AD risk at Bonferroni correction threshold (P value < 3.38 × 10 -6 ).
+Based on fine-mapping analyses, 21 genes at nine loci showed strong support for being causal.
+Our study provides new insights into the etiology and underlying genetic architecture of AD.
+
+Background
+Alzheimer's disease (AD) is a common neurodegenerative disorder in the aging population
+The primary pathological feature of AD is characterized by aggregation of amyloid β peptides into extracellular plaques, as well as hyperphosphorylated tau into intracellular neurofibrillary tangles, accompanied by neuroinflammation, gliosis, and neurodegeneration
+The life quality of AD patients is significantly decreased because of severe impairment in individual executive and cognitive functions
+It is estimated that in 2019, 5.8 million people that aged beyond 65 were diagnosed with AD in the USA, which had yielded a total expenditure of approximately 290 billion dollars for health care, long-term care, and hospice services
+To reduce the burden of AD, a better characterization of the etiology of AD is critically needed.
+Mutations in specific genes such as APP, PSEN1, PSEN2, APOE, and TREM2 are reported to increase the risk of developing AD
+In addition, Genome-wide Association Studies (GWAS) have identified more than 56 common genetic loci associated with AD risk
+However, these loci can explain only a small fraction of the heritability of AD
+Apart from conventional GWAS focusing on individual variants, there has been recent interest in transcriptome-wide association studies (TWAS) focusing on genetically predicted gene expression to gain additional insights into the genetic basis of complex traits and diseases
+This methodology integrates gene expression genetic prediction models built in reference datasets and largescale disease GWAS datasets to identify novel candidate susceptibility genes whose genetically predicted expression levels are associated with the traits
+Several TWAS have already been conducted to identify candidate susceptibility genes for AD risk.
+In an earlier TWAS by Hao et al. involving 17,008 AD cases and 37,154 controls, 25 AD risk-associated genes were identified by leveraging gene expression prediction models of brain dorsolateral prefrontal cortex, adipose, and blood tissues
+Raj et al. leveraged dorsolateral prefrontal cortex (DLPFC) tissue gene expression prediction models and identified eight associated genes at novel loci by studying 25,580 cases and 48,466 controls
+Hu et al. leveraged 44 tissues, including ten brain tissues (anterior cingulate cortex BA24, caudate basal ganglia, cerebellar hemisphere, cerebellum, cortex, frontal cortex BA9, hippocampus, hypothalamus, nucleus accumbens basal ganglia, and putamen basal ganglia), to build gene expression prediction models using a new joint-tissue imputation approach under the proposed UTMOST framework, which aims to increase the prediction accuracy by borrowing information across tissues.
+By applying the models to 17,008 AD cases and 37,154 controls, they identified 12 novel susceptibility gene candidates
+In a recent TWAS by Gerring et al., gene expression prediction models of 48 tissues built using The Genotype-Tissue Expression (GTEx) project data (version 7) were developed, and 126 tissue-specific gene-based associations involving 50 genes were reported for AD risk
+These findings have contributed substantially to the etiological understanding of AD.
+However, some limitations of existing TWAS should be noted.
+First, most of these studies do not systematically evaluate different brain tissues
+It is known that multiple types of brain tissues could be causal for AD pathogenesis
+AD is a neurodegenerative disorder partly induced by dysregulation of different brain regions
+Although Hu et al
+Second, existing studies largely relied on earlier AD GWAS datasets with limited numbers of AD cases and controls for association analyses.
+Furthermore, although research supports an immune component in the etiology of AD
+These limitations have constrained the ability of existing TWAS for characterizing AD-associated genes.
+Herein, to identify novel candidate susceptibility genes for AD risk, we performed a comprehensive TWAS of AD risk using GWAS data involving 71,880 (proxy) cases and 383,378 (proxy) controls of European ancestry, by leveraging gene expression prediction models built using state-of-the-art modeling strategies in ten different tissues, from the latest version of The Genotype-Tissue Expression (GTEx) v8
+It was identified earlier that AD-by-proxy, based on parental diagnoses, showed a high genetic correlation with AD (r g = 0.81)
+Thus, we leveraged the meta-analysis results of the clinical AD GWAS and the AD-by-proxy GWAS in this study to increase the statistical power.
+The tissues analyzed here included brain cortex, anterior cingulate cortex BA24, hippocampus, amygdala, caudate basal ganglia, nucleus accumbens basal ganglia, putamen basal ganglia, substantia nigra, hypothalamus of cerebrum, and pituitary.
+Spleen tissue was also included in a separate analysis to characterize additional genes related to AD.
+
+Methods
+
+Building gene expression prediction models
+Genome and gene expression data of ten different brain tissues and spleen tissue from the GTEx (v8)
+The detailed information of the GTEx v8 dataset including genotyping method, RNA sequencing experiments, and quality control processes, has been described elsewhere
+In brief, only genes with a reasonable expression level were included for model building (thresholds: ≥0.1 TPM in ≥20% of samples and ≥6 reads (unnormalized) in ≥20% of samples).
+Expression values for each gene were inverse normal transformed across samples.
+By adjusting for the sex, platform, first five principal components, and PEER (Probabilistic Estimation of Expression Residuals) factors, the residual of normalized expression level was generated for model training.
+All 838 GTEx v8 samples (more than 85% are of European ancestry) were included.
+We included brain cortex (n = 205), anterior cingulate cortex BA24 (n = 147), hippocampus (n = 165), amygdala (n = 129), caudate basal ganglia (n = 194), nucleus accumbens basal ganglia (n = 202), putamen basal ganglia (n = 170), substantia nigra (n = 114), hypothalamus of cerebrum (n = 170), pituitary (n = 237), and spleen (n = 146) samples with matched genome and transcriptome data available for gene expression genetic model building using a modified UTMOST framework
+Single-nucleotide polymorphism (SNPs) located within 1 Mb upstream and downstream of the gene were included as potential features for the model building.
+The weights for SNPs in the prediction model were estimated with a LASSO penalty both within-and crosstissues.
+Fivefold cross-validation was performed for hyperparameter tuning using two hyperparameters, λ 1 and λ 2, for the within-tissue and cross-tissue penalization, respectively.
+In the final step of the original UT-MOST model building pipeline, a "heritable gene" was defined by the model's prediction performance estimated in the entire dataset which was used to train the final model.
+Model training and performance evaluation in the same dataset may result in overestimation of the prediction performance
+The overestimation will result in a large number of low-quality "heritable genes" for downstream analysis, which will increase the false positive rate and the multiple comparison burden.
+To avoid the model estimation in the entire dataset (and thus avoid the inflated performance), we modified the model training process by using a consistent array of hyperparameter pairs across the five-fold cross-validation, which made the tuning error of hyperparameter pairs comparable across different folds in the cross-validation step (in contrast to the original UTMOST, which used a fold-specific array of lambda pairs).
+After the fivefold training, the lambda pair with the lowest average tuning error across the five folds was selected for final use.
+The performance of the prediction models was assessed by the correlation between the predicted and observed expression levels in the combined tuning set.
+The script for the modified version of UTMOST is available at
+Only models with Pearson's correlation r ≥ 0.1 and P < 0.05 were retained for the subsequent association analyses.
+
+Associations between genetically predicted gene expression levels and AD risk
+Based on S-PrediXcan
+The SNP-SNP covariance matrices estimated using all GTEx v8 subjects were used.
+For each gene, in the main analyses, we combined the association p values across the different brain tissues by a Cauchy distributionbased combination approach
+Briefly, we transformed the P values derived from TWAS of multiple tissues into standard Cauchy random variables and used the average of transformed P values as the test statistics.
+Its P value can be calculated analytically, which is highly accurate when the actual P value is very small.
+Cauchy combination test was conducted using R V3.6.1.
+software
+We then applied the Bonferroni correction to determine the significance threshold.
+Focusing on the identified associated genes, to determine the most likely causal genes for AD risk, we conducted FOCUS (Fine-mapping Of CaUsal gene Sets) fine-mapping analysis, as described elsewhere
+Briefly, we ran FOCUS in each type of brain tissue separately with GWAS summary statistics
+FOCUS outputted the posterior probability for each gene, and the default 90% credible gene set was used to determine the likely causal genes.
+We also conducted a separate analysis focusing on spleen tissue to identify additional genes showing an association with AD.
+
+"Core Analysis" in Ingenuity Pathway Analysis (IPA)
+For the identified AD risk-associated genes using brain tissues in main analyses, we performed the "Core Analysis" in IPA
+Briefly, the list of identified AD risk-associated genes was submitted to IPA for "Core Analysis".
+
+Results
+
+Brain tissue and spleen tissue gene expression prediction models
+We developed gene expression prediction models using a modified UTMOST
+The number of prediction models with a performance of at least 0.01 (i.e., the correlation between predicted expression and measured expression of at least 10%) ranged from 5015 to 8582 across the different brain tissues we assessed (Additional file 1: Table
+There were 8759 models established with performance R 2 ≥0.01 for the spleen tissue.
+
+Associations of predicted gene expression levels in brain tissues with AD risk
+The full results of TWAS for AD risk across the ten brain tissues were included in Additional file 2: Table
+For each gene, we combined the gene-level association p values across the different brain tissues by a Cauchy distribution-based combination approach
+Of the 14,787 genes tested, we observed 54 significant associations at Bonferroni corrected threshold P < 3.38 × 10 -6 (Fig.
+After excluding HLA-DQA2 which is located in a linkage disequilibrium (LD)-extensive region, 53 genes located at 18 distinct genomic loci were retained (Table
+These include 35 genes that have not been previously reported to be associated with AD risk in TWAS (Table
+The associations based on individual tissue prediction models can be found in Additional file 3 and 4: Table
+A total of 45 genes showed concordant association directions across all the tested tissues, positively (17 genes) or negatively (28 genes).
+Tissue-specific association directions were observed for the remaining eight genes (APOC2, APOC4, APOE, FAM111A, GPC2, LAMTOR4, OPA3, and ZNF112).
+Based on the fine-mapping approach, FOCUS
+Ten of the 21 putative causal genes (NDUFS2, FCER1G, BTNL2, AC004522.3,
+GPC2, PVRIG, KAT8, AC012146.1,
+ACE, and AC243964.3)
+have not been reported in previous TWAS.
+The full list of GWAS identified risk SNPs for AD and their distances to the identified genes are shown in Additional file 6: Table
+Of the 35 newly identified associated genes, four genes (FAM241A at 4q25, SAPCD1 at 6p21.33, FAM 111A at 11q12.1, and ACE at 17q23.3) are more than 500 kb away from any GWAS-identified AD risk variants (Table
+Of the 18 previously reported AD-associated genes, the directions of the associations are consistent between the current study and previous TWAS studies (Additional file 4: Table
+In a separate analysis focusing on the spleen tissue, 26 significant associations at Bonferroni corrected threshold P < 5.71 × 10 -6 (0.05/8759) were identified and 25 genes were retained after excluding HLA-DQA2 (Additional file 7: Table
+Nineteen of them, namely, NDUFS2 (1q23.
+and TRAPPC6A (19q13.32),
+were also identified in our main analyses using the brain tissue gene expression prediction models.
+Of the remaining six genes, three (INPP5D at 2q37.1, MS4A2 at 11q12.1, and MS4A4E at 11q12.2) were suggested in previous GWAS for AD risk
+CTSH at 15q25.1, and SETD1A at 16p11.2) were reported to be associated with AD risk in previous studies
+
+Pathway analysis
+For the genes identified in the main analyses focusing on brain tissues, we performed the "Core Analysis" function within Ingenuity Pathway Analysis (Ingenuity System Inc, USA), including "Canonical Pathway," "Disease and Functions," and "Network" analyses.
+Fourteen of 53 associated genes (ACE, APOC1, APOC2, APOC4, APOE, CD2AP, CLU, CR1, FCER1G, NECTIN2, PRSS36, PRSS53, PVR, and ZNF668) were enriched in 11 canonical pathways (P < 0.05) (Additional file 8: Table
+These contain the neuroprotective role of THOP1 in Alzheimer's disease (P = 1.70 ×
+Other canonical pathways are related to immune function, such as IL-12 signaling and production in macrophages (P = 2.75 × 10 -7 ), LPS/IL-1 mediated inhibition of RXR function (P = 1.10 × 10 -3 ) and natural killer cell signaling (P = 7.41 × 10 -3 ).
+Overall, four networks were identified based on the Network Analysis (Additional file 9: Table
+Eighteen associated genes were in the top network "Metabolic Disease, Neurological Disease, Organismal Injury and Abnormalities" (Fig.
+Interestingly, some associated genes located in the network are known risk genes for AD, such as CLU (8p21.1)
+Based on the "Disease and Functions" analysis, the top 20 disease functional categories can be found in  Additional file 10: Table
+
+Discussion
+In this study, we built comprehensive gene expression prediction models leveraging a modified UTMOST method to systematically evaluate the associations of genetically predicated gene expression across the human transcriptome in ten brain tissues and spleen, a representative tissue that contains immune cell types, with AD risk.
+A total of 53 genes were found to be associated with AD risk for their genetically predicted expression in brain tissues, including 35 that have not been reported in previous TWAS.
+Fine-mapping analyses identified 21 of the 53 as putative causal genes for AD risk.
+Ten of the 21 fine-mapped genes are reported here for the first time.
+We also identified associations of specific genes in analyses of spleen tissue.
+Our findings contribute to improved understanding of the etiology and genetics of AD.
+Interestingly, different genes tend to  More information of IPA legend can be found in
+be prioritized as putatively causal in different brain tissues.
+This may that different causal genes may play a role in AD etiology in different brain tissues, which warrants further investigation.
+Of the 35 AD-associated genes identified in analyses of brain tissues that have not been reported in previous TWAS, four of them, FAM241A at 4q25, SAPCD1 at 6p21.33, FAM 111A at 11q12.1, and ACE at 17q23.3, are located at novel loci (Table
+ACE, which encodes angiotensin I converting enzyme, is a known gene for AD
+The remaining three genes, FAM241A, SAPCD1, and FAM 111A, are protein coding genes whose functions are not entirely clear and whose link with AD needs further investigation.
+Seven long noncoding RNA (lncRNA) genes (AC004522.3,
+AC012146.1,
+AC090515.2,
+AC135050.1,
+AC135050.6,
+AC243964.3,
+and AL355353.1)
+were also found to be associated with AD risk in this study.
+Previous work has suggested lncRNAs to potentially have a significant impact on normal neural development and on the development and progression of neurodegenerative diseases
+For example, specific lncRNAs may play a function as Decoy and/or Scaffold to sequester secretase enzyme, and thus decrease amyloid beta (Aβ) aggregation; they may also sequester kinases for decreasing tau hyperphosphorylation. Furthermore, lncRNAs may keep hyperphosphorylated tau proteins apart
+The lncRNAs identified here as associated with AD risk warrant further investigation.
+The APOE has been identified as a biomarker for prognosis of mild cognitive impairment and AD
+In our TWAS, interestingly, predicted expression of APOE in brain substantia nigra and caudate basal ganglia was positively associated with AD risk, and the predicted expression in the pituitary was inversely associated with AD risk.
+This implies that the expression levels of APOE in different brain regions may be related to different mechanisms of AD progression, which warrants further investigation.
+In previous TWAS, predicted expression of APOE in the skin was reported to be positively associated with AD risk
+APOE was also associated with AD risk by analyzing cross tissue models in a previous TWAS
+Similar to APOE, APOC1 (19q13.32),
+identified in our study, has also been previously suggested as a potential biomarker for AD (Additional file 9: Table
+The predicted expression of APOC1 in the brain nucleus accumbens basal ganglia, pituitary, and adrenal gland was inversely associated with AD risk, consistent with the direction identified in previous TWAS
+Previous studies have suggested that AD is a neurodegenerative disease with an immune component
+In order to illustrate whether or not genes in the spleen, a tissue containing immune cell types, may influence AD risk, we leveraged spleen tissue gene expression prediction models and identified twenty-five genes showing an association with AD risk.
+Most of them
+Interestingly, focusing only on the associated genes based on analyses of brain tissue prediction models, we observed enrichment of specific immune function-related canonical pathways, supporting potential roles of such immune-related genes in the etiology of AD.
+In our study, we performed TWAS and TWAS fine-mapping by leveraging the summary statistics of a meta-analysis of AD GWAS and AD-by-proxy GWAS given the strong genetic correlation between AD and AD-by-proxy outcomes.
+To further evaluate the impact of this study design on our findings, we have performed TWAS separately using the results from GWAS of clinically diagnosed AD
+In these two separate analyses (Additional file 11: Table
+There are several strengths of this study.
+Firstly, we used a modified UTMOST method to develop genetic prediction models for gene expression, which can increase power by jointly analyzing data from multiple genetically correlated tissues
+This is in contrast to single-tissue methods, including PrediXcan and TWAS/ FUSION, which do not account for the similarity of genetic regulation across different tissues.
+In contrast to the original UTMOST framework, our modified framework used consistent hyperparameter pairs across the fivefold cross-validation in the model training process, which avoids the overestimation of model performance (Additional file 12: Figure
+Secondly, in this study, we comprehensively assessed ten tissues (derived from the brain) with strong prior support for being related to AD pathogenesis, thus maximizing the possibility of identifying AD related genes.
+Thus, instead of using the ROS-MAP/AMP-AD, PsychENCODE
+To our knowledge, our study is the most comprehensive TWAS of AD involving multiple diseaserelated tissues that have not been systematically evaluated before.
+Thirdly, in this study, we included 71,880 (proxy) AD cases and 383,378 (proxy) controls, which could provide high statistical power to detect associations.
+Previous work has supported that AD-by-proxy based on parental diagnoses showed a strong genetic correlation with AD (r g = 0.81).
+Several potential also need to be acknowledged to interpret our findings.
+As with all other TWAS, we cannot exclude the possibility that some of the associations identified in this study may be false positives.
+Several potential reasons could explain this, such as correlated expression across individuals, correlated predicted expression, as well as shared regulatory variants
+On the other hand, we conducted fine-mapping analyses (using FOCUS) to identify the most likely causal genes.
+Additional experimental work would be needed to better characterize whether the identified genes may play a causal role in AD pathogenesis.
+Furthermore, further statistical confirmations and functional validations are needed for the genes showing inconsistent association directions across the tested tissues.
+
+Conclusions
+In summary, in this large-scale study, we identified 21 putative causal genes, including 10 that have not been reported in previous TWAS, showing an association with AD risk for their predicted expression in brain tissues.
+Our study provides substantial new information to improve our understanding of the genetics and etiology of AD risk.
+
+
+3), FCER1G (1q23.3),
+NIT1 (1q23.3),
+FAM241A (4q25), AL355353.1 (6p12.3),
+CLU (8p21.1),
+AC090515.2
+(15q22.1),
+KAT8 (16p11.2),
+PRSS36 (16p11.2),
+VKORC1 (16p11.2),
+ZNF668 (16p11.2),
+PRSS53 (16p11.2),
+AC135050.6
+(16p11.2),
+AC012146.1 (17p13.2),
+AC243964.3
+(19q13.31-13.32),
+CEACAM19 (19q13.31),
+PVR (19q13.31),
+APOC4
+
+
+
+Fig. 1
+Fig. 1 Manhattan plot of association results from the Alzheimer's disease transcriptome-wide association study.
+The x-axis represents the genomic position of the corresponding gene, and the y-axis represents -log 10 -transformed association combined P value, which is derived from individual p values from single tissue model-based analyses.
+Each dot represents the association for one specific gene.
+The red line shows combined P = 3.38 × 10 -6 based on 14,787 tests.
+The top two associations of TOMM40 and APOE with P < 2.38 × 10 -134 are not shown in this figure
+
+
+
+Fig. 2
+Fig. 2 The top networks identified by Ingenuity Pathway Analysis (IPA).
+Function of the top network involved in metabolic disease, neurological disease, organismal injury and abnormalities.
+Circle indicates gene from the Knowledge Base-not part of our TWAS identified genes for AD risk.
+Shaded circle indicates our TWAS identified genes for AD risk.
+Straight line indicates direct interaction.
+Dashed line indicates indirect interaction.
+More information of IPA legend can be found in http://qiagen.force.com/KnowledgeBase/KnowledgeIPAPage?id=kA41i000000L5rTCAS
+
+
+
+Table 1
+Thirty-five genes that have not been previously identified in TWAS for AD risk The risk SNP closest to the gene is presented and a full list of all risk SNPs, and their distances to the genes are presented in Additional file 6: TableS6
+
+
+
+Table 2
+Fine-mapping results based on TWAS-identified for AD risk
+
+
+
+Table 2
+Fine-mapping results based on TWAS-identified genes for AD risk (Continued)

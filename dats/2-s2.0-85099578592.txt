@@ -1,0 +1,243 @@
+Anterolateral entorhinal cortex thickness as a new biomarker for early detection of Alzheimer’s disease
+Introduction: Loss of entorhinal cortex (EC) layer II neurons represents the earliest AD lesion in the brain.
+Research suggests differing functional roles between two EC subregions, the anterolateral EC (aLEC) and the posteromedial EC (pMEC).
+We use joint label fusion to obtain aLEC and pMEC cortical thickness measurements from serial MRI scans of 775 ADNI-1 participants (219 healthy; 380 MCI; 176 AD) and use linear mixed-effects models to analyze longitudinal associations between cortical thickness, disease status and cognitive measures.
+Results: Group status is reliability predicted by aLEC thickness, which also exhibits greater associations with cognitive outcomes than does pMEC thickness.
+Change in aLEC thickness is also associated with CSF amyloid and tau levels.
+Discussion: Thinning of aLEC is a sensitive structural biomarker that changes over short durations in the course of AD and tracks disease severity -it is a strong candidate biomarker for detection of early AD.
+.
+
+Introduction:
+Layer II of the entorhinal cortex (EC) is one of the earliest sites for the accumulation of tangle pathology and neurodegeneration in the course of Alzheimer's disease (AD)
+Quantitative studies of neuron numbers in autopsy brains characterized for AD pathology have shown that a substantial reduction in EC is observed by the time of dementia diagnosis and further progressive loss of EC neurons occurs over the course of the disease
+Little or no neuron loss occurs within EC in healthy aged brains without AD pathology suggesting that EC neurodegeneration is specific to disease
+Histopathological data indicate that the transentorhinal region, which consists of the anterolateral EC (aLEC) and perirhinal cortex, is vulnerable in the early stages of AD (Braak Stages I and II [2]).
+Recent evidence has elucidated a functional subdivision in the EC whereby the lateral and medial portions are involved in different aspects of information processing
+Other work has shown that the aLEC (which maps onto the lateral entorhinal cortex in rodents) is selectively vulnerable to age-related alterations in processing
+While volume reductions in the EC independently predict the likelihood of conversion from healthy aging to amnestic mild cognitive impairment (MCI) and from MCI to AD
+Given the need for improved diagnostic biomarkers that are capable of detecting the earliest signs of neurodegeneration and the wealth of evidence pointing to the EC as an early site of structural decline, we seek to determine if we can identify different trajectories of structural thinning in the aLEC and pMEC in healthy, MCI and AD individuals.
+The Alzheimer's Disease Neuroimaging Initiative (ADNI
+This multisite imaging endeavor provides investigators with open access to serial MRI scans from nondemented individuals as well as MCI and AD patients, in conjunction with other biomarker data such as CSF amyloid and tau pathological markers.
+Measurements of cortical thickness (CT) have recently emerged as potential candidates for biomarkers due to their superior sensitivity to layer-specific cortical atrophy compared to volumetric approaches and the availability of automated methods for estimation
+In the ADNI sample, EC CT was the most powerful measure of structural change both in MCI and AD brains
+EC thinning also preceded and predicted hippocampal atrophy
+For EC thinning to be a reliable and robust measurement that accurately reflects neurodegeneration and supports longitudinal tracking of disease progression, several common methodological limitations need to be addressed
+These issues include registration bias and inverse consistency, bias due to asymmetric interpolation favoring the baseline scan in longitudinal pipelines
+Here, we apply a novel pipeline that we recently developed for longitudinal registrationbased CT to quantify aLEC and pMEC thinning that directly addresses these pitfalls and extend prior findings that EC thickness reliably differentiates normal controls from MCI patients and MCI patients from AD patients in the ADNI sample.
+Using linear mixedeffects (LME) models, we quantify cross-sectional and longitudinal associations between aLEC and pMEC thickness and two cognitive outcomes, the Clinical Dementia Rating -Memory box score (CDRM) and the Mini-Mental State Exam (MMSE), while controlling for possible confounding variables including age, sex, total brain volume and APOE ε4 genotype.
+We supplement this analysis of cognitive outcomes by using further LME models to establish diagnostic cohort specific trajectories in aLEC and pMEC CT through time and receiver operating characteristic (ROC) curves to ascertain predictive value of aLEC and pMEC CT for diagnostic outcomes.
+In a secondary analysis, we use an LME model to follow trajectories in aLEC and pMEC CT through time for two subcohorts with differing CSF amyloid profiles.
+
+Materials and Methods:
+
+Raw imaging data and preprocessing
+All T1-weighted MPRAGE MRI scans used in this study were drawn from the publicly available Alzheimer's Disease Neuroimaging Initiative (ADNI).
+Exact parameters for the sequences acquired are available on
+Due to limited contrast between EC regions and surrounding areas in T1-weighted MRI, we employ the multiatlas joint label fusion methodology
+
+Atlas data
+We use a set of 17 atlases for multi-atlas joint label fusion comprising T1/T2-weighted image pairs and corresponding segmentation labels for the following left/right regions (aLEC, pMEC, perirhinal cortex, parahippocampal cortex, DG/CA3, CA1, and subiculum).
+Manual atlas labeling uses the T2-weighted image for each atlas set and a well-established and validated protocol
+Atlas labels for a single subject are shown in Supplementary Figure
+The scans used to compose the atlases were collected on a Philips 3T scanner at the University of California, Irvine.
+T1-weighted MPRAGE scans were acquired in the sagittal orientation with an isotropic image resolution of 0.75 x 0.75 x 0.75 mm
+Image acquisition for the T2-weighted protocol was angled perpendicular to the long axis of the hippocampus consistent with previous work
+T2-weighted image resolution is 0.47 x 0.47 x 2.0 mm 3 .
+The optimal rigid transformation between each individual atlas' T1-and T2-weighted images was determined using the Advanced Normalization Tools (ANTs) software package
+
+Population-specific templates
+To facilitate aLEC/pMEC thickness estimation for the ADNI cohort described below, two population-specific, optimal shape/intensity templates were generated.
+The first T1weighted template was constructed from 52 cognitively normal ADNI-1 subjects for a separate ADNI-based investigation
+The second T1-weighted template, the "UCI" template, was generated from the 17 T1weighted atlas images discussed above
+Representative slices for both templates are shown in Supplementary Figure
+ANTs-based Symmetric normalization (SyN) was used to determine optimal diffeomorphic transformation between the two T1-weighted templates.
+This permits the two T1-weighted templates to act as an intermediate geometric space for the "pseudo-geodesic" mapping 29 between a set of atlas labels and the individual T1-weighted time point.
+
+Individual time point processing
+Processing was conducted using the recently developed ANTs longitudinal structural processing pipeline
+Briefly, the T1-weighted images constituting the set of subject's longitudinal data were used to create a single-subject template (SST) as an unbiased space for processing longitudinal time points of individual subjects
+The SST was then processed through the cross-sectional pipeline using the ADNI-1 template mentioned earlier.
+This processing produced the SST auxiliary images (i.e., n-tissue segmentation priors and brain extraction mask prior) used for individual time point brain extraction and tissue segmentation into CSF, cortical gray matter, white matter, deep gray matter, brain stem and cerebellum.
+Output of this processing stream includes the transforms between the individual time point and the SST and the transforms between the SST and the ADNI-1 template.
+In this way, concatenation of transforms can be used to map each of the 17 atlas label sets to each individual time point through a set of intermediary spaces which constitutes the "pseudo-geodesic" transform.
+This strategy has the benefit of reducing diffeomorphic distances between registration image pairs, reducing computational costs in terms of the sheer number of registrations, and taking advantage of the longitudinal nature of the data.
+This pseudo-geodesic mapping strategy is illustrated in Supplementary Figure
+
+Multi-atlas joint label fusion
+After mapping the set of 17 atlas label sets to each individual time point, the multi-atlas joint label fusion
+This technique weights the contribution of each atlas while minimizing informational redundancy between the atlases.
+To estimate CT for each EC region, we base our strategy on the MindBoggle approach 31 but, instead of employing a mesh-based surface area calculation, we opt for the more accurate Crofton's formula
+
+Statistical analyses
+Our primary interest is the linear association between cognitive performance (CDRM and MMSE), diagnostic status (healthy, MCI and AD) and cortical thickness (CT) in the aLEC and pMEC.
+We seek to discern whether declining cognitive performance tracks with deterioration of CT within the two subregions.
+We also ask whether clinical diagnostic groups are separable when viewed through subregion CTs and their trajectories through time.
+Linear mixed-effects (LME)
+As an extension of the multiple linear regression framework, LME modeling also supports adjustment for possible confounding variables as well as inclusion of precision variables.
+For the primary analysis, we use three LME models in total, each of which features subject-specific random intercepts and slopes through time.
+We decide on the inclusion of random components using the modified likelihood ratio test
+With the first two models we wish to understand cognitive performance as a linear function of CT and its change through time.
+Both of these models regress either CDRM or MMSE over aLEC or pMEC CTs (and functions thereof) independently.
+We fit each model once for aLEC thickness as predictor of interest and once for pMEC thickness as predictor of interest since simultaneous inclusion of both measures results in multicollinearity on account of correlations between subregional CT.
+The first model evaluates cognitive score as a function of baseline thickness and the interaction between baseline thickness and months since baseline.
+The second model evaluates cognitive score as a function of baseline thickness and loss of thickness through time.
+We stratify the first two models by diagnostic cohort on account of the possibility of diagnosis based non-linearities in associations through time.
+Stratification decreases statistical power but increases model robustness.
+Another primary question is whether population CT averages and their trajectories through time can be separated as a function of healthy, MCI and AD statuses.
+A third LME model (Model 3) independently regresses aLEC or pMEC CTs over diagnostic status and its interaction with months from baseline.
+We supplement Model 3's inferential analysis with a predictive analysis using ROC curves
+Given positive results, we motivate future research by asking the secondary question whether differential associations between CSF amyloid levels and aLEC/pMEC CTs provides explanatory power for primary analysis results.
+Based on prior work
+All models are outlined in Supplementary Table
+All modeling decisions were made prior to data access.
+We use the R programming language
+We use the nlme package
+For exploratory analyses, we: present a data table with means, proportions and standard deviations of outcomes and model covariates stratified by diagnostic cohort; plot aLEC and pMEC thicknesses as a function of subject age, stratifying by sex; and use nearest neighbor missclassification as an index of homogeneity.
+
+Results: Data distributions
+We provide descriptive statistics for outcomes, predictors and other covariates in Table
+For each cohort, means and standard deviations appear for continuous variables and level-wise percent membership appears for factors.
+For both baseline aLEC and baseline pMEC cortical thickness, the controls have the highest values, the AD cohort has the least, and the MCI cohort is in the middle.
+This trend holds for the longitudinal change in thickness.
+The AD cohort has the largest percent loss per year, and the MCI cohort has less percent loss per year.
+For both of these groups the %/yr loss is less for pMEC than it is for aLEC.
+MMSE and CDRM also follow the cohort-wise trends: baseline MMSE decreases from control cohort to AD cohort and baseline CDRM rises.
+For both MCI and AD cohorts, CDRM changes more through time than does MMSE.
+Figure
+Visibly, there is greater overlap between healthy and AD cohort point clouds as a function of pMEC than as a function of aLEC.
+We quantify this overlap using the nearest neighbor misclassification rate as a homogeneity index.
+Regardless of sex, cohort clusters exhibit roughly 70% less homogeneity when viewed with aLEC thickness than with pMEC thickness.
+[ INSERT FIGURE
+
+Figure 2a
+contains results from analyses based on Models 1 and 2. Green cells are nominally statistically significant at a 95% confidence level.
+Baseline CT and percent loss are standardized within cohort to facilitate cross-cohort comparisons and comparisons between the aLEC and the pMEC.
+In general, aLEC thickness is more predictive of outcome than is pMEC thickness.
+Across both outcomes (MMSE and CDRM), aLEC thickness has 8 significant associations with outcome, whereas pMEC only has 3 significant associations.
+In 9 of 12 of the comparisons shown in Table
+the sign of MMSE so that lower scores reflect better testing performance for both cognitive measures.
+In general, regression coefficients reflecting the associations between CDRM or MMSE and aLEC (orange) thickness (and changes thereof) are more significantly non-zero than those of pMEC (blue) thickness.
+The scaled coefficients of aLEC are uniformly higher than pMEC except for the case of MMSE as a function of % loss CT for the AD cohort.
+For the MCI cohort, both lower baseline aLEC thickness and greater % loss aLEC CT predict worse CDRM and MMSE scores.
+
+[INSERT FIGURE 2 HERE]
+
+EC cortical thickness and clinical diagnosis
+Model 3 regresses CT over cohort membership and its interaction with time.
+In general, estimated effect sizes for aLEC as a function of cohort membership and time are twice those for pMEC.
+Nonetheless, all linear associations are nominally statistically significant at the 95% confidence level, i.e. none of the intervals contain zero.
+
+The top row of
+
+EC cortical thickness and CSF AD pathology
+Given the stronger associations between aLEC CT and clinical outcomes than between pMEC thickness and the same, we ask whether a stronger link between aLEC thickness and CSF AD pathology levels exists than between pMEC thickness and the same.
+This secondary analysis provides a basis for future research into physiological mechanisms underlying aLEC CT and its clinical effects.
+We look at the longitudinal progressions of aLEC and pMEC thicknesses as a function of the binary threshold given by the ratio of phosphorylated tau-181 (p-tau) to amyloid beta (Aß) being greater than 0.1
+These CSF data are available for a smaller 238 subject (70 healthy; 119 MCI; 49 AD) subset of the data used in the primary analyses.
+Due to dearth of repeated measures for CSF levels, we consider only the first CSF measurement for each individual and only include CT, CDRM and MMSE data collected during visits occurring after this CSF measurement with one-month grace period.
+Proportions of the ratio of p-tau to Aß that are greater than 0.1 are 0.9 for the healthy cohort, 0.97 for the MCI cohort and 1 for the AD cohort.
+We refer to these subjects as being "p-tau/Aß ratio-positive" or "amyloid ratio-positive".
+We model the linear associations between subregion CTs and ratio positivity and its interaction with time from baseline (as measured by time of CSF measurement).
+The bottom row of Figure
+Cross-sectionally, we estimate that the population of individuals with amyloid ratio positivity has 0.11 mm less aLEC CT than does the population of individuals who are amyloid ratio negative.
+For perspective, 0.11 mm is more than the difference between baseline aLEC thickness means of healthy control and MCI cohorts presented in Table
+Longitudinally, we estimate that the amyloid ratio-positive sample of individuals experiences an additional loss of 0.025 mm aLEC CT per year compared to the loss experienced by the amyloid ratio-negative sample.
+The additional loss in aLEC CT experienced by the amyloid ratio-positive sample requires 4 years before the difference between healthy and MCI cohorts is spanned.
+Due to the smaller sample size in this analysis, the results require further research and should be regarded as preliminary.
+
+Discussion
+Given the wealth of research implicating the transentorhinal region
+We implemented a novel longitudinal CT pipeline on structural MRI data collected from the ADNI-1 cohort and compared this data with MMSE and CDRM performance, diagnostic cohort membership and CSF amyloid levels.
+Initial homogeneity analyses showed less overlap between healthy control and AD cohorts as a function of aLEC CT than for pMEC CT.
+We used LME models to analyze linear associations between these quantities through time while controlling for within-subject correlations and confounders such as age, sex, brain volume and APOE ε4 genotype.
+Primary analyses showed statistically and practically significant negative associations between baseline aLEC thickness and progression of cognitive performance over time (Model 1).
+We also observed statistically and practically significant associations between change in aLEC thickness and cognitive performance through time (Model 2).
+Cross-sectional and longitudinal correlations between aLEC thickness and cognitive performance were present for both MCI and AD cohorts.
+We also tested whether trajectories of EC subregional CT through time differentiate by clinical diagnostic grouping (Model 3).
+aLEC thickness maintained complete separation between 95% confidence bands between healthy, MCI and AD cohorts while pMEC thickness did not.
+Results indicate that the EC subregions could be differentially affected during early stages of AD.
+This is consistent with histopathological studies, which have reported that neurofibrillary tangles and neuropil threads show a distribution pattern that allow for staging
+Initial stages show alterations confined to the transentorhinal region, which includes the aLEC.
+These results contribute to growing evidence that the aLEC is selectively vulnerable during early AD and also demonstrate that aLEC CT and changes in thickness over time are sensitive to cognitive changes and serve as a viable biomarker for prodromal AD.
+In a secondary analysis, we analyzed the relationship between subregional CT and CSF measures of amyloid and tau pathology.
+Clinical symptoms of Alzheimer's disease are preceded by a long preclinical phase in which pathological protein aggregation occurs in the brain
+Additionally, Aβ plaques develop ~15-20 years before onset of cognitive impairment and neurofibrillary tangles begin to accumulate at least 5 years before symptom onset
+Previous studies have shown low CSF levels of Aβ strongly correlate with increased plaque load in the brain, and that high concentrations of CSF p tau correlate with AD specific neurofibrillary pathology
+Furthermore, ptau 181 -Aβ 42 ratio (ptau 181 /Aβ 42 ) has been shown to be a strong predictor of conversion from cognitively normal to mild cognitive impairment over a 3~4 year period
+We found statistically and practically significant linear associations between the binarized ratio p-tau/ Aβ >0.1 and aLEC CT and estimated that there are similar differences in aLEC CT levels comparing the p-tau/ Aβ ratio-positive sample to the ratio-negative sample as for the comparison between the MCI cohort and the healthy cohort.
+Furthermore, the p-tau/ Aβ ratio-positive sample exhibits a statistically and practically significant change in aLEC thickness over time, requiring an estimated 4 years to span the gap between healthy and MCI cohorts.
+This secondary analysis suggests the presence of AD-specific neuropathology may mediate thinning of the aLEC over time, but results require further investigation.
+Overall, these results suggest that aLEC cortical thickness is a sensitive measure to cognitive decline as well as to AD pathological stage.
+Considering the growing interest in surrogate biomarkers that are sensitive and specific to AD especially during the early stages, we suggest that aLEC thinning may be an early marker that may be associated with cognitive decline especially in the memory domain and may serve as a mechanistic link between pathological load and cognitive outcomes.
+Additional research should focus on further understanding the function of aLEC and structural trajectories with aging and disease.
+For example, the human aLEC appears is involved in tasks ranging from visual object pattern separation
+Developing tasks that are specific and sensitive to aLEC (dys)function could serve as an early predictor of cognitive decline.
+In the future, these tasks can provide measures that can be used as neurobiologically-validated outcomes for clinical trials in preclinical AD.
+
+S.3. MRI methods
+Detailed methods of MRI acquisition are previously described
+Only T1-weighted 3D MP-RAGE scans were used in this report (acquisition parameters: FOV = 240 x 240; matrix = 192 x 192; TR = 3000 ms; TI = 1000; flip angle = 8 degrees, slice thickness = 1.2 mm; sagittal orientation).
+All MPRAGE scans underwent quality control procedures, N3 bias correction and were scaled for gradient drift using phantom data.
+
+S.4. Inferential model building and variable selection
+To moderate inflation of type 1 error, we design our statistical models from first principles and prior to accessing the data.
+We select model responses and predictors of interest based on our neuroscientific questions of interest.
+After this, we decide upon the inclusion of additional covariates based on whether they might be confounders, i.e., variables that might influence both outcome and predictors of interest, or precision variables, i.e., variables that influence outcome alone.
+Inclusion of confounders decreases estimator bias and increases variance, leading to more conservative intervals.
+Inclusion of precision variables tightens confidence intervals, increasing certainty.
+With these relationships in mind, we now discuss inclusion rationale.
+The first two models regress cognitive indices over CT and functions of CT and time from baseline.
+As such, we include months from baseline, clinical diagnosis, the number of APOE 4 alleles, sex, age and total brain volume as potential confounding variables -months from baseline plausibly modulates CT and cognition scores; as a primary biomarker for genetic predisposition, APOE allele count certainly associates with cognition and might associate with CT; when combined with other subject descriptors, sex might modulate cognitive performance and certainly modulates CT; age certainly modulates both; and brain volume plausibly modulates both.
+For Model 3, similar logic applies by exchanging clinical diagnosis for cognition scores.
+A difference is that we take months from baseline to be a precision variable since CT changes with time but diagnosis remains constant for the cohort we consider.
+Importantly, we adjust for all but one potential confounder by inclusion in the regression models as covariates, with the only exception being diagnostic status for Models 1 and 2. Since diagnostic differences plausibly modify the relationship between cortical thickness and MMSE/CDRM in complicated, nonlinear ways, we instead stratify the analysis by diagnosis, fitting the two models to the individual cohorts separately.
+Such stratification increases model robustness but decreases power, here expressed as wider, more conservative confidence intervals.
+Variables of all models appear in Table
+
+
+
+Figure 2
+Figure 2 also illustrates Model 2 results, but, to facilitate comparisons across CDRM and MMSE and aLEC and pMEC thicknesses, axes are standardized.
+MCI cohort results are shown in Figure 2b, AD cohort results are shown in Figure 2c.
+We flipped
+
+
+
+Figure 3
+illustrates these results as a function of months from baseline.
+aLEC thickness is regressed over cohort membership and months in Figure3a, pMEC thickness is regressed over the same in Figure3b.
+The three cohorts exhibit greater separation at baseline when viewed through aLEC thickness than they exhibit when viewed through pMEC thickness.
+Estimated aLEC thickness 95% confidence bands maintain complete separation among cohorts throughout time, whereas estimated pMEC thickness 95% confidence bands do not.
+
+
+
+Figure 4
+Figure4supplements these inferential results with a predictive analysis using ROC curves to measure predictive content of aLEC and pMEC CTs with respect to MCI (Figure4a) and AD (Figure4b) status.
+The aLEC curves are consistently above the pMEC curves and yield higher AUCs, signifying greater predictive content at every threshold of the continuous CT values.
+Both aLEC and pMEC AUCs outperform those of subject age (MCI 0.47; AD 0.48) and total brain volume (MCI 0.47; AD 0.57).
+
+
+
+Table 1 . 27 FiguresFigure 1 .Figure 2 ..Figure 3 .
+Figures and Captions
+
+
+
+Figure 4 .
+Figure 4. Receiver operating characteristic (ROC) curves for the prediction of MCI status and AD status using aLEC and pMEC CT.
+(a) In predicting MCI status, the aLEC curve dominates the respective pMEC curve and exhibits a larger area under the curve (AUC 0.69 vs. 0.62).
+(b) In predicting AD status, the aLEC curve also dominates the respective pMEC curve and exhibits a larger area under the curve (AUC 0.73 vs. 0.67).
+Both aLEC and pMEC AUCs outperform those of subject age (MCI 0.47; AD 0.48) and total brain volume (MCI 0.47; AD 0.57).
+
+
+
+Figure S2 ..Figure S3 .
+Figure S2.
+Representative views of the two population-specific templates created for this study.
+The ADNI-1 template was created from 52 cognitively normal subjects selected from the ADNI-1 template while the UCI template was created from the 17 T1weighted images of the atlas set used for joint label fusion.
+These images constitute the intermediate spaces for the pseudo-geodesic transform between the EC labels and the T1-weighted images representing individual subject time points.
+
+
+
+Table 1 .
+Neuropsychological test data were not available for 4 AD subjects.

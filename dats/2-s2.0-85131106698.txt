@@ -1,0 +1,272 @@
+Alzheimer's Disease Diagnosis With Brain Structural MRI Using Multiview-Slice Attention and 3D Convolution Neural Network
+Numerous artificial intelligence (AI) based approaches have been proposed for automatic Alzheimer's disease (AD) prediction with brain structural magnetic resonance imaging (sMRI).
+Previous studies extract features from the whole brain or individual slices separately, ignoring the properties of multi-view slices and feature complementarity.
+For this reason, we present a novel AD diagnosis model based on the multiview-slice attention and 3D convolution neural network (3D-CNN).
+Specifically, we begin by extracting the local slice-level characteristic in various dimensions using multiple sub-networks.
+Then we proposed a slice-level attention mechanism to emphasize specific 2D-slices to exclude the redundancy features.
+After that, a 3D-CNN was employed to capture the global subject-level structural changes.
+Finally, all these 2D and 3D features were fused to obtain more discriminative representations.
+We conduct the experiments on 1,451 subjects from ADNI-1 and ADNI-2 datasets.
+Experimental results showed the superiority of our model over the state-of-the-art approaches regarding dementia classification.
+Specifically, our model achieves accuracy values of 91.1 and 80.1% on ADNI-1 for AD diagnosis and mild cognitive impairment (MCI) convention prediction, respectively.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common cause of dementia that causes progressive and permanent memory loss and brain damage.
+It is critical to initiate treatment for slowing down AD development in early AD.
+As a non-contact diagnostic method, structural magnetic resonance imaging (sMRI) is regarded as a typical imaging biomarker in quantifying the stage of neurodegeneration
+Based on the examination of the brain's sMRI images, numerous artificial intelligence (AI) technologies, including conventional voxel-based machine learning methods and deep-learningbased approaches, have been performed for assisting the cognitive diagnosis
+In the early attempts, traditional statistical methods based on voxel-based morphology (VBM) were introduced to measure the brain's morphologic changes.
+VBM-based studies determine the intrinsic characteristics of specific biomarkers, such as the hippocampus volumes
+However, most VBM-based approaches relying on domain knowledge and expert's experience need a complex handcrafted feature extraction procedure, which is independent of the subsequent classifiers, resulting in potential diagnostic performance degradation.
+With the advancement of deep learning, especially the successful applications of convolution neural networks (CNN), in recent years, a growing body of research employed deep learning to analyze the MR images by training an end-to-end model without handcrafted features
+Since the 3D volumetric nature of sMRI, 3D-CNN could be directly applied to capture the structural changes of the whole brain at the subject-level
+However, there is much useless information in the complete MRI with millions of voxels.
+Furthermore, it is hard to fully train the CNNs with only a few labeled MRI data available at the subject level.
+Many deep-learning-based methods turn to exact pre-determination of regions-of-interest (ROI) for training the models with 3D-Patch or 2D-slice
+Compared with the modeling in the subject level, the patches or slices carry more local features but lose some global information.
+In addition, some studies try to exclude irrelevant regions by emphasizing specific brain tissues with the help of segmentation technology.
+However, such methods need extra tissue segmentation operations, which inevitably increase the complexity of the diagnostic model.
+Although the existing models have achieved outstanding results so far, it is still a challenging work for AD diagnosis due to a large number of volumes in 3D MR images and a subtle difference between abnormalities and normality brains, i.e., it is vital to extract subtle changes in disease progression from MRI sequence data with a high denominational.
+Previous studies focus on extracting features from the whole brain or individual slices separately, ignoring the feature complementarity from different views.
+As illustrated in Figure
+Considering both global structure changes of whole brain and fine-grained local distinctions of slices could be both crucial, this study proposes a novel fusion model for AD classification, named multiView-slice attention and 3D convolution neural network (MSA3D), which organically integrates multiple slices features and 3D structural information.
+The main contributions of this study are three-fold:
+(
+
+MATERIALS AND DATA PREPROCESSING
+
+Studied Subjects
+Following the previous studies
+Both of them can be found on the Alzheimer's Disease Neuroimaging Initiative (ADNI) website
+This study employed the ADNI data only for model validation but did not involve any patient interaction or data acquisition.
+More detailed data acquisition protocols are available at
+We collected a total of 1,451 subjects from the ADNI database with baseline T1 weighted (T1W) brain MRI scans, which are divided into four categories:
+• Cognitively Normal (CN): Subjects diagnosed with CN at baseline and showed no cognitive decline.
+In our experiments, these two independent datasets will be employed as the training dataset and testing dataset, repetitively, to perform cross-validation.
+More specifically, we first trained the model on the ADNI-1 and evaluated it on ADNI-2.
+Subsequently, we reversed the experimentation and used the ADNI-2 for model learning, and then the trained model was assessed on ADNI-1.
+Note that we employed the ADNI data only for empirical analysis but this study did not employ any patient interaction or data acquisition.
+
+Data Preprocessing
+The standard preprocessing pipeline was performed on all the T1W brain MRIs as follows: First, all MRIs were performed in an axial orientation parallel to the line through anterior commissure (AC)-posterior commissure (PC) correction.
+Then the invalid volumes of the sMRI, i.e., the blank regions, were removed, leaving only the brain tissues.
+Subsequently, the intensity of brain images was corrected and normalized with the N3 algorithm after the skull dissection
+Finally, all the aligned images are resized into the same spatial resolution for facilitating the CNN training.
+The model's inputs are fixed to 91 × 101 × 91(i.e., 2mm × 2mm × 2mm cubic size) in our experiment, following the previous study
+
+METHODOLOGY
+The overall architecture of our model is presented in Figure
+The following sections provide more details for each module.
+
+Multi-View-Slice 2D Sub-Networks
+In this subsection, we introduce the MVSSN module for extracting multiview 2D-slice level features.
+As shown in Figure
+Since discriminative features may exist in different slices, we employ a 2D-CNN to extract the multiview slice features from each slice.
+Let's denote the x, y, and z as the MRI planes of sagittal, coronal, and axial, respectively, particularly, S x = [s 1
+x , s 2 x , ..., s M x x ] denotes the slice cluster in the x plane, where M x is the total slice number of the cluster S x .
+After using the multiple 2D-CNNs on each slice to generate the feature maps in different views separately, the input I ∈ R D×H×W can be transformed as the feature maps F x , F y , F z in three dimensions.
+For example, each feature map F i
+x in sagittal view is calculated by Equation (1):
+where
+x contains three CNN blocks, each with a conventional layer, a barch normalize (BN) layer, a rectified linear unit (RELU) operator, and a maxpooling layer.
+Detailed parameters of our 2D-based CNN are listed in Table
+After the Global-Avg-Pooling (GAP) operation, the feature map F i
+x can be pooled as a vector denoted as I i x .
+In the end, all the feature maps in x view can be cascaded as
+. The same conventional operation can be applied on y and z views to generate the corresponding feature map clusters.
+
+Slices Attention Module
+Each vector in I k can be regarded as a class-specific response after extracting the multiple slices-level features using the MVSSN.
+Considering that the volumetric MRI data contains different slices, many of them may not contain the most representative information relevant to dementia
+To address this issue, we proposed a SAM to help the CNN focus on the specific features by exploiting the interdependencies among slices.
+As shown in Figure
+By employing an attention mechanism, we can obtain the slice attention A k ∈ M k ×M k , which can build the dynamic correlations between the target diagnosis label and slice-level features with the following equation:
+(2) where a k ij ∈ A k is the score that semantically represents the impact of i th slice feature on the j th slice in the k th direction.
+The final output of the weighted slice features I k ∈ M k ×C can be calculated by:
+where β is a learnable parameter that will gradually increase from 0, note that the final output feature maps are the sum of all the weighted features of the slices in one direction so that the SAM can adaptively emphasize the most relevant slices to produce a better AD inference.
+After the SAM module, we fuse all the slice features in three directions using concatenation operation to form the final slicelevel features F s = [ I x , I y , I z ], where F s represents the cascaded weighted features which can capture the multiple views of local changes of the brain in three directions in 2D MRI images.
+
+Subject-Level 3D Neural Network
+The brain MRI data can be regarded as 3D data with an input size of H × W × D, where H and W denote the height and width of the MRI, repetitively, and D is the image sequence.
+In order to explore the global structure changes of the brain, all of the convolution operations and pooling layers are reformed from 2D to 3D.
+The 3D CNN operator is given in Equation (
+where (x, y, z) refers to the 3D coordinates in sMRI data, F l-1 i is the ith feature map of the l -1 layer.
+W l ij (δ x , δ y , δ z ) is a 3D convolution kernel slides in 3 dimensions, thus the new jth feature map u l j (x, y, z) of the l layer can be generated after 3D convolution across the F l-1 i from the l -1 layer.
+Similar to the 2D-CNN, our 3D-CNN includes four network blocks, and each block has a 3D-CNN layer, 3D BN layer, ReLu activation, and 3D max-pooling layer.
+Finally, the 3D convolutional feature maps are pooled into one 1D vector using a 3D-GAP layer with a kernel size of 1 × 1 × 1.
+The produced vector represents the
+
+Fully Connected Layer and Loss for Classification
+To exploit both the slice-level and subject-level features generated by 2D and 3D-CNNs, a fully connected (FC) layer is employed to concatenate all the 2D and 3D features maps, followed by a final FC layer and a softmax classifier, which outputs the prediction probability of the diagnostic labels.
+The cross-entropy (CE) is widely adopted as the training loss function for image classification
+where
+N is the total number of test subjects and X i means the ith sample with the corresponding label Y i in the training datasets X, and i ∈ [1, N].
+P(Y c i = c|X i : W) measures the probability of the input sample X i that is correctly classified as the Y c i by the trained network with weights W.
+
+Complexity Analysis
+We further analyze our proposed model's complexity by reporting the two branches of subnetworks, respectively.
+For the aspect of the global subject-level 3D-CNN model, the computational complexity of 3D-CNN layer is O(D x D y D z K 3 global ), where K global is 3D-CNN kernel size, while D x , D y , D z is the feature map dimensions of the layer.
+For the aspect of the slice-level 2D-CNN model, since the 2D feature maps are fused in three dimensions, the time complexity of the 2D-CNN layer is
+, where M x , M y , M z denotes the total number of slices in three MR planes, receptively, and K slice is the 2D-CNN kernel size.
+
+EXPERIMENTAL RESULTS
+
+Competing Methods
+We first compare our proposed MSA3D method with multiple deep-learning-based diagnosis approaches that we reproduced (3) a method using multi-slice 2D features, i.e., the features extracted from all the slices in three directions (denoted as Multi-Slice), and (4) a method using 3D-CNN with 3D patch-level features (denoted as Multi-Patch).
+(1) Voxel+SVM: As a conventional statistical-based model, Voxel+SVM performed sMRI analyses at the voxel level
+Using a non-linear image registration approach, we first normalized all MRIs with the automated anatomical atlas (AAL) template.
+Then, we segmented the gray matter (GM) from sMRI data.
+In the end, we mapped the density of GM tissue into one vector and used the support vector machine (SVM) as the classifier for AD diagnosis.
+(2) 3D convolution neural network: As an important part of MSA3D, 3D-CNN can extract global subject-level changes of sMRI for dementia diagnosis
+Thus, it can be regarded as the baseline model in our study.
+In this model, we only give the 3D MRI data as the input for training the 3D-CNN.
+(3) Multi-Slice: As another essential component of MSA3D, the multi-slice model focus on the local slice-level features, which consist of all the features extracted by using the 2D-CNN with the 2D slices in sagittal, coronal, and axial MR planes.
+(4) Multi-Patch: In this method, multiple 3D-patches are partitioned from the whole brain according to the landmarks defined in
+In the end, all the ROIbased features were cascaded to obtain the final embedded feature for the entire sMRI.
+
+Experimental Setting
+All the tested models are implemented with Python on Pytorch using one NVIDIA GTX1080TI-11G GPU.
+During the training stage, the batch size is set to the same value of 12 for all models for a fair comparison.
+Stochastic gradient descent (SGD) with an initial learning rate of 0.01 and a weighted delay of 0.02 is adopted as the optimization approach, along with an early stopping mechanism for avoiding over-fitting.
+The following five criteria are calculated to investigate the performance of the tested models, including accuracy (ACC), specificity (SPE), sensitivity (SEN), the area under the ROC curve (AUC), and F1-values (F1).
+
+Results on ADNI-2
+We first present the comparison results of two classification tasks (i.e., AD vs. NC and pMCI vs. sMCI) on ADNI-2 in Table
+As we can inform from Table
+The results indicate that local discriminative features are important for MCI prediction, and only the 2D-slice level features may not be a good option for CNNs.
+In addition, 3D-CNN achieved the second-best results on both AD and MCI prediction tasks.
+We can also find that all the deep-learning-based models perform better than the conventional Voxel+svm method.
+The main reason is that the deep-learning-based technique can achieve a better feature extraction with an end-to-end framework.
+In general, our model consistently yields better performance than the tested methods, e.g., in the case of MSA3D vs. 3D-CNN baseline, our model resulted in 7 and 5.6% improvements in terms of ACC and AUC for classifying AD/NC, and 7.3% and 16.9% improvements in terms of ACC and AUC for determining pMCI/sMCI.
+This result shows that after fusion of the 2D and 3D information through two branches of CNNs, our model can capture more discriminative changes in both multiview 2D-slices and 3D whole-brain volumes in the progress of AD and MCI conversion.
+So that our model generates significant improvements in terms of all the metrics compared to other methods in comparison.
+
+Results on ADNI-1
+In order to further investigate the effectiveness of the test models, we also perform a cross-valuation on ADNI datasets, i.e., we trained the models on ADNI-2 and tested them on ADNI-1.
+It needs to be pointed out that because of the lack of sufficient pMCI samples in ADNI-2 (75 in ADNI-2 vs. 167 in ADNI-1), we only conduct the experiments of AD diagnosis on ADNI-1.
+The comparison results are summarized in Table
+Our model still produces the best values in terms of all the metrics compared with the other methods.
+Meanwhile, we can find a significant performance drop for all models when trained on ADNI-2, which leads to a relatively small improvement of AUC achieved by our model compared with the 3D-CNN.
+The main reason for this is that ADNI-1 and ADNI-2 were collected using 1.5 and 3.0 Tesla MRI scanners, respectively.
+The strength of a 3.0 T magnet is two times that of a 1.5 T magnet, which could cause the overestimation of brain parenchymal volume at 1.5 T
+The variable image quality between different scanners directly impacts the models for diagnosis.
+However, our model still outperforms the 3D-CNN baseline by 5.3% of the F1 value in this scenario.
+All of these findings suggest the proposed model's efficacy and reliability.
+
+Comparison With Other Methods in Literature
+In this section, we give a brief description of our MSA3D method with the previous study reported in the literature for AD diagnosis using the ADNI database.
+The state-of-the-art comparison studies contain:
+(1)  As shown in Table
+The main reason is that CNN has more feature representation power than handcrafted features.
+(2) The local features, including ROI-based, landmark-based, and hippocampal segmentation, are also essential to improve the performance of dementia prediction, which indicates that the local changes in whole-brain images provide some valuable clues for AD diagnosis.
+However, most of these models need predefined landmarks or segmentation regions, which could be hard to obtain potentially informative ROIs due to the local differences between subjects.
+(3) Different from existing deeplearning-based models
+
+DISCUSSION
+
+Influence of Features in Different Dimensions
+In this section, we investigate the effects of models using multiple slice-level features in different views for AD classification.
+As shown in Figure
+Moreover, after combining the features in three dimensions, our proposed MAS3D outperforms all the tested models, especially yielding significantly better SEN values than the tested methods.
+This result demonstrates that our 2D-and 3D-features fusion strategy can organically integrate the multi-view-slices features in all directions.
+
+Influence of Slice Attention Module
+As introduced in Section 3.2, the SAM was employed in our MSA3D model to assist the slice-level feature extraction by exploiting the relationships among the slices, i.e., to filter out uninformative slices efficiently.
+In this subsection, we conducted an ablation experiment for comparison, in which the SAM is removed from our MSA3D, defined as MS3D, to investigate the effectiveness of the proposed SAM, and all the models are trained using ADNI-1 and obtained the test results on ADNI-2.
+The comparison results are illustrated in Figure
+(2) the SAM further improved the performance of slice level feature extraction, especially on the challenging MCI prediction task, e.g., The proposed MSA3D generally had better classification performances than MS3D (the ACC and SEN is 0.772 vs. 0.801 and 0.440 vs. 0.520, respectively).
+This indicates that the proposed SAM can help the neural network focus on specific slices and learn more discriminative 2D-slice level features from abundant slices.
+FIGURE 8 | Attention maps of our MAS3D method for predicting multiple subjects selected from the ADNI database with different stages of dementia (i.e., AD and pMCI), respectively.
+Each subject's attention map is displayed in three MR planes (i.e., sagittal, coronal, and horizontal), where red and blue colors denote high and low discriminative features in sMRI, respectively.
+
+Visualization of Slices Features
+This section visualizes the attention maps produced by our MAS3D method using the Grad-cam
+The first, second, and third columns of Figure
+From Figure
+For example, our model emphasizes the atrophy of the frontoparietal cortex, ventricle regions, and hippocampus in the brain.
+It needs to be pointed out that these highlighted brain regions located by our model in AD diagnosis are consistent with previous clinical research
+All of these results suggest our proposed model can more precisely learn more discriminative features from the brain sMRI for precise dementia diagnosis.
+
+Limitation and Future Study
+While the experimental results suggested our proposed model performed well in automatic dementia detection, its performance and generalization might be potentially enhanced in the future by addressing the limitations listed below.
+First, we take advantage of both 2D-slice and 3D-subject features in an integrated MSA3D model.
+However, the numerous 2D slices observably increased the computational complexity.
+Since not all the slices help determine the prediction, we could reduce the complexity by using an online feature selection module
+Second, the difference distributions between ADNI-1 and ADNI-2 were not taken into account, i.e., 1.5 T scanners and 3 T scanners for ADNI-1 and ADNI-2, repetitively, which might have a detrimental impact on the model's performance, i.e., the model trained on ADNI-2 and assessed on ADNI-1 performed worse than that trained on ADNI-1 and evaluated on ADNI-2.
+We could potentially introduce the domain adaption technique into our model to reduce the domain gap between different ADNI datasets.
+Finally, To further verify the generalization capacity of the proposed model, we will investigate more deeplearning-based methods and test our model on other AD datasets for more AD-related prediction tasks, such as dementia status estimation.
+
+CONCLUSION
+This study explores a 2D-slice-level and 3D subject-level fusion model for AI-based AD diagnosis using brain sMRI.
+In addition, a slice attention module is proposed to select the most discriminative slice-level features adaptively from the brain sMRI data.
+The effectiveness of our model is validated on ADNI-1 and ADNI-2, repetitively, for dementia classification.
+Specifically, our model achieves 91.1 and 80.1% ACC values on ADNI-1 in AD diagnosis and MCI convention precondition, respectively.
+
+
+
+FIGURE 1 |
+FIGURE 1 | The slice-level information in brain sMRI.
+(A) Slice-level features in axial plan.
+(B) Slice-level features captured in multiview, including the sagittal, coronal, and axial planes.
+
+
+1) We proposed an MSA3D model to combine the 2D multiview-slice levels and global 3D subject-level features for fully mining the subtle changes in different views and dimensions.
+(2) We propose a slice-level attention module to help the CNN focus on specific slices to obtain more discriminative features representations from abundant vowels.
+(3) We perform two classification tasks, i.e., AD diagnosis and MCI conversion prediction, on two ADNI datasets.
+Our model achieves superior diagnostic results compared with other tested models, demonstrating our model's efficacy in aiding dementia prediction.
+
+
+
+FIGURE 2 |FIGURE 3 |
+FIGURE 2 | Illustration of the proposed multiview-slice attention and 3D convolution neural network (MSA3D) model.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Comparisons results in terms of ROC curves.
+The models are trained on ADNI-1 and tested on ADNI-2.
+(A) AD vs. NC.
+(B) pMCI vs. sMCI.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Comparisons of ROC curves.
+The models are trained on ADNI-2 and tested on ADNI-1.
+
+
+
+TABLE 1 |
+Detailed clinical information of the studied subjects in ADNI-1 and ADNI-2 (± means the SD).
+
+
+
+TABLE 2 |
+Detailed parameters of our 2D-CNN slice sub-network.
+
+
+
+TABLE 3 |
+Detailed parameters of our 3D-CNN subject sub-network.
+
+
+
+TABLE 4 |
+Classification results of AD vs. CN and MCI convention on ADNI-2.
+
+
+
+TABLE 5 |
+Classification results of AD vs. CN on ADNI-1.
+
+
+
+TABLE 6 |
+The performance comparison of our model with other state-of-the-art studies report in the literature using the ADNI database for prediction of AD vs. CN and pMCI vs. sMCI.
+The influence of features fusion in different dimensions.
+Comparison between multi-view slice fusion without SAM (i.e., MS3D) and multi-view slice fusion with SAM (i.e., MSA3D).
+(A,B) Show the classification results for AD vs. CN and pMCI vs. sMCI, respectively.
+diagnosis methods.
+For example, compared with the secondbest wH-FCN model, which extracts features from multiple 3D-patches with hierarchical landmarks proposals, MAS3D generates better results in terms of ACC, SEN, and yields almost the same AUC values on AD vs. CN task.
+For the aspect of the pMCI vs. sMCI task, our model performs slightly worse than the wH-FCN in terms of ACC and SEN.
+The possible reason is that wH-FCN adopts more prior knowledge to improve the model's recognition capability, i.e., wH-FCN constrains the distances between landmarks and initializes the network parameters of the MCI prediction model from the task of AD classification.

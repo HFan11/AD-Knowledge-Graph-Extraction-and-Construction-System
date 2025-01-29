@@ -1,0 +1,343 @@
+Discriminative self-representation sparse regression for neuroimaging-based alzheimer’s disease diagnosis
+In this paper, we propose a novel feature selection method by jointly considering (1) 'taskspecific' relations between response variables (e.g., clinical labels in this work) and neuroimaging features and (2) 'self-representation' relations among neuroimaging features in a sparse regression framework.
+Specifically, the task-specific relation is devised to learn the relative importance of features for representation of response variables by a linear combination of the input features in a supervised manner, while the self-representation relation is used to take into account the inherent information among neuroimaging features such that any feature can be represented by a weighted sum of the other features, regardless of the label information, in an unsupervised manner.
+By integrating these two different relations along with a group sparsity constraint, we formulate a new sparse linear regression model for class-discriminative feature selection.
+The selected features are used to train a support vector machine for classification.
+To validate the effectiveness of the proposed method, we conducted experiments on the Alzheimer's Disease Neuroimaging Initiative (ADNI) dataset; experimental results showed superiority of the proposed method over the state-ofthe-art methods considered in this work.
+
+Introduction
+Alzheimer's Disease (AD), the most common form of dementia around the world, is the sixth leading cause of death in the United States.
+According to the report of the Alzheimer's Association 1 and the Centers for Disease Control 2 , in 2015, nearly 44 million people had AD or related dementia and only 1-in-4 AD patients had been diagnosed worldwide.
+In 2015, the population of AD, in the United States, was around 5.3 million, with the chance of the number increasing to more than 16 million by 2050.
+Moreover, in 2015, the global cost of AD was estimated to be 605 billion, equivalently 1% of the entire world's Gross Domestic Product (GDP), while the cost in the United States was around 226 billion.
+Thus, the treatment of AD is placing a huge financial burden on society.
+Studies have demonstrated that early diagnosis of AD and its early stage (i.e., Mild Cognitive Impairment (MCI)) are of high importance clinically, as effective treatments on early-stage patients would have more influence for slowing down disease progression.
+However, current clinical assessments, e.g., Mini-Mental State Examination (MMSE) and Alzheimer's Disease Assessment Scale-Cognitive subscale (ADAS-Cog), still present low sensitivity and specificity in early diagnosis of AD.
+Recently, a number of studies
+Neuroimaging tools, such as Magnetic Resonance Imaging (MRI), Positron Emission Tomography (PET), and functional MRI, have become powerful tools for characterizing neurodegenerative progress of AD by helping overcome the limitations of the conventional cognitive assessments, such as imprecise diagnosis and low diagnosis confidence
+For example,
+With a large amount of the neuroimaging dataset publicly available on the web, e.g., the Alzheimer's Disease Neuroimaging Initiative (ADNI) database, machine learning techniques have been playing a core role in investigation and analysis of high-dimensional neuroimaging data, providing unprecedented opportunities to investigate AD-related problems with high confidence and precision.
+For example,
+Among machine learning techniques for the analysis of neuroimaging data, sparse linear regression has attracted researchers' interests by modeling the relation between representation of neuroimaging data and clinical response variables, such as clinical scores and clinical status.
+For example,
+Although the linear regression model is helpful for finding the relationship between neuroimaging features and response variables, it naturally suffers from a high-dimensional problem, which is very common in neuroimaging data analysis.
+The straightforward approach to circumvent the so-called 'curse-of-dimensionality' is to collect as many training samples as possible.
+It is, however, not feasible in reality due to high cost and time consumption.
+Recently, subspace learning
+Usually, feature selection methods
+In regards to the interpretability of the results, feature selection methods are more preferable over subspace learning methods, particularly in neuroimaging studies, as selected features can directly link anatomical structures for providing intuitive understanding of disease.
+In this work, we focus on a feature selection method and propose to consider different kinds of relations inherent in data with the goal of selecting brain regions related to AD for clinical diagnosis and improving the performance of representative features for identifying AD status.
+Specifically, we propose a self-representation feature selection regression model to select a representative feature subset by simultaneously considering a 'sample-level' relation between the features and response variables as well as a 'feature-level' relation among the features.
+The goal of our method is to use the 'sample-level' relation to conduct a taskoriented supervised step and use the 'feature-level' relation to conduct a self-representationoriented unsupervised step.
+Specifically, we first define an objective function with an element-wise similarity loss function (i.e., least square loss function) and the selfrepresentation property of features, to characterize the sample-level relation and the featurelevel relation, respectively.
+Then, we penalize our objective function with an ℓ 2,1 -norm regularizer to output representative features.
+Furthermore, we iteratively optimize these two steps such that each of them may adjust the other in order to achieve an optimal process of feature selection.
+Finally., the selected features are fed into a Support Vector Machine (SVM) classifier for clinical diagnosis.
+Compared to the previous state-of-the-art feature selection methods for AD diagnosis, the main contributions of our work are three-fold.
+First, we propose a novel sparse feature selection method by exploiting the inherent structures of the features along with the relations between response variables and neuroimaging features.
+The rationale of our method is that, the features are dependent in real applications, thus each feature can be (sparsely) represented by other features.
+Moreover, if a feature is important for the classification task, then it is reasonable to assume that the feature can be also informative to represent other features.
+Meanwhile, the designed model should also achieve the minimum regression error measured by the residual between the response matrix and its prediction.
+Second, unlike the existing methods in sparse learning
+Our motivation for this is that, the task-oriented feature selection strategy pursues the minimum regression error under a supervised learning concept, while the selfrepresentation-oriented strategy selects features that are involved in representing other features under a unsupervised learning concept.
+These two strategies are integrated in a unified framework of sparse linear regression.
+Last but not least, this work simultaneously considers binary classification and multi-class classification, instead of only conducting binary classification, as most of the state-of-the-art methods did for AD diagnosis, such as
+In real clinical applications, given neuroimaging data of an subject, he or she can be categorized into one of the following status, such as AD, Normal Control (NC), progressive MCI (pMCI) and stable MCI (sMCI).
+This obviously belongs to a multi-class classification problem.
+
+Materials and image preprocessing
+For performance evaluation, we use the ADNI-1 dataset.
+The ADNI was launched in 2003 by the National Institute on Aging (NIA), the National Institute of Biomedical Imaging and Bioengineering (NIBIB), the Food and Drug Administration (FDA), private pharmaceutical companies, and non-profit organizations.
+The main goal of ADNI is to test if MRI, PET, other biological markers, and clinical and neuropsychological assessments can be combined to predict the progression of MCI and early AD.
+To this end, ADNI has recruited over 800 adults
+Specifically, around 200 cognitively normal older individuals were followed for 3 years, 400 people with MCI were followed for 3 years, and 200 people with early AD were followed for 2 years.
+The research protocol was approved by each local institutional review board and written informed consent was obtained from each participant for the study.
+
+Subjects
+General inclusion/exclusion criteria with respect to the general eligibility criteria in ADNI are as follows 5 : The MMSE score of an NC subject is between 24 and 30.
+Their Clinical Dementia Rating (CDR) is of 0.
+Moreover, the NC subject is non-depressed, non MCI, and non-demented.
+The MMSE score of an MCI subject is between 24 and 30.
+Their CDR is of 0.5.
+Moreover, each MCI subject is an absence of significant level of impairment in other cognitive domains, essentially preserved activities of daily living, and an absence of dementia.
+The MMSE score of a mild AD subject is between 20 and 26, with the CDR of 0.5 or 1.0, and meets the National Institute of Neurological and Communicative Disorders and Stroke and the Alzheimer's Disease and Related Disorders Association (NINCDS/ ADRDA) criteria for probable AD.
+In our experiments, we only use the baseline MRI data acquired from 226 NC, 186 AD, and 393 MCI subjects.
+MCI subjects were clinically further subdivided into pMCI, sMCI, ncMCI, and uMCI.
+118 pMCI subjects indicate that the subjects converted from MCI to AD in 24 months, while 124 sMCI subjects didn't not convert to AD in both 24 months and 36 months.
+Besides, 49 ncMCI subjects did not convert in 24 months but converted in 36 months, while 102 uMCI subjects were MCI at base line but were never converted to AD at any available time points among 0 -96 months.
+We summarize the demographics of the subjects in Table
+
+Image preprocessing
+We downloaded raw Digital Imaging and Communications in Medicine (DICOM) MRI scans from the public ADNI website.
+These MRI scans were already reviewed for quality, and automatically corrected for spatial distortion caused by gradient nonlinearity and B1 field inhomogeneity.
+The image processing for all MR images was conducted following the procedures in
+Specifically, we first performed anterior commissure-posterior commissure correction using MIPAV software
+Second, we extracted a brain on all structural MR images using a robust skull-stripping method, followed by manual edition and intensity inhomogeneity correction.
+After removal of cerebellum, based on registration and intensity inhomogeneity correction by repeating N3
+Next, we used HAMMER
+For each of all 93 ROIs in the labeled image of a subject, we computed the GM tissue volumes of the ROIs and used them as structural features.
+With this, we acquired 93 features from an MRI image.
+
+Method
+In this section, we describe our framework for AD classification by proposing a novel feature selection method.
+Figure
+We first extract features from MRI data and then construct a feature matrix X, with the feature vectors of MRI data, and a corresponding response matrix Y representing a class label at each column.
+With our new feature selection method, we select representative features and then use them to train a Support Vector Machine (SVM) for clinical label identification.
+
+Notations
+In this paper, we denote matrices as boldface uppercase letters, vectors as boldface lowercase letters, and scalars as normal italic letters, respectively.
+For a matrix X = [x ij ], its i-th row and j-th column are denoted as x i and x j , respectively.
+Also, we denote the Frobenius norm and ℓ 2,1 -norm of a matrix X as
+2 , respectively.
+We further denote the transpose operator, the trace operator, and the inverse of a matrix X as X T , tr(X), and X -1 , respectively.
+
+Feature selection with a sparse linear regression model
+where x i ∈ ℝ 1×d and x j ∈ ℝ n×1 , i = 1, ..., n; j = 1, ..., d) and Y = [y 1 ; ...; y n ] ∈ {0, 1} n×c , respectively, be the feature matrix and the clinical status (a.k.a., response matrix) of all MRI data, where n, d, and c denote the numbers of samples (or subjects), feature variables, and response variables, respectively.
+We use a class indicator vector for response variables by denoting the class label of the i-th sample x i as y i = [y i1 , ..., y ij , ..., y ic ] ∈ {0, 1} c , where y ij denotes the label information of the j-th class of the i-th sample x i and y ij = 1 if x i belongs to the j-th class, while y ij = 0 otherwise.
+A linear regression model formulates a linear relation between feature variables and the response variables as follows:
+where W ∈ ℝ d×c is a regression coefficient matrix or weight matrix, Ŷ is the prediction of X on the space spanned by XW, b ∈ ℝ 1×c is a bias term, and e ∈ ℝ n×1 denotes a column vector with all ones.
+To find optimal coefficients of the weight matrix W, with which the response variables in Y are represented by a linear combination of the features X, we use the least squares error for a loss function l(W) as follows:
+(2) From a matrix similarity point of view, Eq. 2 computes the similarity between Y and Ŷ with the sum of element-wise differences between them.
+The lower the loss, the more similar they are.
+Task-oriented feature selection-As for feature selection, we assume that a small number of features is useful to represent the response variables.
+Furthermore, since the clinical status, i.e., the response variables in Y, has high neurophysiological relations among them, it is commonplace to assume that the same neuroimaging features are used to represent the response variables.
+To this end, we add an ℓ 2,1 -norm regularizer into the loss function in Eq. 2 as follows:
+where λ is a sparsity control parameter.
+The ℓ 2,1 -norm regularizer ||W|| 2,1 penalizes all coefficients in the same row of W together for jointly selecting or un-selecting features for predicting the response variables
+Specifically, the ℓ 2,1 -norm regularizer results in zero-rows in W after optimizing (1).
+The features that are multiplied with zero-rows do not play any role to represent the response variables in Y, and thus can be removed from the feature set.
+From a clinical standpoint, the selected features for representation of the response variables can be interpreted as potential biomarkers
+Since the solution of W is oriented to response variables of the clinical values, i.e., clinical status, the prediction of which is the main task of this work, we call it a 'task-oriented' method.
+Self-representation-oriented feature selection-The main assumption in Eq. 1 is that the features that are important to represent a response variable are also informative of other response variables, while features uninformative to represent a response variable are also uninformative of other response variables.
+Thus, such features should be jointly selected or un-selected in representing the response variables, i.e., clinical status.
+In this section, we propose to further include an important characteristic among features by maximally utilizing the information inherent in observations X into the objective function as a regularizer.
+Note that AD may affect multiple brain regions simultaneously, rather than just a single region
+Justified by neurophysiological characteristics observed in the previous AD studies, we assume that there are dependencies among ROIs (i.e., features).
+We devise a new regularizer to utilize this relational characteristic among ROIs in feature selection.
+Specifically, we define a linear regression model such that each feature x i in X can be represented as a linear combination of other features (including itself):
+where the element s ji of matrix S is a weight coefficient between the i-th feature vector x i and the j-th feature vector x j and p = [p 1 , ..., p j , ..., p d ] ∈ ℝ 1×d is a bias term.
+By regarding the prediction of each feature as a task and constraining the sparsity across tasks with an ℓ 2,1 -norm regularizer, we define a new objective function as follows:
+where α is a sparsity control parameter.
+The ℓ 2,1 -norm regularizer ||S|| 2,1 penalizes all coefficients in the same row of S together for joint selection or un-selection in predicting the feature matrix X.
+Note that since a vector x i in the observation X can be used to represent itself
+That is, its corresponding coefficient in S equals to one and all the other coefficients equal to zero.
+However, due to our assumption of dependencies among ROIs, i.e., rank(X) < min(n, d), there also exist non-trial solutions in the space of I -null(X)
+To differentiate from the 'taskoriented' method, we call Eq. 5 a 'self-representation-oriented' method.
+The first term in Eq. 5 measures the distance of all column vectors in X to the subspace spanned by XS, thus the optimal matrix S * clearly makes the regression error between X and its predictions XS * as small as possible.
+On the other hand, the optimal matrix S * also reflects the importance of different features.
+If a feature is important for the model, then it should participate in the representation of other features and help lead to a significant representation coefficient in the row, and vice versa.
+Specifically, we approximately extend Eq. 4 (by ignoring the bias term) to have:
+Equation 6 indicates that each feature vector e.g., x i in left-hand side of Eq. 6 is represented by a linear combination of the feature vectors (including itself) in right-hand side of Eq. 6 and the corresponding weight vector is the i-th column s i of S. Obviously, the larger the values in the s i , the more the corresponding feature vectors involved in the representation of the feature vector x i .
+If there is a zero-row in the optimal matrix S * , e.g., a zero-vector s j = [s j1 , ..., s j,j , ..., s jd ], then the corresponding feature i.e., x j in right-hand side of Eq. 6 will not participate in the representation of features.
+The features participating in the representation of all features should be important, while those not participating in the representation process should be discarded by means of feature selection.
+
+Proposed objective function
+By simultaneously considering aforementioned constraints, we combine Eq. 3 with Eq. 5 as follows:
+where β > 0 is a tuning parameter.
+Equation 7 conducts two feature selection models (i.e., W and S), the one under supervised learning (i.e., the first two terms) and the others under unsupervised learning (i.e., the last two terms).
+However, in this work, we simultaneously consider two models (the task-oriented relations (i.e., the difference between Y and XW) and the self-representation-oriented relations (i.e., the difference between X and XS)) for feature selection.
+Ultimately, the optimal solutions of W * and S * are aimed to select informative features for clinical response representation.
+To this end, we integrate the matrices of W and S into a single matrix by letting λ = α as follows:
+where d) is defined as a joint analyzer
+An intuitive interpretation of the propose method is as follows: It alternately optimizes a supervised step i.e., W and b in Eq. 7 and a unsupervised step i.e., S and p in Eq. 7, where the supervised step i.e., the first term in Eq. 7 learns a task-specific feature selection model and the unsupervised step i.e., the second term in Eq. 7 learns a self-representation feature selection model.
+Concretely, the proposed method uses the element-wise similarity measure under the supervision of label information to learn a feature selection model W and b, and also uses the self-representation property of features to learn another feature selection model S and p.
+As these two models jointly conduct feature selection on the same feature matrix X, they should be designed to output the same sparsity.
+In this way, after optimizing W ̃, the ℓ 2,1norm regularizer pushes Eq. 7 to output zero values through the whole rows of W ̃, i.e., the same sparse rows on both W and S.
+This process that simultaneously satisfies two constraints (i.e., the sample-level relation constraint and the feature-level relation constraint) makes the selection of informative features more confident.
+Finally, after optimizing Eq. 7, we can discard the shared irrelevant or noisy components (i.e., the features whose regression coefficient vectors are zero in the rows on both W and S).
+Given the selected representative features, we use them to train an SVM as a classifier.
+The following remarks show two aspects of the importance of the self-representation characteristics inherent in observed features and the rationale of the combination on the 'task-oriented' feature selection and the 'self-representation-oriented' feature selection.
+Remark 1: In this section, we reveal the feature-level relation among self-representation, which characterizes the property that each feature can be linearly approximated by a subset of other features (called as representative features in this work) in feature selection.
+Selfsimilarity has been widely used in computer vision and machine learning
+In computer vision, non-local self-similarity means that patches at different locations in an image may be similar to each other.
+In machine learning, self-representation can also be modeled as a sparse representation model or a low-rank representation model depending on tasks.
+However, previous models belong to sample-level representation, while our selfrepresentation regularizer is feature-level representation.
+In other words, the goal of previous literature is to sparsely represent each sample by other samples (e.g.,
+, where m ij is the similarity between the i-th sample x i and the j-th sample x j , i, j = 1, ..., n.), while our goal is designed to sparsely represent each feature by other features, i.e., x i ≈ ∑ j = 1 d x j s ji , i, j = 1, ..., d.
+Remark 2: Self-representation is designed on the assumption that there is redundancy in features as features are linearly correlated Such assumption has been used in a lot of literature on either feature selection or subspace learning for the analysis of highdimensional neuroimaging data
+On the other hand, The proposed self-representation regularizer is designed for unsupervised learning, as label information can be used to enhance the performance of feature selection models.
+Hence, it is reasonable to add the element-wise similarity loss function to conduct supervised learning by making use of the label information.
+Mathematically, it is very similar to conduct unsupervised feature selection in supervised learning, with another assumption that the original feature gets best reconstruction by the self-representation property of features in unsupervised learning.
+Moreover, both the element-wise similarity loss function and the self-representation regularizer enable the proposed framework (with an intuitive and easy way) to select representative features.
+
+Optimization
+The objective function in Eq. 7 is convex but non-smooth.
+In this work, we utilize the framework of iteratively reweighted least square
+With simple algebraic operations, Eq. 7 becomes
+where c+d) and D ∈ ℝ d×d is a diagonal matrix with
+By setting the derivative of Eq. 8 w.r.t.
+b to zero, we have:
+After a simple mathematical transformation, we have:
+Similarly, by setting the derivative of Eq. 8 w.r.t.
+p to zero, we obtain optimal p as:
+By substituting Eqs. 10 and 11 into Eq.
+8, we have: (13)
+By taking the derivative of Eq. 13 w.r.t.
+W and setting it equal to zero, we obtain:
+Similarly, by setting the derivative of Eq. 13 w.r.t.
+S and setting it equal to zero, we have:
+Next, we applied Algorithm 1 to solve the objective function in Eq. 7. Based on the theory of iteratively reweighted method in
+According to the iterative characteristics of Algorithm 1, the current W can be enhanced by the last optimal S, whose next optimization can be further improved by the updated optimal W. In this way, the proposed optimization method in Algorithm 1 helps obtain the optimal W and S, which finally ensure the output of classdiscriminative features.
+
+Algorithm 1
+Pseudo code of solving Eq. 7
+
+Experimental results
+
+Experimental settings
+In this work, we considered three binary classification tasks (e.g., AD vs. NC, MCI vs. NC, and pMCI vs. sMCI) and two multi-class classification tasks (e.g., AD vs. NC vs.
+MCI and AD vs. NC vs. pMCI vs. sMCI).
+To evaluate the performance of all competing methods, we referred to the metrics of classification accuracy, sensitivity, specificity, and Area Under the receiver operating characteristic Curve (AUC) for binary classification and referred only to accuracy for multi-class classification.
+We used a 10-fold cross-validation technique for all methods.
+Specifically, we first randomly partitioned the whole dataset into 10 subsets.
+We then selected one subset for testing and used the remaining 9 subsets for training.
+We repeated the whole process 10 times to avoid possible bias during dataset partitioning for cross-validation.
+The final result was computed by averaging results from all experiments.
+For the model selection of our method, we applied a 5-fold inner cross-validation on the parameter spaces of λ ∈ {10 -3 , 10 -2 , . . .
+, 10 3 } and β ∈ {10 -5 , 10 -4 , . . .
+, 10 1 } in Eq. 7 and C ∈ {2 -5 , 2 -4 , . . .
+, 2 5 } in SVM.
+As for SVM, we used a LIBSVM.
+The parameters that resulted in the best performance in the inner cross-validation were used in testing.
+
+Competing methods
+We selected the following methods for comparison.
+
+•
+Original: This method doesn't involve a feature selection step, but uses all the features for classification.
+
+•
+Fisher Score (FS)
+Specifically, we compute a Fisher's score for each feature individually, based on the way we sort the features in an ascending order.
+
+•
+Laplacian Score (LS)
+The importance of a feature is evaluated by its power of a Laplacian score.
+• SELF-representation (SELF)
+It is worth noting that SELF is a special case of our method, with the objective function in Eq. 5.
+• Multi-Modal Multi-Task (M3T)
+It is worth noting that M3T is a special case of our method with the objective function, i.e., Eq. 1 on singlemodality data.
+
+•
+Sparse Joint Classification and Regression (SJCR)
+It simultaneously learns these two functions with an ℓ 2,1 -norm regularizer for multi-task feature selection.
+In our experiments, we used all feature selection methods separately (except Original) in order to conduct feature selection, and then used an SVM for three binary classification tasks and two multi-class classification tasks on the data with the selected features.
+Moreover, for fair comparison, we also conducted 5-fold inner cross-validation to conduct model selection for each competing method.
+Specifically, for eigen-value based methods, such as FS and LS, we determined their optimal features based on their respective eignevalues computed by the generalized eigen-decomposition method, according to
+For achieving the best performance for SELF, SJCR and M3T, we optimized their sparsity parameter by cross-validating the values in the ranges of {10 -3 , 10 -2 ..., 10 3 }, {10 -5 , 10 -3 ..., 10 5 } (as in
+
+Binary classification results
+We summarized the performances of the competing methods with three binary classification tasks in Table
+The proposed method outperformed all competing methods by improving the classification accuracies on average over three binary classification tasks by 8.70% (vs.
+Original), 4.10% (vs.
+FS), 4.87% (vs.
+LS), 4.40% (vs.
+SELF), 3.80% (vs.
+SJCR), and 3.73% (vs.
+M3T).
+Specifically, compared to the worst performed method of Original and the best performed method of M3T among the competing methods, our method enhanced the classification accuracy by 12.2% (AD vs. NC) and 4.6% (MCI vs. NC).
+Based on these results, we conclude that the proposed feature selection method helped enhance classification performances by selecting more class-discriminative features.
+It is noteworthy that all methods achieved the highest classification performance on AD vs. NC and the lowest classification performance on pMCI vs. sMCI.
+All feature selection methods outperformed the method using full features for classification, i.e., Original, which implies the effectiveness of feature selection with respect to the highdimension problem in the classification of neuroimaging data.
+For example, the classification accuracy of Original is lower than FS (as it achieved the lowest performance among the other competing methods) and M3T (as it achieved the best performance among the other competing methods) on average of as much as 3.83% and 4.97%, respectively, over three binary classification tasks.
+In comparison between LS and SELF, which adopt, respectively, a task-oriented and a selfrepresentation-oriented strategies for feature selection, there was no significant difference in classification accuracy.
+Meanwhile, the supervised feature selection methods (i.e., FS, M3T and SJCR) obtained slightly higher performances than LS and SELF, yet there are still no significant differences in accuracy.
+However, the proposed method, which adopts both the task-oriented and self-representation-oriented by integrating the supervised and unsupervised learning concepts in a unified framework, clearly outperformed all these methods with significance, less than 0.05 of p-value in a statistical test.
+In this regard, we argue the effectiveness of joint task-oriented and self-representation-oriented regularization.
+
+Multi-class classification results
+In clinical applications, there exist multiple stages in the spectrum of AD and NC, such as pMCI and sMCI, but previous literature mostly focused on binary classification tasks.
+In this work, we consider the practical applications to conduct two multi-class classification tasks (i.e., AD vs. NC vs.
+MCI and AD vs. NC vs. pMCI vs. sMCI).
+We summarized the performance of all methods in Table
+Similar to the binary classification results, we observed that the proposed method outperformed the competing methods for both 3-class and 4-class classification tasks.
+More specifically, in the 3-class classification, our method achieved a classification accuracy of 63.9% by improving 14.5% (vs.
+Original), 6.6% (vs.
+FS), 6.0% (vs.
+LS), 4.6% (vs.
+SELF), 3.2% (vs.
+M3T), and 3.6% (vs.
+SJCR), respectively.
+In the 4-class classification, our method produced the highest classification accuracy of 59.3% by improving by 11.1% (vs.
+Original), 8.0% (vs.
+FS), 6.6% (vs.
+LS), 5.7% (vs.
+SELF), 4.0% (vs.
+M3T), and 5.3% (vs.
+SJCR).
+Compared to binary classification tasks, the classification accuracy in multi-class classification tasks is decreased by around 14.0% and 18.6% on average, respectively, for the 3-class classification and the 4-class classification.
+One possible reason is that the subtle structure difference between pMCI subjects and sMCI subjects (or between AD subjects and MCI subjects) makes the multi-class classification much more difficult.
+
+Most discriminative brain regions
+We investigated the selected features to identify the potential biomarkers in AD diagnosis.
+We listed the most frequently selected ROIs in Table
+Moreover, these discriminative brain regions have been pointed out in previous literature on binary classification
+In this regard, we can say that these regions could be potential biomarkers for AD or MCI diagnosis.
+It is worth noting that: (1) most of the competing methods in our experiments selected the ROIs listed in Table
+(2) Even though most of the methods selected similar ROIs as the top brain regions, our method selected them with the highest frequency.
+
+Sensitivity with Different Parameter Values
+Figures 3 and 4 present the sensitivity in performance according to the changes in the values of β and γ in Eq. 7. The results show that our proposed method is sensitive to the parameters within only a small range.
+Specifically, the best parameter combination was always found since 1) the magnitude of ‖X -XS -ep‖ F 2 was almost approached to the magnitude of the data fitting term (i.e., ‖Y -XW -eb‖ F 2 ) (by tuning the values of β); and 2) the large values of γ caused the matrices of W and S to be sparse.
+This indicates the importance of the penalty term ‖X -XS -ep‖ F 2 ; and also the sparse constraint on the proposed objective function plays an important role for selecting informative features.
+
+Discussion and conclusion
+In this paper, we focused on the high feature-dimension problem for both binary classification and multi-class classification in AD diagnosis.
+Specifically, we proposed a novel feature selection method by integrating a task-oriented regularization in supervised learning and a self-representation-oriented regularization in unsupervised learning in a linear regression framework.
+Our experimental results on the ADNI dataset with MRI imaging data validated the effectiveness of the proposed method by enhancing classification accuracies in both binary classification and multi-class classification problems.
+In the study of high-dimensional neuroimaging data, multi-modality data have been demonstrated to improve performance of AD diagnosis due to the beneficiary of complementary information from different modalities
+However, the proposed model in Eq. 7 cannot be directly applied for multi-modality data, as literature showed that multimodality neuroimaging data may not share the same sparsity across modalities
+In our future work, we will focus on extending the proposed model to its multi-modality version for further improving the performance of AD diagnosis via mapping multiple subspaces spanned by multi-modality data into a common space.
+The framework of the proposed method
+
+
+-XWe( 1 n e T Y -1 n e T XW)) T (Y -XWe( 1 n e T Y -1 n e T XW)) + βtr((X -XSe( 1 n e T X -1 n e T XS)) T (X -XSe( 1 n e T X -1 n e T XS))) + λtr(W ∼ T DW) .(12)Let
+H = I -1 n ee T ∈ ℝ n × n , where I ∈ ℝ n×n is an identity matrix, Eq. 12 can be rewritten as min W, S tr((HY -HXW) T (HY -HXW) + βtr((HX -HXS) T (HX -HXS)) + λtr(W ∼ T DW ∼ ) .
+
+
+
+Fig
+Fig. 1.
+
+
+
+Fig. 2 .
+Fig. 2. Top 10 selected regions of the proposed method in five classification tasks: (a) AD vs. NC; (b) MCI vs. NC; (c) pMCI vs. sMCI; (d) AD vs. NC vs. MCI; (e) AD vs. NC vs. pMCI vs. sMCI
+
+
+
+Fig. 3 .
+Fig. 3. Classification accuracy of the proposed objective function with varied values of β and γ in three binary classification tasks
+
+
+
+Fig. 4 .
+Fig. 4. Classification accuracy of the proposed objective function with varied values of β and γ in two multi-class classification tasks
+
+
+Another possible reason may be the imbalance of training data among classes, i.e., 186 ADs vs. 226 NCs vs. 393 MCIs in 3-class classification and 186 ADs vs. 226 NCs vs. 118 pMCIs vs. 124 sMCIs in 4-class classification.
+
+
+
+Table 6
+
+
+
+Table 1
+Demographic and clinical information of the subjects Mini-Mental State Examination, CDR: Clinical Dementia Rating, N: number of subjects, SD: Standard Deviation, [min, max])
+
+
+
+Table 2
+Classification accuracy for AD vs. NC Bold number in each column represents the best result Brain Imaging Behav.
+Author manuscript; available in PMC 2018 December 17.
+
+
+
+Table 5
+Classification accuracy of multi-class classification tasks
+
+
+
+NC vs. MCI AD vs. NC vs. pMCI vs. sMCI
+Bold number in each column represents the best result Brain Imaging Behav.Author manuscript; available in PMC 2018 December 17.

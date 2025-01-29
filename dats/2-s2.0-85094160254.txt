@@ -1,0 +1,397 @@
+Stacked autoencoders as new models for an accurate Alzheimer’s disease classification support using resting-state EEG and MRI measurements
+Artificial neural networks with stacked autoencoders detected Alzheimer's dementia patients based on EEG and structural MRI variables.
+Classification accuracies over control participants reached 80% (EEG), 85% (MRI), and 89% (both).
+These results motivate future multi-centric, harmonized prospective and longitudinal crossvalidation studies.
+Objective: This retrospective and exploratory study tested the accuracy of artificial neural networks (ANNs) at detecting Alzheimer's disease patients with dementia (ADD) based on input variables extracted from resting-state electroencephalogram (rsEEG), structural magnetic resonance imaging (sMRI) or both.
+Methods: For the classification exercise, the ANNs had two architectures that included stacked (autoencoding) hidden layers recreating input data in the output.
+The classification was based on LORETA source estimates from rsEEG activity recorded with 10-20 montage system (19 electrodes) and standard sMRI variables in 89 ADD and 45 healthy control participants taken from a national database.
+Results: The ANN with stacked autoencoders and a deep leaning model representing both ADD and control participants showed classification accuracies in discriminating them of 80%, 85%, and 89% using rsEEG, sMRI, and rsEEG + sMRI features, respectively.
+The two ANNs with stacked autoencoders and a deep leaning model specialized for either ADD or control participants showed classification accuracies of 77%, 83%, and 86% using the same input features.
+
+Introduction
+In aging, the most prevalent progressive neurodegenerative dementing disorder is Alzheimer's Disease (AD), which induces progressive cognitive deficits, loss of autonomy/independence in activities of everyday, and behavioral symptoms
+The US National Institute on Aging-Alzheimer's Association (NIA-AA) and the International Working Group (IWG) have recommended the use of the following in-vivo biomarkers for the assessment of AD patients in clinical research studies
+For diagnostic purposes, measures of amyloidosis and tauopathy in the brain can be extracted from cerebrospinal fluid (CSF) or maps of positron emission tomography (PET), while measures of AD-related neurodegeneration or synaptic dysfunction tauopathy can be derived from structural magnetic resonance imaging (sMRI) and 18 Fluorodeoxyglucose-PET
+The above biomarkers are valid and reliable but partially or totally invasive and relatively expensive for screening millions of old seniors with cognitive deficits and risk of AD
+Therefore, research studies have been testing noninvasive and cost-effective techniques including the spectral analysis of resting state electroencephalographic (rsEEG) rhythms, especially at delta (<4 Hz), theta (4-8 Hz), and alpha (8-12 Hz) frequency bands
+Those rhythms mainly reflect partially overlapping neurophysiological oscillatory mechanisms of synchronization of neural activity in thalamocortical, corticothalamic, and corticocortical circuits involved in the regulation of vigilance in quiet wakefulness
+In the past decades, investigations in AD patients with dementia (ADD) and amnesic mild cognitive impairment (ADMCI) have reported that rsEEG may be promising disease neurophysiological markers.
+In relation to normal elderly (Nold) subjects, groups of ADD patients showed abnormally high power of widespread delta and theta rhythms, as well as low power of posterior alpha and/or beta (13-30 Hz) rhythms
+In the review by
+In another review with more stringent selection criteria
+Recently, we have developed a research line to evaluate the hypothesis that Nold and ADD individuals may be classified with at least a moderate accuracy (70-80%) using rsEEG source activities estimated by the standard LORETA toolbox
+Specifically, LORETA source estimates of rsEEG rhythms were used to derive a single variable -occipital delta/alpha ratio -that allowed a classification accuracy of 75% in the discrimination of 120 ADD patients and 100 matched Nold seniors by the computation of receiver operating characteristic (ROC) curves
+In another study, we re-analyzed that database giving 4 LORETA source estimates (i.e.
+delta/alpha 1 and theta/alpha 1 ratios in posterior cortical lobes) as an input to resilient backpropagation ANNs, confirming a moderate classification accuracy of 77%
+In the framework of that research line, the present retrospective and exploratory study aimed at testing three novel hypotheses based on the use of LORETA source estimates.
+The first hypothesis was that more advanced ANNs such as those based on autoencoders (AEs) may produce a classification accuracy > 80% in the discrimination between Nold and ADD individuals by LORETA source estimates.
+The second hypothesis was that based on these ANNs, the classification accuracy between Nold and ADD individuals may be similar using LORETA source estimates and standard sMRI markers of brain neurodegeneration.
+The third hypothesis was that the combined use of those LORETA source estimates and sMRI markers may produce the best discrimination accuracy in this exercise.
+The study was designed to compare performances of two different architectures and learning processes of autoencoder-based ANNs for testing the hypothesis of moderate to high classification accuracies of both architectures in the discrimination between Nold and ADD individuals based on rsEEG and sMRI markers.
+The confirmation of this hypothesis may indicate the general robustness of the present methodological approach.
+To achieve the study aim, we used a national database of clinical, rsEEG, and sMRI data in 45 Nold seniors and 89 ADD patients, including 16 Nold (35%) and 27 ADD (30%) individuals who already participated in our previous study by Triggiani and colleagues
+Of note, a previous study of an independent research group successfully used autoencoder-based ANNs in the discrimination (>80% of accuracy) between Nold, ADD, and ADMCI individuals by a combination of relatively invasive or expensive markers of AD derived from sMRI, PET, and CSF in Alzheimer's Disease Neuroimaging Initiative (ADNI) cohorts
+
+Materials and methods
+
+Subjects
+The clinical, rsEEG, and sMRI data of the present study refer to 89 ADD and 45 Nold subjects, matched for age, education years, and gender.
+Local institutional ethics committees have endorsed the information collection and the analysis for scientific reasons.
+In accordance with the World Medical Association Code of Ethics (Declaration of Helsinki), each participant or caregiver subscribed a written informed consent.
+Probable ADD was diagnosed based on the criteria of the Diagnostic and Statistical Manual of Mental Disorders, fourth edition (DSM-IV-TR; American Psychiatric Association) and the National Institute of Neurological Disorders and Stroke-Alzheimer Disease and Related Disorders (NINCDS-ADRDA) working group
+Individuals underwent medical, neuropsychological, neurological, and psychiatric evaluations including Instrumental Activities of Daily Living scale (IADL;
+Criteria for exclusion included any kind of proof of other types or causes of dementia such as frontotemporal dementia
+When before EEG recordings, given, benzodiazepines, antidepressant and/or antihypertensive were temporally stopped for about 24 h.
+This procedure did not guarantee that a full washout of the drug-longer periods would not have been valid for apparent ethical reasons-but it made it possible for patients with ADD to compare the drug situation.
+Note that most ADD patients (>95%) followed a long-term therapy with normal daily doses of acetylcholinesterase inhibitors including donepezil, rivastigmine, or galantamine in standard dosages.
+The Nold subjects were evaluated medically, neurologically, and psychiatrically including Mini Mental Stage Evaluation (MMSE;
+Finally, according to the Alzheimer's Disease Neuroimaging Initiative (ADNI;
+another exclusion criterion was a score below 27 for the Nold topics at the MMSE and above 24 for the AD topics.
+Table
+T-tests assessed age, education, MMSE score, and Individual Alpha Frequency peak (IAFp; see below for a description of this index) differences (p < 0.05, one-tailed) between groups (Nold and ADD).
+For the MMSE score (p < 0.0001; higher MMSE score in the Nold than in the ADD group) and for the IAFp (p < 0.0001; higher IAF in the Nold than in the ADD group), as expected, there was no statistically significant difference in age, gender, and education (p > 0.05).
+
+EEG recordings and preliminary processing of data
+As a premise, this retrospective and exploratory study is based on experiments performed in the framework of different clinical studies over time, so some methodological procedures were equal or very similar across the participating clinical units, while others showed some differences.
+Furthermore, EEG procedures used in the present study are based on some assumptions and the results must be interpreted as related to those assumptions.
+Specifically, we followed the procedures of preliminary rsEEG data analysis used in previous investigations of our research group to enrich the interpretation of the present results
+Instructions to participants for the rsEEG recordings were very similar in all clinical units.
+All subjects were kindly asked to stay in a relaxed state with the eyes closed during the experiments.
+They were also kindly asked not to move or talk and keep the mind wandering without focused mentalization.
+During the experimental recordings, the experimenters noted down, in the experimental sheet: drowsiness, eyes opening, gentle verbal warnings given to the participants when signs of drowsiness, significant muscle tensions or movements appeared, and hand and/or head movements or other confounding events disturbing EEG recordings.
+In all experiments, at least 5 minutes of electrophysiological data were recorded by professional digital EEG systems licensed for clinical applications (i.e., EB-Neuro Be-light, Micromed, Brain vision, etc.) from 19 exploring scalp electrodes placed according to the 10-20 montage system (i.e., Fp1, Fp2, F7, F3, Fz, F4, F8, T3, C3, Cz, C4, T4, T5, P3, Pz, P4, T6, O1, and O2).
+The ground electrodes were placed in the posterior midline, while the reference electrodes were located in different positions across participating clinical units (i.e., linked earlobes, mastoids, vertex, etc.) in relation to local standard protocols and trials.
+This difference did not affect the present findings as the LORETA toolbox produces cortical source estimates independent of the placement of ground and reference electrodes.
+In other words, it provides the identical EEG source estimate using any placement of ground and reference electrodes
+During the rsEEG recordings, electrode impedances were kept below 5 KOhm.
+The rsEEG recordings were performed using 128 Hz or higher sampling rate (128-1,024 Hz) with an antialiasing bandpass between 0.01 Hz and 60-100 Hz.
+In parallel to the rsEEG recording, bipolar vertical and horizontal electrooculographic (EOG) signals and one-channel electrocardiographic (ECG) signals were also acquired using the same sampling frequency adopted to record the rsEEG data (128-1,024 Hz).
+Consequently, rsEEG, EOG, and ECG signals had the same sampling rate, so EOG and ECG signals could be used for the artifact detection and their off-line correction when adequate.
+As mentioned above, some rsEEG datasets were recorded using a relatively low sampling frequency of 128 Hz (<20% of the rsEEG datasets collected).
+It should be remarked that such a sampling frequency is sub-optimal for an ideal reconstruction of rsEEG signal beyond 40 Hz without aliasing.
+Ideally, a factor of 3-4 between the low-band pass limit and the rsEEG sampling frequency should be set
+In the preliminary analysis, the rsEEG data were split into 2-s epochs and analyzed off-line centrally.
+This segmentation allowed the use of standard toolboxes for the spectral analysis of rsEEG activity such as Fast Fourier Transform (FFT) and eLORETA source estimation, which assume the stationary of rsEEG activity.
+Furthermore, it allowed to minimize the rejection of rsEEG data around a short of period of artifactual activity.
+The use of those procedures allowed a better understanding of the present results in light of previous reference evidence of our research line
+Two independent experimenters (G.
+N. and R. L.) performed a visual analysis of EOG and rsEEG data blind to the clinical diagnosis associated with the electrophysiological datasets.
+They rejected those with artifacts due to instruments, electronic noise, headneck movements, and face muscle tension.
+They also rejected rsEEG epochs with amplitude values exceeding 100 lV.
+Particular attention was given to the contamination of ocular activity (i.e., blinking) on electrophysiological data recorded at frontal (i.e., F7, F3, Fz, F4, and F8) and frontopolar (Fp1 and Fp2) electrodes.
+This specific exam was based on the comparison of EOG and rsEEG traces.
+The rsEEG epochs with artifacts marked as eye movements and blinking were given as inputs to a software toolbox based on an autoregressive model for their possible correction.
+Technical details and performances of this procedure were reported elsewhere
+Noteworthy, the outcome of this procedure was visually revised by the two experimenters (G.
+N. and R. L.).
+All Nold and ADD datasets showed less than 20% of artifact-free rsEEG epochs, without significant differences between the Nold and ADD groups (t-test, p > 0.05).
+To harmonize rsEEG data recorded using different reference electrodes and sampling frequency rates, artifact-free rsEEG epochs were off-line frequency-band passed at 0.1-45 Hz and down sampled, when appropriate, to make the sampling rate of all artifact-free rsEEG datasets in the Nold and ADD participants equal to 128 Hz.
+For sake of harmonization of all datasets, the recorded rsEEG data were re-referenced to the common average reference.
+Spectral power density of rsEEG rhythms was computed by Fast Fourier Transform (FFT, Welch algorithm, Hanning window, no phase shift) using 0.5 Hz as frequency resolution.
+According to previous rsEEG studies carried out in Nold and ADD seniors
+Hz), alpha 2 (10.5-13
+Hz), beta 1 (13-20 Hz), beta 2 (20-30 Hz), and gamma (30-40).
+The contiguous frequency bands shared a bin of frequency in line with the assumption of partially overlapping neurophysiological oscillatory mechanisms
+
+rsEEG rhythms cortical sources computation by LORETA
+To estimate cortical source activity (i.e., neural current density) from rsEEG rhythms, the official LORETA toolbox
+It solves the EEG linear inverse problem estimating neural currents in 2,394 voxels with 7 mm of spatial resolution that form the spherical cortical source model of the LOR-ETA toolbox.
+The other two compartments of the head model are those representing electrical properties of scalp and skull.
+Those voxels of the cortical comportment are co-registered to the Talairach probability brain atlas developed in the Brain Imaging Center of the Montreal Neurological Institute
+As EEG inverse problem solutions are typically underdetermined and unconditioned due to the greater number of unknown samples (current density at each voxel) than scalp electrodes, LORETA toolbox regularizes inverse solutions selecting the maximally smooth source activity solution explaining input scalprecorded EEG data
+We used the LORETA toolbox to estimate rsEEG cortical source activities in all 2,394 voxels from 1 to 45 Hz.
+Afterward, we normalized LORETA source estimates by the following procedure.
+For each participant, we averaged LORETA source estimates across all voxels and frequency bins from 1 to 45 Hz.
+This averaged value served as a denominator to normalize (i.e., ratio) LORETA source estimates at all cortical voxels and for all frequency bins.
+This normalization method typically fits rsEEG power density into a Gaussian distribution and decrease its variability between subjects
+After the above normalization, the LORETA solutions lost the original physical dimension and are represented by arbitrary units.
+In the normalized scale, the value ''1 00 at all frequencies (0.5-45 Hz) and cortical volume voxels was equivalent to the mean of the dipole current density.
+In line with the LORETA intrinsic low-spatial resolution of its solutions, we averaged the normalized LORETA source estimates for bilateral ROIs representing cortical lobes of the head model.
+Specifically, the LORETA solution for a given lobar ROI was obtained averaging the normalized LORETA source estimates across all the voxels of that ROI.
+The bilateral lobar ROIs were the following: (pre)frontal, central (i.e., Brodmann
+
+The rsEEG features used as inputs for ANNs
+In total, we used 42 rsEEG features as inputs for the present ANNs.
+They are listed in the following: LORETA source current density in the parietal, temporal, occipital, limbic, central, and frontal ROIs systematically combined with delta, theta, alpha 1, alpha 2, beta 1, beta 2, and gamma frequency bands.
+For example, the following 6 rsEEG source estimates (features) were extracted for the delta band: ''frontal delta", ''central delta", ''parietal delta", ''occipital delta", ''temporal delta", and ''limbic delta."
+
+Recording and analysis of sMRI data
+Proton density, T1-and T2-weighted sMRIs were acquired based on the standard research settings mostly by 1.5 or 3.0 Tesla scanners at the following clinical neuroimaging centers based on local neuroimaging scientific platforms: Sapienza University of Rome (Italy), IRCCS Fatebenefratelli of Brescia (Italy), IRCCS San Raffaele Pisana of Rome (Italy), IRCCS SDN of Naples (Italy), IRCCS Oasi Maria SS of Troina (Italy), and Service of Neurophysiopathology of the University of Genova (Italy).
+Some of these units (IRCCS SDN of Naples; Sapienza University of Rome and Service of Neurophysiopathology of the University of Genova) provided the MRIs based on the ADNI protocol (
+All 1.5 Tesla MRI scanners used harmonized sequences and scan parameters for image acquisition.
+In the same line, all 3.0 Tesla MRI scanners used harmonized sequences and scan parameters for image acquisition.
+The centralized analysis of all MRIs was performed by the group of the Department of Physiology and Pharmacology ''Vittorio Erspamer" at Sapienza University of Rome.
+The MRI scans were visually checked to confirm that they were free from structural defects or technical artifacts.
+The MRI scans were also checked as general quality of the images, signal-to-noise ratio, and wellbalanced number of MRI datasets at 1.5 and 3.0 Tesla in the Nold and ADD participants to allow a combined use of 1.5 and 3.0 Tesla MRIs as inputs to ANNs for classification purposes.
+The analysis of MRIs was conducted using the Functional Magnetic Resonance Imaging of the Brain (FMRIB) Software Library (FSL), to identify the probability that a given voxels under the skull may belong to gray matter (GM), white matter (WM) or cerebrospinal fluid (CSF).
+Specifically, the following method estimated the probability that a given voxel may belong to GM.
+First, the FSL-BET pipeline conducted an atlas-based parceling operation to segment subject's brain regions from MRIs automatically.
+This was followed by a single-channel segmentation using the FAST tool of FSL.
+It produced a-posterior probability maps in the space of the individual subject for GM, WM, and CSF, with each voxel in the range 0-1 where 1 is the maximum probability
+FAST is specifically based on Hidden Markov Random Field (HMRF) model and a related Expectation Maximization (EM) algorithm
+This HMRF model has benefits regarding the manner that MRI spatial information is encoded through nearby voxels, which leads to spatial regularization and decreasing noise impact on the segmentation.
+The HMRF model is integrated by an EM algorithm to obtain precise and robust segmentations
+In order to fit and provide a standard labeled template, non-linearly normalizations (FSL-FNIRT tool) were computed for the determination of the GM probability.
+The output of this procedure was an associated spatial transformation matrix from the subject's space to a standard template space.
+This model was based on averaged high-resolution MRIs obtained from the subjects of this research, which included anatomical channels (T1-, T2-, and proton density-weighted images), tissue channels (CSF probability, GM probability, WM probability, and tissue labels), and two cortical parcellation maps, namely the TZO map, using the model of
+Based on this parcellation of the MRIs, the following 16 sMRI markers were obtained and used as inputs for the AE ANNs: volume of the Total Intracranial Volume (TIV; cm 3 ), GM (cm 3 ), WM (cm 3 ), CSF under the skull (CSF; cm 3 ), left hippocampus (L-Hippo; cm 3 ), left hippocampus normalized to the TIV (L-HippoTiv), left hippocampus normalized to the GM (L-HippoGM), right hippocampus (R-Hippo; cm 3 ), right hippocampus normalized to the TIV (R-HippoTIv), right hippocampus normalized to the GM (R-HippoGM), total hippocampus (T-Hippo; cm 3 ), total hippocampus normalized to the TIV (T-HippoTiv), total hippocampus normalized to the GM (T-HippoGM), cortical GM (Cortex; cm 3 ), cortical GM normalized to the TIV (CortexTiv), and cortical GM normalized to the total GM (CortexGM).
+Of note, we measured both volume (i.e., number of voxels) and concentration (ratio by TIV) of gray matter to be sensitive to complementary and informative dimensions of the AD-related neurodegenerative process in the cerebral cortex and hippocampus to improve the detection of ADD patients
+
+ANN architecture and procedures
+Fig.
+In some classification trials, the input datasets included only sMRI features.
+In other classification trials, they included only rsEEG features or a combination of the rsEEG and sMRI features.
+A diagram of the adopted SAE is reported in Fig.
+These ANNs had an input layer receiving those input features, two stacked autoencoding hidden layers recreating input data in the output, and a softmax output layer (SAE ANN) or a layer for the computation of the distribution of the reconstruction error (AE ANNs) to produce the classification outcome
+Referring to Fig.
+This iteratively compresses the feature dimensional representation space containing all needed information for the reconstruction.
+The hidden layers H1 and H2 build up the SAE, which contains a softmax output layer which reformulates the hidden layers representation into a probability distribution, to provide the classification of the individual dataset of rsEEG and/or sMRI features as ''Nold" or ''ADD".
+The second approach consists in training separately two AEs, each one specialized for reconstructing only one of the two classes.
+As depicted in Fig.
+Overall, in the classification procedure, the ''low-level" sMRI and rsEEG features of the input datasets were used to derive a ''high-level" representation of latent features by the deep learning using the stacked autoencoding hidden layers.
+To optimize their structure and parameters, the present ANNs (i.e., SAE and AEs) were subjected to a learning process developed in two phases: 1) the pre-training of the stacked autoencoding hidden layers to achieve optimum original parameters in a greedy layer-wise manner and 2) the main training allowing the fine tuning of the deep network to choose the optimum parameters across all the mentioned layers.
+In the pre-training phase, the learning process in the two autoencoding hidden layers exploited an optimization algorithm based on the scaled conjugate gradient descent
+In the learning process of the softmax layer, the class label was, instead, used to categorize the output feature vectors autoencoding hidden layers.
+As mentioned above, the outcome of the learning process in the deep network was the probability of an input pattern to be classified as ADD vs. Nold.
+It must be noticed that the initialization of the network weights via this pre-training phase makes different the deep network with respect to a conventional ANN, reducing the problem of local minima
+In the main training phase, the results obtained for the deep neural network were improved by performing a further learning phase on the whole multi-layer network.
+This phase stacked the input layer together with the two autoencoding hidden layers and the final classification layer.
+In this phase, the fine tuning of the network was performed on the training data using a supervised learning approach.
+The learning algorithm adopted to optimize the entire deep network was the gradient descent back propagation.
+Summarizing, in this learning process, sparse learning of the enhanced feature vectors (i.e., a concatenation of the initial lowlevel features and the stacked autoencoding hidden layerslearned features) was used to select the regressed features of targets effectively, namely the clinical diagnosis of Nold or ADD.
+The mentioned main training phase was developed in two steps.
+In the first step, the best number of the artificial neurons in the two autoencoding hidden layers was defined based on systematic simulation trials and the generation of classification performance maps.
+Specifically, the simulation trials were performed changing systematically the number of the artificial neurons in the first (from 5 to 25 with step 5) and the second (from 2 to 8 with step 2) autoencoding hidden layers.
+The activation function adopted for the neurons was the logistic sigmoid function (i.e., logsig).
+In this exercise, the following three learning parameters were optimized.
+The first parameter was the ''iteration", namely the numbers of models created and used to develop the performance statistics.
+For each model, the topology and learning parameters remained unchanged, while the division of the individual datasets (i.e., Nold and ADD individuals associated with rsEEG and/or sMRI features) in learning (80%) and testing (20%) patterns was differently randomized, performing a parameter optimization through internal cross-validation.
+The second parameter was called ''MaxEpoches", namely the maximum number of learning epochs used for the autoencoding hidden layers and the softmax layer.
+The third parameter was called ''MaxEpoches Stacked", namely the maximum number of learning epochs used for a fine-tuning of the complete stacked network.
+As a criterion of best classification performance, we considered both the mean classification accuracy in the testing phase and the standard deviation of that accuracy across the iterations.
+Ideally, the best number of artificial neurons in the two autoencoding hidden layers was producing the highest classification accuracy combined with the lowest standard deviation.
+Of note, the optimization of the ''iteration", ''MaxEpoches", and ''MaxEpoches Stacked" in the simulation trials must be considered as one of the most important aspects of the procedure.
+Considering the relatively high number of rsEEG and/or sMRI input features and the relatively limited number of individual Nold and ADD datasets associated with those features, an important challenge in the learning process of the deep network model was to avoid the overfitting of the learning datasets.
+The risk of this overfitting increases when the learning error in the training phase become too low, thus predicting a poor generalization capability of the ANN to classify independent testing datasets (not used in the training phase) correctly.
+To tackle this risk, we optimized the above three parameters in the simulation trials to balance the learning errors in fitting the learning patterns and the classification accuracy in the discrimination of the testing patterns.
+In line with previous evidence
+As an outcome, the optimal setting of the three parameters for the SAE was 500 iterations, 250 MaxEpoches, and 10 MaxEpoches Stacked.
+Furthermore, that setting for the SAE was 500 iterations and 20 MaxEpochs.
+In the second step, each network was trained using the learning parameters optimized as mentioned above to determine the connection weights among all the neurons in the layers.
+These weights had the functionality to optimize the association between the individual sMRI and/or rsEEG features, coded as an input in the autoencoding hidden layers, and the correct classification in the output neurons as ''Nold" or ''ADD".
+To this purpose, we used new training datasets (i.e., Nold and ADD individuals) of sMRI and/or rsEEG features not used in the first step of the procedure.
+As an outcome of this second step, a sparse learning on the augmented feature vectors, i.e. a concatenation of the original low-level features and the stacked autoencoding hidden layers-learned features, was applied to select features that efficiently regressed the targets, namely the clinical diagnosis (i.e.
+Nold or ADD).
+Finally, we used or fused the selected sMRI and rsEEG features via ANNs for the classification of testing individual datasets as ''Nold" or ''ADD".
+In this phase of the classification exercise, the network performance was evaluated in the discrimination between the Nold and ADD individual datasets using a testing subset never used in this experiment.
+The performance of the ANNs was expressed as percentages (%) by the following indices:
+(1) Sensitivity, defined as the ADD rate of the test datasets properly categorized as AD; this index was referred as True Positive (TP) or TP rate (TPR).
+(2) Specificity, defined as the Nold rate of the testing datasets correctly classified as Nold; this index was called as True Negative (TN) or TN rate (TNR).
+(3) Accuracy, defined as the sum of the TP and the TN divided by the all number of the datasets including the two classes (ADD and Nold).
+This step-by-step classification process with optimization of the ANNs, training phase, and testing phase was repeated 500 times (iterations).
+Any iteration resulted in different values of sensitivity, specificity, and accuracy.
+The final reports in the ''Results" section referred to the average sensitivity, specificity, and accuracy values over all 500 iterations.
+In general, the above procedure was valid for the two classification architectures used in the present study (i.e., SAE and AE).
+In the first model, the training phase of the SAE was performed with both Nold and ADD feature datasets as input to the unique stacked network.
+In the second architecture, a pair of AEs were trained with Nold and ADD feature datasets, separately.
+The testing datasets were given to both specialized AEs, and the AE with the lower mean squared reconstruction error was considered as the best classification.
+If the AE trained with the Nold (ADD) feature datasets produced the lowest reconstruction error, the individual dataset was associated with a Nold (ADD) individual.
+The above classification procedure was repeated three times for the optimization of the networks specific for the classification of the 42 rsEEG features, the 16 sMRI features, and 58 rsEEG + sMRI features, respectively.
+
+Results
+Considering the proposed architecture, the first step performed was associated with identification of the optimal number of hidden-layer neurons.
+The adopted performance index is the classification accuracy, and a series of maps were reproduced for the three different subsets of input features.
+Fig.
+The same procedure was adopted for the classification architecture based on the specialized AE, and the obtained results indicate Fig.
+The simulation trials were performed changing systematically the number of the neurons in the first (from 5 to 25 with step 5) and the second (from 2 to 8 with step 2) hidden layers; for each configuration 500 iterations were performed.
+The selected topology is indicated with a red circle.
+rsEEG: resting-state electroencephalogram; SAE: stacked autoencoder; sMRI: structural magnetic resonance imaging.
+
+Table 3
+Best performing SAE (stacked autoencoder) network topology optimized based on the classification accuracy as depicted in Fig.
+that the performances change very slightly.
+Therefore, we considered the same topology with 10 hidden neurons for both AE, independently from the selected input features.
+Based on the SAE topology optimized with the first step of the procedure, the two levels of training and the testing phases were performed.
+The classification rate obtained adopting this procedure is reported in Table
+The learning procedure, followed for the SAE, is fundamental to obtain this performance.
+In particular, the role of the fine tuning of the whole network is crucial as demonstrated in Fig.
+Similar behavior is also verifiable, considering a reduced input space.
+The results obtained for the SAE were compared with the second architecture with specialized AE.
+The classification rate obtained adopting this model is reported in Table
+For the classification of the 42 rsEEG features, we observed a sensitivity of 86.5%, a specificity of 58%, and an accuracy of 77%.
+For the classification of the 16 sMRI features, we observed a sensitivity of 78.8%, a specificity of 89.7%, and an accuracy of 82.4%.
+Finally, for the classification of the 58 rsEEG-sMRI features, we observed a sensitivity of 92.3%, a specificity of 74.2%, and an accuracy of 86.2%.
+Fig.
+Adopting the criterion above (maximization of the accuracy over the testing datasets) and selecting ''MaxEpoch" equal to 20 (see ''Methods" for more detail), the learning and testing Gaussian shape distributions were similarly arranged over the error axis.
+Smaller values in the learning epochs may have led to larger training errors, whereas larger ones may have caused overfitting of the learning datasets  The performance obtained comparing learning and testing phase using Sensitivity, Specificity, and Accuracy, when all the 58 input features were provided, is reported in Fig.
+This performance presents some similarities with the results reported in Fig.
+To test the discriminant value of those rsEEG and sMRI variables at the group level, a control analysis was performed.
+We compared those rsEEG and sMRI variables between the groups of Nold and ADD participants as follows.
+Concerning the rsEEG part, the normalized LORETA source activities (dependent variable) were compared by an ANOVA design the exploratory statistical threshold of p < 0.01.
+This ANOVA used three factors such as Group (Nold and ADD), Band (delta, theta, alpha 1, alpha 2, beta 1, beta 2, and gamma), and ROI (frontal, central, parietal, temporal, occipital, and limbic).
+The individual variability of the alpha power peak in the spectrum was considered by the variable called individual alpha frequency peak (IAFp;
+For each subject, the IAFp was defined as the frequency bin showing the maximum global power density in the range between 6 and 13 Hz, averaging the power density values across all scalp electrodes
+Results showed that the mean IAFp was higher in frequency in the Nold group (9.4 Hz, ±0.2 standard error of the mean, SE) than the ADD group (8.0 Hz, ±0.2 SE) as revealed by a t-test (p = 0.000005).
+Fig.
+The IAFp was used as a covariate.
+A Bonferroni correction was applied for 7 bands X 6 ROIs = 42 (p < 0.05/42 = 0.001).
+In the figure, the normalized rsEEG source activities exhibit marked differences between the Nold and ADD groups.
+As compared to the Nold group, the ADD group shows that the rsEEG source activities at the alpha 1 and alpha 2 bands are generally smaller, confirmed by the post-hoc Duncan test (p < 0.000005).
+The differences at the alpha 1 and alpha 2 bands are observed in the posterior ROIs including the parietal, temporal, occipital, and limbic lobes (p < 0.000005).
+As compared to the Nold group, the ADD group also shows greater normalized rsEEG source activities at the delta band.
+This effect was confirmed by the post-hoc Duncan test in the frontal, central, parietal, temporal, and occipital lobes (p < 0.001-0.00001).
+Overall, the results of the above control analysis suggest that present LORETA-based rsEEG source activities showed marked differences between the Nold and ADD groups as a solid basis for their use as an input for the ANN classification exercise.
+Concerning the sMRI part of the control analysis, the standard biomarkers used for the classification exercise were compared between the Nold and ADD groups by univariate Kruskal-Wallis H tests using with the exploratory statistical threshold of p < 0.01 (one tail predicting signs of greater atrophy in the ADD group than the Nold group).
+These sMRI biomarkers comprised what follows: white matter (WM) hyperintensity, gray matter (GM) volume normalized by the total intracranial volume (TIV), left hippocampus volume, left hippocampus volume normalized by the TIV, right hippocampus volume, right hippocampus normalized by the TIV, left hippocampus volume normalized by the GM, total hippocampus volume, total hippocampus volume normalized by the TIV, total hippocampus volume normalized by the GM, cerebral cortex volume, cerebral cortex volume normalized by the TIV, and cerebral cortex volume normalized by the GM.
+Results showed that most of those sMRI biomarkers exhibited statistically significant abnormalities in the ADD group as compared to the Nold group (p < 0.01-0.001).
+These abnormalities pointed to a remarkable atrophy in the ADD group in practically all variables representing cerebral cortex and hippocampus (Table
+Overall, the results of the above control analysis suggest that present LORETA-based rsEEG source activities showed marked differences between the Nold and ADD groups as a solid basis for their use as an input for the ANN classification exercise.
+
+Discussion
+In a previous study, resilient backpropagation ANNs have been reported to reach 77% of accuracy in classifying ADD vs. Nold individuals using (LORETA) rsEEG cortical source activities as input features for the classification
+Here we used another class of ANNs with stacked autoencoding hidden layers to: 1) obtain higher classification accuracy (>80%) in the discrimination between Nold and ADD individuals by LORETA source estimates and 2) compare the classification accuracy of LORETA source estimates in relation to standard sMRI markers of brain neurodegeneration and a combination of LORETA source estimates and those sMRI markers.
+Two different architectures and learning processes of autoencoder-based ANNs were used and performances compared to evaluate the general robustness of the present methodological approach.
+Results showed that the ANN with the SAE architecture achieved a moderate-to-high accuracy in the classification between the Nold and ADD individuals based on 42 rsEEG (LOR-ETA) source features spanning over several frequency bands and cortical lobes.
+Specifically, there was a moderate-to-high classification accuracy (i.e., 80-89%) of the SAE architecture of the ANN in the discrimination between the Nold and ADD individuals as a function of the rsEEG (i.e., 80%) and sMRI (i.e., 85%) variables considered separately, with the best findings obtained when those variables were combined together (i.e., 89%).
+Interestingly, the ANNs with both SAE and AE architectures exhibited a slightly better (i.e., 2-3%) classification accuracy using sMRI as compared to rsEEG variables (see Tables
+Results also showed higher (i.e.
+5%) classification accuracies by the SAE over the EA architecture in the present ANNs.
+Based on this finding, there would be a certain advantage in the sue of an ANN with the SAE architecture able to represent and separate two clinically relevant classes (i.e., Nold and ADD) of patterns in its internal deep learning model.
+In that ANN, the SAE deep learning model developed in the present study may be directly tested in the discrimination between Nold seniors and patients with prodromal stages of the disease such as ADMCI status without further learning processes.
+Of course, this advantage would be concrete only with the maintenance of moderate to high classification accuracies even in the discrimination between Nold and ADMCI individuals.
+We expect this similarity based on the prediction that AD neuropathology is quite significant in ADMCI patients and may produce rsEEG and sMRI features qualitatively like those found in ADD patients
+Differently, the discrimination between Nold and ADMCI individuals with ANNs based on AEs would imply the construction and learning of another deep learning model specialized in the detection of ADMCI patients.
+This additional work would have the advantage to specialize that autoencoder-based ANN based on rsEEG and sMRI markers derived from ADMCI patients.
+These results are in agreement with earlier evidence of our group; for example, our resilient backpropagation ANNs produced a discriminant accuracy between Nold and ADD individuals of 77% using 4 (LORETA) rsEEG source activity as features (i.e.
+occipital, temporal, and parietal theta/alpha; occipital delta/alpha;
+Furthermore, univariate classifications by the ROC curves reported accuracies of 75-80% based on LORETA occipital alpha sources or the ratio between parietooccipital delta and alpha source activities
+The present results also extend earlier evidence of other groups showing that rsEEG scalp-sensor features allow a mild discrimination between Nold and ADD individuals of about 80%
+To achieve an accuracy of 84% in the classification between
+Furthermore,
+More information of this literature can be discovered in two Fig.
+Performance obtained for the specialized AEs, in terms of Sensitivity (TPR = true positive rate), Specificity (TNR = true negative rate), and Accuracy (ACC), when all the 58 input features are provided.
+The learning and testing phase results are reported before (left side) and after (right side) the fine-tuning of the network.
+Within each statistical distribution, the central mark is the median, the edges of the box are the 25th and 75th percentiles, the whiskers extend to the most extreme data points the algorithm considers to be non-outliers, and the outliers are depicted individually as ''+".
+AE: autoencoder.
+papers.
+In of them
+Another interesting finding of this research is that the ANNs with SAEs allowed a moderate classification accuracy with rsEEG (80%) just slightly lower than the accuracy obtained with the sMRI features (84%).
+Furthermore, rsEEG and sMRI features were nonredundant to each other, as their combination gave the highest classification accuracy (89%).
+The same conclusions were reached adopting a different architecture where a pair of AEs was specialized to recognize either ADD or Nold related input patterns.
+These results enrich the complex picture of the previous multimodal classification studies using rsEEG and sMRI in AD patients.
+In this research line,
+Combining rsEEG and sMRI features,
+In the same vein,
+Moreover,
+Analogously,
+An original finding of this study is that the ANNs with SAEs unveiled high values of sensitivity (89%) in the detection of ADD individuals, with a less performant specificity in recognition of Nold subjects (64%).
+This sensitivity was higher than that obtained using resilient backpropagation ANNs in our reference study of
+The high sensitivity in the detection of ADD individuals may make the present ANN procedure of interest for clinical applications as a ''gatekeeper" of seniors at risk of ADD to undergo more complex and expensive diagnostic procedures such as PET mapping of brain amyloid accumulation or the invasive
+This ANOVA design used the regional normalized LORETA solutions as a dependent variable.
+Individual alpha frequency peak (IAF) was used as covariate.
+Legend: the rectangles indicate the cortical regions and frequency bands in which the LORETA solutions statistically presented a significant LORETA pattern Nold -ADD (Bonferroni corrected p < 0.05; the Bonferroni correction was applied for 7 frequency bands X 6 ROIs = 42, p < 0.05/42 = 0.001).
+
+Table 6
+Results of the sMRI part of the control analysis between normal elderly subjects (Nold, N = 45) and patients with Alzheimer's Disease Dementia (ADD, N = 89).
+Rankbased nonparametric analysis (Kruskal-Wallis H test) was used to test the differences between sMRI variables in both group of ADD and Nold.
+The results show sMRI variables have statistically significant differences (p < 0.01 to 0.001).
+lumbar puncture for the dosing of Ab42 and phospho-tau proteins
+Indeed, EEG techniques are non-invasive, costeffective, easily accessible, and replicable in long longitudinal studies
+According to this ''gatekeeper" function, seniors with ''ADD-like" rsEEG markers may undergo more invasive and expensive diagnostic procedures such as PET mapping of brain amyloid accumulation or lumbar puncture for the dosing of Ab42 and phospho-tau proteins
+In this perspective, the relatively low specificity of the present ANN procedure would result in some Nold subjects ''ADD-like" undergoing CSF and neuroimaging diagnostic procedures.
+This may be a reasonable cost when compared to general population screening programs in seniors based on CSF and neuroimaging diagnostic procedures.
+Finally, it is essential to acknowledge some important limitations of the present study, which needs to be replicated in independent cohorts of patients with more advanced procedures.
+In the present study, we used the traditional clinical 10-20 montage with 19 scalp exploring electrodes (e.g., 10-20 system), which is not ideal for an optimal spatial sampling of rsEEG rhythms aimed at estimating underlying cortical sources
+Indeed, previous evidence showed that EEG source estimates based on few scalp exploring electrodes led to both blurring of source estimates and incorrect spatial localizations
+These estimation errors may be fatal in the localization of circumscribed sources of epileptiform activity from < 32 scalp exploring electrodes, especially in addition to undetected errors in the placement of electrodes placed over the scalp
+Moreover, a further cause of approximation in the present rsEEG source estimation was the use of the standard LORETA cortical model (i.e., MNI152 developed by Montreal Neurologic Institute) for all participants rather than the use of realistic head models based on their individual MRIs.
+Those models would have much better accounted for the inter-individual variability of cortical mantles.
+
+Structural MRI biomarkers
+In the present explorative study, we partially mitigated these methodological limitations averaging normalized LORETA source estimates within bilateral lobar ROIs rather than to perform a localization study at the level of single voxels or small ROIs considered in each hemisphere separately.
+The present EEG source estimation at bilateral lobar ROIs may represent an acceptable approximation for widespread maps of cortical rsEEG rhythms expected during a condition of quiet wakefulness keeping the eyes closed in a silent room
+Indeed, the LOR-ETA toolbox was designed to estimate widespread EEG source patterns fitting large distributions of scalp EEG activity
+Cortical rsEEG rhythms may have those ideal features for LORETA source estimations.
+
+Conclusions
+In the present retrospective and exploratory study, we used ANNs with two architectures (i.e., SAE and AE) of stacked (autoencoding) hidden layers recreating input data in the output, to examine the classification accuracy between the Nold and ADD individuals based on input features derived from sMRI, rsEEG, and a combination of both variables.
+The feature database referred to Nold and ADD individuals enrolled by several clinical units in different clinical trials.
+Results showed that the ANN with stacked autoencoders and a deep leaning model representing both ADD and control participants (i.e., SAE) showed classification accuracies in discriminating them of 80%, 85%, and 89% using rsEEG, sMRI, and rsEEG + sMRI features, respectively.
+The two ANNs with stacked autoencoders and a deep leaning model specialized for either ADD or control participants (i.e., AE) showed classification accuracies of 77%, 83%, and 86% using the same input features.
+These findings confirmed the general robustness of this kind of ANNs for the present application and motivate future resource investments and use of more advanced procedures in this research line.
+Those procedures may include 1) the use of > 48-64 exploring electrodes and the digitization of their true position on the scalp; 2) the use of individual head models for rsEEG source estimations at small ROIs localized in each hemisphere to gain spatial detail; 3) a fine-grain individual analysis of frequency bands based on IAFp
+If the best combination of those procedures allowed the best classification accuracy in the discrimination between Nold and ADD individuals, they may be applied for research purposes in the classification between Nold seniors and ADMCI patients and the detection of ADMCI patients with probable rapid trajectories of progression to dementia.
+It should be remarked that even if the above scenarios were successful, the present ANNs could not be directly translated into clinical applications.
+A tentative roadmap for clinical translations may imply at least the following steps: 1) cross-validation with extended specificity as a replication of the current model of ANN classification in a fully independent rsEEG and MRI database collected not only in Nold and ADD individuals but also patients with dementing disorders typically misdiagnosed as ADD such as dementia with Lewy bodies
+
+
+
+Fig. 1 .
+Fig. 1.
+Block scheme of two developed architectures for Alzheimer's disease patients with dementia (ADD) vs Nold classification used in the present study: a stacked autoencoder (SAE) with a softmax output layer and a pair of internal specialized AEs with an output layer based on the reconstruction error (MSE).
+Three different input datasets were considered including sMRI and resting state electroencephalographic (rsEEG) features, separately and together.
+The labels indicating the correct output class are used in both schemes but at different levels of the processing steps.
+Nold: normal elderly subjects; SAE: stacked autoencoder; sMRI: structural magnetic resonance imaging.
+
+
+
+Fig. 2 .
+Fig. 2. Diagrams of the adopted autoencoder structures: (A) stacked autoencoder used for classification and its construction (see text for details).
+(B) Second approach: the outputs of two specialised AEs are compared to decide about the class of the presented testing pattern.
+AD: Alzheimer's Disease; ADD: Alzheimer's disease patients with dementia; AE: autoencoder; MSE: reconstruction error; Nold: normal elderly subjects.
+
+
+-state electroencephalogram; sMRI: structural magnetic resonance imaging.
+R. Ferri, C. Babiloni, V. Karami et al.
+Clinical Neurophysiology 132 (2021) 232-245
+
+
+
+Fig. 4 .
+Fig.4.
+Performance obtained with the SAE in terms of Sensitivity, Specificity, and Accuracy, when all the 58 input features are provided.
+The learning and testing phase results are reported before (A) and after (B) the fine-tuning of the network.
+Within each statistical distribution, the central mark is the median, the edges of the box are the 25th and 75th percentiles, the whiskers extend to the most extreme data points the algorithm considers to be non-outliers, and the outliers are depicted individually as ''+".
+ACC: Accuracy; SAE: stacked autoencoder; TNR: true negative rate; TPR: true positive rate.
+
+
+
+Fig. 5 .
+Fig. 5. Distribution of the reconstruction error (MSE) for the specialized ADD and Nold AEs during the learning and testing phase.
+Performance obtained in terms of Sensitivity, Specificity, and Accuracy, when all the 58 input features are provided.
+ADD: Alzheimer's disease patients with dementia; AE: autoencoder; Nold: normal elderly subjects.
+
+
+
+Fig. 7 .
+Fig.7.
+Regional normalized low-resolution brain electromagnetic tomography (LORETA) solutions (mean across subjects) of cortical sources of eyes-closed resting state electroencephalographic (rsEEG) rhythms relative to a statistical ANOVA interaction among the factors Group (normal elderly subjects, Nold, N = 45; patients with Alzheimer's Disease Dementia, ADD, N = 89), Band (delta, theta, alpha1, alpha2, beta1, beta2, and gamma), and Region of interest, ROI (frontal, central, parietal, occipital, temporal, and limbic).
+This ANOVA design used the regional normalized LORETA solutions as a dependent variable.
+Individual alpha frequency peak (IAF) was used as covariate.
+Legend: the rectangles indicate the cortical regions and frequency bands in which the LORETA solutions statistically presented a significant LORETA pattern Nold -ADD (Bonferroni corrected p < 0.05; the Bonferroni correction was applied for 7 frequency bands X 6 ROIs = 42, p < 0.05/42 = 0.001).
+
+
+= 30.8,
+p = 0.001 White matter volume X 2 (1) = 12.6, p = 0.001 Cerebral fluid under the skull X 2 (1) = 10.3, p = 0.001 Left hippocampus volume X 2 (1) = 22.2, p = 0Intracranial Volume; GM: gray matter; CSF: Cerebrospinal fluid; sMRI: structural magnetic resonance imaging.
+
+
+
+Table 1
+Demographic and clinical characteristics of the subjects; mean ± standard deviation.
+
+
+
+Table 2
+List of the used Brodmann areas of the cortical sources of rsEEG (resting-state electroencephalogram) rhythms by LORETA software to define the ROIs (regions of interest).
+
+
+
+Table 4
+Classification performance for the SAE (stacked autoencoder) depending on the input features.
+The mean percentage ± standard deviation of sensitivity, specificity, and accuracy, over 500 iterations are reported.
+
+
+
+Table 5
+Classification performance for the specialized AE (autoencoder) depending on the input features.
+The mean percentage ± standard deviation of sensitivity, specificity, and accuracy, over 500 iterations are reported.

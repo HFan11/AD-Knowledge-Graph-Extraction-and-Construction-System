@@ -1,0 +1,368 @@
+Longitudinal data in peripheral blood confirm that PM20D1 is a quantitative trait locus (QTL) for Alzheimer’s disease and implicate its dynamic role in disease progression
+Background: While Alzheimer's disease (AD) remains one of the most challenging diseases to tackle, genome-wide genetic/epigenetic studies reveal many disease-associated risk loci, which sheds new light onto disease heritability, provides novel insights to understand its underlying mechanism and potentially offers easily measurable biomarkers for early diagnosis and intervention.
+We analyzed whole-genome DNA methylation data collected from peripheral blood in a cohort (n = 649) from the Alzheimer's Disease Neuroimaging Initiative (ADNI) and compared the DNA methylation level at baseline among participants diagnosed with AD (n = 87), mild cognitive impairment (MCI, n = 175) and normal controls (n = 162), to identify differentially methylated regions (DMRs).
+We also leveraged up to 4 years of longitudinal DNA methylation data, sampled at approximately 1 year intervals to model alterations in methylation levels at DMRs to delineate methylation changes associated with aging and disease progression, by linear mixed-effects (LME) modeling for the unchanged diagnosis groups (AD, MCI and control, respectively) and U-shape testing for those with changed diagnosis (converters).
+Results: When compared with controls, patients with MCI consistently displayed promoter hypomethylation at methylation QTL (mQTL) gene locus PM20D1.
+This promoter hypomethylation was even more prominent in patients with mild to moderate AD.
+This is in stark contrast with previously reported hypermethylation in hippocampal and frontal cortex brain tissues in patients with advanced-stage AD at this locus.
+From longitudinal data, we show that initial promoter hypomethylation of PM20D1 during MCI and early stage AD is reversed to eventual promoter hypermethylation in late stage AD, which helps to complete a fuller picture of methylation dynamics.
+We also confirm this observation in an independent cohort from the Religious Orders Study and Memory and Aging Project (ROSMAP)
+
+Background
+Over a decade of genetics research on Alzheimer's disease (AD) has identified 30+ susceptibility genes which altogether account for less than 50% of the heritability of late-onset Alzheimer's disease (LOAD)
+With continuous efforts to thoroughly characterize the genetic risk for LOAD, emerging evidence suggests that epigenetics also plays a significant role in disease pathogenesis, progression and resilience
+Among the various epigenetic modifications, DNA methylation is the most widely studied mechanism due to its interpretable relationship to disease-associated gene expression, the availability of different experimental assays and advanced analysis tools, thus enabling high throughput processing.
+It has also attracted increasing attention as a potential biomarker, with accumulating evidence indicating that abnormal methylation can be used for detection and diagnosis of disease, prediction of response to therapeutic interventions and prognosis of outcome
+For AD, the methylation profile from peripheral tissues such as blood would be especially useful as a diagnostic tool due to the noninvasive, easily measurable characteristics and the possibility of longitudinal study
+Specifically for LOAD, in postmortem brain tissues, cell type-specific methylation signatures and differential methylation dynamics were reported for several brain pathology-related genes such as ankyrin 1 (ANK1)
+More recently, analysis from biologically and technically independent datasets focusing on the comparison between samples from healthy controls and patients with advanced-stage AD shows that only one gene, peptidase M20-domain-containing protein 1(PM20D1), a biosynthetic enzyme for a class of N-lipidated amino acids in vivo, consistently displayed promoter hypermethylation in patients with AD
+Furthermore, it has been demonstrated that PM20D1 is a methylation and expression QTL coupled to an AD-risk associated haplotype defined by rs708727 and rs960603, which displays enhancer-like characteristics and contacts the PM20D1 promoter via a haplotype-dependent, CCCTC-binding-factor-mediated chromatin loop
+Nevertheless, these findings, which were all observed in various brain tissues, are not necessarily translatable to the whole blood due to the highly dynamic nature of peripheral tissues and the heterogeneity of disease.
+Multiple studies have attempted to reproduce the observations of methylation changes in brain and peripheral blood, but few consistent results have emerged.
+For example, hypermethylation of ALK1 in two cortical regions (superior temporal gyrus and prefrontal cortex) of AD subjects has been observed; however, these alterations were not observed in whole blood obtained premortem from the same individuals
+TNF-α shows significant hypomethylation in the cortex samples of AD patients but not in their blood samples
+These findings indicate that some of the epigenetic mechanisms being uncovered in AD pathology are only relevant to brain cells, not blood cells.
+Furthermore, many epigenetic alterations observed in blood cells could not be detected in the brain
+A global correlation of epigenetic changes in the brain with peripheral tissues is yet to be established.
+Still there is evidence indicating that blood DNA methylation dynamics may mediate detectable transcriptomic changes
+Analysis of methylomic co-variation between tissues, specifically between whole blood and different regions of brain demonstrated that for a portion of the methylation sites, blood methylation levels are correlated with those from brain, and suggested the utility of using a blood-based approach to identify potential biomarkers of psychiatric disease phenotypes
+Given the difficulty in accessing and collecting brain tissue samples especially longitudinally to track disease diagnosis and progression, valuable information could still be obtained from blood-based DNA methylation studies
+We set out to utilize the data available from the ADNI study which comprised a large cohort with both bloodbased longitudinal DNA methylation data and crosssectional gene expression data, by starting from baseline DNA methylation measurements in the stable diagnostic groups to detect the differential methylated regions (DMRs) at the group level, then tracking the dynamic change of the DMR among the different diagnostic subgroups, including those converters.
+It is one of the ongoing efforts to exploit the data to seek understanding of the heterogenicity and dynamic nature of AD.
+The ample information possessed by the longitudinal data in the ADNI cohort could help validate the previous findings observed in brain tissues while providing unprecedented perspectives into the dynamics of the epigenetic background of AD.
+Based on the ADNI data, we now report the preliminary findings that are observed at PM20D1 locus: (1) confirmation of PM20D1 as a methylation and expression QTL coupled to an AD-risk associated genotype defined by rs708727 in peripheral blood, mostly consistent with what is been observed in the brain tissues from the hippocampus and the frontal cortex; and (2) the methylation profile's moving direction at the early stage of AD, which is contrary to what is observed in brain tissues with advanced-stage AD (Braak staging ≥ 5)
+We modeled the alteration of methylation levels at the promoter regions of the gene as a function of disease progression and validated the findings in a separate cohort with both methylation and gene expression data from brain tissues.
+This work helps characterize a comprehensive picture for the epigenetic change at the PM20D1 gene locus associated with the onset, as well as progression of AD and suggests its potential as a blood-based biomarker.
+
+Results
+
+Methylation data processing and quality check (QC)
+The details of the ADNI study, the experiment design for methylation array and initial data QC are available online at:
+Briefly, DNA was isolated and plated out at NCRAD and DNA methylation profiling was performed at AbbVie for a total of 1920 samples, including 1719 unique samples and 201 technical replicates (653 unique individuals).
+Longitudinal DNA samples at baseline, and +up to 4 years, sampled at ~ 1 year apart were obtained from all subjects.
+Samples were randomized using a modified incomplete balanced block design, whereby all samples from a subject were placed on the same chip, with remaining chip space occupied by age-and sex-matched samples.
+Subjects from different diagnosis groups were placed on the same chip to avoid confounding.
+Unused chip space was leveraged for technical reproducibility assessment via replicated DNA samples.
+Sample and probe quality control, including detection P values, checking the sex of samples and sample identity, removed 15 samples from the data.
+The released raw data from ADNI methylation array consist of 1905 samples at > 850,000 CpG sites, creating unique challenges in data processing and QC.
+We chose to process the data with the most recently developed 'bigmelon' package in R, a memory efficient method to import the raw data and export the data matrices without any filtering steps.
+All the downstream analyses were accomplished by the ChAMP pipeline for an integrated workflow, which employs a set of tools for filtering, normalization, batch correction and cell type correction for data from whole blood samples.
+Preprocessing of the data resulted in 685,446 probes for 1,905 samples.
+Singular value decomposition (SVD) analysis
+Mean value for each estimated cell proportion shows the cell type profile agrees well with known cell type profile for whole blood samples, with granulocytes/neutrophils making up 50-60% of the samples and lymphocytes/monocytes making up the rest (Fig.
+At baseline, the proportion of granulocytes was higher (p = 0.0027, fdr = 0.048, two-sided Student's t test), and that of CD8T cells was lower (p = 0.0059, fdr = 0.053, two-sided Student's t test) in the AD patients, indicating an alteration of immune response in the AD patients.
+All other cell types remain comparable among the subjects.
+This observation also does not change in the full longitudinal data time frame.
+
+Differentially methylated regions (DMRs) at baseline
+We first focused on those subjects (579 out of 649) whose age > 65 at the baseline measurements (LOAD).
+A subset of the subjects (424) kept a stable diagnosis during the whole sampling time frame throughout all the visits; thus, their baseline measurements were used for DMR detection.
+A region of ~ 900 bp on chromosome 1 demonstrated hypomethylation in the AD patients in comparison with control (p = 7.48E-06, fwer = 0.004), as well as AD vs MCI (p = 9.11E-05, fwer = 0.048).
+This is also the only DMR passing the corrected fwer cutoff (0.05).
+This region also demonstrated moderate hypomethylation when we compared MCI against control (p = 0.00237, fwer = 0.748), indicating a gradual methylation decrease during disease progression (Table
+Interestingly, this region lies within the promoter region of gene PM20D1, the recently reported mQTL/eQTL for AD, albeit it is hypermethylated in some brain regions of subjects with advanced LOAD
+We therefore focused on the longitudinal data for the 10 CpG probes from the Illumina EPIC array in this region (Table
+
+Allelic dosage effect in the DMR
+The effects on the methylation values ( β = M M+U +α , where M and U are the methylated and unmethylated signal intensities, and α is an offset) in the DMR regions from alternate allele doses of the two SNP sites were quantitatively evaluated by linear regression at the baseline.
+We stratified the cohort by diagnostic status during the full sampling time frame by AD only (87 subjects), MCI only (174 subjects), control only (162 subjects) and converters (117 subjects), and effect was evaluated for the three stable diagnosis groups, respectively.
+We observed that in all diagnostic groups, rs708727 had the most prominent effect as expected (p < 2e-16 in control and MCI, p < 0.0001 in AD), while rs960603 was not significant for any of the 3 groups (p > 0.1) (Table
+The slopes of rs708727 were comparable in all diagnostic groups (p > 0.05 by testing the differences of the slopes).
+For both control and MCI groups, age and sex were not significantly associated (p > 0.05), while in AD, sex plays a role in the methylation change (p < 0.05 in 6 probes, p < 0.1 in 9 probes in total), where female shows higher β values.
+
+Longitudinal data analysis
+To evaluate longitudinal changes in methylation levels, we first stratified the cohort by diagnosis status.For stable diagnosis groups (AD/MCI/control), β values were fit to age, with sex, allelic dosages for rs708727 and rs960603 as fixed effect covariates by LME models.
+Consistent with the baseline data, allelic dose for rs708727 demonstrates the most dominant effect on the methylation levels in all  the groups (p < 2.2e-16), while that of rs960603 is not significant (p > 0.1).
+On top of the effect of allelic dose of rs708727, it also shows an increasing trend of the slope from control to MCI, then to AD (AD vs control, p < 0.1 at 4 probes).
+For both MCI and control groups, no other variables show any effects on any of the probes (p > 0.1).
+In contrast, in AD patients, after controlling allelic dose effect, at least half of the probes (4 probes with p < 0.05, 6 probes with p < 0.1) still show significant age-dependent methylation elevations (Table
+Also consistent with the model of allelic dosage effect at baseline, a majority of the probes (6 probes with p < 0.05, 9 probes with p < 0.1) also show sexdependent methylation elevation.
+Another interesting finding is the weak positive correlation between methylation level and p-tau181 values in plasma (3 probes with p < 0.05, Additional file 3: Table
+To test if there is a turning point for the methylation level of PM20D1 in the disease progression process, we employed the U-shape test by the two-lines method on the longitudinal data for the converters group (117 subjects).
+We adopted the 'two-lines' U-shape test approach to demonstrate (and statistically test) that there is a  non-monotonical trajectory in the methylation level as a function of disease progression, by characterizing the nonlinearity without making functional-form assumptions about f(x).
+This approach has also been adopted in the AD research field previously to model disease progression
+For each probe, a clear U shape was observed (p < 0.01 on both slopes), with the breakpoint identified at ~ 78 to 79 years of old (Additional file 3: Table
+Allelic doses of rs708727 and rs960603 also show significant effect on the correlation, although the former is more prominent than the later.
+Consistent with our previous analysis, we also detected a sex effect
+
+Correlation of methylation data with gene expression
+To characterize associations between methylation changes and expression of PMD20D1, we integrated available DNA methylation data from subjects with a stable diagnosis, with matched whole blood gene expression data.
+For all 10 probes, we observed an inverse correlation between probe methylation β value and PM20D1 expression (Additional file 4: Table
+We again observed a significant association between dosage of rs708727 and PM20D1 expression (p < 0.0001, t test), while that of rs960603 shows negligible effect (p > 0.1, t test).
+We did not observe associations between sex, age or diagnosis and PM20D1 gene expression.
+Strikingly, we observed that the observed association between cg05841700 and PM20D1 was entirely driven by subjects with an allelic dose of 0, homozygous GG at rs708727.
+When the correlation is stratified by allelic doses of rs708727, it is apparent that only in the hypomethylated samples (allelic dose = 0, homozygous GG) there is a significant linear correlation (Fig.
+There is no such linear correlation in the heterozygous samples (allelic dose = 1, heterozygous GA, Fig.
+This is consistent with the recent discovery that the methylation level of PM20D1 promoter cannot be directly translated into gene expression, due to blockage of an enhancer downstream for the hypermethylated groups (AD-risk associated haplotype).
+Only from individuals with unmethylated PM20D1 where the enhancer region physically interacts with the promoter, can PM20D1 transcription begin
+The current study provides numeric representations of the relationship and confirms a similar observation that is made in a peripheral tissue (blood) in comparison with the findings originally reported in brain tissue samples
+
+Data from brain tissue support findings in whole blood
+As a validation of the methylation alteration at the PM20D1 promoter region observed in blood-based data, we investigated DNA methylation changes at 6 CpG sites profiled from postmortem brain prefrontal cortex tissue samples collected as part of the ROSMAP cohort.
+We observed a strong association between CpG methylation and Braak staging (p < 0.05) in participants with an AD diagnosis (Table
+We did not observe any association in the control group for any of the 8 CpG sites, and only one probe was found to be significantly associated with Braak staging in the MCI group (p = 0.038 at cg24503407), and another marginally significant (p = 0.070 at cg17178900).
+When combined together, there is a linear correlation (p < 0.05) between methylation level and Braak score at 6 out of the 8 probes for all the subjects.
+This correlation could be attributed to the larger sample size, AD subgroup and wider range of Braak stages in the overall group.
+Again, rs708727 was found to be a highly significant (p < 2e-16) covariant of all probes, while rs960603 is not.
+In contrast with our previous analysis, we did not observe an association with sex.
+Interestingly, the correlation between DNA methylation levels and pathological biomarkers (amyloid and tangles) shows a positive association of quantitative overall amyloid level at 3 probes in the AD subgroup, 1 probe in the MCI subgroup and 0 in the controls out of the 8 probes in total.
+For tangles, there is no association of PM20D1 methylation at all for any of the diagnostic subgroups, but a weak association in the overall group (p < 0.05 for 4 out of 8 probes, Additional file 5: Table
+We also observed an inverse linear correlation between β value and PM20D1 expression (Additional file 6: Table
+Consistent with our findings within the blood-based ADNI data, after stratification by rs708727 genotype, the observed linear correlation was primarily attributed to the lower AD-risk populations (rs708727 allelic dose = 0, GG).
+
+Direction comparison of DNA methylation between brain tissues and whole blood
+The consistent findings between the different brain regions and the peripheral blood from different cohorts prompted a direct comparison between DNA methylation in blood with brain regions for the CpG probes at PM20D1 promoter region, using published results in the third independent cohort (the London cohort).
+Across the 8 CpG probes from the Methylation 450 K array at PM20D1 promoter region, the positive correlation of methylation between blood and any of the four brain regions is all highly significant, with correlation coefficient ranging from 0.857 to 0.976 (p < 0.0001, Additional file 7: Table
+Of note, this correlation is regardless of age, sex or pathological state of the individuals, highlighting a consistent interindividual covariance in whole blood and that observed in all four brain regions, specific to the promoter region of PM20D1.
+The clear trimodal distribution of DNA methylation suggests that the mQTL mediates much of the observed cross-tissue similarities, and the profile at PM20D1 in blood could be used as a proxy to predict DNA methylation levels in the brain
+In summary, our results collectively demonstrate that there is a U-shaped dynamic trajectory in the methylation profile for PM20D1 promoter in the whole blood samples from ADNI cohort, from normal state to MCI then to LOAD.
+The change trend of the methylation profile at the same promoter in the brain samples from the ROSMAP cohort, and the remarkable correlation between blood and brain and between several brain tissues in the third cohort confirm that this is a universal observation conserved in different tissue types across different demographics.
+
+Discussions
+Early diagnosis and treatment of AD have been called out as the most urgent problem to tackle for this second century disease
+Nevertheless, to date not a single easyto-measure biomarker has been fully established for its diagnosis and it remains elusive to identify blood-based biomarkers that will pinpoint AD in its earliest phases.
+As the most important goal is to detect AD at the earliest possible stage (pre-dementia) and identify ways to track the disease's progression with biomarkers, ADNI data provide unique opportunity to observe the drastic change of molecular profiles during disease progression.
+Data obtained from microarray whole-genome DNA methylation profiling enable large scope in both time frame and sample size offering unprecedented insights into the dynamics of epigenetic signatures during the early phases in a large AD cohort.
+On the other hand, epigenetic signatures are largely tissue-specific; so understanding how observations obtained from peripheral tissue such as blood might relate to brain tissues needs further examination.
+As a pioneering study in exploring the whole dataset, we made a direct comparison of baseline measurements among control, MCI, and AD groups from the wholegenome methylation profiling data.
+We found that the promoter of PM20D1 gene locus consistently displayed hypomethylation from control to MCI, and even further to symptomatic AD.
+PM20D1 has recently been reported as an mQTL in two major AD affected brain regions, the hippocampus and the frontal cortex, based on the comparisons between samples from healthy controls and patients with advanced-stage AD, although it is been found to be hypermethylated in the latter
+In the report, an allele-dependent correlation with PM20D1 promoter methylation is identified for the rs708727-rs960603 haplotype.
+In the proposed mechanistic model, PM20D1 has been suggested as a protective gene of AD, whose elevated expression levels might provide a   potential cellular defense mechanism.
+For AD non-riskhaplotype carriers, specifically those with homozygous reference allele haplotype at both SNP rs708727 (GG) and rs960603 (CC), PM20D1 methylation level is lower; in the presence of AD-related stress, expression is enhanced to reduce ROS-induced cell death and Aβ levels and prevent memory impairment.
+In contrast, in samples with hypermethylated PM20D1 (high risk, homozygous alternate allele haplotype carriers, AA/TT), the promoter region is not contacted by the enhancer and transcription does not occur, which results in low PM20D1 expression, and there is no protective effect against Aβ.
+The role of PM20D1 in AD has since then been further explored
+In concordance with the previous mechanistic model, we first validated the allelic dosage effects on PM20D1 promoter region in the blood samples, but found it is only due to the genotypes of rs708727.
+The allelic dosage of rs708727 has been found to be highly significant in determining the methylation level of the CpG sites, with higher dosage associated with higher baseline methylation quantitatively.
+Notably, this QTL has an effect size of ~ 25% (Fig.
+Although not most common, such effect size of a QTL has been reported in multiple studies, e.g.,
+In fact, this agrees almost perfectly with what is been observed in brain tissues as reported in the aforementioned work of Sanchez-Mut et al.
+Interestingly, although rs960603 is reported to be co-segregated as a haplotype in nearly 85% of cases in the 1000 Genomes Project, its allelic dosage is not as significant in multiple tests within our analysis.
+This is in agreement with a most recent linkage disequilibrium analysis showing in the haplotype, six SNPs (rs17772159, rs823074, rs803275, rs9438393, rs823090 and rs17772143) but not rs960603 were tightly linked to the lead QTL SNP rs708727
+Our study thus confirms that PM20D1 is an mQTL mediated primarily by the AD-risk associated SNP (rs708727) as measured in peripheral blood.
+Furthermore, we exploited the longitudinal data and demonstrated that hypomethylation actually occurs before the symptomatic onset of the disease, conceivably to facilitate increasing expression of the gene to activate its protective function.
+As disease progresses, methylation level is gradually elevated in most of the CpG sites in the AD patients, which ultimately leads to depletion of the gene transcription and expression.
+This phenomenon is not observed in the control or MCI groups as their methylation levels are almost constant (Fig.
+This explains the previously observed hypermethylation in late stage AD patients (Braak staging ≥ 5) in comparison with control.
+Our models provide a comprehensive picture of the dynamic change of the methylation profile at PM20D1 promoter region, thus complementing the previous work
+Of note, the initial methylation decline for these probes actually prevails in AD vs control for all the stratified genotypes of rs708727 (Additional file 8: Table
+In our LME model, random slopes of age are not tested due to limited data points per individual which would result in singular fit, or failed converge of the random slope model.
+By excluding the random slope for the priming manipulation, we assume that the priming effect of age (disease progression) is invariant across subjects in the population.
+This might be oversimplified and there is possibility that different risk groups possess different rates of increasing methylation level across the PM20D1 promoter region.
+This hypothesis cannot be directly tested in the current dataset due to the small sample size of AD patients carrying the highrisk SNP (n = 5), but it warrants further exploration with larger datasets in the future.
+From the U-shape test for the subjects with converted diagnosis, it is identified that 78-79 years old would be the turning point for the methylation level of the probes.
+This matches the average initial diagnosis age for LOAD at ~ 78 years old in the general population
+Whether the turning point is triggered by some other factors or solely determined by age is something that requires further investigation.
+Furthermore, we found a sex-dependent effect on the methylation elevation for most of the probes, indicating that female is at higher risk for hypermethylation of PM20D1 promoter.
+This reveals yet another possible contributing factor to the females' higher odds for AD
+Despite this, hypomethylation does not necessarily translate into higher gene expression.
+The correlation between methylation profile and gene expression of PM20D1 from cross-sectional data clearly demonstrated that only within the lower-risk genotype carriers, there is an inverse linear relationship.
+Higher risk genotype carriers' expression profiles are not correlated with methylation, which can be attributed to the inaccessibility of the enhancer to the gene promoter, as suggested by the mechanism model for PM20D1 function in AD.
+These findings indicate that methylation signatures at the PM20D1 locus are more robustly associated with conversion to AD, than PM20D1 expression.
+The methylation trend after the onset of AD has been once more observed in brain tissues in the ROSMAP cohort, by using Braak stage as a proxy of the disease's progression.
+The same correlation pattern between methylation and gene expression for PM20D1 in the brain tissues, as well as the remarkable direct correlation between blood and brain tissue's methylation levels in the third independent cohort at the CpG sites provide strong evidence of a link between peripheral blood methylation profiles and AD-associated methylation differences in the brain tissues at PM20D1 region.
+Although sex's effect has not been repeated in the brain tissues probably due to the fact the ROSMAP data has been adjusted for age and sex
+Of special note, we have also attempted the correlation between PM20D1 methylation level and a few pathological biomarkers, in order to better understand the significance of PMD20D1 methylation in the evolution of AD pathology.
+For the ROSMAP cohort, methylation level of PM20D1 might be positively associated with amyloid in AD patients (p < 0.05 for 3 out of 8 probes in total), but not in MCI (1 probe), nor control (0 probe) or the overall group (1 probe) (Additional file 5: Table
+For tangles, there is no association of PM20D1 methylation in any of the three diagnostic subgroups, but a weak association in the overall group (p < 0.05 for 3 out of 8 probes), probably due to larger sample size and wider range of tangle scores.
+In the ADNI cohort, there is no correlation with any of the biomarkers (Aβ1-42, t-tau and p-tau181) from cerebral spinal fluid (CSF) in any of the three diagnostic subgroups, or the overall group (results not shown, biomarker data from
+This is in line with the report that plasma p-tau181 has greater variability than CSF p-tau181 and may be differently regulated depending on Aβ status
+Recently, it has been demonstrated that plasma ptau-181 is an indicator of very early brain amyloidosis
+Another possible scenario is that soluble amyloid peptide, or other secondary factors associated with very early amyloidosis in the brain, actually triggers hypomethylation of PM20D1 in AD patients, and insoluble plagues in AD stages further affects its methylation level, so the correlation is observed with Aβ deposition.
+As a circulating enzyme, PM20D1 regulates a class of N-lipidated amino acids in vivo, and these metabolites function as endogenous uncouplers of mitochondrial respiration
+It has been implicated in obesity, type 2 diabetes
+In mouse models, PM20D1 activity was dramatically increased in lipoprotein fractions from APOE-knockout (KO) mice versus wild-type mice.
+The activation of the PM20D1/N-acyl amino acid pathway is suggested as a contributor to the protection from metabolic and neurological diseases observed in APOE-KO mice
+The recent study focusing on PM20D1′s role in AD demonstrated that PM20D1 expression is increased both in vitro and in vivo following neurotoxic insults, probably by activating the hypomethylation machinery as illustrated in our work.
+Forced overexpression of PM20D1 in the hippocampus results in improved learning performance in the mouse model of AD, whereas PM20D1 knockdown increases amyloid plaque load, so it has been suggested to have a protective role against AD.
+Given that LOAD has also been suggested as a metabolic disorder
+Accurate, minimally invasive and timely diagnosis of probable AD in living individuals has always been challenging, although most recently great breakthroughs are being made in blood-based biomarkers, such as p-tau181
+Multiple factors contribute to it, such as heterogenicity of the disease, inaccessibility of the pathological tissues, and lack of robust and readily measurable biomarkers
+The dynamic methylation alteration for PM20D1, depicted by the longitudinal data with individuals both before disease onset and following clinical diagnosis opens a probable channel to monitor the disease, and the possibility of a diagnostic tool.
+Notably, the initial methylation decrease is universal to all the risk-associated SNP genotypes (Additional file 8: Table
+The random effect from LME modeling shows that intra-individual methylomic variation at PM20D1 (SD > 0.1 for RID) is still non-negligible after controlling fixed effects from age, sex, allelic dosage of rs708727 and rs960603.
+Notably, APOE status has been initially considered as a covariant in all of our studies, but the effect is not significant (p > 0.1), thus not included in the final analysis.
+While there are presumptively still other factors underlining the baseline methylomic β values for PM20D1 promoter, the overall trend of individual methylation change, instead of absolute methylation level (which is primarily determined by the SNP allelic dose), is worthy of further evaluation.
+The current study is the first of its kind applying large-scale longitudinal data to obtain novel insights into the epigenetic signature of PM20D1 intervening with LOAD.
+Further in-depth study, including those in animal models and patients, as well as its precise relationship with Aβ proteins and p-tau levels in blood could help define its sensitivity and specificity to differentiate AD from non-AD and its broader utility down the road.
+The preliminary result we observed in the longitudinal data from ADNI cohort is just one piece of evidence that there is correlation for specific pathological changes in AD between different tissues from different cohorts, as manifested at PM20D1 locus.
+An expansive analysis that addresses DMR and longitudinal data in an integrated model would reveal even more exciting findings; nevertheless, it requires tremendous computational resources and innovative methodologies and tools, which is worth active pursuing.
+The current study exemplified utilization of the data to distill useful information in the epigenetic landscape of AD.
+Further exploitation is thus warranted and would be beneficial to the early diagnosis and effective treatment of the formidable disease.
+
+Conclusions
+The longitudinal data from ADNI methylation profiling present compelling evidences demonstrating that changes to the methylome in LOAD detected in blood could reflect pathologic processes implicated in ongoing neurodegeneration in the brains.
+Specifically to PM20D1 gene locus, it clearly confirms PM20D1 is a methylation QTL essentially coupled to an AD-risk associated SNP rs708727, and illustrates its dynamic role of being hypomethylated in the conversion phase and gradually turning into hypermethylation after onset and during progression of the disease.
+Our results call for further study, both for PM20D1′s role in AD pathology and its potential as a blood-based biomarker, to address the urgent need of early detection and treatment of AD.
+
+Methods
+
+Study cohort and data source
+ADNI data were all downloaded from the ADNI database (
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment (MCI) and early Alzheimer's disease (AD).
+For up-to-date information, see www.adni-info.org.
+For details of the methylation profiling procedure, refer to the documentation on the genetic data download page.
+Briefly, DNA methylation profiling was performed at AbbVie from a total of 1,920 blood samples, including 1719 unique samples and 201 technical replicates (653 unique individuals).
+Longitudinal DNA samples at baseline and follow-ups were obtained from the cohort.
+The Illumina Infinium Human-MethylationEPIC BeadChip Array (www.illum
+ina.com), which covers ~ 866,000 CpGs, was used for methylation profiling.
+After multiple steps of quality check (QC), 1905 samples from 649 subjects were retained and raw methylation data (idat files) were released and analyzed in our study.
+Genotype data were obtained from ADNI wholegenome sequencing (WGS) panel, where genotypes were called by the ADNI genetics core using the pipeline following Broad best practices (BWA
+Gene expression data were obtained from blood samples from the 811 participants in the ADNI WGS cohort.
+The Affymetrix Human Genome U219 Array (Affymetrix (www.affym
+etrix .com),
+Santa Clara, CA) was used for expression profiling.
+The processed gene expression profile was downloaded and used for analysis.
+Diagnosis data and other demographics (sex, date of birth) were also obtained from ADNI database.
+Subject selection for the different study sections and the workflow of the ADNI cohort are outlined in Fig.
+All the data from ROSMAP cohort
+Methylation β values at the interesting CpG probes were obtained from the methylation profile generated on prefrontal cortex samples collected from 740 individuals using the Illumina HumanMethyla-tion450 BeadChip
+Genotypes at the interesting loci were extracted from the published WGS data from 1196 subjects
+Gene expression Fragments Per Kilobase of transcript per Million mapped reads (FPKM) values were obtained from bulk RNAseq data, where samples were taken from the gray matter of the dorsolateral prefrontal cortex of 724 subjects
+Clinical and neuropathology data including final diagnosis and Braak stages were matched for each individual and used in the analysis.
+Subject selection for the different study sections and the workflow of the ROSMAP cohort are outlined in Fig.
+
+ADNI methylation data quality control and normalization
+Raw DNA methylation data (idat files) were imported into R, and the Bioconductor package 'bigmelon'
+Detection p values (detP), methylation (M) and unmethylation (uM) intensities and β values defined as the ratio between the methylated and total signals (M + uM) were calculated and exported.
+The ChAMP pipeline
+Multiple filtering steps were first applied, by excluding probes with detection p value (default > 0.01), probes with < 3 beads in at least 5% of samples per probe, all non-CpG probes contained in the dataset
+Data were then normalized with BMIQ method
+Cell proportion was calculated based on a reference DNA methylation profile, and cell type influence on the whole blood data was removed by RefbaseEWAS
+The 'estimateCellCounts' function in minfi
+
+Differential methylated region (DMR) detection
+Since the longitudinal data consist of 649 subjects sampled at dates spanning up to 5 years with 390 subjects having at least 3 visits' data, many of the subjects have changed their diagnostic status over the time course.
+To focus on the study of LOAD, 70 subjects with sampling age < 65 at any time point were removed.
+The diagnosis dates were compared against the blood sample collecting dates for each of the remaining 579 subjects, and the closest diagnosis in time (< 0.5 years) was chosen as the diagnosis for each individual sample.
+For clear DMR detection, only those samples keeping a stable diagnosis (i.e., control, MCI, or AD across all the time points for each subject, respectively) were retained for analysis.
+This left 424 total subjects for the DMR detection.
+Among them, 162 were control, 175 were MCI, and the remaining 87 were AD patients.
+DMRs were detected using the baseline β values by the BumperHunter method implemented in ChAMP
+When technical replicates exist for the same sample, one data point was randomly picked.
+Comparisons were made for AD vs control, AD vs MCI and MCI vs control, respectively.
+
+Allelic dosage effect in the DMR region at baseline
+Out of the 424 subjects with stable diagnosis, 423 were genotyped by WGS.
+Their baseline measurements used for DMR detection were also used for modeling the dosage effect of the two reported associated SNP rs708727 (GG = 0, GA = 1, and AA = 2) and rs960603 (CC = 0, CT = 1 and TT = 2).
+Their effects to the β values of the probes at the promoter regions of the PM20D1 gene locus were modeled by the lm function in R, using age, sex as covariates, stratified by the diagnosis group.
+The formula, in R syntax, for the model is:
+
+Longitudinal data modeling
+Longitudinal analysis was performed on the whole longitudinal data for 540 total subjects with genotypes available from the WGS panel (423 stable diagnosis, 117 converted cases).
+Their demographics profile is reported in Table
+For the subjects with a stable diagnosis, linear mixed-effects (LME) models were fit for the β values for the probes at the promoter regions of the PM20D1 gene locus, for the 162 controls, 174 MCI patients and 87 AD patients, respectively, by the lmer function in the R package 'lmerTest'
+The formula for the linear mixedeffects model is:
+where age, sex and the allelic dosages for the two known SNP rs708727 and rs960603 were modeled as fixed effects, and subject ID (RID), array and slide were modeled as random effects.
+The exam dates from plasma p-tau181 data (obtained from recent ADNI release
+For the group of 117 subjects with changed diagnosis, a U-shape test was carried out by the two-line method introduced by Simonsohn [57] and using the code (
+The breakpoint is set using the "Robin Hood" algorithm, seeking to obtain higher power to detect a U-shape if it is present
+
+Methylation correlation with gene expression
+For the 423 subjects with stable diagnosis (as well as genotype data), gene expression data were also available from ADNI microarray profiling.
+All the gene expression data were cross-sectional, and only information on sample collection years is available.
+The sample collection years were matched against the methylation profiling sample collection years, and those samples collected in the same year were deemed as a matching expression-methylation data pair for each subject.
+The collection years were more than one year apart between methylation and expression samples for two subjects; thus, they were excluded from this analysis.
+The relationship between gene expression of PM20D1 and the β value for each probe was modeled for the 421 data pairs by the lm function in R, using age, sex, diagnosis and allelic dosages of rs708727 and rs960603 as covariates, following the equation:
+
+Methylation data analysis for ROSMAP cohort
+Subjects' clinical diagnosis, Braak stages for brain tissues and demographic information including sex and age at death were obtained from AMP-AD portal.
+A total of 677 subjects were found to have genotypes, Braak stages and methylation profiles available.
+Only those subjects with diagnosis as no cognitive impairment (control) or MCI/ AD without any other cause of cognitive impairment (cogdx = 1, 2 or 4), totaling 605 subjects were included in the final analysis.
+They were stratified by the diagnosis, and linear regression models in respect to Braak stage, (log transformed) amyloid and (log transformed) tangles were built for the β values of the 8 CpG probes at the promoter regions for PM20D1, respectively, controlling for age, sex, allelic dosages of rs708727 and rs960603, using the lm function in R. Gene expression data were also matched with the methylation data, and 448 subjects out of the 605 were found to have gene expression data from RNASeq profiling.
+Linear regression models were built between gene expression FPKM value of PM20D1 and the β value at each probe for the 448 data pairs by the lm function in R, using age, sex, diagnosis and allelic dosages of rs708727 and rs960603 as covariates.
+e ∼ β + age + sex + dx + rs708727 + rs960603
+
+DNA methylation correlation between brain tissue and whole blood
+We utilized the Blood Brain DNA Methylation Comparison Tool (
+The cohort included both neuropathologically unaffected controls and individuals with variable levels of neuropathology.
+The data are from published results in 4 dissected brain regions (PFC: n = 114, EC: n = 108, STG: n = 117 and CER: n = 112) and matched premortem whole blood samples (n = 80) from an overlapping set of 122 individuals
+All the correlation values were obtained directly from the database.
+
+
+
+Fig. 1
+Fig. 1 Comparison of individual cell type across control (n = 162), MCI (n = 175) and AD (n = 87) groups with stable diagnosis at baseline measurements.
+Shown in a granulocytes (Gran), in b CD4T cells, in c CD8T cells, in d natural killer (NK) cells, in e monocytes (Mono) and in f B cells.
+Blue line indicates comparison between AD cases versus control subjects; black line indicates comparison between MCI cases versus control subjects.
+P Value for the differences in cell composition estimates across groups as per T test is indicated
+
+
+
+Fig. 2
+Fig. 2 Graphical representation of differentially methylated region (DMR) near PM20D1 gene locus.
+Genomic location is indicated by chromosome position based on Genome Reference Consortium Human Build 37 (GRCh37).
+Transcripts are indicated by light blue arrows.
+Solid line represents β values for all the CpGs constituting the significant region, where AD is colored in red, MCI in blue and control in green
+
+
+
+Fig. 3
+Fig. 3 Methylation change as allelic dose of rs708727 changes modeled by β values at baseline regressed with allelic dose of rs708727 at one of the representative CpG probes (cg14159672).
+Scatter plot is colored by the allelic doses of rs708727 where red = 0 (GG), green = 1 (GA), and blue = 2 (AA).
+An overall linear fit line is also shown.
+Panel a depicts control group, b depicts MCI group, and c depicts AD group
+
+
+
+Fig. 4
+Fig. 4 Methylation change as disease/age progresses modeled by β values regressed with age at one of the representative CpG probes (cg14893161).
+Scatter plot is colored by the allelic doses of rs708727 where red = 0 (GG), green = 1 (GA), and blue = 2 (AA) in panels a-c.
+An overall linear fit line is also shown.
+Panel a depicts control group, b depicts MCI group, and c depicts AD group.
+Panel d depicts all the conversion cases where a U-shape is fit and a break point is marked
+
+
+
+Fig. 5
+Fig. 5 Correlation of methylation β values at one of the representative CpG probes (cg05841700) with gene expression of PM20D1 for the ADNI cohort.
+An overall fit line and the fit lines stratified by the allelic doses of rs708727 are shown
+
+
+
+Fig. 6
+Fig. 6 Methylation change as disease progresses modeled by β values regressed with Braak score at one of the representative CpG probes (cg26354017) from the ROSMAP brain samples.
+Scatter plot is colored by the allelic doses of rs708727 where red = 0 (GG), green = 1 (GA), and blue = 2 (AA).
+An overall linear fit line is also shown.
+Panel a depicts control group, b depicts MCI group, and c depicts AD group
+
+
+
+Fig. 7
+Fig. 7 Workflow and selection for the study outlined in this work
+
+
+regions (prefrontal cortex, entorhinal cortex, superior temporal gyrus and cerebellum) from 71-75 matched samples for one of the representative probes (cg11965913).
+The figure is taken from the Blood Brain DNA Methylation Comparison Tool (17) (https ://epige netic s.essex .ac.uk/blood brain /index .php?probe nameg =cg119 65913 ).
+
+
+Figure S3.
+Methylation change as disease progresses in the AD patients, modeled by β values regressed with age at one of the representative CpG probes (cg14893161).
+Scatter plot is colored by the allelic doses of rs708727 where red = 0, green = 1, and blue = 2.
+An overall linear fit line, as well as the fit lines for each allelic dose group are also shown.
+
+
+
+Table 1 The differentially methylated regions (DMRs) in PM20D1 promoter region as detected by the comparisons among control, MCI and AD Comparison Rank Chr Start End Width Value Area p value fwer p.value Area Fwer area
+
+
+
+Table 2 . 10 CpG probes and their respective β values from EPIC array in the DMR region at PM20D1
+
+
+
+Table 3 Model summary for the allelic dosage effects of rs708727 on the β values at one of the representative CpG probes (cg14159672)
+
+
+
+Table 4 Model summary for the LME modeling between age and the β values at one of the representative CpG probes (cg14893161). Fixed effects from age, sex, allelic dosages of the two SNPs and random effects from subject (RID), chip slide and array are shown
+
+
+
+Table 5 Model summary for the effects of Braak staging on the β values at one of the representative CpG probes (cg26354017)
+
+
+
+Table 6 Demographic profile for the subjects in the longitudinal data analysis by different diagnosis groups
+± 0.69 2.63 ± 0.68 2.10 ± 0.99 3.10 ± 0.88 Age at visits 77.34 ± 6.19 75.78 ± 6.20 79.01 ± 6.62 78.18 ± 6.33 Duration of follow-ups 1.71 ± 0.71 1.73 ± 0.67 1.12 ± 1.00 2.07 ± 0.95

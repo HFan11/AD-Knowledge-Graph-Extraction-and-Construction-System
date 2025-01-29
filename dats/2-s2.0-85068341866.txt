@@ -1,0 +1,422 @@
+Transcriptional Dysregulation Study Reveals a Core Network Involving the Progression of Alzheimer's Disease
+Background: The pathogenesis of Alzheimer's disease is associated with dysregulation at different levels from transcriptome to cellular functioning.
+Such complexity necessitates investigations of disease etiology to be carried out considering multiple aspects of the disease and the use of independent strategies.
+The established works more emphasized on the structural organization of gene regulatory network while neglecting the internal regulation changes.
+Methods: Applying a strategy different from popularly used co-expression network analysis, this study investigated the transcriptional dysregulations during the transition from normal to disease states.
+Results: Ninety-seven genes were predicted as dysregulated genes, which were also associated with clinical outcomes of Alzheimer's disease.
+Both the co-expression and differential co-expression analysis suggested these genes to be interconnected as a core network and that their regulations were strengthened during the transition to disease states.
+Functional studies suggested the dysregulated genes to be associated with aging and synaptic function.
+Further, we checked the conservation of the gene co-expression and found that human and mouse brain might have divergent transcriptional co-regulation even when they had conserved gene expression profiles.
+Overall, our study reveals a core network of transcriptional dysregulation associated with the progression of Alzheimer's disease by affecting the aging and synaptic functions related genes; the gene regulation is not conserved in the human and mouse brains.
+
+INTRODUCTION
+Alzheimer's disease (AD) is a neurodegenerative disorder most prevalent in people over the age of 65 years
+As the population ages, AD will impact more people and place an increasing economic burden on society
+There is still no effective treatment that prevents or slows the disease progression.
+A significant challenge is the poor understanding of the etiology of this disease
+The progression of AD is associated with the dysregulation of many genes at different regulatory levels from transcriptome to neuronal function
+To study such a complex multifactorial disease, integrated and large-scale data are necessary to catch the diverse regulatory interactions
+The availability of high-throughput transcriptomic sequencing data and clinical annotation in the Accelerating Medicines Partnership-Alzheimer's Disease (AMP-AD) program (provides an opportunity to study the altered transcriptional regulation during the progression of AD
+Co-expression network analysis is useful to infer causal mechanisms for complex diseases
+It is based on the assumption that co-expressed genes are usually regulated by the same transcriptional regulators, pathways or protein complexes and that the co-regulated genes can be revealed by analysis of the topological structure of co-expression networks
+The coregulated clusters in the network provide the chance to track the affected pathways or biological processes in diseases
+One of the most popular strategies is to find the topological structural changes of the co-expression network under different disease states where these changes indicate regulatory dysregulation in the disease
+Another way is to associate the subnetwork expression to disease progresses or clinical traits, which can uncover the regulatory components involved in the dysregulation of diseases
+Application of co-expression network analysis to AD data has revealed many AD-associated genes and pathways
+However, the nature of such analyses may bias toward the genes with higher connectivity in a co-expression network.
+The complexity of AD progression leads us to extend co-expression analysis to a more detailed investigation of coexpressed genes, especially for the genes with relatively low connectivity, during the disease progression.
+To understand the etiology of AD, the changes of regulation are supposed to be more essential than the regulations themselves.
+We studied the transcriptional dysregulation by evaluating all the gene pair combinations for their co-expression changes, which can be referred as differential co-expression (DCE) analysis.
+The genes with altered co-expression are indicated in the progression of AD and their importance can be ranked by the numbers of changed connections.
+In this study, we collected the RNA-seq expression data for 1,667 human brain samples from the AMP-AD program.
+Differential co-expression analysis indicated 87,539 gene pairs to have significant co-expression changes.
+Among them, 97 genes, including 10 transcription factors, were found to be dysregulated in AD progression.
+Both the co-expression and differential coexpression analysis suggested these genes to take roles as an interconnected core network.
+In the transition from normal to disease states, the co-expression is strengthened in this network.
+Functional studies supported this network to be involved in the etiology of AD by directly or indirectly affecting aging, synaptic function and metabolism related genes.
+We also evaluated the evolutionary conservation of gene regulations by comparing the co-expression profiles between human and mouse.
+Dislike the gene expression, the regulation indicated by co-expression is not conserved, including the core network, which may indicate transcriptional regulation divergence between human and mouse.
+Based on the clinical annotation, the samples were grouped as AD and normal samples.
+In this step, some patients with vague disease status, missing annotation or other disease annotations were filtered out.
+
+MATERIALS AND METHODS
+For the RNA-seq data from each project, the AD and normal samples were separately processed for quality control.
+We first performed normalization with the tools of edgeR package
+Then, the samples were checked for genomic gene expression similarity.
+Samples with strong deviation in hierarchical clustering and principal component analysis plots, were treated as outliers and removed.
+The covariates, such as age, sex, post-mortem interval (PMI), brain regions were evaluated and adjusted by a linear model.
+Next, the expression data, including both AD and normal samples, from different projects were treated as different batches and adjusted to remove the batch effects using ComBat
+The adjusted expression data were further normalized with quantile normalization and evaluated by PCA plots to make sure that the selected samples to have consistent expression profiles and have no clear batch effects among the data from different projects.
+Then, the resulting expression data were divided into two expression profiles for AD and normal samples, respectively.
+The mouse and human brain microarray data were collected from GEO database.
+To minimize the effects of the different microarray platforms, we only selected the data performed with Affymetrix's platforms.
+Normalized expression data were downloaded and used.
+For each dataset, we performed quality control to make sure the expression profiles of samples had good expression profile consistency with experimental descriptions introduced in the original paper.
+The batch effects of the data from different experiments were estimated and removed with ComBat.
+And then the data were combined together.
+They were further evaluated for expression profiles consistency and the experiment or sample outliers were removed.
+Finally, the probes of microarray were mapped to gene symbols.
+For the genes with multiple probes, we selected the ones with maximum expression values.
+The gene from human and mouse were mapped based on the gene homologous annotation from Mouse Genome Informatics (MGI) (www.informatics.jax.org).
+
+Differential Co-Expression Analysis
+Using the expression values of different samples as elements of expression vectors, the Spearman's correlation of all gene pairs was calculated for AD and normal samples, respectively.
+To evaluate the robustness of calculated correlations, we performed two simulation studies.
+In the first evaluation, we randomly selected half of the samples and calculated new correlations.
+We then checked the mean and variance of correlation values under 100 rounds of simulation.
+The results helped us to understand the stability of observed correlation values under the different sample selection.
+In another evaluation, the annotation of samples for each gene was shuffled so that the gene pairs had the wrong sample mapping.
+The new correlations were calculated under 100 rounds of simulations.
+This simulation helps us to evaluate the confidence ranges for the observed correlation values.
+The correlation differences under disease and normal status were evaluated using the R package DiffCorr
+In this step, the correlation values were transformed with Fisher's transform and z-scores were calculated to indicate the correlation differences.
+The p-values were calculated by fitting to a Gaussian Distribution.
+After comparing the efficiency, Benjamini and Yekutieli's algorithm in R package
+At a cutoff of adjusted p < 0.01, we select the significantly differentially correlated genes.
+
+Enrichment Analysis
+The gene ontology (GO) annotation of gene lists was performed with the GO enrichment analysis tool David
+The significantly enriched terms for biological process and cellular components were selected at a cutoff of adjusted p < 0.05.
+When multiple gene lists were available, the GO annotation results were visualized in a heatmap to facilitate comparisons.
+In this work, we also performed enrichment analysis using an annotated gene list, e.g., text-mining annotated genes.
+For k input genes, the number of genes with annotation is x.
+For n whole genomic genes, the number of genes with annotation is p.
+We use Fisher's exact test to evaluate if the observed x genes result from random occurrences.
+> m=matrix(c(x,k-x,p-x,n-k),ncol=2,byrow=T) > p=fisher.test(m,alternative="greater")$p.value
+
+Differentially Expressed Genes in Alzheimer's Disease
+We performed differential expression analysis to the RNA-seq data collected in above steps from the AMP-AD program.
+For data from the MSBB project, four brain regions were treated as four independent datasets.
+Among 7 used datasets, some RNAseq data had raw counts, e.g., data from MSBB project and we carried out differential expression analysis using edgeR.
+Other data with normalized expression values were analyzed by log2 transformed t-test.
+For all the datasets, the DEGs were determined at a cutoff of p < 0.01.
+To increase the confidences, the DEGs from different datasets were cross-validated with each other and the ones with clear inconsistency, e.g., the DEG list with weak overlap with other DEG lists were filtered out.
+Then, the selected DEGs were combined together as the DEGs of AD.
+The differential expression direction was also checked and determined by using the direction supported by the maximum datasets.
+
+Alzheimer's Disease Related Genes
+The AD related genes were determined by selecting the ones with reported association with AD in published works, such as the genetics evidences and expression evidences.
+In this step, we use the gene-disease annotation for AD from IPA (
+Metacore (
+We filtered out the low-confidence genes by manually removing the ones with only evidence of expression or those with inconsistency evidences.
+
+Gene Co-expression Network Analysis
+Gene co-expression network analysis was to find the gene clusters or modules with good co-expression similarity.
+As one of well recognized implementation, WGCNA was applied to RNA-seq expression data following the protocol provided by the tool developers
+The RNA-seq data for both AD and normal samples were merged as the input of WGCNA.
+The power of 6 was determined by pickSoftThreshold function.
+Then, block-wise network construction were performed by setting the maximum block size to 2,000 and consensus module were detected with a minimum module size of 30.
+In this step, static height cutoff method was applied to retrieve highly connected modules.
+All of the expressed genes were clustered into modules, which were labeled with different colors, including gray.
+In each module, the connectivity and module membership of each module gene were calculated to assess the association and significance of genes in the modules.
+
+RESULTS
+
+Transcriptional Dysregulation in Alzheimer's Diseases
+To find the dysregulation associated with AD, we evaluated the co-expression changes in the brain of AD patients, which indicated the transcription regulation changes.
+The whole process is detailed in Figure
+In the first step (a), four sets of independent human RNA-seq expression data were collected from the AMP-AD program compiling with the data access control policy.
+The selected samples from different projects were processed and combined together to define the expression profiles of both AD and control subjects [see step (b) and  The mouse expression data were also collected from the GEO database (
+where 931 samples from 20 microarray experiments were selected and processed to construct the mouse brain expression profiles.
+In the next step (d), the co-expression level, described by Spearman's correlations, of all gene pairs were calculated for AD and control subjects, respectively.
+To check the robustness of calculated correlations, we performed random sampling and shuffling to original expression data.
+We found that the calculated values were tolerant to the sample selection and were less likely to result from random correlation (see Figure
+These results suggested the correlation value to be robust enough to study the co-expression changes.
+Applying the differential correlation analysis method introduced in Fukushima (2013), we found 87,539 out of 163 million gene pairs to have significant co-expression changes in the AD patients at a cutoff of adjusted p < 0.01 (see Table
+Among them, there were 9,168 genes with at least one DCE partner (see Table
+Considering the nature of DCE analysis and the strict cutoff, all of the predicted gene pairs were co-expressed in either AD patients or normal people or both at a cutoff of p < 0.01 that calculated using transformed correlation values (see Methods and Table
+Similarly, the DCE pairs were supposed to have altered regulation in the AD patients.
+Therefore, we could call them dysregulated genes.
+We checked the co-expression status of the 87,539 dysregulated gene pairs.
+22,150 gene pairs (25.3%) were coexpressed only in AD samples while 10,707 pairs (12.2%) were co-expressed only in normal samples at a cutoff of p < 0.01.
+Other gene pairs were co-expressed in both AD and normal samples.
+Among them, 31,685 pairs (36.2%) have increased co-expression correlation in AD while only 9,694 pairs (11.1%) have decreased values.
+There were also gene pairs with reversed co-expression trend.
+For example, 6,459 negatively correlated gene pairs (7.4%) in normal subjects become positively correlated in AD patients.
+Vice versa, 6,844 gene pairs (7.8%) have the opposite changes.
+By summarizing the overall changes, we observed more gene pairs to have increased co-expression correlation in AD (2.6 times that of the gene pairs with decreased co-expression correlation), which suggested a strengthened transcriptional regulation in the AD patients.
+
+Dysregulated AD Genes
+In published works, at least 777 expressed genes have been reported to be associated with AD.
+We found that 479 of them were predicted with at least one dysregulated partner (see Table
+Among them, the MAP1B gene was predicted with the maximum number of partners (365 genes), of which 32 genes were also AD associated genes.
+We found that the partners of MAP1B had diverse functions and many of them were associated with AD progression, such as intracellular signaling cascades (42 genes, p = 3.7e -4 and FDR = 0.2), regulation of apoptosis (18 genes, p = 3.4e -3 and FDR = 0.2), neuron and dendrite development (5 genes, p = 4.13e -3 and FDR = 0.3) and RNA metabolic process (19 genes, p = 4.71e -3 and FDR = 0.3).
+This result confirmed that MAP1B, as a microtubule associated protein, had diverse involvement in neuron related biological processes
+Another example was the TREM2 gene, which was reported to get involved in the neuroimmunology of AD
+We observed 4 partners, including SLA (DCE at p = 3.7e -10 and FDR < 0.01), HCLS1 (p = 2.5e-10), C3AR1 (p = 8.7e-10) and FCER1G (p = 1.3e -9), all of which were associated with inflammation related functions.
+Among the well-studied AD drug targets
+In Table
+To understand their biological involvement, we studied the enrichment of AD related genes in their partners.
+We found the partners of 48 dysregulated AD genes enriched with AD genes at a cutoff of p < 0.05, indicating their close relationship with AD progression.
+We also checked the transcriptional association of 68 dysregulated AD genes.
+We found 56 genes to be differentially expressed (p < 0.05) in the AD patients and the significance for such enrichment was p = 1.1e -27 by Fisher's exact test.
+Similarly, we found that the partners of 53 dysregulated AD genes were enriched with the differentially expressed genes (DEGs), confirming the transcriptional involvement of the dysregulated AD genes.
+Another investigation was to the aging related genes based on the annotation in our previous work
+We found 21 out of 68 dysregulated AD genes to be aging genes and the significance for such enrichment was p = 6.9e -5.
+The partner genes of 39 dysregulated AD genes were also enriched with the aging genes at a cutoff of p < 0.05, confirming the association of the aging process with the progression of AD.
+We also studied the functional involvement of the dysregulated AD genes.
+In Figure
+Consistent with the selecting criteria, we found that these genes were associated with many AD related functions.
+Among them, "transmission of nerve impulse" was predicted to be the most enriched term (12 genes, p = 2.3e -7 and FDR < 0.05).
+In the published works, synaptic dysfunction had been widely reported for its association with AD
+Other AD related terms include "neurological system process" (14 genes, p = 1.54e -3), "regulation of protein kinase activity" (7 genes, p = 3.5e -3).
+In summary, we found a subset of the AD related genes that were transcriptionally dysregulated in AD; these genes were involved in the progression of AD by affecting the AD related pathways or biological processes, e.g., synaptic transmission.
+
+A Core Network Involves the Dysregulation of AD
+Following the widely accepted hypothesis for hub genes in a network, we assume that the genes with more dysregulated partners will take more essential roles in the etiology of AD
+Another assumption is that the dysregulated genes and their partners will participate in the same pathways or biological processes.
+Therefore, we can infer the function of dysregulated genes by analysis of their partners
+Based on these assumptions, we defined the genes with both transcriptional dysregulation and involvement in the progression of AD by the following criteria: (1) with more than 50 partners; and (2) to be differentially expressed in AD (p < 0.01, see Table
+In this way, 97 dysregulated genes were selected (see Figures
+Among them, 64 genes were differentially expressed in AD and 39 genes were reported as AD associated genes.
+These genes were dysregulated in 14,322 gene pairs with 3681 partners.
+Of the dysregulated genes, TMEM178A was the most dysregulated gene with 669 partners.
+We checked the co-expression status between dysregulated genes and their partners and found 85.9% of the gene pairs to have increased co-expression correlation, which was far more than the observed percentage (66.2%)
+with non-filtered dysregulated gene pairs (Figure
+In AD patients, we also observed 3461 gene pairs co-expressed only in AD, which was 3.6 times of the normal-specific co-expressed pairs (p = 4.6e -67 by Fisher's exact test), suggesting a strengthened transcriptional regulations in AD patients.
+Even though the dysregulated genes were not selected for any co-expression correlation among each other, we observed the 97 dysregulated genes displaying stronger co-expression correlation values than randomly selected genes.
+Of 4,656 gene pair combinations, 95.7% of them were co-expressed at a cutoff of p < 0.01 and 86.9% have a correlation r > 0.3.
+The median correlation value was 0.556 (p = 7.7e-86 by correlation test).
+We also checked their co-expression changes and found 929 out of 4,656 gene pairs to be differentially co-expressed in the transition from normal to AD.
+Using the co-expression and differential co-expression information, we could connect the dysregulated genes as a network (see Figure
+In this network, 96 out of 97 nodes had at least one connected co-expression partner at r > 0.3 and 90 nodes can also have at least one dysregulation partner at a cutoff of adjusted p < 0.01.
+Combining the co-expression and differential co-expression information, 96 out of 97 dysregulated genes were connected with other dysregulated genes.
+The island of this network was ARF5, which was differentially expressed in AD but not reported with any association with AD.
+Therefore, we filtered it in Figure
+We further checked the direction of edges and found 870 out of 929 dysregulated edges to have increased co-expression correlation in AD while 176 of these regulations were AD-specific.
+In Figure
+The transcriptional regulations were observed between up-and down-regulated genes, including 42.7% of co-expressed edges to have negative correlation values.
+In the network, we observed 10 transcription factors (TFs): FLI1, NOTCH2, SALL2, STAT3, PPARA, BEX1, ARID1A, ARID1B, AFF1, and PRNP.
+We checked if these 10 TFs regulated the expression of other dysregulated genes.
+Due to limitation for experimental validation, e.g., human brain sample collection and manipulation, we evaluated their regulatory roles by comparing their expression profiles with the dysregulated genes.
+Compared with 2405 annotated TF genes in the Gene Ontology, we FIGURE 2 | Functional involvement of dysregulated AD genes.
+68 dysregulated AD genes were annotated for their functional involvement based on the Gene Ontology annotation; the colors of GO terms indicated the enrichment significance.
+observed that these TF genes were always ranked as the most co-expressed TF genes.
+In Figure 3C, we showed the example for TMEM178A gene.
+We found that 9 TFs had strong coexpression correlations, especially for PPARA and STAT3, which were co-expressed with TMEM178A at r = -0.62 and r = -0.603,
+ranked as the 10th and 16th of the most negatively coexpressed TF genes.
+Similar results were observed with other dysregulated genes (see Figure
+Another investigation was to predict the gene-specific regulators using the method introduced in
+In this step, we predicted the enriched regulators for each of 97 dysregulated genes using AD and normal expression data as the input expression matrix.
+In the Jaspar database, only STAT3 had clear TF binding profiles and therefore, we could only predict the transcriptional regulation for STAT3.
+We found that STAT3 was ranked as the 16th of the most important regulators for 96 dysregulated genes in 474 annotated TFs.
+In normal and AD samples, STAT3 was predicted to regulate 25 and 31 dysregulated genes, respectively.
+Overall, these results suggest that the dysregulated TFs may be involved in transcriptional regulation or dysregulation in AD.
+
+Aging, Synaptic Transmission and Metabolism Are Dysregulated
+Applying a strategy of guilt by association, we extended the functional study of 97 dysregulated genes to the subnetworks comprising of themselves and their partners.
+In this step, we used each of 97 dysregulated genes as hub and exacted the partner genes to construct the dysregulation subnetwork, which could be treated as the co-regulated unit for further studies.
+Investigation of these subnetworks suggested them to have overall consistent co-expression changes.
+Taking the TMEM178A subnetwork as an example, we found 665 out of 669 nodes to have increased co-expression correlations with the hub gene, including 164 gained co-expression in AD.
+Similar results were observed with many other dysregulated genes (see Table
+We investigated the association of subnetworks with AD progression.
+The first attempt was to check the enrichment of DEGs in AD.
+We found all the subnetworks (97/97) to be enriched with DEGs at a cutoff of p < 0.01 (see Figure
+Taking the TMEM178A subnetwork as an example, 413 out of 669 partner genes was differentially expressed in AD and the significance for this enrichment was p = 6.5e -127 by Fisher's exact test.
+By checking the other genes, we found 84 subnetworks enriched with DEGs with a good statistical significance of less than p = 1e -10 by Fisher's exact test.
+Such significant enrichment suggested that all the subnetworks were associated with the progression of AD at the transcriptional regulation level.
+Considering the fact that age is the biggest risk factor for AD, we checked the enrichment of aging related genes in each subnetwork which were identified by finding 2,862 genes with aging associated expression or DNA methylation in our previous work
+For the subnetworks with differentially expressed genes as hubs, we found 53 out of 64 subnetworks significantly enriched with aging related genes (see Figure
+Taking the TMEM178A subnetwork as an example, we found 165 out of 669 genes to be aging related genes (p = 3.2e -20 by Fisher's exact test).
+Out of 2,862 aging genes, 624 genes were also dysregulated in AD.
+We further evaluated the involvement of dysregulated aging genes in the progression of AD by checking their differential expression direction in AD and their expression trend in the aging process.
+As showed in Figure
+Overall, the analysis results suggested that the aging genes were associated with the transcriptional dysregulation of the AD progression.
+We performed functional annotation using David
+Figure
+The most enriched category was the synaptic function related terms.
+One example was the "transmission of nerve impulse" term, which was enriched in 37 subnetworks and that was also the most enriched term.
+The other related terms include "synaptic transmission" and "cellcell signaling, " which had been reported for their involvement in the AD progression
+Another category was the metabolism related terms.
+Among them, "generation of precursor metabolites and energy" was significantly enriched in 39 subnetworks and "glycolysis" was significantly enriched in 29 subnetworks.
+The links between metabolism and AD were also supported by the published works
+Even as different functional categories, synaptic function and metabolism related terms were usually enriched by the same subnetworks.
+We also observed other enriched terms and most of them had been reported for association with AD, such as "cation transport"
+Using David, we also checked the cellular component (CC) enrichment (see Figure
+We found neuron, especially synapse related CCs to be the most enriched cellular location.
+Consistent with BP analysis results, the "synapse part" term was enriched in 46 subnetworks, especially the subnetwork with dysregulated DEGs as hubs confirming the analysis results with BP terms.
+As described above, the dysregulated genes were either DEGs or literature reported AD genes.
+We found that the functional involvement for the two groups of subnetworks was different.
+The 39 subnetworks with hubs of AD genes were less associated with any enriched biological process.
+For example, the term "transmission of nerve impulse" was enriched in only 8 out of 39 subnetworks while there were 29 out of 64 DEG-hub subnetworks enriched with this term.
+Similarly, the other AD associated terms were also less likely enriched with these 39 subnetworks.
+However, considering the fact that the dysregulated AD genes themself were associated with the AD related terms (as discussed in above section), including synaptic function and metabolism related biological processes, we could assume that these 39 subnetworks with the hubs of dysregulated AD genes were also associated with the enriched terms.
+
+Association With Clinical Outcomes
+In the ROSMAP project of AMP-AD program, most samples have been annotated with clinical information.
+We studied the association of gene expression with three disease related clinical traits, e.g., cognitive test scores (cts), braak stage (braaksc) and assessment of neuritic plaques (ceradsc).
+We did not find any gene to have strong expression correlations (e.g., r > 0.6) with studied traits.
+The maximum correlation was observed with SLC6A9 at r = -0.388.
+For all the genes, only 12.3% of them have a clinical association at |r| > 0.15.
+This result suggests that the clinical outcomes of AD may be affected by combined effects and even beyond the effects of gene expression.
+In Figure
+We found that the dysregulated genes were always ranked as the most clinical associated genes.
+Of 97 dysregulated genes, 66 genes had a clinical association of |r| > 0.15 (p = 4.49e -37 by Fisher's exact test).
+Among them, NCALD, a neuronal calcium binding protein, was associated with the cognition score at r = 0.268.
+Another investigation was to the combined effects of dysregulated gene pairs.
+We studied the partial correlations between the dysregulated genes and the clinical traits by controlling the effects of their dysregulated partners.
+We found that many dysregulated gene pairs had improved clinical association (see Table
+In these dysregulated gene pairs, the clinical association of one gene was improved by considering the gene expression of its partners, which indicates the importance of dysregulation relationship.
+
+Dysregulation Divergence in Mouse
+Mice are widely used as a model animal in wet-lab studies for AD.
+Investigation of the evolutionary conservation of gene regulation can help with the evaluation of experimental studies performed in mice.
+Therefore, we collected mouse brain microarray expression data from GEO database.
+One thousand five and hundred eighty three samples from 24 experiments were identified (see Table
+We removed arrays with poor quality or inconsistent expression profiles and finally, 931 samples from 20 experiments were used.
+The selected samples were combined together to describe the mouse brain expression profiles.
+Using gene homologous annotation from Mouse Genome Informatics (MGI) (www.informatics.
+jax.org), 14,186 expressed genes were used for co-expression evaluation with the human normal control samples.
+We first studied the overall gene expression similarity between mouse and human.
+As showed in Figure
+Another investigation was to compare co-expression profiles of gene pairs.
+The co-expression correlations of all gene pairs were calculated for mouse and human normal samples, respectively.
+Figure
+Human and mouse had different co-expression profiles and the Spearman's correlation to co-expression correlations was only r = 0.139.
+Further, we performed differential co-expression analysis and found 25.0% of gene pairs to have differential co-expression at the cutoff of adjusted p < 0.01.
+We also checked the co-expression directions and found 34.7% of 10 million co-expressed gene pairs to have inconsistent correlation directions, indicating the divergence of co-expression patterns between human and mouse.
+Similar results were also observed with the human AD samples (see Figure
+To understand the co-expression conservation of AD related genes, we restricted the same analysis to the 87,539 differential co-expressed gene pairs.
+As shown in Figure
+We further restricted the analysis to 97 dysregulated genes and found the co-expression conservation were weakly improved (r = 0.31, p = 8.08e -6) (see Figure
+Different platforms, e.g., RNA-seq and microarray, may lead to different expression measurements
+Therefore, we constructed the human brain expression profiles by collecting the microarray data from GEO database (see Table
+To minimize the influences of different platforms, we only collected data from AffyMetrix's platform when the mouse expression data were also generated using AffyMatrix's technology.
+Finally, 452 samples were selected to describe the human brain expression profiles.
+As showed in Figure
+Next, we re-evaluated the co-expression conservation using the co-expression profiles calculated from human brain microarray data.
+The Spearman's correlation to the co-expression correlations was r = 0.152 (see Figure
+In summary, human and mouse may have the divergent co-expression patterns in brain, even though they have the conserved gene expression profiles, which indicates the different transcriptional regulation.
+
+Comparison With Established Works
+Based on the assumption that the connectivity in the co-expression network indicates the gene importance, connectivity has widely been used to identify the essential components for a specific biological process.
+We investigated the association between dysregulation and the connectivity in the co-expression network.
+We firstly checked the connectivity preference of dysregulated genes by selecting the top 100 dysregulated genes discovered in the above analysis.
+As shown in Figure
+Another investigation was to check if the genes with stronger connectivity would be more differentially co-expressed.
+As shown in Figures
+Next, we investigated if the dysregulated genes could be identified by co-expression network analysis.
+We applied WGCNA
+The 97 dysregulated genes were mapped into 22 modules.
+We found that the number of dysregulated genes in a module was correlated with its module size (r = 0.76).
+For example, the BLUE module had the largest module size of 7,776 genes and it was also mapped with the maximum number of dysregulated genes (44 genes) (see Table
+Further, we ranked the module members based on their connectivity in the modules.
+None of 97 dysregulated gene was ranked as the most connected hubs.
+All these results suggested that the dysregulated genes were relatively novel to hub genes in co-expression network analysis.
+In independent work, the dysregulation of AD has been investigated using microarray data
+Considering the fact that platforms may affect the analysis results
+The gene pairs from microarray and RNA-seq platforms had overall consistent coexpression profiles (r = 0.49, p = 1.2e -199) (see Figure
+Applying the differential correlation test, we found 18.5% of gene pair combinations to be differentially co-expressed, which was far more than the number of predicted dysregulations for AD progression: that was, 0.05% of all gene pairs for RNA-seq dataset and 0.6% for microarray datasets.
+This observation suggested that the dysregulations predicted using microarray and RNA-seq data were different.
+To illustrate it, we checked the consistency of predicted dysregulation by DCE analysis for both RNA-seq and microarray data.
+Figure
+We found that the overall dysregulation was weakly consistent between RNA-seq and microarray (Spearman's r = 0.106).
+At a cutoff of adjusted p < 0.01, 59,710, and 603,335 gene pairs were predicted to be dysregulated with RNAseq and microarray data, respectively.
+Among them, only 1,469 gene pairs were shared by two datasets.
+We also checked the predicted partner number of dysregulated genes from RNA-seq and microarray data and found them to be weakly consistent (r = 0.218) (see Figure
+
+DISCUSSIONS
+Using the RNA-seq data, we studied the association between gene expression correlation and connectivity.
+We found that the genes with higher connectivity showed stronger co-expression correlations with other genes (see Figure
+Functional annotation to top 200 of the most connected genes suggested these genes more associated with house-keeping related roles, such as protein location and protein transport see Figure
+Considering the fact that AD is associated with loss of neuron related functions, we further checked the connectivity of 2,155 brain tissue-specific genes
+Even though the brain-specific genes have stronger connectivity than the genomic genes (p = 7.53e -56), we found that only 14.8% of the brain-specific genes were ranked in the top 1,000 of the most connected genes.
+Similar results were observed with the AD related genes.
+All these observations suggested that the genes associated with AD progression were not necessary to have strong connectivity in co-expression analysis and this led us to extend the connectivity-based analysis to a less biased investigation.
+We evaluated the co-expression differences between AD and normal samples for all the gene pair combinations without considering gene connectivity.
+The genes with differential coexpressed profiles were supposed to be dysregulated in the progression of AD.
+Using a similar assumption, the genes with more dysregulation partners were supposed to take more essential roles.
+Combining AD-related information, 97 dysregulated genes were identified and validated to take critical roles in the AD progression.
+Consistent with our hypothesis, the predicted genes failed to show strong connectivity in coexpression network analysis.
+This was further supported by mapping these genes into the WGCNA analyses results.
+These results suggested that this work revealed the etiology of AD in an independent and novel way.
+We performed functional annotation on the 64 dysregulated DEGs and found them to take diverse functions.
+The limited gene number and the relative independence of dysregulated genes hindered the efficiency of functional annotation.
+We extended the functional studies of dysregulated genes to the investigation to their dysregulated partners.
+We observed 33 of them to be associated with synaptic transmission related functions while synaptic dysfunction was widely accepted as a key characteristic of AD progression
+Evaluation using aging related genes indicated their wide and consistent involvement, which might explain the effects of age on AD progression.
+Overall, our analysis results suggested the predicted dsyregulation closely associated with the AD progression by affecting many well-reported mechanisms.
+We defined the transcriptional "dysregulation" by selecting gene pairs with changed co-expression between disease and normal samples.
+The gene pairs could be down-or up-stream members in regulatory pathways, i.e., either A regulates B or B regulates A. They can also be co-regulated genes by common upstream pathways.
+In the context of co-expression or differential co-expression, it was not easy to elucidate the exact information of their relationship.
+However, by checking the functional annotation to the hub genes and their partners, we always found consistent functional annotation.
+For example, EIF4EBP2 was reported as a translation initiation repressor and got involved in synaptic plasticity, learning and memory formation
+Functional enrichment analysis to its partners identified the GO terms related to synaptic transmission, which confirmed the consistent functional involvement between hub genes and their partners.
+This study is to find the correlation difference between AD and normal sample.
+Its confidence is highly dependent on the sample size
+Therefore, most of co-expression analysis studies recommend to include as many as possible samples and conditions (e.g., see
+This may lead to information loss, e.g., brain regionspecific dysregulation.
+However, this also leads to identification of the consensus dysregulation that is more associated with AD progression.
+In differential co-expression analysis results are subtle and related to the batch or platform effects of the data from independent projects.
+We applied several steps to improve the confidence.
+The most critical one was to collect large-scale RNA-seq data from the AMP-AD program, which minimized the effects of different platforms and batches.
+Due to the large-scale RNA-seq data, we were able to perform deep evaluation of the quality of expression data by comparing the sample consistency.
+Another novel finding is the divergent transcriptional regulations between human and mouse.
+As the widely used animal model, mouse is widely used in many neurological studies.
+Our finding puts a potential warning to some wetlab conclusions especially these from transcriptional related studies.
+
+
+Figure S1].
+Based on the clinical annotation provided by the data suppliers, 1045 AD samples and 622 control samples were
+
+
+
+FIGURE 1 |
+FIGURE 1 | The pipeline to find the transcriptional dysregulation in AD. (A) The human RNA-seq expression data are collected from four projects of AMP-AD program; the mouse brain expression data are collected from 20 microarray experiments in GEO database.
+(B) The expression data from different datasets are processed, normalized and combined to describe the expression profiles of AD patients, control subjects and mouse.
+(C) The human brain samples are categorized into AD patients and normal samples based on the clinical annotation.
+(D) All gene pairs are evaluated for gene-gene regulations by measuring co-expression correlations for all the gene pairs.
+(E) The dysregulated genes are predicted by differential co-expression analysis.
+(F) The co-expression conservation of all gene pairs are compared between human and mouse.
+
+
+
+FIGURE 3 |
+FIGURE 3 |The core network involving the dysregulation of AD.
+We connected the dysregulated genes as a network and found that (A) Majority of the dysregulated genes have increased correlations (both direction) in the transmit from normal to AD; (B) 96 (out of 97) dysregulated genes can be interconnected as a regulatory network based on co-expression and differential co-expression information.
+(C) TMEM178A expression is negatively correlated with dysregulated transcription factors, among which PPARA is ranked as the most negatively correlated transcription factors.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Aging, synaptic transmission and metabolism are dysregulated.
+(A) The enrichment of aging genes, AD differentially expressed genes and AD related genes in 97 subnetworks; (B) the dysregulated genes usually have the same expression change direction in the aging process and the AD progression; (B) functional enrichment analysis to dysregulated genes for (C) biological process and (D) cellular component.
+
+
+
+FIGURE 5 |
+FIGURE 5 | The dysregulated genes prefer to have more association with clinical traits, including (A) cognitive test score (cts), (B) braak stage (braaksc) and (C) assessment of neuritic plaques (ceradsc).
+The black lines show the density plots of clinical association (correlation) for all protein coding genes; the blue points indicate the 97 dysregulated genes.
+
+
+
+FIGURE 6 |
+FIGURE 6 |The dysregulation divergence between human and mouse.
+(A) shows the density plot of expression profile similarity (correlation) of human and mouse homologous genes, which suggests the conserved gene expression patterns between human and mouse.
+However, (B) the regulations among all the genomic genes are not conserved between human and mouse (r = 0.139).
+By restricting the studied regulations to the dysregulated pairs (C) and the edges in Figure3 (D), the conservation between human and mouse regulations was weakly improved.
+The observation was further investigated with human microarray data and found good consistent with human RNA-seq (E) but still failed to suggest any gene-gene regulation conservation between human and mouse (F).
+
+
+
+FIGURE 7 |
+FIGURE 7 | Comparison analysis with the results from established work.
+(A) The connectivity distribution of top 100 of the most dysregulated genes (red circle points) fails to indicate any association between connectivity and dysregulation; (B) the same result is observed with all the genomic genes (r = -0.012).
+(C) using human RNA-seq and micorarray data, the calculated gene co-expression correlations are consistent; but (D) the predicted dysregulation are not consistent.
+
+
+
+TABLE 1 |
+The dysregulated AD genes.
+
+
+
+TABLE 1 |
+Continued
+
+
+
+TABLE 2 |
+The association of dysregulated genes with the cognitive test scores.
+The correlation between gene expression and cognitive test score.
+b The partial correlation with cognitive test score.

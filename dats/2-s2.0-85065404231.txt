@@ -1,0 +1,282 @@
+Identification of Blood Biomarkers for Alzheimer's Disease Through Computational Prediction and Experimental Validation
+Background: Alzheimer's disease (AD) is the major cause of dementia in population aged over 65 years, accounting up to 70% dementia cases.
+However, validated peripheral biomarkers for AD diagnosis are not available up to present.
+In this study, we adopted a new strategy of combination of computational prediction and experimental validation to identify blood protein biomarkers for AD.
+Methods: First, we collected tissue-based gene expression data of AD patients and healthy controls from GEO database.
+Second, we analyzed these data and identified differentially expressed genes for AD.
+Third, we applied a blood-secretory protein prediction program on these genes and predicted AD-related proteins in blood.
+Finally, we collected blood samples of AD patients and healthy controls to validate the potential AD biomarkers by using ELISA experiments and Western blot analyses.
+Results: A total of 2754 genes were identified to express differentially in brain tissues of AD, among which 296 genes were predicted to encode AD-related blood-secretory proteins.
+After careful analysis and literature survey on these predicted blood-secretory proteins, ten proteins were considered as potential AD biomarkers, five of which were experimentally verified with significant change in blood samples of AD vs. controls by ELISA, including GSN, BDNF, TIMP1, VLDLR, and APLP2.
+ROC analyses showed that VLDLR and TIMP1 had excellent performance in distinguishing AD patients from controls (area under the curve, AUC = 0.932 and 0.903, respectively).
+Further validation of VLDLR and TIMP1 by Western blot analyses has confirmed the results obtained in ELISA experiments.
+Conclusion: VLDLR and TIMP1 had better discriminative abilities between ADs and controls, and might serve as potential blood biomarkers for AD.
+To our knowledge, this is the first time to identify blood protein biomarkers for AD through combination of computational prediction and experimental validation.
+In addition, VLDLR was first reported here as potential blood protein biomarker for AD.
+Thus, our findings might provide important information for AD diagnosis and therapies.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the major cause of dementia in population aged over 65 years, accounting up to 70% dementia cases
+This disease is pathologically characterized with extracellular senile plaques (amyloid-β, Aβ) and intraneuronal neurofibrillary tangles (NFTs), which are the prime suspects in damaging and killing nerve cells
+AD has become a major health problem in the world due to the lack of effective treatment.
+It was reported that there were approximate 48 million people worldwide affected by AD in 2015, and the number was estimated to reach 86 million by the year 2050
+Clearly, the increasing AD cases would load great burden on families and society, urging the physicians and scientists to find precise and effective ways to diagnose and treat this disease.
+Currently, the clinical diagnosis of AD requires a series of examinations including medical history, neuropsychological assessment, and various radiological investigations
+However, those diagnosis processes could not be used as routine examinations for AD, because they are time-consuming and largely depend on physician's experience.
+In order to diagnose AD objectively and accurately, researchers have used biotechnologies and bioinformatics methods to search for disease biomarkers.
+As cerebrospinal fluid (CSF) is affinity with brain, it is considered to contain potential biomarkers of AD pathologies.
+Several studies have indicated that the decreased concentration of Aβ 42 peptide and increased concentration of tau proteins in CSF of AD patients compared to controls might work as diagnostic biomarkers for AD
+While CSF collection by lumbar puncture is invasive and may lead to some side effects such as headache
+Blood contains large number of disease-associated proteins and its obtaining is non-invasive, thus it becomes a good source for discovery of AD biomarkers.
+Extensive researches have been done to discover plasma or serum biomarkers for AD.
+For example, Ray and colleagues used antibody arrays to identify an 18-panel protein signature from 120 cell-signaling proteins, which could differentiate ADs from non-demented controls and could also distinguish mild cognition impairment (MCI) patients who later progressed to AD from those unchanged or converted to other dementia
+Liao and colleagues recognized 6 possible plasma biomarkers for AD patients by combining 2D-PAGE and LC-MS/MS methods
+Pratico' et al disclosed that the F2-IsoPs, resulting from peroxidation of poly-unsaturated fatty acid
+However, the identified AD biomarkers are discrepant dramatically due to the variations in research methods.
+Generally, discovery of blood biomarkers for disease was conducted through Abbreviations: AD, Alzheimer's disease; ROC, receiver operating characteristic; Aβ, amyloid-β; NFT, neurofibrillary tangles; CSF, cerebrospinal fluid; MCI, mild cognition impairment; ELISA, enzyme-linked immunosorbent assay; DEPs, differentially expressed probes; FDR, false discovery rate; FC, fold change; SVM, support vector machines; DSM-IV, Diagnostic and Statistical Manual of Mental Disorders-Fourth Edition; BBB, blood-brain barrier; AUC, area under the curve; ROS, reactive oxygen species; SEM, standard errors of the means.
+comparing the proteome of blood samples from disease and control.
+But this no-targeted method is very challenging because there are lots of proteins with relatively low abundance or with a wide range of orders of magnitude in blood, which could not all be covered by one mass spectrometer
+As of today, there are no valid biomarkers for AD diagnosis in blood.
+In this study, we conducted a combination of computational prediction and experimental validation to identify potential blood protein biomarkers for AD.
+We firstly analyzed previously published gene expression data of brain tissues from AD patients to identify differentially expressed genes for AD.
+Furthermore, we applied a blood-secretory protein prediction program on these genes to predict AD-related proteins in blood.
+Finally, several potential blood protein biomarkers for AD were selected and verified by enzyme-linked immunosorbent assay (ELISA) experiments and Western blot analyses on blood samples from AD patients and healthy controls.
+This work provides a more specific and effective way to investigate blood protein biomarkers for AD.
+
+MATERIALS AND METHODS
+The schematic diagram of the workflow in this study was given as Figure
+
+Gene Expression Data of Brain Tissues From AD Patients
+Brain tissue-based gene expression data of AD patients were collected from GEO database
+Two series of datasets, GSE48350
+After analysis, we found that these two datasets meet our screening criteria, and have a relatively large number of samples for data analysis.
+The two datasets are all generated from the platform of Affymetrix Human Genome U133 Plus 2.0 Array, which includes 43285 probes corresponding to 21246 genes.
+There are 253 samples (80 ADs and 173 controls) in GSE48350, and 161 samples (87 ADs and 74 controls) in GSE5281.
+All CEL files of each dataset were downloaded from the database, and normalized by using Robust Multi-array Averaging (RMA) method
+Detailed information about these samples can be accessed from GEO database.
+However, our results showed that the values of many examined probes did not fit normal distribution, Wilcoxon rank sum test
+Additionally, Benjamini and Hochberg
+In order to further determine which probes were up-regulated and downregulated in ADs, fold change (FC) was computed across samples for each probe.
+As a whole, probes with q-value < 0.05 and FC > 1.2 were considered up-regulated, and those with q-value < 0.05 and FC < 0.833 were down-regulated.
+Finally, we chose the differentially expressed probes with consistent change trend in these two datasets to map to their corresponding genes, which were considered to be differentially expressed genes for AD.
+
+Prediction of AD-Related Blood Proteins Based on Differentially Expressed Genes
+All differentially expressed genes were analyzed for prediction whether their protein products could be secreted into blood through a program developed by Juan Cui et al
+The basic idea of this program was summarized as follows.
+First, human proteins that are known to be secretory proteins and can be detected in plasma/serum due to various pathological conditions were collected to form positive dataset.
+Second, non-bloodsecretory proteins, which include proteins unrelated to secretory pathway and secreted proteins not involved in the circulatory system, were selected as negative dataset.
+Third, these proteins' physical and chemical properties, amino acid sequence and structural features were collected to identify what these bloodsecretory proteins have in common.
+Fourth, a list of protein features such as signal peptides, glycosylation sites, secondary structural content, hydrophobicity and polarity measures etc. was identified due to their great power in distinguishing bloodsecretory proteins from those that were deemed not.
+Finally, a classifier based on support vector machines (SVM)
+
+Validation of Potential Blood Protein Biomarkers of AD by ELISA Experiments
+In this work, ELISA experiments were carried out on blood samples from AD patients and healthy individuals to validate the predicted blood protein biomarkers for AD.
+The research protocol of this study was approved by the Human Research Ethics Committee of Shenzhen University and had been performed in accordance with the ethical standards.
+A total of 123 subjects were enrolled in experiment from Shenzhen People's Hospital and the Eighth Affiliated Hospital of Sun Yat-sen University, including 54 AD patients and 69 healthy subjects.
+Informed consents were obtained from all participants in accordance with the Declaration of Helsinki prior to their inclusion in this study.
+All the patients were diagnosed by neuropsychiatrists in the hospital according to the criteria of Diagnostic and Statistical Manual of Mental Disorders-Fourth Edition (DSM-IV).
+The average age of the patients and controls were 74.3 (ranged from 52 to 93) and 73.9 (ranged from 53 to 94), respectively.
+The ratio of male to female was about 2:3.
+In each ELISA experiment, blood samples were selected from AD patients and age-and gender-matched healthy controls.
+Blood samples (5 ml) were collected using glass tubes.
+Serums were separated by centrifugation at 3000 g for 10 min, and then subdivided into aliquots and stored at -80 • C for further use.
+For ELISA experiments, commercial ELISA kits for proteins gelsolin (GSN), brain-derived neurotrophic factor (BDNF), metalloproteinase inhibitor 1 (TIMP1), pigment epithelium-derived factor (SERPINF1) and amyloid-like protein 2 (APLP2) were bought from Uscn Life Science Inc. (Wuhan, China).
+The catalog numbers of these ELISA kits were SEA372Hu, SEA011Hu, SEA552Hu, SEB972Hu, and SEG122Hu, respectively.
+Additionally, ELISA kits of inositol 1,4,5-trisphosphate receptor-interacting protein (ITPRIP), transmembrane emp24 domain-containing protein 10 (TMED10), very low-density lipoprotein receptor (VLDLR), mitogen-activated protein kinase 8 (MAPK8) and mitogenactivated protein kinase 1 (MAPK1) were bought from Sbj Biological technology Co., Ltd.
+(Nanjing, China) with catalog numbers of SBJ-H2157, SBJ-H2158, SBJ-H1100, SBJ-H2160, and SBJ-H2161, respectively.
+The concentrations of these proteins were measured under the manufacturer's instructions.
+The total protein concentrations of samples were determined using bicinchoninic acid (BCA) protein assay kit with product No. 23227 (Beyotime, Jiangsu, China).
+
+Statistical Analyses for ELISA Experiments
+Protein concentration of each sample detected by ELISA was normalized with its total protein concentration.
+For the normalized protein concentrations, G-test
+Software GraphPad Prism 5 was used to visualize the normalized protein concentrations of AD samples and healthy controls.
+T-test was applied to make differential analysis on normalized protein concentrations of AD samples vs. controls, and then FDR
+Furthermore, receiver operating characteristic (ROC) curve analysis was carried out to evaluate the power of these proteins in distinguishing AD samples from healthy controls, which was generated by using package pROC on R
+
+Further Validation of the Potential Protein Biomarkers of AD by Western Blot Analyses
+To further validate the potential protein biomarkers of AD in blood, Western blot analyses were carried out on un-depleted serum samples of AD patients and healthy controls by specific antibodies.
+Total protein concentrations of these samples were measured by the BCA assay.
+Proteins (10 µg) were separated by SDS-PAGE on 12% polyacrylamide gels.
+After electrophoresis, the proteins were transferred onto 0.2 µm polyvinylidene fluoride (PVDF) membranes (Millipore, Massachusetts, USA), and the membranes were blocked with 5% nonfat-dried milk in Tris-buffered saline (TBS: 100 mM Tris, and 1.5 M NaCl, pH 7.6) for 1 h and then washed with TBS containing 0.4% (v/v) tween 20 (TBST), followed by incubation with primary antibodies (Bioss Biotechnology, Beijing, China) against VLDLR and TIMP1 overnight at 4 • C and horseradish peroxidase (HRP)-conjugated secondary antibody (1:8000, Abmart Inc, Shanghai, China) for 2 h at room temperature.
+The membranes were washed three times each for 10 min in TBST and developed with enhanced chemiluminescence (ECL) kit (FDbio-Femto ECL kit, FDbio Science Biotech co., Ltd, Hangzhou, China).
+Immunoreactive signals were detected using a Kodak Image Station 4000M imaging system (Carestream Health Inc., Rochester, NY, USA).
+Quantitative analysis was performed on the protein bands by ImageJ analysis software (National Institutes of Health, USA).
+Equal amount of proteins were separated by SDS-PAGE and stained with Coomassie blue, which was used as the loading control.
+
+Statistical Analysis for Western Blot
+The data of Western blot were analyzed using the two-tailed Student's t-test to examine any significant differences between ADs and controls by GraphPad Prism 7 software (GraphPad Software, USA) and presented as the means ± the standard errors of the means (SEM).
+Differences were considered significant with p-value < 0.05.
+
+RESULTS
+
+Identification of Differentially Expressed Genes in the Brain Tissues of AD Patients
+Two brain tissue-based gene expression datasets of AD patients were downloaded from GEO database.
+There were 5481 DEPs (2511 up-regulated and 2970 down-regulated) identified in GSE48350 and 12115 DEPs (4675 up-regulated and 7440 down-regulated) in GSE5281.
+Further comparing analysis was made on these two groups of DEPs, and 1545 probes (corresponding to 1186 genes) and 1981 probes (corresponding to 1568 genes) were found consistently upand down-regulated in these two datasets, respectively
+In addition, pathway enrichment analysis was conducted on these genes and showed that focal adhesion, TGFβ signaling pathway, and MAPK signaling pathway were significantly enriched by up-regulated genes, and synapse transmission, neuronal system, and calcium signaling pathway were significantly enriched by down-regulated genes [complete list shown in our previous study
+These pathways are consistent with previous observations that AD is associated with neuronal damage and apoptosis, synaptic dysfunction, neuronal activity alteration, blood brain barrier dysfunction, neuro inflammation, oxidative stress, mitochondrial function and aberrant lipid metabolism
+Therefore, these differentially expressed genes are speculated to be associated with AD pathogenesis.
+
+Prediction of AD-Related Protein in Blood
+It is well known that blood-brain barrier (BBB) controls substances exchange strictly between brain and blood.
+However, some evidence indicates that breakdown of BBB may account for AD occurrence or aggravation and could enhance the movement of proteins between brain and blood in either direction
+Thereby, there might be some protein biomarkers reflecting AD pathology in blood.
+Based on the information described above, we applied a program developed by Juan Cui et al
+Consequently, a total of 296 proteins encoded by 115 up-regulated and 181 down-regulated genes were predicted to be blood-secretory proteins, suggesting that they might be AD-related proteins in blood (Table
+Some of these proteins have been previously reported as AD biomarkers, such as gelsolin
+To gain a comprehensive understanding of these predicted AD-related blood-secretory proteins, we carried out GO enrichment analysis using DAVID
+A variety of GO terms were enriched, including 66 biological processes, 30 cellular components and 30 molecular functions (Table
+We found that the biological processes such as protein phosphorylation and microtubule-based process, cellular components like mitochondrion and neuronal cell body, and molecular functions like ATP binding and MAP kinase activity were enriched, which are all known to be involved in the development of AD.
+The top 10 GO terms of biological processes, cellular components and molecular functions are shown in Figure
+To further choose precise and important candidate biomarkers for AD, we manually checked the relationship between these proteins and AD through database and literature studies.
+First, we collected a total of 1493 AD-related genes from three databases, 1291 from GAD
+Generally, if genes were related with AD, their corresponding protein products were considered to be AD-related as well.
+Thus, 1493 proteins encoded by these AD-related genes were ADrelated proteins.
+Second, we made literature searches and compiled 167 proteins that have been reported as potential blood biomarkers of AD.
+Third, we combined the ADrelated proteins collected from database and literature, and obtained a total of 1590 AD-related proteins.
+Finally, we made a comparison analysis between these reported AD-related proteins with 296 predicted blood-secretory proteins, and found that 35 proteins were consistent in these two groups (Table
+In order to explore the relationship between these 35 proteins and AD pathology, we made a protein-protein interaction analysis through the online sever LENS
+A network was generated, which contains the 35 AD-related proteins presented by red nodes, 4 key AD pathology related proteins (APP, APOE, PSEN1, and PSEN2) presented by blue nodes and other proteins presented by gray nodes, which connect the 35 proteins with the 4 key proteins (Figure
+In the network, most proteins are connected to these 4 key proteins except PFKFB3, HMGCS1, ATAD1, and PADI2, suggesting that almost all these proteins were associated with AD pathogenesis.
+
+Validation of Potential Protein Biomarkers of AD in Blood by ELISA Experiments
+Based on the gene expression levels of these 35 proteins in AD samples and their functional annotations, 10 proteins were chosen for experimental verification.
+They are GSN, BDNF, TIMP1, SERPINF1, ITPRIP, TMED10, VLDLR, MAPK8, APLP2, and MAPK1.
+ELISA experiments were performed to examine the protein levels in blood samples from AD patients and healthy controls.
+Figure
+Furthermore, comparison analyses were carried out on the results of computational prediction and experimental validation (Table
+We found that these five proteins were consistent in their change trend among prediction and validation.
+In order to investigate whether age and gender would affect our validation results, further statistical analyses were made on the concentrations of these five proteins according to the different age stages and genders of samples with AD and healthy controls (Figures
+We found that almost all these five proteins were significantly changed in samples of AD vs. control at different age stages and genders.
+Even though APLP2 is not changed with statistical significance in samples of AD vs. control at age stage 70-89, and BDNF and APLP2 are not significantly changed in male samples of AD vs. control, they still have downward trend in AD samples compared to controls, indicating that age and gender do not affect our experimental validation results.
+ROC curve analyses were used to evaluate the performance of the five significantly changed proteins in distinguishing AD samples from controls (Figure
+We found that VLDLR had the most discriminative ability with the area under the curve (AUC) of 0.932 (sensitivity 80.8%, specificity 96.7%), the AUC of TIMP1 was 0.903 (sensitivity 80.0%, specificity 100%) and the AUCs of GSN, BDNF and APLP2 were 0.826, 0.714, and 0.682 respectively.
+Since VLDLR and TIMP1 were with AUCs larger than 0.85, suggesting that they are more powerful in identifying ADs from controls, and might serve as potential protein biomarkers for AD in blood.
+Even though the AUCs of GSN, BDNF, and APLP2 were less than 0.85, they could also provide important information for AD diagnosis and therapies.
+
+Further Validation of Potential Protein Biomarkers for AD by Western Blot Analyses
+Based on the ELISA analyses, VLDLR and TIMP1 were chosen for further validation of their abilities in identifying the samples of AD patients by Western blot analyses.
+The serum samples of 5 AD patients and 5 age-and gender-matched healthy controls were used to detect the expression levels of these two proteins.
+After densitometry analysis on Western blots, VLDLR and TIMP1 were found down-and up-regulated in AD patients respectively as shown in Figure
+
+DISCUSSION
+AD is the major cause of dementia.
+However, there are no valid biomarkers for AD diagnosis in blood so far.
+In this study, we searched for potential protein biomarkers of AD in blood through computational prediction combined with experimental verification.
+Based on this strategy, we predicted 296 ADrelated blood-secretory proteins, which were predominant enriched in protein phosphorylation, microtubule-based process, mitochondria and MAP kinase activity.
+As widely known, AD is characterized by neurodegenerative plaques and neurofibrillary tangles in brain
+Tau protein is microtubule-associated phosphoprotein, whose homeostasis plays a critical role in maintaining the microtubule stability.
+Hyperphosphorylation of tau has been confirmed to cause dynamic instability and disintegration of microtubule, and then formation of neurofibrillary tangles, which would result in neurodegeneration in the end
+In addition, reactive oxygen species (ROS) have been reported to involve in the AD pathology mechanisms
+Mitochondria are the most important places to generate ROS in AD.
+Some evidence indicated that mitochondria dysfunction in the patients of AD enhanced the oxidative stress and the cellular apoptosis
+Since these predicted proteins were mainly involved in the processes related to AD pathogenesis (47), we considered that these proteins might be associated with AD pathology.
+After careful analyses on these 296 proteins, 10 proteins were chosen for experimental validation by ELISA.
+Five proteins  In the table, up and down represent up-regulated and down-regulated proteins in the blood samples of AD patients when compared with those of controls.
+(GSN, BDNF, TIMP1, VLDLR, and APLP2) were verified to be differentially expressed in AD patients vs. controls, suggesting that they might serve as potential biomarkers for AD in blood.
+Among them, GSN, BDNF, and TIMP1 have been reported to be potential blood protein biomarkers for AD in previous studies
+To further understand the role of these proteins in the pathogenesis of AD, we present the relationship of these proteins with AD in details in the following parts.
+GSN was reported to be implicated in AD due to its level changed with AD progression
+GSN could bind amyloid beta (Aβ) peptide, inhibit its fibrillization, solubilize reformed Aβ fibrils, and promote its clearance from brain
+Some studies found that the expression level of GSN was increased in serums of AD compared to controls
+In this study, we predicted and verified that the level of GSN was significantly higher in serums of AD comparing with controls, which was inferred that high expression level of GSN might attribute to the neuroprotective response in AD subjects through immune compensatory system.
+BDNF could support the survival of existing neurons and encourage the growth and differentiation of new neurons and synapses
+Previous studies suggested that BDNF had protective effects on neurons by reducing amyloid beta toxicity
+BDNF depletion led to an increase in the numbers and size of the cortical amyloid plaque through analyzing on transgenic mouse model of AD
+It has been reported that BDNF is lower in brain tissue of AD patients
+Kim BY and colleagues made a comprehensive systematic review and meta-analysis on articles and found that BDNF was increased in early AD serum samples and decreased in AD with low MMSE scores respectively comparing with healthy individuals
+In this study, lower BDNF expression was predicted and experimentally confirmed in blood of AD patients.
+TIMP1 is a tissue inhibitor of MMP9 and plays an important role in the development of AD for its function of inflammatory mediation
+MMP9 was reported to be associated with neurodegeneration processes including extracellular Aβ degradation, neurons degeneration and neurofibrillary tangles formation
+Meanwhile, neurotoxic Aβ fragment could induce the release of MMP9 and TIMP1, and cause their expression changes, which was correlated with the neurotoxicity process
+The imbalance of levels between MMP9 and TIMP1 in AD patients was associated with senile plaque homoeostasis and tau oligomer formation in brain regions.
+James D. Doecke and colleagues identified that the level of TIMP1 in plasma of AD was higher than that in healthy controls
+However, Lorenzl S et al did not observe the level change of TIMP1 in plasma between AD patients and healthy subjects
+Herein, we found that the level of TIMP1 was significantly up-regulated in AD serums.
+VLDLR is an apolipoprotein E receptor involved in synaptic plasticity, learning, and memory
+It was presented at synaptic compartments, and could alter presynaptic composition and postsynaptic dendritic spine formation through the Ras signaling pathway that is associated in neurodegeneration such as AD
+Thus, it could be speculated that VLDLR might involve in AD pathogenesis through Ras signaling pathway.
+Additionally, VLDLR was reported to be one of receptors for AD-related risk factor ApoE
+ApoE4 was shown to mediate its effects in AD pathogenesis by interfering with Reelin signaling in the brain
+While Reelin is the major ligand for VLDLR, so it could be speculated that VLDLR might be involved in AD pathogenesis through the ApoE4-Reelin pathway as well.
+In our study, we found that VLDLR was down-regulated in the brain of AD patients and its encoded protein was predicted and validated with a lower concentration level in blood of AD patients relative to controls.
+APLP2, an APP like protein, could bind to synaptic signaling molecules exhibiting synaptogenic activity
+Furthermore, APLP2 shares essential functions with APP, as it could also interact with proteins Stub1 and CRL4 (CRBN) to facilitate ubiquitination of proteins involved in presynaptic functions and neurodegeneration
+Herein, we predicted and validated that the encoded protein of APLP2 was down-regulated in the blood of AD patients.
+As a whole, this novel biomarker discovery strategy, namely computational prediction combined with experimental verification, provides some potential blood biomarkers for AD.
+To our knowledge, this is the first report to use such a strategy for AD blood biomarker discovery.
+Meanwhile, VLDLR is the first time reported here as potential protein biomarker for AD in blood.
+In addition, this strategy for biomarker discovery could also be used for discovering biomarkers of other nervous system diseases such as Parkinson's disease.
+Worth noting, this method provides an effective way to find pathology-associated biomarkers in blood, but there are still some shortages in this strategy that could affect our results.
+For example, there might be some false positive blood-secretory proteins coming from the computational prediction, so the sensitivity of the bloodsecretory protein predictor need to be improved in the future.
+Additionally, gene expression changes in ADs vs. controls could not accurately reflect their proteins' expression changes, so the predicted proteins need to be validated on large scale blood samples further.
+
+CONCLUSION
+A total of 2754 genes were identified differentially expressed in brain tissues of AD, among which 296 genes were predicted to encode blood-secretory proteins.
+GO enrichment analysis on the predicted blood-secretory proteins suggested that they were associated with AD and might act as candidate protein biomarkers of AD in blood.
+Furthermore, ten proteins were chosen for validation by ELISA and five proteins (GSN, BDNF, TIMP1, VLDLR, and APLP2) were validated changed significantly in serum samples of AD vs. controls.
+ROC curves analyses on these five proteins showed that VLDLR and TIMP1 were with more power in distinguishing AD samples from controls.
+Western blot analyses on VLDLR and TIMP1 were further revealed that they might serve as potential blood biomarkers for AD.
+Obviously, further studies are required to confirm these findings.
+designed and performed the experimental work.
+FY and LS processed the data and carried out the statistical analysis.
+YG and AL recruited and diagnosed the patients and provided the blood samples.
+FY and LS wrote the manuscript.
+All authors have read and proved the final manuscript.
+
+
+
+FIGURE 1 |
+FIGURE 1 | GO enrichment analysis of the 296 predicted blood-secretory proteins.
+Blue, orange and green bars represent enriched biological processes, cellular components and molecular functions, respectively.
+The number of proteins enriched in each GO term is shown along with each bar.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The protein-protein interaction network of the 35 proteins.
+The red notes are 35 proteins worked as candidates, and the blue notes are AD pathology related proteins worked as targets.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Validation of the 10 selected proteins between AD samples and health controls by ELISA experiment.
+(A) The concentration of protein GSN in serum samples of AD and control.
+(B) The concentration of protein BDNF in serum samples of AD and control.
+(C) The concentration of protein TIMP1 in serum samples of AD and control.
+(D) The concentration of protein SERPINF1 in serum samples of AD and control.
+(E) The concentration of protein ITPRIP in serum samples of AD and control.
+(F) The concentration of protein TMED10 in serum samples of AD and control.
+(G) The concentration of protein VLDLR in serum samples of AD and control.
+(H) The concentration of protein MAPK8 in serum samples of AD and control.
+(I) The concentration of protein APLP2 in serum samples of AD and control.
+(J) The concentration of protein MAPK1 in serum samples of AD and control.
+*p < 0.05 vs. controls; **p < 0.05 vs. controls; ***p < 0.0005 vs. controls.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Receiver operating characteristic curve analyses on the 5 proteins.
+The blue line represents protein APLP2, the red line is BDNF, the green line is GSN, the orange line is TIMP1 and the purple line is VLDLR.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Further validation of the potential protein biomarkers for AD by Western blot analyses.
+(A) The concentration of VLDLR was decreased significantly in AD samples, with **p < 0.01 vs. control samples.
+(B) The concentration of TIMP1 was increased significantly in AD samples, with ***p < 0.001 vs. control samples.
+The expression level of protein was normalized by the mean of the controls (n = 5), with each bar representing SEM.
+The upper images of Western blot analysis correspond to the lower histograms of semi-quantification.
+The statistical results of the data were show as *p < 0.05, **p < 0.01, ***p < 0.001.
+(C) A loading control is presented aiming to verify the normalization of protein amounts.
+
+
+
+TABLE 1 |
+The list of 35 AD-related blood-secretory proteins.
+
+
+
+TABLE 2 |
+The results of 10 proteins in computational prediction and experimental validation.

@@ -1,0 +1,321 @@
+Identification and Validation of Aging-Related Genes in Alzheimer’s Disease
+Aging is recognized as the key risk factor for Alzheimer's disease (AD).
+This study aimed to identify and verify potential aging-related genes associated with AD using bioinformatics analysis.
+Aging-related differential expression genes (ARDEGs) were determined by the intersection of limma test, weighted correlation network analysis (WGCNA), and 1153 aging and senescence-associated genes.
+Potential biological functions and pathways of ARDEGs were determined by GO, KEGG, GSEA, and GSVA.
+Then, LASSO algorithm was used to identify the hub genes and the diagnostic ability of the five ARDEGs in discriminating AD from the healthy control samples.
+Further, the correlation between hub ARDEGs and clinical characteristics was explored.
+Finally, the expression level of the five ARDEGs was validated using other four GEO datasets and blood samples of patients with AD and healthy individuals.
+Five ARDEGs (GFAP, PDGFRB, PLOD1, MAP4K4, and NFKBIA) were obtained.
+For biological function analysis, aging, cellular senescence, and Ras protein signal transduction regulation were enriched.
+Diagnostic ability of the five ARDEGs in discriminating AD from the control samples demonstrated a favorable diagnostic value.
+Eventually, quantitative real-time reverse transcription-polymerase chain reaction (qRT-PCR) validation test revealed that compared with healthy controls, the mRNA expression level of PDGFRB, PLOD1, MAP4K4, and NFKBIA were elevated in AD patients.
+In conclusion, this study identified four ARDEGs (PDGFRB, PLOD1, MAP4K4, and NFKBIA) associated with AD.
+They provide an insight into potential novel biomarkers for diagnosing AD and monitoring progression.
+
+INTRODUCTION
+Alzheimer's disease (AD) is a neuro-degenerative disorder most prevalent in people over 65 years
+It initially impacts memory and leads to progressive and irreversible cognitive decline and functional impairment, seriously affecting the patient quality of life
+As the population ages, the increasing incidence of AD imposes a heavy economic burden on family and society
+Aging or senescence are recognized as the critical risk factors for AD
+Pathologically, senescent cells accumulate in aged tissues and have been shown to play causal roles in age-related diseases, including AD
+Changes in the timing or nature of the cellular markers of normal senescence may be vital to understanding the events that convert normal senescence to neurodegeneration.
+Cellular senescence is a candidate mechanism that might be important for this conversion.
+Studies reported that during the development of AD, both post-mitotic cells [e.g., neurons
+Therefore, abating senescent cells is considered a promising therapeutic approach to target the aging phenotype and thereby prevent or mitigate the onset and progression of AD
+Gene expression analysis is becoming important in biological research
+The availability of high-throughput transcriptomic sequencing data and clinical annotation in the Accelerating Medicines Partnership-Alzheimer's Disease (AMP-AD) program allow us to study the altered transcriptional and associated biological pathways involved in AD
+Several studies have utilized the gene expression datasets downloaded from the Gene Expression Omnibus (GEO) database to elucidate the biological mechanisms in the development of AD
+Results from these bioinformatics analysis supply ponderable hints for understanding the pathogenesis molecular mechanisms of AD from a diverse perspective.
+However, no study focuses on which aging-related genes (ARGs) are critical for AD development using bioinformatics analysis.
+Therefore, in this study, we aimed to analyze the AD-related GEO datasets from the angle of the ARGs.
+The Aging-related DEGs (ARDEGs) were determined by the intersection of limma test, weighted correlation network analysis (WGCNA), and 1153 aging and senescence-associated genes.
+The potential biological functions and pathways of ARDEGs were determined by GO, KEGG, GSEA, and GSVA.
+Then, LASSO algorithms were used to identify the hub genes involved in AD development.
+In addition, the correlation between hub ARDEGs and clinical characteristics within AD we explored.
+Finally, the expression level of the four ARDEGs was validated using other four GEO datasets and clinical samples.
+
+MATERIALS AND METHODS
+
+Downloading and Processing of Data
+Microarray data, containing five transcription profiles [GSE132903
+The details of the datasets included in this analysis are listed in Table
+GSE132903 dataset was acted as the training dataset.
+GSE122063, GSE63060, and GSE5281 datasets were used to validate the hub genes.
+We also utilized the GSE106241 (only included AD patients) to explore the relationships of hub genes with the clinical characteristics.
+Raw data or series matrix files were downloaded and processed, and the probe with maximal mean values of expression was annotated into the homologous gene symbol by means of the 1
+platform's annotation information if multiple probes were matched with one gene.
+
+Aging and Senescence-Associated Genes
+A total of 1153 aging and senescence-associated genes were obtained from the Human Aging Genomic Resources
+
+Analysis of Differential Expression Genes
+After the data standardization and normalization of GSE132903 using the normalize Between Arrays function in the "limma" R package, principal component analysis (PCA) was conducted by using the "factoextra" R package.
+The DEGs between AD and non-demented controls (ND) were analyzed by using the "limma" R package.
+The DEGs were screened with the criteria of |Fold Change| > 0.58 and p < 0.05.
+A volcano plot and a heat map plot were depicted by using the R software ggplot2 package and "ComplexHeatmap" to show significantly deregulated genes, respectively.
+
+Enrichment Analysis
+The "clusterProfiler" package was used to enrich the biological processes (BPs) of Gene Ontology (GO) and Kyoto Encyclopedia of Genes and Genomes (KEGG) pathways of DEGs.
+Gene set enrichment analysis (GSEA) was also conducted to identify the significantly differential functions between AD and ND.
+The gene sets of "c5.go.bp.v7.5.1.symbols"
+was downloaded from the MSigDB database.
+The gene set variation analysis (GSVA) algorithm was used to calculate the processes score using the "GSVA" R package.
+
+Identification of Co-expression Genes
+Weighted Gene Co-expression Network Analysis (WGCNA) is an algorithm to cluster genes into different modules and uncover the relationships between modules and disease traits
+To comprehensively investigate the genetic mechanisms involved in the pathogenesis of AD, a co-expression network was constructed by the "WGCNA" package in R. The co-expression network was constructed only using the genes with the top 25% variance from the GSE132903 dataset.
+The dynamic cutting tree method was adopted to merge modules with the threshold of 0.25.
+Other criteria were used to construct the co-expression network: soft threshold power (β) based on the scale-free topology criterion (an independence index of R 2 = 0.85) by using the pick Soft Threshold function; minimum genes of each module = 30.
+Pearson correlation analysis was adopted to uncover the potential correlations between modules and clinical characteristics of patients.
+The genes from the key modules were used for the GO and KEGG enrichment analysis.
+
+Identification of Aging-Related Differential Expression Genes
+We intersected the DEGs, genes from key modules (WGCNA), and aging and senescence-associated genes to identify the ARDEGs.
+The overlapped genes were visualized with a heatmap.
+The biological processes and enrichment pathways were also discovered, as mentioned above.
+
+Identification of Hub Aging-Related Differential Expression Genes
+We divided the GSE132903 dataset into the training (50%) and test (50%) cohorts.
+The least absolute shrinkage and selection operator (LASSO) logistic regression was used to identify the hub ARDEGs using the "glmnet" package.
+The minimum lambda was defined as the optimal value.
+The ARDEGs predicting score (ARGPS) was calculated in each sample.
+Receiver operating characteristic curve analysis was used to evaluate the diagnostic and discriminative value of the ARGPS in AD and ND.
+GSE122063, GSE63060, and GSE5281 datasets were used as the external validation datasets.
+A forest plot was used to visualize the odds ratio between AD and ND.
+
+Correlation Between Hub Aging-Related Differential Expression Genes and Clinical Characteristics in GSE106241
+We enrolled another GSE106241 dataset which only had the AD patients, but with different clinical variables off setting the limitations of our discovery dataset.
+The relationships between genes and clinical traits (age, Braak stages, alpha-, beta-, gamma-secretase activity, and amyloid-beta 42 levels) were analyzed using the Spearman correlation analysis.
+Moreover, the expression level of hub genes in different Braak stages was tested using the Kruskal-Wallis test and depicted with a violin plot.
+Construction of a TF-ARDEGs-miRNA network MiRNA and transcriptional factors (TF) usually participate in the process of gene transcription and post-transcription.
+Network analyst, a comprehensive network visual analytics platform for gene expression analysis, was used to predict the TF and miRNA of hub genes through the dataset collected from the RegNetwork repository.
+The interactional network of TF-ARDEGs-miRNA was further visualized in Cytoscape software.
+
+Patients With Alzheimer's Disease and Healthy Controls
+To further verify selected five hub ARDEGs, we recruited 15 patients with AD (case group) and 15 healthy controls (HC group, age, and sex-matched) from Xiangya hospital of Central South University.
+The selection criteria for AD and HC are the same as our published works
+Clinical characteristics of the samples are shown in Supplementary Table
+The study protocol was approved by the Institutional Review Board of Xiangya Hospital of Central South University in China (Ethics number: 2019030501).
+Written informed consent was obtained from each participant or guardian.
+
+RNA Extraction and Quantitative Real-Time Reverse Transcription-Polymerase Chain Reaction
+Peripheral blood monocytes (PBMCs) were isolated from the blood samples of AD and HC using Ficoll solution (Solarbio, Beijing, China).
+Total RNA was extracted from the PBMCs using TRIzol reagent (Takara, Kyoto, Japan) according to the manufacturer's protocol.
+Then reverse transcription reactions were performed using 500 ng RNA and an Evo M-MLV reverse transcriptase kit (Accurate Biotechnology, Hunan, China) according to instructions.
+SYBR Green Pro Taq HS Kit (Accurate Biotechnology, Hunan, China) and 0.4 µmol of each primer pair were used to amplify the cDNA, then evaluated in an ABI 7500 real-time PCR system (Applied Bioscience, Foster City, CA, United States).
+The results were analyzed using the 2 -Ct method and expressed as the ratio of the internal control, ACTIN.
+The primer sequences used for the real-time PCR analysis are available in Table
+
+Statistical Analysis
+All statistical analyses were conducted using R software (version R-4.1.0).
+The Wilcoxon test was used for statistical analysis between two groups, and the Kruskal-Wallis test was selected flexibly when there were three or more groups.
+P < 0.05 was considered statistical significance.
+The significance level is denoted as follows: * P < 0.05, * * P < 0.01, * * * P < 0.001, and * * * * P < 0.0001.
+
+RESULTS
+
+Principal Component Analysis and Identification of Differential Expression Genes
+The flow chart of this study is presented in Figure
+PCA analysis showed that AD patients and ND controls were relatively discriminated into two groups (Figure
+A total of 493 DEGs were identified, including 207 upregulated genes and 286 downregulated genes (Figure
+
+Analysis of Functional Enrichments
+The DEGs between AD and ND were used to conduct the enrichment analysis.
+The BP results showed that the signal release, modulation of chemical synaptic transmission, and neurotransmitter transport were enriched (Figure
+The pathways analysis showed that the GABAergic synapse, synaptic vesicle cycle, and MAPK signaling pathway were enriched in KEGG terms (Figure
+Furthermore, the GSVA results of BP indicated that regulation of gluconeogenesis, positive regulation of Notch receptor target, and pyroptosis processes were upregulated in AD patients, while nervous system process and neuropeptide signaling pathway were downregulated (Supplementary Figure
+The GSEA results showed that compared with the ND controls, the Hippo signaling pathway, JAK-STAT signaling pathway, Notch signaling pathway, and TNF signaling pathway were increased in AD patients (Figure
+
+Co-expression Network Construction and Module Detection
+A soft-thresholding power of 22 was used to obtain approximate scale-free topology for the network (Figure
+The top 25% variance genes (7215 genes) were clustered and merged into nine co-expression modules (Figure
+The correlation between module eigengene and clinical traits was explored by Pearson's correlation analysis (Figure
+Results showed that the brown module (2419 genes) was significantly associated with the "Group" trait (i.e., AD and ND) and showed the strongest correlation (Figure
+Also, we performed function enrichment for the genes inside the brown module.
+The most enriched GO terms of the brown module included axonogenesis for BP, presynapse for cellular component (CC), and GTPase regulator activity for molecular function (MF) in Figure
+The KEGG terms were most enriched in the pathways of neurodegeneration in Figure
+
+Identification of a Least Absolute Shrinkage and Selection Operator Model With Aging-Related Genes
+We further overlapped the DEGs, the brown module genes (WGCNA), and aging-related genes.
+A total of 27 genes (ARDEGs) were intersected (Figure
+The heat map showed the expression patterns of these genes in AD patients and the controls (Figure
+An enrichment analysis of the 27 genes was also conducted.
+In BP results, the aging, cellular senescence, and regulation of Ras protein signal transduction were enriched, and the genes involved in these pathways were depicted in Figure
+The KEGG results indicated that salmonella infection and the TNF signaling pathway might participate in the pathogenesis of AD (Figure
+We identified five ARDEGs (GFAP, PDGFRB, PLOD1, MAP4K4, and NFKBIA) with non-zero regression coefficients using the LASSO method and with the optimal lambda value of lambda.min
+= 0.0411 (Figures
+The coefficients and descriptions of the 27 ARDEGs are listed in Supplementary Table
+The box plots and forest showed the significantly different levels of the five genes between AD and controls (Figures
+As shown in Figure
+
+Relationships of Hub Aging-Related Differential Expression Genes and Clinical Characteristics
+The relationships of hub ARDEGs and clinical characteristics in GSE106241 (NFKBIA was not found in this dataset) were depicted in Figure
+The relationship between age and the five ARDEGs (GFAP, PDGFRB, PLOD1, MAP4K4, and NFKBIA) was no significant difference (Supplementary Figure
+With regards to clinical feature, four ARDEGs (GFAP, PDGFRB, PLOD1, MAP4K4) were almost positively related to more severity of clinical features (Figure
+Especially, PLOD1 and MAP4K4 were strongly correlated with beta-secretase activity.
+GFAP and PLOD1 were significantly associated with the Braak stages (Figures
+
+Prediction of miRNA and Transcriptional Factors of Hub Aging-Related Differential Expression Genes
+A total of 130 miRNA and 124 TF were predicted for hub ARDEGs (Supplementary Table
+The miRNA-ARDEGs interaction network is presented in Supplementary Figure
+The circular and squared nodes represent the ARDEGs and the miRNA, respectively.
+The size of a node depends on the degree of the node.
+For example, NFKBIA and MAP4K4 were interacted with 47 and 54 miRNA, while GFAP was only predicted 14 miRNA.
+The TF-ARDEGs interaction network is presented in Supplementary Figure
+The circular and diamond nodes represent the ARDEGs and the TF, respectively.
+GFAP, MAP4K4, NFKBIA, and PLOD1 were interacted with 7, 28, 65, and 56 TF, respectively.
+No TF was predicted for PDGFRB.
+
+Validation of Hub Aging-Related Differential Expression Genes by Other Gene Expression Omnibus Datasets and Quantitative Real-Time Reverse Transcription-Polymerase Chain Reaction in Clinical Samples
+The expression levels of the five ARDEGs (GFAP, PDGFRB, PLOD1, MAP4K4, and NFKBIA) were also verified in GSE122063, GSE5281, GSE63060 datasets.
+Except for the expression of PLOD1 in GSE5281, and GFAP in GSE63060 did not show significant differences, the other genes were increased in AD samples (Figure
+In addition, to verify the reliability of the five hubs ARDEGs, we collected blood samples from AD (n = 15) and healthy individuals (n = 15) to perform quantitative real-time reverse transcription-polymerase chain reaction (qRT-PCR).
+The results showed that compared with HCs, the mRNA expression levels of PDGFRB, PLOD1, MAP4K4, and NFKBIA were significantly elevated in AD patients (Figure
+
+DISCUSSION
+Over 44 million people worldwide suffer from AD, and there is no effective treatment for AD due to an incomplete understanding of its etiology and pathogenesis
+Cellular senescence, a state of permanent cell growth arrest, is believed to contribute importantly to aging and aging-related diseases (e.g., AD, cancer, pulmonary fibrosis).
+In addition, senescent astrocytes, microglia, endothelial cells, and neurons have been detected in the brain of AD patients and AD animal models
+Nonetheless, although accumulated evidence highlights the role of cellular senescence in aging and AD, the mechanisms that promote cell senescence and how senescent cells contribute to AD neuro-pathophysiology remain largely unknown.
+Recently, a few studies have highlighted the role of ARGs in different aging-related diseases.
+For example,
+Apart from cancers, the importance of ARGs in non-cancerous diseases also gained considerable attention.
+Such as, asthma
+However, bioinformatic analysis of ARGs in AD has not yet been performed, and crucial ARGs involved in the pathogenesis of AD are not confirmed.
+In the present study, we determined the ARDEGs through intersected DEGs (filtered by limma package), WGCNA, and 1153 ARGs (obtained from the Human Aging Genomic Resources and MSigDB gene sets).
+In addition, five hub ARDEGs (GFAP, PDGFRB, PLOD1, MAP4K4, and NFKBIA) were identified by LASSO logistic regression, and the diagnostic ability was validated using external datasets and clinical samples.
+The biological function enrichment analysis showed the ARDEGs were enriched in aging, cellular senescence, and Ras protein signal transduction.
+Ras family GTPases (Ras, Rap1, and Rap2) and their downstream mitogen-activated protein kinases (ERK, JNK, and p38MAPK) and PI3K signaling cascades could modulate cellular senescence involved in the progression of AD
+For example, MAPK/ERK and PI3K/Akt pathway could be activated by beta-amyloid, enhancing vulnerability of neurons, exaggerating DNA damage in neurons, subsequently inducing neuron senescence
+In patient, increased expression of Ras protein positively correlated with Aβ levels in the brain of patients with AD.
+What's more, in animal, decyltriphenylphosphonium, a selective Ras protein inhibitor, could alleviate AD progression by suppressing MEK1/2-ERK1/2 activity
+These works illustrate the Ras family protein plays an active role in AD.
+However, further works are needed to investigate the crosstalk between these five ARDEGs and the Ras signal transduction protein in AD.
+Glial Fibrillary Acidic Protein (GFAP), one of the major intermediate filament proteins of mature astrocytes, is used as a marker to distinguish astrocytes from other glial cells during development
+As long ago as 2005, studies explored the importance of GFAP in AD.
+In the same year, another study showed caloric restriction in mice could decrease the expression of GFAP (astrocytic activation), thus retard the progression of AD, suggesting the potential therapy of GFAP for AD
+Similarly, GFAP has been demonstrated to accumulate in a variety of neuro-degenerative diseases, such as Huntington disease
+Seemingly, the accumulation of GFAP in neuro-degenerative diseases has been attributed to secondary astrocytic gliosis, which is an important shared pathologic process in neuro-degenerative diseases.
+However,
+The result hints the potential diagnostic capability of GFAP for discriminating different neuro-degenerative diseases.
+More importantly, with the advancement of sensitivity of test technology, a recent study detected that plasma GFAP is higher in preclinical AD patients than in normal cognitive individuals
+And also detected higher in symptomatic stages of AD than in patients with mild cognitive impairment, which suggests that plasma GFAP is a sensitive biomarker for diagnosing the early stages of AD
+In this study, we found elevated transcription expression of GFAP besides in GSE63060.
+A possible explanation for this discrepancy may be the different sample sources and diverse composition of study participants.
+The samples in GSE63060 obtained from peripheral blood, and the samples in other datasets obtained from brain tissue.
+We also validated the results using clinical blood samples, and found no significant difference of mRNA level of GFAP between AD and healthy control.
+It corroborates the results of our bioinformatics analysis.
+However, the relatively smaller sample size may lead to inherent bias.
+Further work will need to validate the expression level of GFAP from the protein level with larger sample size.
+Platelet-Derived Growth Factor Receptor Beta (PDGFRB) is a dimeric receptor tyrosine kinase that plays critical roles in cell growth, survival, and differentiation
+In addition, PDGFRB is a marker of pericyte, which controlling key neurovascular functions during brain aging
+Numerous studies investigated the role of PDGFRB in the development of AD.
+For example, the decreased expression of PDGFRB in the precuneus is associated with fibrinogen leakage, reduced oxygenation, and related to fibrillar amyloid-β accumulation
+The elevated soluble PDGFRB in cerebrospinal fluid correlates with the severity of blood-brain barrier breakdown and pericyte injury, an important pathologic process in AD
+In animal studies,
+Also,
+Besides AD, studies reported the links between PDGFRB and other neuro-degenerative diseases.
+For example, primary familial brain calcification has recently been linked to heterozygous mutations in PDGFRB gene
+And mutation of the PDGFRB gene is a cause of idiopathic basal ganglia calcification
+In the present study, PDGFRB in PBMCs increased in AD compared with healthy controls, the same as our bioinformatics analysis.
+Thus, whether soluble PDGFRB in serum could be a biomarker for monitoring the severity of AD could be considered in the future works.
+Procollagen-Lysine, 2-Oxoglutarate 5-Dioxygenase 1 (PLOD1), also named as lysyl hydroxylase.
+It is essential for hydroxylation of lysine residues in collagen telopeptides and collagen cross-link formation
+Contrary to
+In animal study, POLD1 knockdown led to premature senescence and increased DNA damage in primary neuronal cells of senescence-accelerated mouse prone 8 mice, suggesting that the deficiency of POLD1 may aggravate AD progression.
+In our study, we found mRNA level of PLOD1 was elevated in PBMCs in AD.
+Previous studies showed AD could affect peripheral blood mononuclear cells (PBMCs), and PBMCs could aid the diagnosis of different forms of dementia and monitor disease progression
+Further work needs to investigate the mechanism of whether PLOD1 affect the progression of AD and whether PLOD1 alone in serum or PBMCs could be used to detect the different stage of AD using a large cohort.
+Mitogen-Activated Protein Kinase Kinase Kinase Kinase 4 (MAP4K4) is a member of the serine/threonine-protein kinase family, which play a role in response to environmental stress and cytokines
+Studies explored the relationship between MAP4K4 and neuro-degenerative diseases.
+For example,
+In addition,
+Also, militarinone alkaloids, a potent neuro-protective molecule, enhanced the neurite outgrowth through MAP4K4
+Limited studies talked about the relationship between MAP4K4 and AD.
+Considering the protective role of inhibiting MAP4K4 in neurons, future research needs to investigate whether MAP4K4 could mediates the progression of AD in animal studies.
+As for NFKB Inhibitor Alpha (NFKBIA), this protein interacts with REL dimers to inhibit NF-κB/REL complexes, which involved in immune and inflammatory responses
+Already back in 1999,
+However, pharmacological intervention targeting microglial NF-κB could retard the progression of Parkinson's disease through inhibiting the neuroinflammation
+Recently,
+Hence, inhibiting the expression of NFKBIA could be a target for the treatment of AD.
+Finally, as future interventions targeting these hub ARDEGs and provide potential mechanism research, we established a miRNA-gene, and TF-gene network and found that MAP4K4 and NFKB1A was predicted to have the greatest miRNA and TF abundance, which provide clues about the molecular links between these ARDEGs and AD.
+Several limitations existed in our study:
+1. We did not obtain the brain tissue from patients with AD, and the expression of these ARDEGs was only validated using blood samples.
+2. Although we validated our results using other datasets and clinical samples, our interpretation may contain some bias because relatively smaller samples and data came from mRNA expression.
+In future work, we intend to conduct an ELISA experiment (from protein level) for validating the diagnostic role of these five ARDEGs in larger samples.
+3. We have not conducted an in vitro and in vivo experiment to verify the mechanisms underlying these ARDEGs in AD.
+
+
+
+FIGURE 2 |FIGURE 3 |
+FIGURE 2 | Screening of DEGs.
+(A) Principal component analysis (PCA).
+(B) Volcano plot showing the DEGs between Alzheimer's disease and non-demented controls.
+(C) Heat map plot showing the expression patterns of DEGs.
+AD, Alzheimer's disease; ND, non-demented controls.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Construction of co-expression modules.
+(A) Scale-free fitting index analysis and mean connectivity of soft threshold power from 1 to 30.
+(B) Clustering dendrograms.
+According to dynamic tree cutting, the genes were clustered into different modules through hierarchical clustering with the threshold of 0.25.
+Each color represents each module.
+(C) Correlation heatmap between module eigengenes and clinical traits.
+(D) Scatterplot of genes in the brown module.
+(E) GO of biological processes (BP), cellular component (CC), and molecular functions (MF) for brown module.
+(F) KEGG brown module.
+
+
+
+FIGURE 5 |
+FIGURE 5 | Identification and functional enrichment analysis of aging-related DEGs (ARDEGs).
+(A) Identification of ARDEGs with a venn diagram.
+(B) A heat map showing the expression of ARDEGs.
+(C) A heat map showing the biological processes and related ARDEGs.
+(D) KEGG pathways of ARDEGs.
+
+
+
+FIGURE 6 |
+FIGURE 6 | Construction a diagnostic model using the ARDEGs.
+(A,B) Feature selection by LASSO regression model in train dataset of GSE132903.
+(A) The coefficients change of different genes with different lambda.
+(B) By verifying the optimal parameter (lambda) in the LASSO model, the partial likelihood deviance (binomial deviance) curve was plotted vs. log (lambda).
+Dotted vertical lines were drawn based on 1 SE of the minimum criteria (the 1-SE criteria).
+Five features with non-zero coefficients were selected by optimal lambda.
+(C) Boxplot showing the relative expression of the five selected genes in GSE132903.
+(D) Forest plot of five genes based on univariate logistic regression.
+(E) ROC curves showing the five ARDEGs diagnostic ability in train and test dataset of GSE132903, GSE122063, GSE5281, and GSE63060.
+
+
+
+FIGURE 7 |
+FIGURE 7 | The correlation between hub ARDEGs and clinical characteristics in GSE106241.
+(A) The landscapes of the correlation between hub ARDEGs and clinical characteristics.
+The two respective scatterplots show hub ARDEGs and clinical characteristics with the highest correlation; (B,C) Shows the expression levels of GFAP and PLOD1 in different Braak stages, respectively.
+Significance level was denoted by *p-value < 0.05, **p-value < 0.01, ***p-value < 0.001.
+
+
+
+FIGURE 8 |
+FIGURE 8 |The relative expression levels of five hub ARDEGs in GSE122063 (A), GSE5281 (B), and GSE63060 (C) with box and scatter plots.
+Except for the expression of PLOD1 in GSE5281 and GFAP in GSE63060 did not show significant differences, the other genes were increased in AD samples.
+
+
+
+FIGURE 9 |
+FIGURE 9 | The result of quantitative real-time reverse transcription-polymerase chain reaction (qRT-PCR) illustrated the mRNA expression levels of GFAP, PDGFRB, PLOD1, MAP4K4, NFKBIA in patients with AD (n = 15) and healthy controls (n = 15).
+Significance level was denoted by * * p-value < 0.01, * * * p-value < 0.001.
+
+
+
+TABLE 1 |
+The details of the selected datasets.
+
+
+
+TABLE 2 |
+Primer sequences for RT-qPCR.

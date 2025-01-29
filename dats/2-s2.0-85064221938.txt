@@ -1,0 +1,177 @@
+A Novel Protein Subcellular Localization Method With CNN-XGBoost Model for Alzheimer's Disease
+The disorder distribution of protein in the compartment or organelle leads to many human diseases, including neurodegenerative diseases such as Alzheimer's disease.
+The prediction of protein subcellular localization play important roles in the understanding of the mechanism of protein function, pathogenes and disease therapy.
+This paper proposes a novel subcellular localization method by integrating the Convolutional Neural Network (CNN) and eXtreme Gradient Boosting (XGBoost), where CNN acts as a feature extractor to automatically obtain features from the original sequence information and a XGBoost classifier as a recognizer to identify the protein subcellular localization based on the output of the CNN.
+Experiments are implemented on three protein datasets.
+The results prove that the CNN-XGBoost method performs better than the general protein subcellular localization methods.
+
+INTRODUCTION
+The study of neurodegenerative diseases, specifically the Alzheimer's disease(AD) has gained great attention and been addressed widely
+The abnormalities and disorder distribution the compartment or organelle of tau protein and the beta-amyloid protein have been considered to contribute to the pathogenesis of AD.
+Protein subcellular localization prediction is an essential task in bioinformatics and plays import roles in the further understanding of the relationship among protein locations, their function exhibition, and nosogenesis
+Related predictive tools typically use the amino acid sequence information of the protein itself as input to output predicted protein cell sublocalization.
+It provides information on protein function and gene annotation to aid in the identification of drug targets.
+The two commonly used methods are: (1) homology-based method and (2) machine learning based method
+The homology-based method highly depends on the homology of protein sequences, and therefore performs worse for low protein sequence similarity
+The machine learning based methods usually extract some features from the amino acid sequence of the protein
+For example, the most widely used WoLF PSORT software for eukaryotic proteins, characterized by the amino acid composition of the protein, gives the cellular sublocalization of the 32 proteins most similar to the input protein using the k-nearest neighbor algorithm
+There also exist similar methods like BaCelLo
+We believe that existing forecasting methods also have some room for improvement.
+First, the extracted sequence characteristics may not fully reflect the properties of the protein associated with the training task.
+Second, the current predictions only use information about the protein itself, without considering the interaction between proteins.
+In recent years, deep learning has been proven to be a very powerful method by researchers in many fields
+CNN is an efficient deep learning method due to it can learn high-level features with neural networks.
+Recently, it also has attracted attentions from researchers and practitioners in bioinformatics.
+A prediction tool "DeepLoc"
+However, the model structure is of high complication, sequentially has too many hyper-parameters to train.
+Moreover, the proteins in the dataset they constructed have been found to be highly homologous and therefore might provide an overly optimistic model evaluation
+In addition, DeepLoc considers only one possible label for each protein, whereas the protein subcellular location belongs to a multi-label multi-class problem in general.
+In this work, we propose a new framework for protein subcellular localization prediction by combining CNN and XGBoost.
+As an outstanding classifier and feature extractor, CNNs have achieved great success, especially in the field of image recognization.
+For the protein sequence, CNNs have ability to detect short motifs in the input sequence irrespectively of where they occur and automatically extract features from the original protein sequences.
+Inspired by this advantage, we also exploit CNN as the feature extractor but a new classifier XGBoost to replace the traditional classifiers connected like the softmax classifier, since they can not well understand the extracted feature by CNN.
+XGBoost is an efficient implementation of gradient boosted decision trees (GBDT) due to its block structure to support the parallelization of tree construction.
+In GBDT, gradient boosting refers to a kind of ensemble technique creating new models to predict the residuals or errors of prior models and making the final decision by the summing up the predictions from all models.
+Meantime, gradient descent algorithm is also exploited to minimize the loss when adding new models.
+The main contribution of our work includes the following aspects:
+• We propose a new CNN-XGBoost model for prediction of the protein subcellular localization.
+The high-level features of protein sequence can be learned by a CNN that can be used by XGBoost classifier for prediction the localization of the subcellular of proteins.
+• The experiments conducted on four real datasets consisting of protein sequences show that the proposed method achieves competitive performance.
+
+METHODS
+In this paper, we propose a novel protein subcellular localization method by integrating the CNN and the XGBoost as a new model for possible application in the pathogenes verification of Alzheimer's disease.
+The general concept of CNN-XGBoost model is to add an XGboost after the feature layer of a CNN and replace the output layer of the CNN.
+Our CNN-XGBoost model can automatically extract featutue from the protein sequences and provides more precise localization results.
+Figure
+
+Convolutional Neural Network
+In the field of image analysis, the mask (or filter, or kernel) is an important construct.
+A convolution is an operation involving an initial image and the mask.
+The operation is equivalent to flipping the mask both vertically and horizontally and then visually placing it over each pixel in turn.
+The output is the sum over a pixel-wise product of the mask and the sub-image.
+Masks are usually symmetric, so flipping is unnecessary.
+Recall from signal processing, the convolution between two f and g is given by the following equation.
+In image processing, a convolution between an image I and kernel K of size d × d centered at a given pixel (x, y) is defined as,
+Convolutional neural networks are a family of neural network architectures having at least one convolutional layer.
+LeNet is the original CNN network architecture bearing the name of Yann Lecun.
+Its architecture can be written as, In this architecture, convolutional layer is the cornerstone of the CNN, which is a hidden layer where a square grid of weights is convolved with the input, just like an image mask.
+The output of the convolutional layer is akin to a convolved image.
+Next, the non-linear activation function, ReLu (REctified Linear Unit), is applied to zero-out any negative values.
+To reduce the dimension of the feature extracted from the convolutional layer, there is a pooling layer emulating downsampling.
+In general, each group of four values or pixels is replaced by the maximum (sometimes the mean) of the four, leaving a single most intense pixel.
+This pooling method is known as max pooling.
+This sequence of CONV->RELU->POOL layers may be repeated multiple times to create a deep architecture.
+Finally, a few fully-connected layers round off the architecture.
+Though it seems far more sophisticated than a MLP, it can be shown that a CNN can be represented as a classical fullyconnected neural network.
+For example, a convolutional layer can be represented as a sparse fully-connected layer.
+Various techniques have been developed for training these vast models, for example momentum optimizers, weight initialization, batch normalization, and dropout.
+Convolutional Neural Networks are the current state-ofthe-art in many computer vision tasks.
+In addition to image classification, their great success has attracted wide attention in many fields.
+It has been found that using a pre-trained CNN as a general-purpose feature extractor for a simple linear model can yield significant improvements over even the most meticulously hand-crafted feature engineering.
+The protein subcellular localization problem can be viewed as a multi-label multi-class classification task.
+Unlike the ordinary deep learning methods for multi-classification problems, in our method, we need to change the loss function.
+The most intuitive way is to extend the cross-entropy loss.
+The cross-entropy loss function is defined by min - where denotes the parameters of CNN model, y + i is a set that contains the relevant localization of protein i and pij is the result for protein i on localization j, through a softmax activation:
+Instead of using the cross-entropy loss function, the binary crossentropy loss (BCE) over sigmoid activation has shown better performance when applied into multi-label task.
+The binary cross-entropy loss is min -
+where
+
+Tree Boosting and XGBoost
+Tree boosting is a learning method to enhance the classification ability of weak classifiers by iteratively adding new decision trees to the ensembles of decision trees.
+) denotes a dataset with n classes and m feature.
+Then the prediction of a tree boosting for a (x i , y i ) is given by
+where g j (x i ) = w q (x i ) is the prediction of the j-th decision tree with leaf weights w q on a datapoint x i , and M is the number of members in the ensemble.
+It is well-known that the decision tree tends to overfit when the decision tree is fully grown.
+Thus, the set prediction function of decision trees g j can be learned by minimizing the objective function
+where l i (y i , ŷi ) is a term which measures the goodness of the prediction ŷi and the object y i .
+(g j ) is a regularization term that does not depend on the data.
+XGBoost implements a parallel tree boosting in a fast and accurate way.
+In XGBoost, the regularization function is chosen to be
+with γ and λ regularization parameters that must be chosen appropriately.
+Notice this regularization penalizes both large weights on the leaves (similar to L 2 -regularization) and has large partitions.
+As mentioned above, the tree boosting iteratively enlarges the ensemble of decision trees, then the prediction of the t-th iteration can be defined as
+The objective function (7) at step t can be modified as
+Pang et al.
+
+Protein Subcellular Localization With CNN-XGBoost
+Apply a Taylor expansion on the objective function (10) to second order and then the final objective function at step t can be approximated as
+where
+Let j : I j = {i : q t (x i ) = j} denotes the set of point x i mapped to leaf, B j = i∈I j b i and A j = i∈I j a i .
+Then we can rewrite the C t as
+To find the optimal weight w j of leaf j for a fixed tree structure, q(x) can be obtained by applying the following equation
+It is clear that
+measures the in-sample performance of g t and we should find the decision tree that minimizes this value.
+However, in practice, this is impossible to enumerate all possible trees over the data and find the tree which can minimize C opt t .
+Instead, an approximate greedy algorithm runs to optimize one level of the tree at a time by trying to find optimal splits of the data, leading to a tree with a local minimum of C opt t , which is then added to the ensemble.
+For the multi-label multi-class classification problem, we utilize XGBoost as classifiers and adopt the binary relevance strategy
+
+CNN-XGBoost Model
+Figure
+The input of the model is a one-dimensional vector and constructed by the position specific scoring matrices (PSSM) and proteins interaction scoring matrix which are extracted from STRING and GO terms semantic similarities.
+On this basis, a protein can be expressed as L × 1 vector ( L is the number of sequences in training set), analog image data equivalent to a protein is a onedimensional "image" with 1 channels.
+So the input is a L × 1 matrix.
+After obtaining the proper feature representations by the trained CNN, compared with the classic CNN, our CNN-XGBoost model replaces the soft-max layer of CNN with XGBoost to predict the localization of subcellular of proteins, which enables features automatically obtained from input and provides more precise and efficient classification.
+
+RESULTS
+
+Dataset
+To verify the performance of our method, we employ three protein datasets: the Hum-mPloc3.0, the BaCelLo animals, and the Hoglund.
+Table
+The train set of Hum-mPloc 3.0 consists of 3,122 proteins and 1,023 proteins own more than one label.
+The test set of Hum-mPloc 3.0 consists of 379 proteins, among which 120 proteins belong to multi-label proteins.
+Each protein in Hum-mPloc 3.0 is assigned at least one label of 12 subcellular locations (Centrosome, Cytoplasm, Cytoskeleton, Endoplasmic reticulum, Endosome, Extracellular, Golgi apparatus, Lysosome, Mitochondrion, Nucleus, Peroxisome, and Plasma membrane).
+For the BaCelLo dataset, there are four subcellular locations: Cytoplasm, Mitochondrion, Nucleus, and Secreted.
+The size of the training set is set to 2,597 and the testing set consists of 576 proteins.
+All the proteins of BaCelLo dataset are of a single label.
+In the Hoglund dataset, the training set includes nine subcellular locations (Nucleus, Cytoplasm, Mitochondrion, Endoplasmic reticulum, Golgi apparatus, Peroxisome, Plasma membrane, Extracellular space, Lysosome, and Vacuole), and the test consists of 158 proteins with six subcellular locations (Endoplasmic reticulum, Golgi apparatus, Peroxisome, Plasma membrane, Extracellular space, and Lysosome).
+
+Measurements
+A widely-applied method for evaluating a mutli-label multi-class classifier is to compute the ACC and F1 values.
+ACC is the average of ACC x i of all proteins in the testing set, calculated for protein x i is
+where TP, FP, and FN are true positive, false positive, and false negative, respectively.
+The F1 score considers both the harmonic mean of precision and recall of subcellular location y j , defined as follows:
+where T j and P j are the set of proteins for true location y j and the set of proteins for predicted locations y j respectively.
+The bold marks the first best result and the underline marks the second best result.
+
+Results and Discussions
+To verify the performance of our approach, some typical protein subcellular location tools including Hum-mPLoc 3.0
+The F1 score and ACC for each subcellular localization are summarized in Table
+As seen in Table
+Also, in 7 out of 12 subcellular locations, CNN-XGBoost has the best performance among all the methods while in the other three locations it has the second best performance.
+It is only in centrosome and endosome that CNN-XGBoost shows unsatisfactory results.
+As seen in Table
+In addition, we also evaluated our method on the DeepLoc dataset, compared to the DeepLoc, our method provides slightly better prediction with significantly lighter model, meanwhile, it is known that DeepLoc can not handle multilabel multiclass problem, whereas our method still shows outstanding performance.
+
+CONCLUSIONS
+In order to make balance of the classification performance and the complexity when training the model for the protein subcellular location in Alzheimer's disease, this paper proposes a prediction framework integrating CNN and XGBoost, taking advantage of the outstanding ability of feature expression of CNN, and the good classification performance of XGBoost.
+Experiments are implemented on the Hum-mPloc3.0, the BaCelLo animals, and the Hoglund database, and the results demonstrate that the new method outperforms the typical machine learning based tools.
+Further work will focus on the verification of our model on more datasets, especially the datasets
+
+
+
+FIGURE 1 |
+FIGURE 1 | The framework of the CNN-XGBoost based protein subcellular location predictor.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The accuracy comparison on the Hum-mPloc 3.0 data set.
+
+
+Pang et al.
+Protein Subcellular Localization With CNN-XGBoost related to Alzheimer's disease, and the optimization of the structure of CNN utilized in the model.
+
+
+
+TABLE 1 |
+Dataset Summary.
+
+
+
+TABLE 2 |
+Comparision of CNN-XGBoost on Hum-mPloc 3.0 dataset with other methods.
+
+
+
+TABLE 3 |
+Comparison of CNN-XGBoost ACC/F1-mean on other proteins datasets with other methods.

@@ -1,0 +1,360 @@
+Deep Learning Approach for Early Detection of Alzheimer’s Disease
+Alzheimer's disease (AD) is a chronic, irreversible brain disorder, no effective cure for it till now.
+However, available medicines can delay its progress.
+Therefore, the early detection of AD plays a crucial role in preventing and controlling its progression.
+The main objective is to design an end-to-end framework for early detection of Alzheimer's disease and medical image classification for various AD stages.
+A deep learning approach, specifically convolutional neural networks (CNN), is used in this work.
+Four stages of the AD spectrum are multi-classified.
+Furthermore, separate binary medical image classifications are implemented between each two-pair class of AD stages.
+Two methods are used to classify the medical images and detect AD.
+The first method uses simple CNN architectures that deal with 2D and 3D structural brain scans from the Alzheimer's Disease Neuroimaging Initiative (ADNI) dataset based on 2D and 3D convolution.
+The second method applies the transfer learning principle to take advantage of the pre-trained models for medical image classifications, such as the VGG19 model.
+Due to the COVID-19 pandemic, it is difficult for people to go to hospitals periodically to avoid gatherings and infections.
+As a result, Alzheimer's checking web application is proposed using the final qualified proposed architectures.
+It helps doctors and patients to check AD remotely.
+It also determines the AD stage of the patient based on the AD spectrum and advises the patient according to its AD stage.
+Nine performance metrics are used in the evaluation and the comparison between the two methods.
+The experimental results prove that the CNN architectures for the first method have the following characteristics: suitable simple structures that reduce computational complexity, memory requirements, overfitting, and provide manageable time.
+Besides, they achieve very promising accuracies, 93.61% and 95.17% for 2D and 3D multi-class AD stage classifications.
+The VGG19 pre-trained model is fine-tuned and achieved an accuracy of 97% for multi-class AD stage classifications.
+
+Introduction
+The most common cause of dementia is Alzheimer's disease (AD) because 60-80% of dementia cases account for it
+In a neurodegenerative form of dementia, AD starts with mild cognitive impairment (MCI) and gradually gets worse.
+It affects brain cells, induces memory loss, thinking skills, and hinders performing simple tasks
+Therefore, AD is a progressive multi-faceted neurological brain disease.
+The persons with MCI are more likely to develop AD than others
+People observe the effects of AD only after years of changes in the brain because it initiates two decades or more before the symptoms are detected.
+Alzheimer's disease International (ADI) reports that more than 50 million people worldwide are dealing with dementia.
+By 2050, this percentage is projected to increase to 152 million people, which means that every 3 s, people develop dementia.
+The estimated annual cost of dementia is expected to be $1 trillion and is predicted to double by 2030
+Depending on the age, the proportion of people affected by AD varies.
+Figure
+And by 2050, it is expected to reach 13.8 million
+The biggest challenge facing Alzheimer's experts is that no reliable treatment available for AD so far
+Despite this, the current AD therapies can relieve or slow down the progression of symptoms.
+So, the early detection of AD at its prodromal stage is critical
+Computer-Aided System (CAD) is used for accurate and early AD detection to avoid AD patients' high care costs, which are expected to rise dramatically
+In the early AD diagnosis, traditional machine learning techniques typically take advantage of two types of features
+More specifically, they rely heavily on basic assumptions, such as regional cortical thickness, hippocampal volume, and gray matter volume, regarding structural or functional anomalies in the brain
+Traditional methods depend on manual feature extraction, which relies heavily on technical experience and repetitive attempts, which appears to be time-consuming and subjective.
+As a result, deep learning especially convolutional neural networks (CNNs) is an effective way to overcome these problems
+CNN can boost efficiency further, has shown great success in AD diagnosis, and it does not need to do handcrafted features extraction as it extracts the features automatically
+In this study, an end-to-end Alzheimer's disease early detection and classification (E 2 AD 2 C) framework is established focused on deep learning approaches and convolutional neural networks (CNN).
+Four stages of AD such as (I) Clinically Stable or Normal Control (NC), (II) Early Mild Cognitive Impairment (EMCI), (III) Late Mild Cognitive Impairment (LMCI), and (IV) Alzheimer's disease (AD) are multi-classified.
+Besides, separate binary medical image classifications are implemented between each two-pair class of AD stages.
+This medical image classification is applied using two methods.
+The first method uses simple CNN architectures that deal with 2D and 3D structural brain scans from the ADNI dataset based on 2D and 3D convolution.
+The second method applies the transfer learning principle to take advantage of the pre-trained models for medical image classifications, such as the VGG19 model.
+In addition to that, using the final qualified architectures, Alzheimer's checking web application is proposed.
+It helps doctors and patients to check AD remotely, determines the AD stage, and advises the patient according to its AD stage.
+The remainder of this paper is organized as follows: in the "Related Work" section, the relevant works are reviewed.
+The "Problem Statement and Plan of Solution" section outlines the major issues and the aims of this study.
+In the "Methods and Materials" section, the methods and materials are discussed.
+In the "Experimental Results and Model Evaluation" section, the experiments and the results are assessed.
+The "Conclusion" section summarizes the paper.
+
+Related Work
+AD detection has been widely studied, and it involves several issues and challenges.
+A sparse autoencoder and 3D convolutional neural networks were used by Payan et al.
+They built an algorithm that detects an affected person's disease status based on a magnetic resonance image (MRI) scan of the brain.
+The major novelty was the usage of 3D convolutions, which gave a better performance than 2D convolutions.
+The convolutional layer had been pre-trained with an auto-encoder, but it had not fine-tuned.
+Performance is predicted to improve with fine-tuning
+Sarraf et al.
+Hosseini et al.
+They predicted the AD by a Deeply Supervised Adaptive 3D-CNN (DSA-3D-CNN) classifier.
+Three stacked 3D Convolutional Autoencoder (3D-CAE) networks were pre-trained using CAD-Dementia dataset with no skull stripping preprocessing.
+The performance was measured using ten-fold cross-validation.
+Korolev et al.
+When the residual network and plain 3D CNN architectures were applied on 3D structural MRI brain scans, the results showed that the two networks' depth was very long, and the complexity was high.
+They did not achieve high performance as expected.
+An eight-layer CNN structure was studied by Wang et al.
+Six layers served the feature extraction process in convolutional layers and two fully connected layers in classification.
+The results showed that max-pooling and Leaky Rectified Linear unit (LReLU) gave a high performance.
+Khvostikov et al.
+The method depended on Structural Magnetic Resonance Imaging (SMRI) and Diffusion Tensor Fig.
+They compared the performance of that approach with the AlexNet-based network.
+Higher performance was reported by 3D Inception than by AlexNet.
+A HadNet architecture was proposed to study Alzheimer's spectrum MRI by Sahumbaiev et al.
+The dataset of MRI images is spatially normalized by Statistical Parametric Mapping (SPM) toolbox and skull-stripped for better training.
+It is projected that when the HadNet architecture improved, sensitivity and specificity would improve as well.
+The model of Apolipoprotein E expression level4 (APOe4) was suggested by Spasov et al.
+MRI scans, genetic measures, and clinical evaluation were used as inputs for the APOe4 model.
+Compared with pre-trained models such as AlexNet
+A novel CNN framework was proposed based on a multimodal MRI analytical method using DTI or Functional Magnetic Resonance Imaging (fMRI) data by Wang et al.
+The framework classified AD, NC, and amnestic mild cognitive impairment (aMCI) patients.
+Although it achieved high classification accuracy, it is expected that using 3D convolution instead of 2D convolution would give better performance.
+A shallow tuning of a pre-trained model such as Alex net, Google Net, and ResNet50 was suggested by Khagi et al.
+The main objective was to find the effect of each section of the layers in the results in the natural image and medical image classification.
+PFSECTL mathematical model was proposed by Jain et al.
+It worked as a feature extractor for the classification task.
+The model supported the concept of transfer learning.
+Ge et al.
+For AD diagnosis, 3DMSCNN was a new architecture.
+Additionally, they proposed an enhancement strategy and feature fusion for multi-scale features.
+Graph Convolutional Neural Network (GCNN) classifier was proposed by Song et al.
+They trained and validated the network using structural connectivity graphs representing a multi-class model to classify the AD spectrum into four categories.
+For the detection of AD, Liu et al.
+The features of the spectrogram were extracted and obtained from elderly speech data.
+The system relied on methods for machine learning.
+Among the tested models, the logistic regression model gave the best results.
+Besides, a multimodel deep learning framework was proposed by Liu et al.
+Automatic hippocampal segmentation and AD classification were jointed based on CNN using structural MRI data.
+The learned features from the multi-task CNN and the 3D Densely Connected Convolutional Networks (3D DenseNet) models were combined to classify the disease status.
+A protocol was introduced by Impedovo et al.
+This protocol offered a "cognitive model" for evaluating the relationship between cognitive functions and handwriting processes in healthy subjects and cognitively impaired patients.
+The key goal was to establish an easy-to-use and non-invasive technique for neurodegenerative dementia diagnosis and monitoring during screening and follow-up.
+A 3D CNN architecture is applied to 4D FMRI images for classifying four AD stages (AD, EMCI, LMCI, NC) by Harshit et al.
+In addition to that, other CNN structures that deal with 3D MRI for different AD stage classification are suggested by Silvia et al.
+A 3D Densely Connected Convolutional Networks (3D DenseNets) is applied in 3D MRI images for 4-way classification by Juan Ruiz et al.
+
+Problem Statement and Plan of Solution
+Recently, numerous architectures that can accommodate AD detection and medical image classification have been proposed in the literature, as seen in the "Related Work" section.
+However, most of them lack applying transfer learning techniques, multi-class medical image classification, and applying Alzheimer's disease checking web service to check AD stages and advise patients remotely.
+These issues have not been sufficiently discussed in the literature.
+So, the novelties of this study, according to other state-of-the-art techniques reviewed in the "Related Work" section, can be organized as follows:
+• An end-to-end framework is applied for the early detection of Alzheimer's disease and medical image classification.
+• Medial image classification is applied using two methods as follows:
+The first method is based on simple CNN architectures that deal with 2D and 3D structural brain MRI.
+These architectures are based on 2D and 3D convolution.
+The second method uses transfer learning to take advantage of the pre-trained models such as the VGG19 model.
+• The main challenges for medical images are the small number of the dataset.
+So, data augmentation techniques are applied to maximize the dataset's size and prevent the overfitting problem.
+• Resampling methods are used, such as "oversampling, downsampling" to overcome collected imbalanced dataset classes.
+• Three multi-class medical image classification and 12 binary medical image classification have experimented with four AD stages.
+• The experimental results give high performance according to nine performance metrics.
+• Due to the COVID-19 pandemic, it is difficult for people to go to hospitals periodically to avoid gatherings and infections.
+Thus, Alzheimer's disease checking web service for doctors and patients is proposed to check AD and determine its stage remotely.
+Then, it advises according to the specified AD stage.
+
+Methods and Materials
+Early detection of Alzheimer's disease plays a crucial role in preventing and controlling its progress.
+Our goal is to propose a framework for the early detection and classification of the stages of Alzheimer's disease.
+There will be a comprehensive explanation of the proposed E 2 AD 2 C framework workflow, the preprocessing algorithms, and medical image classification methods in the next sub-sections.
+
+The Proposed E 2 AD 2 C Framework
+The proposed E 2 AD 2 C framework comprises six steps, which are as follows:
+Step 1-Data Acquisition Step: All trained data is collected from the ADNI dataset in 2D, T1w MRI modality.
+It includes medical image descriptions such as Coronal, Sagittal, and Axial in the DICOM format.
+The dataset consists of 300 patients divided into four classes AD, EMCI, LMCI, and NC.
+Each class has 75 patients with a total number of images of 21 and 816 scans.
+AD class contains 5764 images, EMCI has 5817 images, LMCI includes 3460 images, and NC has 6775 images.
+All medical data were derived with a size of 256 × 256 in 2D format.
+Table
+It gives an overview of the data, such as the number of patients in each class, the ratio of male or female patients in each class, and the mean of ages with the standard deviation (STD).
+Figure
+The slices were extracted from an MRI scan in MR Accelerated Sagittal MPRAGE view, MR Axial Field Mapping view, and MR 3 Plane Localizer view.
+Step 2-Preprocessing Step: The collected dataset suffers from imbalanced classes.
+To overcome this problem, we resampling the dataset using two methods (oversampling and undersampling).
+Oversampling means coping instances for the under-represented class, and undersampling means deleting instances from the over-represented class.
+We apply oversampling method on AD, EMCI, and LMCI.
+Also, the undersampling method is utilized for the NC class.
+All AD classes after resampling methods become 6000 MRI images.
+As a result, the dataset becomes 24,000 images.
+The dataset is then processed, normalized, standardized, resized, denoised, and converted to a suitable format.
+The data is denoised by a non-local means algorithm for blurring an image to reduce image noise.
+Step 3-Data Augmentation Step: Due to the scarcity of medical datasets, the dataset is augmented using traditional data augmentation techniques such as rotation and reflection (flipping) that flips images horizontally or vertically.
+So, the dataset's size becomes 48,000 images divided into 12,000 images for each class.
+The major reasons for using data augmentation techniques are to (i) maximize the dataset and (ii) overcome the overfitting problem.
+The balanced augmented dataset of 48,000 MRI images is then shuffled and split into training, validation, and test set with a split ratio of 80:10:10 on a random selection basis  Step 5-Evaluation Step: The two methods and the CNN architectures are evaluated according to nine performance metrics.
+Step 6-Application Step: Based on the proposed qualified models, an AD checking web application is proposed.
+It helps doctors and patients to check AD remotely, determines the Alzheimer's stage of the patient based on the AD spectrum, and advises the patient according to its AD stage.
+The full pipeline of the proposed framework is shown in Fig.
+
+Preprocessing Techniques
+Data Normalization Data normalization is the process that changes the range of pixel or voxel intensity values.
+It aims to remove some variations in the data, such as different subject pose or differences in image contrast, to simplify subtle difference detection.
+Zero-mean, unit variance normalization, [-1, 1] rescaling, and [0, 1] rescaling are examples of the data normalization methods.
+The last method is applied in the current study.
+The difference between these normalization methods appears in Fig.
+
+Proposed Classification Methods and Techniques
+Feature extraction, feature reduction, and classification are three essential stages where traditional machine learning methods are composed.
+All these stages are then combined in standard CNN.
+By using CNN, there is no need to make the feature extraction process manually.
+Its initial layers' weights serve as feature extractors, and their values are improved by iterative learning.
+CNN gives higher performance than other classifiers.
+It consists of three layers: (i) the convolution layer performs the feature extraction process, (ii) the pooling layer performs the dimensionality reduction, and (iii) the fully connected layer performs the classification and converts from the two-dimensional matrices into a one-dimensional vector
+The convolutional layer represents a learnable filter that extracts features from an input image.
+For a 3D image with size H × W × C where H is the height, W is the width, and C is the number of channels.
+Using a 3D filter-sized F H × F W × F C where F H is the filter height, F W is the filter width, and F C is the number of filter channels.
+Therefore, the output activation map should be with a size of A H × A W , where A H is the activation height and A W is the activation width.
+The values of A H and A W can be obtained using Eqs. 1 and 2.
+(1) A H = 1 + H -F H + 2P S P represents the padding and S is the stride; n filters may exist, so the activation map size should become A H × A w × n, as illustrated in Fig.
+Non-linearity in the network is handled by the activation function, making a non-linear transformation to the neuron's inputs.
+For the proposed binary classifier, we apply the sigmoid function in the output layer.
+It gives the probabilities of a data point belonging to a particular class in values between 0 and 1, calculated by Eq. 3. The Rectified Linear Unit (ReLU) activation function is applied for all hidden layers because of sigmoid drawbacks, as it gives zero results for the negative input values.
+So, the neuron is not activated, and only a definite number of neurons are activated, which accelerates the computation and training, calculated by Eq. 4.
+An improved version of the ReLU activation function is called the Leaky rectified linear layer (2)
+Fig.
+The difference between the three activation functions is depicted in Fig.
+For the proposed multi-classifier, the SoftMax function is used
+where x is the input vector, e x i is the standard exponential function for the input vector, k is the number of classes in the multi-class classifier, and e x j is the standard exponential function for the output vector.
+For medical image classification and AD stage detection, we use two methods.
+The first method uses simple CNN architectures built from scratch.
+These architectures are a competitive tool for Multi-class medical image classification (M 2 IC) and binary medical image classification (BMIC) that deal with 2D, 3D MRI based on 2D, 3D convolution.
+So, we called these architectures (2D-M 2 IC, (3)
+3D-M 2 IC, 2D-BMIC, and 3D-BMIC).
+The 2D-M 2 IC model uses three convolutional layers in a two-dimensional format by convolutional kernels (sized: 3 × 3), with 3 max-pooling kernels (sized: 2 × 2).
+After that, there are two dropout layers followed by a flatten layer and 2 FC layers.
+Rectified linear layer (ReLU) is the activation function of the hidden layers.
+Eventually, a final FC layer with a softmax activation function is used to handle the four stages of Alzheimer's disease.
+The dataset format in this model is the 2D format with a size of (100 × 100) pixels
+Fig.
+The architecture of the 2D-M 2 IC model is shown in Fig.
+The 3D-M 2 IC model has the same structure as the 2D-M 2 IC model, but it uses 3D convolutional layers.
+It comprises three convolution layers, three max-pooling, and 2 FC layers, followed by a softmax output layer.
+All 3D convolution kernels are sized 3 × 3 × 3 with a stride value of 1 in all three dimensions.
+All pooling kernels are sized 2 × 2 × 2.
+
+Matthews Correlation Coefficient (MCC)
+•The higher the correlation between True and predicted values is, the better the model prediction is
+
+Confusion matrix
+•It is the complete description of the model performance •It gives a matrix as an output, and it forms the basis of other types of metrics that depend on TP, TN, FP, and FN metrics
+To understand the definition of TP, TN, FP, and FN, assume the proposed binary model classifies between AD and NC then: -TP: The case that p is AD and y is AD -TN: The case that p is NC and y is NC -FP: The case that p is AD and y is NC -FN: The case that p is NC and y is AD The 2D MRI medical images' processing is performed to convert them to the 3D format with size (50 × 30 × 20) voxels to be more suitable to this model, as shown in Fig.
+The number of trainable parameters is 875.588 and 1,654,468 for 2D-M 2 IC and 3D-M 2 IC, respectively.
+The number of non-trainable parameters is zero for the two architectures.
+The Adam optimization algorithm is also used in the proposed models to improve the weights with a learning rate = "0.0001" to optimize the loss function.
+The second method uses the transfer learning principle for medical image classification.
+Transfer learning is a deep learning procedure whereby a neural network model is first trained on a problem similar to the issue being solved.
+Transfer learning's key benefit is that (i) it benefits from the pre-trained weights resulting
+
+Experimental Results and Model Evaluation
+The proposed models take into consideration different conditions.
+The experimental results are analyzed in terms of nine performance metrics: accuracy, loss, confusion matrix, F1 Score, recall, precession, the receiver operating characteristic curve (ROC), True Positive Rate (Sensitivity), Area under Curve (AUC), and Matthews Correlation Coefficient.
+The summarization of the applied performance metrics is shown in Table
+
+Methods and Model Evaluation
+For multi-class and binary medical image classification methods applied, we propose simple CNN architecture models called 2D-M 2 IC, 3D-M 2 IC, 2D-BMIC, 3D-BMIC, and finetuned VGG19 model.
+According to the accuracy metric, these models will be evaluated by comparing their performance to other state-of-the-art models, as shown in Table
+Table
+The proposed 3D-M 2 IC achieved the second-highest accuracy of 95.17%.
+The proposed 2D-M 2 IC achieved the third-highest accuracy of 93.6%.
+Harshit et al.
+Therefore, from the empirical results, it is proved that the proposed architectures are suitable simple structures that reduce computational complexity, memory requirements, overfitting, and provide manageable time.
+They also achieve very promising accuracy for binary and multi-class classification.
+Figure
+The comparison among the proposed models (2D-M 2 IC, 3D-M 2 IC, 2D-BMIC, 3D-BMIC, and fine-tuned VGG19 model) with one another for multi-class and binary medical image classifications for four stages of Alzheimer's disease is shown in Fig.
+It shows three multi-class medical image The performance metrics, such as precision, recall, and F1 Score of the models (2D-M 2 IC model, 3D-M 2 IC model) on the test set after 25 epochs of learning, are shown in Table
+When evaluating the models (2D-M 2 IC model, 3D-M 2 IC model) by training and validation accuracy and the training and validation loss, it is noticed that the accuracy increases and the loss is decreased for the models, as shown in Figs.
+The confusion matrix shows the number of patients diagnosed as NC and classified as AD and vice versa, the number of patients diagnosed as NC and classified as LMCI and vice versa, the number of patients diagnosed as LMCI and classified as EMCI and vice versa, and so on.
+The confusion matrix and normalized confusion matrix for the models (2D-M 2 IC model, 3D-M 2 IC model) are shown in Table
+The ROC-AUC for the models (2D-M 2 IC model, 3D-M 2 IC model) where class 0 refers to AD, class 1 refers to EMCI, class 2 refers to LMCI, and class 3 refers to NC, shown in Figs.
+Besides, when applying the MCC metric for evaluating the proposed models, MCC = 92.51134%
+for 2D-M 2 IC and 94.3247% for 3D-M 2 IC for medical image multi-class classifications.
+Alzheimer's disease remotely.
+It also determines in which Alzheimer's stage the patient suffers from based on the AD spectrum.
+The application is created using the python programing language.
+Python is used to program the backend of the website.
+Besides, HTML, CSS, JavaScript, and Bootstrap languages are used for the design of the website.
+The website is divided into sections.
+The first contains information about Alzheimer's disease.
+It also includes the causes that lead to it.
+The second contains the stages of Alzheimer's and the features in each AD stage.
+The third is a dynamic application that works as a virtual doctor.
+The patients or doctors can upload the MRI images for the brain.
+The application then checks if that MRI has the disease or not and to which stage the MRI images belong.
+After that, the application advises the patient according to the AD stage diagnosed, as appeared in Fig.
+After the patient uploads the MRI image, the program classifies the MRI as belonging to one of the phases of Alzheimer's disease (AD, EMCI, LMCI, and NC).
+Moreover, the application guides the patient with advice relied on the classified stage.
+
+Conclusion
+In this paper, the E 2 AD 2 C framework for medical image classification and Alzheimer's disease detection is proposed.
+The proposed framework is based on deep-learning CNN architectures.
+Four AD stages are multi-classified.
+Besides, separate binary classifications are implemented between each two-pair class.
+This medical image classification is applied using two methods.
+The first method uses simple CNN architectures that deal with 2D and 3D structural brain scans from the ADNI dataset based on 2D and 3D convolution.
+The second method applies the transfer learning principle to take advantage of the pre-trained models.
+So, the VGG19 model is fine-tuned and used for multi-class medical image classifications.
+Moreover, Alzheimer's checking web application is proposed using the final qualified proposed architectures.
+It helps doctors and patients to check AD remotely, determines the Alzheimer's stage of the patient based on the AD spectrum, and advises the patient according to its AD stage.
+Nine performance metrics are used in the evaluation and comparison between the two methods.
+The experimental results prove that the proposed architectures are suitable simple structures that reduce computational complexity, memory requirements, overfitting, and provide manageable time.
+They also achieve very promising accuracy, 93.61% and 95.17% for 2D and 3D multi-class AD stage classifications.
+The VGG19 pre-trained model is fine-tuned and achieved an accuracy of 97% for multi-class AD stage classifications.
+In the future, it is planned to apply other pretrained models such as EfficientNet B0 to B7 for multiclass AD stage classifications and check the performance.
+Furthermore, the dataset is augmented by simple data augmentation techniques.
+It is intended to use the DCGAN technique.
+In addition to that, it is planned to apply MRI segmentation to emphasize Alzheimer's features before AD stage classifications.
+
+
+
+Fig. 3
+Fig. 3 The proposed framework E 2 AD 2 C architecture
+
+
+
+Fig. 4 Fig. 5
+Fig. 4 Example of the normalization methods applied on MRI image
+
+
+
+Fig. 9 Fig. 10
+Fig.
+
+
+
+Fig. 11
+Fig. 11 Training and validation accuracy and loss for 2D-M2IC
+
+
+
+Fig. 12
+Fig.
+
+
+
+Fig. 13
+Fig.
+
+
+
+Fig. 14 Fig. 15
+Fig.14The ROC-AUC of the proposed 3D-M2IC
+
+
+
+Table 1
+Demographic data for 300 subjects
+
+
+
+Table 2
+Training, validation, and test set size
+
+
+
+Table 3
+The tuning applied in the vgg19 model
+
+
+
+Table 4
+Summarization of the applied performance metrics
+
+
+
+Table 5
+Comparison of the proposed models with the state-of-the-art models
+
+
+
+Table 5
+(continued) It decreases the training time for a learning model.(iii)
+Its ability to reduce generalization errors.Therefore, we use the VGG-19 pre-trained model for MRI multi-class classification.VGG-19 is a convolutional neural network that has 19 layers in its architecture.
+A basic fine-tuning is applied to the final layer of VGG19 to be optimal for the proposed medical image classification problem.
+The trainable parameter for fine-tuned VGG19 is 25,433,540, and the non-trainable parameter is zero.
+The tuning applied in the VGG 19 model is shown in Table
+
+
+
+Table 6
+Comparison
+
+
+
+Table 7
+The confusion metric and normalized confusion metric for the proposed models (2D-M 2 IC model, 3D-M 2 IC).

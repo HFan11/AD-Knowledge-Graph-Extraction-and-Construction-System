@@ -1,0 +1,245 @@
+Novel methods for integration and visualization of genomics and genetics data in Alzheimer's disease
+Introduction: Numerous omics studies have been conducted to understand the molecular networks involved in Alzheimer's disease (AD), but the pathophysiology is still not completely understood; new approaches that enable neuroscientists to better interpret the results of omics analysis are required.
+We have developed advanced methods to analyze and visualize publicly-available genomics and genetics data.
+The tools include a composite clinical-neuropathological score for defining AD, gene expression maps in the brain, and networks integrating omics data to understand the impact of polymorphisms on AD pathways.
+We have analyzed over 50 public human gene expression data sets, spanning 19 different brain regions and encompassing three separate cohorts.
+We integrated genome-wide association studies with expression data to identify important genes in the pathophysiology of AD, which provides further insight into the calcium signaling and calcineurin pathways.
+Discussion: Biologists can use these freely-available tools to obtain a comprehensive, information-rich view of the pathways in AD.
+
+Introduction
+Alzheimer's disease (AD), the most common form of dementia, affects an estimated 5.7 million Americans and is the sixth leading cause of death in the United States
+To date, there are no disease-modifying therapies, and the failure of clinical trials can be attributed to multiple factors from inadequate study methodologies to targeting the wrong pathway, patient, or disease stage
+To address some of these challenges, AD researchers have recently advocated a paradigm shift from a syndromic diagnosis to a biologically based definition of the disease for interventional and observational studies
+In this framework, AD is defined either by postmortem pathologies or in vivo biomarkers of amyloid b deposition, pathologic tau, and neurodegeneration
+There are several underlying processes and putative risk factors that lead to these pathophysiologies, which are not completely understood, and an improved understanding of these will lead to better targeted therapies for AD.
+Omics is one approach used by researchers to understand the biological complexity and heterogeneity of the disease.
+The largest such effort is the multiinstitution Accelerating Medicines Partnership in Alzheimer's Disease (AMP-AD), a public-private open science initiative
+The AMP-AD consortium has generated genomics (microarray and RNA-Seq), epigenomics, and proteomics data from over 2000 human brain samples; the data are publicly available through the Synapse platform developed by Sage Bionetworks
+Several system biology analyses of these multiomics data have identified networks and pathways that may be implicated in AD
+Other efforts have combined genetic and transcriptomic data to identify novel pathways in AD
+More recently, the AMP-AD data integration was used to suggest the involvement of the human herpes virus 6A and human herpes virus 7 in AD
+A similar large-scale effort to understand the genetics of AD has led to the identification of genetic loci associated with the risk of developing AD that are thought to be involved in amyloid b precursor protein processing and tau pathways, inflammation, immune response, lipid transport, and endocytosis
+The epigenome and the effects of aging are other factors contributing to the molecular phenotypes observed in AD
+These studies and others have led to an understanding of how amyloid β and tau can lead to synapse degeneration, neuronal loss, and the eventual loss of cognitive abilities
+The omics and systems biology efforts have uncovered several molecular networks in AD and taken strides to understand the pathophysiology of AD
+We have developed a suite of tools to consistently process the AMP-AD transcriptomic data, combine it with genetic data, and visualize it using novel tools to explore the results.
+We have made our methods and visualization tools available to promote open and reproducible science research.
+As an example, our efforts validate previously implicated calcium-associated pathways and point to some novel mechanisms in the previously studied Aβ-mediated activation of the calcineurin pathway.
+
+Methods
+
+AMP-AD data
+Gene expression data from AMP-AD was obtained from three centers:
+The ROSMAP project contains two longitudinal cohort studies from Rush University.
+The Religious Order Study enrolls participants from 40 religious groups across the United States and the Memory Aging Project recruits older subjects with no cognitive deficits
+The ROSMAP study provides RNA-Seq data from the dorsolateral prefrontal cortex (PFC) of 724 subjects from the Religious Order Study and Memory Aging Project cohorts
+The ROSMAP study also provides microarray data from 490 samples (Myers data set)
+Data on clinical and demographic covariates including sex, race, age of death, apolipoprotein E (APOE) status, and clinical and neuropathological scores were provided for all subjects.
+We also used the genotype data provided for 1709 individuals using the Affymetrix GeneChip 6.0 for expression quantitative trait loci (eQTL) analysis
+The MSBB study has samples from the Mount Sinai/JJ Peters VA Medical Center Brain Bank which were sequenced from 301 individuals from PFC, inferior frontal gyrus, superior temporal gyrus, and parahippocampal gyrus (PHG).
+In addition, 19 brain regions were assayed with microarrays
+Covariates including sex, race, age of death, APOE status, and clinical and neuropathological scores were reported
+The MCBB study sequenced samples from 275 cerebellum and 276 temporal cortex brain regions from subjects with neuropathological diagnosis of AD, progressive supra-nuclear palsy, pathologic aging, or elderly controls without neurodegenerative diseases
+Data were processed, and normalized counts were provided
+We also downloaded the results of the eQTL analysis of cis-single-nucleotide polymorphisms (SNPs) affecting gene expression, which are provided by the Mayo Clinic
+With these three studies, a total of 27 data sets spanning 19 brain regions and including both microarrays and RNA-Seq were evaluated (Supplementary Table
+
+Differential gene expression analysis
+Processed microarray and RNA-Seq data were downloaded from the AMP-AD portal
+All RNA-Seq Fragments Per Kilobase of transcript per Million mapped reads data were log transformed.
+RNA-Seq raw counts were normalized and transformed using the R edgeR
+Differential expression analysis was performed using the limma package in R
+In the microarray data, for each gene, we choose the probe with lowest P value.
+The false discovery rate for multiple comparisons was adjusted using the Benjamini-Hochberg method
+We analyzed the data using Braak
+Braak scores were divided into high (B3: V, VI), medium (B2: III, IV), and low (B1: 0, I, II) scores(Fig.
+A combined neuropathology score was developed using both Braak and Consortium to Establish a Registry for Alzheimer's Disease scores (Fig.
+The final composite diagnosis (CpDx) is determined by combining the aforementioned neuropathological score with a clinical staging of dementia to define subjects with normal cognition, AD, preclinical AD, or dementia not AD (Fig.
+A subject is considered normal cognition if documented with a clinical dementia rating ≤ 0.5 or a Mini-Mental State Exam ≥ 26.
+These thresholds were chosen according to the study by Balsis et al.
+All scripts are available at
+
+International Genomics of Alzheimer's project
+Genetics data were obtained from the International Genomics of Alzheimer's Project (IGAP) stage 1 meta-analysis results of genome-wide association studies of 7,055,881 SNPs either genotyped or imputed in at least 40% of the AD cases and 40% of the control samples across all data sets for genome-wide association with AD (17,008 cases and 37,154 controls) in individuals of European ancestry.
+Gene-wide significance of SNPs was computed using the Gene-Wide Significance (GWiS) test that identifies the independent effects of SNPs within a gene using a greedy Bayesian approach and combines them to compute a stronger signal for each gene
+The GWiS P values for gene loci are computed using permutation tests.
+
+Visualization
+All visualizations were implemented using the JavaScript D3 libraries
+The bubble chart, scatter plot, and force-directed visualization methods were used.
+The input to the visualizations is provided as comma-separated values files.
+The plots are interactive, allowing the user to look up information or navigate to areas of further interest.
+The code is available at
+
+Results
+
+Differential expression of AD pathway
+We systematically analyzed all the various ways of defining AD and control subjects as described in the Methods section (Fig.
+The ROSMAP PFC and MSBB PHG RNA-Seq data sets contained the highest number of differentially expressed genes; similarly, for microarray data, it was the ROSMAP PFC and the MSBB HIPP (hippocampus) data sets.
+The dorsolateral PFC, PHG, and hippocampal (HIPP) brain regions are affected in AD
+For each of these four data sets, we ranked each gene by the 7 methods as applicable: Braak, Consortium to Establish a Registry for Alzheimer's Disease, Clinical Diagnosis, Mini-Mental State Exam, CpDxAll, CpDxStrict, and CpDxLow.
+We summed the ranks of genes in the AD pathway from the Kyoto Encyclopedia of Genes and Genomes pathway database
+The CpDxLow method for analyzing AD versus control ranked among top 2 in the MSBB microarray and RNA-Seq data sets and top 3 in the ROSMAP data.
+Full results are available in the Supplementary Table
+Such a combined clinical and neuropathological scoring was deemed superior and selected for the recent ROSMAP network analysis article
+Thus, we chose to use the CpDxLow scoring for the rest of our analyses.
+We also implemented a brain expression map for a set of genes (see example in Supplementary Fig.
+
+Integration of genome-wide association studies and expression data
+Then, we took the list of significantly differentially expressed genes in the ROSMAP PFC data set based on the composite CpDxLow score (p-adjusted < 0.01, 4044 genes) and combined it with the results from the IGAP stage 1 meta-analysis.
+For each gene, we selected the SNP with lowest P value within ± 1 Mbp of gene loci start and end.
+Although this method has the potential of selecting a gene that is not necessarily closest to the SNP, we wanted to look at the potential impacts on differential expression broadly.
+Fig.
+We choose a threshold of IGAP P value < 1E-4 for further investigation (828 genes shown in blue and red).
+Enrichment analysis with a hypergeometric test using the Molecular Signatures Database
+The calcium signaling pathway and its involvement in AD has been well studied
+All the other pathways enriched such as chemokine signaling and mitogen-activated protein kinases signaling have also been implicated in AD
+
+Calcium homeostasis dysregulation in AD
+To look for potential effects of genotypes in AD net-works, we created a protein-protein and pathway interaction network of the Kyoto Encyclopedia of Genes and Genomes calcium signaling pathway (178 genes) and 9 additional genes that are significantly connected to this set using Gen-eMANIA
+The network of these 187 genes with their expression and gene locus significance, computed using GWiS test as described in the Methods section, is shown in Fig.
+Each bubble is a gene and is colored by its fold change in AD versus normal in the ROSMAP dorsolateral prefrontal cortex RNA-Seq data.
+As seen in Fig.
+The most significant upregulated gene is the inositol trisphosphate 3-kinase B (ITPKB).
+ITPKB has previously been shown to be upregulated in mouse AD models and human brains and aggravates amyloid and tau pathologies
+The two genes with a high genetic risk in this network are TOMM40 and PTK2B.
+The TOMM40 gene and its genetic association with AD is a matter of debate.
+Some studies claim that the association of TOMM40 with AD is due to linkage disequilibrium
+From Fig.
+and both are located on the outer mitochondrial membrane, suggesting a potential role for TOMM40 in the calcium dysregulation of AD.
+Furthermore, eQTL analysis of the rs1160985 SNP, which was associated with a risk of AD
+Taken together, these results suggest a functional role of mutations in TOMM40 in the calcium signaling pathway.
+The role of PTK2B in calcium signaling and long-term potentiation has been previously studied
+Indeed, analysis of the rs7827965 SNP located within the PTK2B gene showed a differential expression of low-density lipoprotein receptorrelated protein 6.
+Fig.
+
+Synapse genes in the calcineurin pathway
+Then, we investigated the hypothesis that the calcium/ calmodulin activated serine/threonine protein phosphatase, calcineurin (PPP3CA) pathway, which promotes neurodegeneration
+We took the 140 synapse genes from the set of ~ 1150 differentially expressed genes in mice HIPP neurons with constitutively active calcineurin
+We downloaded protein interactions and other significantly connected partners of these genes using GeneMANIA.
+Some of the genes
+The entire network of these 112 genes, visualized with the ROSMAP PFC differential expression and GWiS significance, is mostly downregulated even after adjusting for neuronal loss using the pan neuronal marker MAP2, which has robust expression and is downregulated in subjects with AD (Fig.
+The genes in this network that have a genetic association (labeled in black and sized by significance)-and not necessarily downregulated themselves-are all membrane proteins or extracellular ones, suggesting a role of these mutations in calcium homeostasis in the calcium-calcineurin pathway.
+The gene GRIN2A (glutamate ionotropic receptor N-methyl-D-aspartate-type subunit 2A), which plays a critical role in long-term depression in AD
+GRIN2A interacts with DLG2
+Taken together, these data suggest the downregulation of the calcium-/calmodulin-activated calcineurin pathway in part modified by diseaseassociated polymorphisms.
+However, the SNPs in NRXN1, DLG2, and SDC2 do not have a significant eQTL association with the synapse genes of the calcineurin pathway.
+
+Discussion
+We used a combination of novel analytical and visualization methods to enable inquiries of extensive genetic and omics data.
+As one example, we test the hypothesis that the calcium signaling pathway, and in particular the calcium-/calmodulin-dependent calcineurin pathway, is activated in the pathogenesis of AD.
+The central claim of the calcium hypothesis is that oxidative stress and other mechanisms lead to disruption of homeostasis in early stages of the disease, which leads to synapse dysfunction, neuroinflammation, and other AD-associated phenomenon
+Although alterations in calcium homeostasis have been clearly demonstrated in animal models by, for example, multiphoton microscopy and calcium imaging in amyloid β precursor protein overexpressing mice
+We examined the possibility that transcriptomics can be used to further expand our understanding of calcium alterations in AD.
+Previously, gene expression studies have shed light on upstream process in neurons that are vulnerable to chronic calcium dysregulation; stress and immune response genes are upregulated, whereas energy and signal transduction genes are downregulated
+In amyloid β precursor protein mice models with plaques, it has been shown that calcium overload within neurons causes abnormal morphologies through activation of the calciumdependent calcineurin/nuclear factor of activated T-cells (NFAT) pathway
+Overexpression of calcineurin produces transcriptional suppression in mouse HIPP neurons
+Gene expression of calcium signaling genes in neuronal subcompartments, however, has not yet been fully explored in human brains.
+Here, we report a series of changes that are consistent with AD-related calcium dysregulation, including downregulation of calciumsignaling genes in neurons potentially leading to synaptic failure and abnormal neuronal function.
+These results match closely the predictions based on mouse data
+The dysregulation of calcium signaling in AD brains, however, is complex, and it is quite likely that there are several factors involved in how this pathway is downregulated.
+One possibility is the dephosphorylation and inactivation of the transcription factor CREB, which regulates several memory-associated genes via calcineurin
+Indeed, CREB transcriptional targets obtained from the Molecular Signatures Database are overrepresented in the set of synapse calcineurin genes (hypergeometric test P value: 0.002).
+Another possible explanation is the upregulation of RCAN1, which provides negative feedback to turn off NFAT-a transcription factor involved in the calcineurin pathway
+ITPKB2, which is upregulated, also deactivates NFAT through the activation of the AKT-PI3 kinase pathway and phosphorylation of NFAT by GSK3
+Synapse genes could be downregulated in AD due to neuronal loss, but Hopp et al.
+Future experiments that would either implicate CREB or possibly a micro-RNA as a key intermediate in AD pathology need to be conducted.
+Genetic susceptibility also has a role in the calcium hypothesis.
+It has been previously studied in familial Alzheimer's disease (FAD): for example, Tong et al.
+Here, we hypothesize that polymorphisms in the PTK2B and TOMM40 in sporadic AD have an effect on the calcium signaling pathway; our speculations are based on significant associations with the polymorphisms and downregulation of calcium signaling genes.
+PTK2B is a protein tyrosine kinase which is involved in calcium-induced regulation of ion channels; the SNP rs28834970 in the PTK2B locus was recently associated with altered splicing
+TOMM40 interacts with the voltage-dependent anion channel, and both are located on the outer mitochondrial membrane, suggesting a potential role for TOMM40 in the calcium dysregulation of AD.
+Another important consideration is the role of calcium signaling in other cell types.
+For example, in astrocytes, Ca 2+ -mediated CN/NFAT signaling leads to synapse dysfunction and neuroinflammation
+Norris suggests a positive-feedback cycle in which neurodegeneration leads to Ca 2+ hyperactivity in astrocytes, which in turn promotes neuroinflammation
+Single-cell RNA sequencing of the aging and AD brain with the aid of in-silico modeling
+Aging is another major factor in neurodegenerative disease, and a similar integrative approach with transcriptomics and genetics can be used to understand the interaction of aging and plaques on calcium in neurons and other cell types.
+A large control cohort with no pathologies or single pathology and a wide range of ages would be needed for such studies.
+The hypothesis-based analyses of the calcium and the calcineurin pathways, which limit the number of comparisons, present new mechanisms without being penalized by harsh multiple-comparison adjustments that are required when performing unbiased searches on the whole genome.
+The combination of statistical analysis with visualization is innovative and produces interpretable results.
+However, there are limitations to these methods.
+Visualization using a bubble chart or force-directed graph involves the use of arbitrary cutoffs and has the potential to miss important genes that fall just below the chosen threshold.
+The size of the pathway and the number of dimensions that can be visualized are constrained.
+Neither compensatory mechanisms nor cross-talk between pathways are modeled.
+Furthermore, the force-directed graph displays the physical or pathway interactors of genes without the use of direction or statistics.
+In the differential gene expression analyses, the use of a composite clinical-neuropathological score is innovative and hereafter can be used to better characterize subjects with preclinical AD or to distinguish AD from other dementias.
+The differential expressional and eQTL analyses were conducted using the limma package
+We normalized and transformed RNA-Seq count data using edgeR
+Preprocessing RNA-Seq data with voom allows us to use the same statistical test for both microarrays and RNA-Seq data.
+As examples of the usefulness of pulling together data sets from multiple cohorts into a readily accessible format, we previously used part of this analytical framework to study angiogenesis stress signatures in mice
+Going forward, we imagine that this approach could be useful to many investigators, perhaps to study neuroinflammation, IFN signaling pathways, pathological aging, mitochondrial stress, auto-phagy, protein degradation, and microglial signatures and to test the various modules and genes implicated in the omics data sets developed by AMP-AD.
+We have made the methods and tools described in this article available for others to use.
+In future, we also plan to make all analyses and interactive visualizations of the AMP-AD data available through a DataLENS portal (alzdatalens.org).
+Researchers will be able to query and visualize the AMP-AD data using a list of genes of interest.
+DataLENS, which is complementary to the Agora platform, allows researchers to explore pathways of interest and to get a comprehensive view of all affected genes.
+We hope that the portal will serve as an useful resource for neuroscientists involved in the study of AD pathophysiology.
+
+RESEARCH IN CONTEXT
+
+1.
+Systematic Review: We did an extensive literature survey using PubMed to find integrative analyses of the AMP-AD omics data and computational methods used to analyze such studies.
+
+2.
+Interpretation: Our analysis of the AMP-AD gene expression and genetics data and use of visualization methods for pathways exploration is novel.
+Through our findings in the molecular signaling pathways in late stages of AD, we elucidate a small piece of the complex role of calcium homeostasis in the disease.
+
+3.
+Future Direction: We plan to deploy the data analytics and visualization through a portal for neuroscientists to study their genes and pathways of interest.
+Gene set enrichment using the MSigDB database.
+Alzheimers Dement.
+Author manuscript; available in PMC 2019 July 30.
+
+
+
+Fig. 1 .
+Fig. 1.
+Defining analysis groups.
+(A) Braak scores were divided into high, medium, and low scores.
+(B) Combined neuropathological score was developed using Braak and CERAD.
+(C) Composite diagnosis score (CpDx) combines clinical and neuropathological measures.
+Comprehensive scoring CpDxAll applies to all categories with a neuropathological threshold NP score > 2. Low-scoring CpDxLow applies to low NP score values 1-2 and extreme value 4; cases with transitional NP score = 3 are ignored.
+Strict scoring CpDxStrict applies to extreme NP score values 1 and 4 only, and cases with transitional NP score values 2-3 are ignored.
+AD, Alzheimer's disease; CDR, clinical dementiarating; CERAD, Consortiumto EstablishaRegistry forAlzheimer'sDisease; PCAD, preclinicalAD; DNAD, dementia not AD.
+
+
+
+Fig. 2 .
+Fig. 2.KEGG AD pathway.
+Differentially expressed genes are colored.
+AD, Alzheimer's disease; KEGG, Kyoto Encyclopedia of Genes and Genomes; AICD, amyloid precursor protein intracellular domain; sAPP, soluble amyloid precursor protein; APP, amyloid precursor protein; ROS, reactive oxygen species; ATP, adenosine triphosphate; NAC, non-Aβ component.
+
+
+
+Fig. 3 .
+Fig.3.
+Plot of fold change in AD versus control of ROSMAP PFC using CpDxLow composite score vs. significance of SNP in IGAP meta-analysis that is within 61 Mbp of gene.
+All differentially expressed genes in the ROSMAP PFC data set that has IGAP data are shown.
+Each dot represents a gene and is colored by whether it is significant in the IGAP study, Mayo eQTL study, both, or none.
+GWAS, genome-wide association studies; AD, Alzheimer's disease; IGAP, International Genomics of Alzheimer's Project; ROSMAP, Religious Orders Study and Memory and Aging Project; PFC, prefrontal cortex.
+
+
+
+Fig. 4 .
+Fig.4.Network visualization of the calcium signaling pathway with expression and GWAS information.
+Each bubble is a gene and is colored by its fold change in differential expression analysis of AD versus normal defined using the composite clinical and neuropathological scores (CpDxLow) in the ROSMAP dorsolateral prefrontal cortex RNA-Seq data; the size indicates significance.
+Edges are protein or pathway interactions.
+The black text labels indicate significance of the locus computed using GWiS from the IGAP meta-analysis; the size indicates the magnitude of the significance log10 (P value).
+The blue labels are differentially expressed genes without significant GWiS results.
+GWAS, genomewide association studies; AD, Alzheimer's disease; IGAP, International Genomics of Alzheimer's Project; ROSMAP, Religious Orders Study and Memory and Aging Project; GWiS, Gene-Wide Significance.
+
+
+
+Fig. 5 .
+Fig.5.Network visualization of the synapse genes of the calcineurin pathway with expression and GWAS information.
+Each bubble is a gene and is colored by direction in differential expression analysis of AD versus normal defined using the composite clinical and neuropathological scores (CpDxLow) in the ROSMAP dorsolateral prefrontal cortex RNA-Seq data; the size indicates significance (-log10 P value).
+Edges are protein or pathway interactions.
+The black text labels indicate significance of the locus computed using GWiS from the IGAP meta-analysis; the size indicates the magnitude of the significance.
+The blue labels are differentially expressed genes without significant GWiS results.
+GWAS, genomewide association studies; GWiS, Gene-Wide Significance; AD, Alzheimer's disease; IGAP, International Genomics of Alzheimer's Project; ROSMAP, Religious Orders Study and Memory and Aging Project.
+
+
+Abbreviations: MSigDB, Molecular Signatures Database; KEGG, Kyoto Encyclopedia of Genes and Genomes; MAPK, mitogen-activated protein kinases;GnRH, gonadotropin-releasing hormone; FDR, false discovery rate.
+
+
+
+Table 1

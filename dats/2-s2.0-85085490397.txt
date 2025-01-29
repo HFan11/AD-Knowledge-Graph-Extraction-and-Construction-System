@@ -1,0 +1,366 @@
+Early Detection of Alzheimer’s Disease Using Magnetic Resonance Imaging: A Novel Approach Combining Convolutional Neural Networks and Ensemble Learning
+Early detection is critical for effective management of Alzheimer's disease (AD) and screening for mild cognitive impairment (MCI) is common practice.
+Among several deeplearning techniques that have been applied to assessing structural brain changes on magnetic resonance imaging (MRI), convolutional neural network (CNN) has gained popularity due to its superb efficiency in automated feature learning with the use of a variety of multilayer perceptrons.
+Meanwhile, ensemble learning (EL) has shown to be beneficial in the robustness of learning-system performance via integrating multiple models.
+Here, we proposed a classifier ensemble developed by combining CNN and EL, i.e., the CNN-EL approach, to identify subjects with MCI or AD using MRI: i.e., classification between (1) AD and healthy cognition (HC), (2) MCIc (MCI patients who will convert to AD) and HC, and (3) MCIc and MCInc (MCI patients who will not convert to AD).
+For each binary classification task, a large number of CNN models were trained applying a set of sagittal, coronal, or transverse MRI slices; these CNN models were then integrated into a single ensemble.
+Performance of the ensemble was evaluated using stratified fivefold cross-validation method for 10 times.
+The number of the intersection points determined by the most discriminable slices separating two classes in a binary classification task among the sagittal, coronal, and transverse slice sets, transformed into the standard Montreal Neurological Institute (MNI) space, acted as an indicator to assess the ability of a brain region in which the points were located to classify AD.
+Thus, the brain regions with most intersection points were considered as those mostly contributing to the early diagnosis of AD.
+The result revealed an accuracy rate of 0.84 ± 0.05, 0.79 ± 0.04, and 0.62 ± 0.06, respectively, for classifying AD vs. HC, MCIc vs. HC, and MCIc vs. MCInc, comparable to previous reports and a 3D deep learning approach (3D-SENet) based on a more state-of-the-art and popular Squeeze-and-Excitation Networks model using channel attention mechanism.
+Notably, the intersection points accurately located the medial temporal lobe and several other structures of the
+
+INTRODUCTION
+Alzheimer's disease (AD) is a chronic, progressive, and irreversible neurodegenerative disease clinically manifested by amnesia, cognitive dysfunction, and gradual loss of multiple other brain functions and daily living independency
+The number of patients with AD worldwide is expected to increase from the current 47 million to 152 million by 2050, causing serious economic, medical, and societal consequences
+The pathogenesis of AD remains not fully elucidated and no available therapy can cure AD or completely stop disease progression.
+Amnestic mild cognitive impairment (MCI) is a transitional stage between cognitively normal aging and AD, and patients with MCI are more likely to develop AD than age-matched healthy cognition (HC)
+Early detection of AD by screening MCI is crucial both for effective management and care strategies and for developing new drugs and measures to prevent further deterioration of the disease.
+Brain magnetic resonance imaging (MRI) has enabled noninvasive in vivo investigations of AD-related changes in the brain.
+A large number of promising machine learning applications have used MRI for AD prediction
+Even so, existing machine learning approaches typically involve manual selection of predefined brain regions of interest (ROIs) based on known MRI features of AD.
+Given the limited understanding of definitive MRI biomarkers for AD, it is likely that pre-selected ROIs cannot include all the information potentially useful to uncover the complexity of AD.
+Manual selection can also be prone to subjective errors and be time-consuming and labor-intensive
+Deep learning represents a more advanced approach; methods such as stacked auto-encoder (SAE)
+The CNN model has been widely used for classification
+When a CNN model is trained with MRI slices, image features can be automatically retrieved, eliminating the need of manual selection of features for the learning process
+Meanwhile, ensemble learning (EL) has shown beneficial in the performance and robustness via integrating multiple learning systems
+So far, some researchers have combined deep learning and EL on MRI data for AD.
+A method for AD and early AD diagnosis by fusing functional and structural imaging data based on the use of the Deep Learning paradigm, and more specifically, deep belief networks (DBN) has been advocated
+Gray matter (GM) images from each brain area have been split into 3D patches according to the regions defined by the Automated Anatomical Labeling (AAL) atlas, and these patches were used to train a set of DBNs.
+The DBNs were then ensembled where the final prediction was determined by a voting scheme.
+Two deep learning based structures and four different voting schemes were implemented and compared, giving as a result a potent classification architecture where discriminative features were computed in an unsupervised fashion
+In addition, sparse regression models were combined with deep neural networks for AD diagnosis
+Here, sparse regression models with different regularization control values outputted their own prediction values.
+To obtain the final prediction values, CNNs discovered the optimal weights to ensemble multiple sparse regression models in a hierarchical and non-linear way
+In 2019, 20 white matter and GM slices with significant brain structures from MR images were selected to train an ensemble of ConvNet networks
+In
+Subsequently, the authors grouped the patches from each region into different clusters with the K-Means clustering method.
+Next, a DenseNet was constructed to learn the patch features for each cluster and the features acquired from the discriminative clusters of each region were ensembled for classification.
+At the end, the authors combined the classification results from different local regions to improve final image classification.
+In the present study, we proposed a novel CNN-EL approach based on an established eight-layer CNN network structure
+We are also interested in identifying patterns of MRI brain changes that characterize AD and MCIc.
+To achieve the study objectives, we first derived a CNN model using each set of the sagittal, coronal, or transverse MRI slices; then, we developed a classifier ensemble based on three-axis slices using EL.
+A number of sophisticated techniques were employed in our approach, which included six ways of data augmentation (DA) to facilitate an equal and relatively large number of instances of each class in the training dataset, top-performance enforcing to achieve a high classification accuracy and robustness of the model training, and parallel processing to improve the time efficiency of the system function.
+In the CNN-EL, a data-driven, homogeneous ensemble learning approach was employed.
+A base classifier based on 2D CNN model was trained using each set of the sagittal, coronal, or transverse MRI slices; that is, a trained base classifier corresponds to a slice dataset, which is composed of slices in a specific position in brain from the subjects in the training dataset.
+The preparations of training datasets didn't depend on prior experience or domain knowledge.
+In order to reduce the loss of information as much as possible during the process of slicing the 3D volume into 2D slices, we have utilized as many and meaningful 2D-sagittal, -coronal, or -transverse slices from all over the brain as we can at the same time to train the base classifiers.
+Among them, the trained base classifiers with the best generalization performance on the validation datasets were selected and combined to generate a refined final classifier ensemble based on three-axis slices.
+In this data-driven way, the slices corresponding to the selected trained base classifiers were considered as those with the strongest capabilities to classify AD.
+The number of the intersection points determined by the most discriminable slices separating two classes in a binary classification task among the sagittal, coronal, and transverse slice-sets, transformed into the standard Montreal Neurological Institute (MNI) space, acted as an indicator to assess the ability of a brain region in which the points were located to classify AD.
+Thus, we located the most discriminable brain regions indicated by the trained CNN-EL model while its generalization abilities were maximized and superior to those of the compared methods.
+That is, we can understand the predictions made by the trained CNN-EL model to some extent.
+However, the compared methods, i.e., PCA + SVM
+To our knowledge, this is the first attempt to do the above way with both CNN and EL, and at the same time, the promising experimental results have been achieved.
+In detail, the CNN-EL was different from the abovementioned methods which combined the deep learning with the ensemble learning to analyze MRI data for detecting AD in the base classifiers
+Furthermore, in the paper
+Next, they proposed an open-source framework for reproducible evaluation of classification approaches.
+In this study, the fivefold cross validation procedure was strictly followed and repeated ten times for each binary experiment, i.e., AD vs. HC, MCIc vs. HC, and MCIc vs. MCInc.
+The potential data leakage among binary classification tasks was avoided and therefore the experimental results were unbiased and reproducible.
+
+MATERIALS AND METHODS
+
+Participants and Datasets
+Data used in the study were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database.
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator, Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial MRI, positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.
+To facilitate comparison of our results with those reported previously, we used the same MRI dataset from the ADNI database as utilized by
+We enrolled 162 cognitively normal elderly controls (HC), 137 patients with diagnosis of AD, 76 patients with diagnosis of MCI who converted to AD within 18 months (MCIc), and 134 patients with diagnosis of MCI who did not convert to AD within 18 months (MCInc).
+MCI patients who had been followed less than 18 months were not considered
+A total of 509 subjects from 41 different radiology centers were considered.
+Inclusion criteria for HC were as follows: Mini Mental State Examination (MMSE) scores between 24 and 30; Clinical Dementia Rating (CDR)
+Inclusion criteria for MCI were as follows: MMSE scores between 24 and 30; CDR of 0.5; objective memory loss, measured by education adjusted scores on Wechsler Memory Scale Logical Memory II
+Inclusion criteria for AD were as follows: MMSE scores between 20 and 26; CDR of 0.5 or 1.0; and NINCDS/ADRDA criteria for probable AD
+To facilitate the development of the EL process, an additional validation dataset of 278 subjects (AD = 100, 36 months MCIc = 39 and MCInc = 39, and HC = 100; Table
+The validation data of 278 subjects had no overlapping with the aforementioned data of 509 subjects, i.e., the validation data were used for neither training the base classifiers nor testing the acquired final classifier ensemble based on three-axis slices (Table
+Here, among 164 patients with diagnosis of pMCI (progressive MCI) used by
+Meanwhile, among 100 patients with diagnosis of sMCI (stable MCI) used by
+In order to keep the validation dataset relatively balanced, we enrolled 100 cognitively normal elderly controls (HC) and 100 patients with diagnosis of AD who were not in the aforementioned 509 subjects as well.
+
+MRI Preprocessing
+Upon downloading, the T1-weighted MRI data in.nii
+format were processed using the CAT12 toolkit
+The preprocessing pipeline included skull extraction, registration to the MNI space, and image smoothing, so that after processing, all the images had a dimension of 121 × 145 × 121 (X × Y × Z) with a spatial resolution of 1.5 × 1.5 × 1.5 mm 3 per voxel.
+Voxel-based MRI signal intensity normalization was then performed for each image; i.e., the value of each voxel was normalized as the original value divided by the original maximal value of the image, yielding a value between 0 and 1.
+The complete preprocessing pipeline is summarized in Figure
+To facilitate the CNN training, verification, and testing, a 3D image set of each subject was re-sliced into three 2D image sets, each of the sagittal, coronal, or transverse orientation (with X, Y, and Z axes perpendicular to the sagittal, coronal, and transverse planes, respectively).
+A preprocessed 3D MRI image (of 121 × 145 × 121) was thus re-sliced into 121 sagittal, 145 coronal, and 121 transverse slices; the values on the X, Y, and Z axis were {-90, -88, -87, . . .
+90}, {-126, -125, -123, . . .
+90}, and {-72, -71, -69, . . .
+108}, respectively.
+For example, X(i), i∈{-90, -88, -87, . . .
+90} is the sagittal slice through the point [i, 0, 0].
+Here, the numbers within the brackets were the MNI coordinates.
+To reduce the number of base classifiers without compromising the effectiveness of the classification, every other slice was used (given the relatively small difference between two adjacent slices) and slices near either end of an axis were discarded (given the relatively less amount of information useful for classification), which lay outside the blue rectangle shown in  slices {Z(-28), Z(-25), Z(68)}, i.e., in total, 123 slices of a subject's 3D brain image.
+Given the dimension of the 3D MRI (121 × 145 × 121), the sizes of the sagittal, coronal, and transverse slices obtained through re-slicing were 145 × 121, 121 × 121, and 121 × 145, respectively.
+Each of the 2D slices was reformatted to 145 × 145 using edge padding and zero filling, so that the 2D slice is squared, while the center and the spatial resolution of the resized image remained unchanged.
+
+Convolutional Neural Network
+As an automated image recognition method, the CNN has attracted widespread research attention with tremendous success in recent years.
+Hubel and Wiesel first described receptive fields, binocular interactions, and the functional architecture of cat primary visual cortex about 55 years ago
+Kunihiko Fukushima proposed a neural network model nicknamed "Neocognitron"
+This unique network structure can effectively reduce the complexity of feedback neural networks, which characterizes the CNN model.
+With the CNN, each input image is passed through a series of convolution layers: filtering layers (kernels), pooling layers, and fully connected layers (FCs).
+A softmax function is then applied to classify an image with probabilistic values between 0 and 1, making the CNN suitable for learning representations of image features
+A convolution layer in the CNN model is typically composed of two segments: feature extraction and feature mapping
+In the feature-extraction segment, each neuron is connected to the local receptive field of the upper layer to extract local features.
+Once the local feature is extracted, its spatial relationship with other features is also determined.
+In the feature-mapping segment, convolution is performed on the input data using a learnable filter or kernel to produce a feature map.
+Feature mapping computes the outputs of neurons connected to receptive fields in the input, with each neuron computing a dot product between its weight (i.e., filter) and a local receptive field (equivalent to filter size) to which it is connected (the input volume).
+Multiple feature maps can be calculated with a set of learnable filters.
+In this way, the number of parameters to be tuned in the CNN is effectively reduced.
+A convolutional layer is followed by a pooling layer, e.g., max-pooling layer
+This unique dual-feature extraction method can effectively reduce the feature resolution
+The basic structures of the convolutional layer and the pooling layer of the CNN model are shown in Figure
+In this study, the CNN was utilized mainly to recognize 2D images with displacement, scaling, and other non-deformed distortions.
+Data were reconstructed, so that an image was inputted into the CNN model as a vector for easy feature extraction and classification.
+The effectiveness of the CNN was improved as the pooling layer learned the features from training data without manual extraction.
+Applying the learnable kernels and convolution operation, the CNN was trained in parallel, while the local weight-sharing effectively reduced its complexity.
+
+Ensemble Learning
+EL algorithms including Bagging
+Using a training dataset, EL discriminates features to produce a weighted vote for classes, which is then applied in classifying more cases in new datasets.
+Based on the methods with which a base learner is generated, each of the EL algorithms can be divided into two general approaches: the heterogeneous approach, which applies different learning algorithms in the same training data, and the homogeneous approach, which applies the same learning algorithm in different training data
+Both approaches have been shown to significantly improve the generalizability and robustness of a learning system.
+In the present study, the homogeneous EL approach was adopted from the stratified Bagging method.
+The same CNN algorithm was employed to train different base classifiers using different 2D MRI slices.
+The outputs from the multiple trained base classifiers with the best generalization performance on the validation dataset were then combined to generate a refined final classifier ensemble based on three-axis slices that was used to predict classification results for new cases, i.e., 3D MRI data.
+
+Classification Experiment
+A total of 787 subjects' 3D MR images from the ADNI database were partitioned into three datasets: training and testing datasets to build the base classifiers and examine the performance of the final classifier ensemble based on threeaxis slices (n = 509; Table
+For training and testing, a stratified fivefold cross-validation method was employed, such that each binary classification task Then, the 123 labeled 2D MR images from each of AD (n = 100) and HC (n = 100) cases were altogether used as the validation dataset (Table
+The number of five was determined by the experiments.
+Finally, after building three classifier ensembles based on single-axis slices (i.e., sagittal, coronal, and transverse), a classifier ensemble based on three-axis slices, which was composed of all the three classifier ensembles based on single-axis slices, was finally built using these 15 base classifiers, following a simple majority voting scheme
+The 2D slices that were extracted from the 3D MR images of the remaining 60 (or 20%) cases in the training and testing dataset and were corresponding to the 15 base classifiers were used to test the performance of the built classifier ensemble based on three-axis slices.
+
+Data Augmentation
+To overcome the possible over-fitting problem in training robust CNN models and to incorporate possible image discrepancy, augmented images were generated from the original slices by six operations: rotation, translation, gamma correction, random noise addition, scaling, and random affine transformation.
+The augmented data were added to the original training dataset to allow a sufficiently large sample size (Table
+Data augmentation was also used to mitigate the originally imbalanced dataset (e.g., there were more subjects with MCInc than those with MCIc), for which the preset number of augmented slices to be generated varied from class to class.
+For example, to classify MCIc vs. MCInc, there were 76 MCIc and 134 MCInc cases.
+Using six data augmentation operations, 10 new slices were generated from an MCInc case and 18 from an MCIc case with each operation.
+In this way, slice ratios of MCInc:MCIc became ∼1:1 after data augmentation from the original ∼1.8:1.
+
+RESULTS
+
+Base Classifiers
+To   to update network weights.
+The learning rate and the batch size were set to 0.0001 and 200, respectively.
+
+Ensemble Learning
+The proposed model employed a two-stage EL scheme.
+Phase 1 involved building three classifier ensembles based on singleaxis slices (i.e., sagittal, coronal, and transverse) and Phase 2 involved constructing a classifier ensemble based on three-axis slices, which was composed of all the three classifier ensembles based on single-axis slices acquired in Phase 1.
+In total, 40 sagittal, 50 coronal, and 33 transverse base classifiers were acquired.
+Then, the five base classifiers with the best generalization performance for each slice orientation were selected using the verification dataset, yielding three classifier ensembles based on single-axis slices, each with the 5 best base classifiers.
+The output of a classifier ensemble based on single-axis slices was generated by combining the outputs of the five best base classifiers.
+Finally, a simple majority voting scheme was used to combine the predictions of these three classifier ensemble based on singleaxis slices to yield the output of the classifier ensemble based on three-axis slices.
+Experimental results demonstrated that this EL method greatly improved the generalizability and robustness of early stage AD detection.
+
+Classification Performance
+Using the stratified fivefold cross-validation procedure and repeating it 10 times, the average classification accuracies were 84% for AD vs. HC, 79% for MCIc vs. HC, and 62% for MCIc vs. MCInc.
+The average classification accuracies for AD vs. HC and MCIc vs. HC were statistically significantly higher than those achieved using principal component analysis (PCA) plus the SVM method described in a previous study
+As for the reason why the classification accuracy for MCIc vs. MCInc task was relatively low, we suppose the performance of the proposed CNN-EL method, as a deep learning approach, which usually demands more training data, was a little bit more negatively affected by the insufficient training samples in the MCIc vs. MCInc classification task.
+Plus, one additional possible reason might be the cutoff threshold of follow-up duration to define MCIc and MCInc, and the cohorts of MCIc and MCInc subjects might be highly heterogeneous regardless of the threshold used
+More importantly, the standard deviations of the classification accuracies were only 0.05 for AD vs. HC, 0.04 for MCIc vs. HC, and 0.06 for MCIc vs. MCInc, all of which were about one-third of those reported previously
+In this study, all of the experiments were run on one node in a GPU cluster with five nodes, each of which had two NVIDIA Tesla P100-PCIe-16GB 250W cards.
+For a 1 × 5-fold crossvalidation process, the computing time of the CNN-EL proposed here in AD vs. HC, MCIc vs. HC, and MCIc vs. MCInc task was about 21, 19, and 15 h, respectively.
+At the same time, the proposed approach here was compared with the 3D-SENet.
+As the central building block of CNNs, the convolution operator could enable networks to acquire informative features by fusing both spatial and channel-wise information within local receptive fields at each layer.
+To achieve better generalization performance, the SENet automatically learned the weight of each feature channel to enhance the useful features and suppress the useless features for the task to be tackled, by introducing "Squeeze-and-Excitation" block as a self-attention function on channels
+Here, the architecture of the compared 3D-SENet model and corresponding detailed hyper-parameters are shown in Figure 7
+For all three binary classification tasks, the average classification accuracies of the CNN-EL were statistically significantly higher than those achieved using the 3D-SENet, while the standard deviations of the CNN-EL were lower than or equal to those of the 3D-SENet.
+It can be seen that the proposed early detection model for Alzheimer's disease based on CNN and EL was more accurate and robust than the PCA plus SVM method
+
+Discriminable Brain Regions
+In the first phase of EL, the validation set was employed to examine each base classifier and subsequently to acquire three classifier ensembles based on each of the three single-axis slice datasets, each comprising of the best five sagittal, coronal, and transverse base classifiers in generalization capabilities.
+As a base classifier corresponds to a slice dataset, all 15 best base classifiers correspond to 15 slices in the X-Y-Z coordinate system, which can define 5 × 5 × 5 points in the X-Y-Z coordinate system.
+As an example, the sagittal, coronal, and transverse slice numbers corresponding to the 15 best base classifiers for the first time to run the stratified fivefold cross-validation procedure are shown in Table
+Take the AD vs. HC classification task for the first time to run the stratified fivefold cross-validation procedure as an example.
+One hundred twenty-five points in the X-Y-Z coordinate system were determined by the top 5 sagittal, coronal, and transverse slices, respectively, e.g.,
+These 125 points were mapped onto various brain regions using the Brainnetome Atlas
+The Brainnetome Atlas currently contains 246 regions of the bilateral hemispheres.
+Moreover, the atlas connectivity-based parcellation-yielded regions are functionally defined according to behavioral domain and paradigm class meta-data labels of the BrainMap database 3 using forward and reverse inferences.
+The brain regions corresponding to the 125 points in the standard MNI space were located with the help of the Brainnetome Atlas.
+In this way, the brain regions with particularly significant contributions to the classification were identified according to the number of intersection points located in those regions.
+Here, the number of the intersection points determined by the most discriminable slices separating two classes in a binary classification task among the sagittal, coronal, and transverse slice sets, transformed into the standard MNI space, acted as an indicator to assess the contributions of a brain region in which the points were located to classifying AD.
+Given that the brain regions in a discriminable slice contribute to the classification 3
+In this way, for all the 10 × 5-fold cross-validation processes, the number of all the intersection points located in the same brain region is summed to measure the ability of the brain region to classify AD.
+The brain regions identified with the most intersection points might be the most discriminable for a binary classification task.
+Thus, the details of the identified brain regions with the classification capacity are shown in Figure
+It is notable that the sum of the last column (i.e., the number of points located in a brain region) in each of the three tables was less than 1250 since some intersection points were located in the unlabeled brain regions.
+In Figure
+The prefix capital letters R and L of a brain region label (e.g., R.rHipp) refer to the right and left cerebral hemispheres, respectively.
+From the above figures and tables, the most discriminable brain regions in the AD vs. HC classification task were the rostral hippocampus
+Finally, the most discriminable brain regions in the MCIc vs. MCInc classification task were rostral area 21 and anterior superior temporal sulcus, i.e., middle temporal gyrus
+The top 10 most discriminable brain regions are mapped onto brain images in Figure
+In the paper
+The results are consistent with the highly lateralized MCIc vs. MCIncrelated features acquired in this study, to some degree.
+Plus, the most discriminable brain regions identified in the MCIc vs. MCInc classification task in our study were in agreement with the conclusion of the paper
+Furthermore, in the paper
+The results and conclusion were consistent with most of our results to some extent.
+After location mapping, the corresponding behavioral domains to every identified brain region were obtained from  the Brainnetome Atlas official website,
+Then, the number of identified brain regions corresponding to each AD-related behavioral domain was calculated for each task (Figure
+In the figure, the vertical and horizontal axes show the relevant behavioral domains and the number of identified brain regions associated with these relevant behavioral domains, respectively.
+From Figure
+The most common symptoms of AD, especially in the early achieve two objectives: i.e., classification of AD or MCIc vs. HC, and MCIc vs. MCInc and identification of the complex change patterns associated with AD.
+In comparison with a previous PCA plus SVM method
+The proposed method employs a two-stage EL scheme to improve generalization and robustness.
+The model achieved average classification accuracies (± standard deviation) of 0.84 ± 0.05 for AD vs. HC, 0.79 ± 0.04 for MCIc vs. HC, and 0.62 ± 0.06 for MCIc vs. MCInc.
+Compared to the PCA plus SVM method, the proposed method showed statistically substantially improved accuracy and robustness for distinguishing among the AD, MCIc, and HC groups, while model accuracy was NOT statistically lower than that achieved by the PCA plus SVM method for distinguishing MCIc from MCInc.
+At the same time, compared to the 3D-SENet model, the CNN-EL method achieved statistically higher accuracy and robustness for all the three binary classification tasks.
+For a 1 × 5-fold cross-validation processes, we also identified the 15 slices and resultant 125 (i.e., 5 × 5 × 5) intersection points in the standard MNI space based on the five best base classifiers trained respectively with sagittal, coronal, or transverse slice data.
+These points were then mapped onto the Brainnetome Atlas to identify the corresponding brain regions with the discriminability in the three binary classification tasks.
+For all the 10 × 5-fold cross-validation processes, the number of all the intersection points located in the same brain region was summed to evaluate the capability of the brain region to help diagnose AD.
+The identified brain regions included hippocampus, amygdala, and temporal lobe, which are known to be affected by AD and involved in neurological processes impaired in AD
+Also, we acquired the corresponding behavioral domains based on all identified brain regions, which were generally consistent with the common symptoms of AD.
+In two-dimensional convolutional neural network (2D-CNN)-based models for early detection of AD, only sagittal, coronal, or transverse slices of 3D MR images are usually used as the training dataset.
+A specific slice, such as a transverse slice through the hippocampus, was often selected based on experience or prior domain knowledge
+Using only the data from a single 2D slice of a 3D MR image removes potentially valuable information.
+In comparison, the novel CNN-EL approach that we proposed here has the following significant features: CNN classifier was trained with the data from a single slice orientation.
+Then, the top "N" trained base classifiers were selected according to the generalization performance on the verification dataset to build the final ensemble.
+In this way, the method effectively improved classification accuracy and robustness.
+The slices used as training data to construct base classifiers were not necessarily specified based on prior domain knowledge; rather, each available and valid slice (sagittal, coronal, or transverse) in the dataset was used to train the corresponding base classifier.
+(3) Compared to the length of time spent on building a model with data from only a single slice orientation, it may take more time to build the proposed model since many more base classifiers need to be trained.
+To effectively solve this problem, the parallel processing method was adopted to train the base classifiers used to build the ensemble model.
+This greatly improved the training efficiency and made the proposed model scalable.
+(4) According to the classification performances of all trained base classifiers on the verification dataset, the three sets of top "N" base classifiers trained using data from sagittal, coronal, and transverse slices, respectively, were determined.
+Since a base classifier was trained with the data from only a specific slice orientation, the most important sagittal, coronal, or transverse slice for a binary classification task (e.g., AD vs. HC) could be located according to the three sets of top "N" base classifiers in a data-driven way.
+Furthermore, the brain regions corresponding to the intersection points determined by the top "N" sagittal, coronal, and transverse slices could be located with the help of the Brainnetome Atlas.
+The brain regions identified with the most intersection points might be the most discriminable for a binary classification task, given that the number of the intersection points could be an indicator to measure the ability of a brain region in which the points were located to classify AD. (5) The performance of the proposed classifier ensemble was compared to that of other machine learning models using the same dataset.
+The experimental results showed that the proposed model achieved better classification accuracy and robustness.
+The relatively low classification accuracy for MCIc vs. MCInc warrants further investigation and the classification performance needs to be improved with the optimization methods and/or other deep learning models to identify the brain regions with stronger discriminability.
+For an individual subject to be diagnosed, the votes of base classifiers in the trained classifier ensemble based on the threeaxis slices and the number of resulting intersection points located in each brain region might be employed to disclose the extent to which AD impaired each brain region and each behavioral domain, which could help understand and evaluate the subject's disease status, symptom burden and, more importantly, progress.
+Plus, with the advancements of brain atlases and advanced ultra-high-field scanners, chances are that the positions and the number of the intersection points determined by the proposed CNN-EL methods might provide more details on and insights into the progress of AD pathology.
+Furthermore, the advocated method may be useful for identifying additional candidate neuroimaging biomarkers for AD as well as for other brain diseases such as Parkinson's disease, autism, schizophrenia and severe depression, especially for identifying candidate neuroimaging biomarkers for other little-known brain disorders, in a data-driven way.
+The above-mentioned discussions, the clinical implication of the finding applying other samples, and the generalizability of the advocated CNN-EL approach need to be examined in the future research.
+
+
+
+Figure 2 .
+The CNN model training, testing, and verification involved use of only 40 sagittal slices {X(-61), X(-58), X(56)}, 50 coronal slices {Y(-91), Y(-88), Y(56)}, and 33 transverse
+
+
+
+FIGURE 1 |
+FIGURE 1 | Preprocessing pipeline-an example showing the formation of a transverse slice used in the learning.
+(A) Original image.
+(B) Skull-stripping and spatial normalization.
+(C) Smoothing.
+(D) Gray normalization.
+(E) Slicing and resizing.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The cropping range (inside the blue rectangle) of the slices used to train the model on (A) a sagittal plane and (B) a coronal plane, respectively.
+(A) Sagittal Plane.
+(B) Coronal plane.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Basic structures of the CNN convolutional layer and pooling layer.
+(A) Convolutional layer.
+(B) Pooling layer.
+
+
+(e.g., MCIc vs. MCInc) was conducted five times.
+No images in the training/testing datasets were used to select the best base classifiers, and thus potential data leakage among binary classification tasks was avoided.In each binary classification task, a total of 123 2D sagittal, coronal, and transverse slices extracted from each 3D MRI were employed to generate 123 trained base classifiers.
+Using classification of AD (n = 137) vs. HC (n = 162) as an example, 299 labeled 3D MRI (Table1A), were partitioned into 80% training and 20% testing cases with stratified random sampling.
+The 299 2D slices of X(i) [or Y(j), or Z(k)] were compiled as a 2D dataset, where i∈{-61, -58, . . .
+56}, j∈{-91, -88, . . .
+56}, and k∈{-28, -25, . . .
+68}; 239 (or 80%) of stratified randomly selected cases were employed to train the X(i) [or Y(j), or Z(k)] base classifier, while the remaining slices of 60 (or 20%) cases were used to test the trained classifier ensemble based on three-axis slices.
+In this way, all 123 trained base classifiers to classify AD vs.HC were acquired.
+
+
+FIGURE 4 | The architecture of the classifier ensemble based on the three sets of 2D slices (from left to right: sagittal, coronal, and transverse).
+
+
+
+FIGURE 5 |
+FIGURE 5 | Experimental flow chart.
+(A) Training phase.
+(B) Testing phase.
+
+
+
+FIGURE 6 |
+FIGURE 6 | Base-classifier architecture used in the CNN-EL approach proposed here.
+
+
+
+FIGURE 8 |
+FIGURE 8 | The list of brain regions with the classification capacity in each classification task.
+(A) Discriminable brain regions in the AD vs. HC.
+(B) Discriminable brain regions in the MCIc vs. HC.
+(C) Discriminable brain regions in the MCIc vs. MCInc.
+
+
+
+FIGURE 9 |
+FIGURE 9 | Top 10 most discriminable brain regions in each binary classification task: (A) AD vs. HC; (B) MCIc vs. HC; (C) MCIc vs. MCInc.
+
+
+
+FIGURE 10 |
+FIGURE 10 | Distributions of the identified brain regions on the relevant behavioral domains in each binary classification task: (A) AD vs. HC; (B) MCIc vs. HC; (C) MCIc vs. MCInc.
+
+
+
+( 1 )
+Six data augmentation (DA) methods are used to deal with the imbalanced data problem by disproportionately increasing the number of image slices in classes with fewer samples.
+As a result, each class can have approximately an equal increased number of training instances in the augmented dataset.
+(2) The proposed ensemble model combines features identified from the sagittal, coronal, and transverse slices of a 3D MRI dataset together, to improve classification accuracy and model adaptability.
+Each of the base 2D
+
+
+
+TABLE 1 |
+Characteristics of participants in (A) the training and testing dataset (upper panel) and (B) the validation dataset (lower panel).
+
+
+
+TABLE 2 |
+Numbers of augmented images in the MCIc and MCInc datasets.
+
+
+
+TABLE 3 |
+Detailed hyper-parameters of base classifiers of the CNN-EL approach advocated here.
+
+
+
+TABLE 5 |
+(Christian et al., 2015)al results with PCA + SVM(Christian et al., 2015)and 3D-SENet.
+
+
+
+TABLE 6 |
+Statistical comparisons with p-values about accuracy mean of the three methods for (A) AD vs. HC task (upper panel), (B) MCIc vs. HC task (middle panel), and (C) MCIc vs. MCInc task (lower panel).
+
+
+
+TABLE 7 |
+Sagittal, coronal, and transverse slice numbers corresponding to the 15 best base classifiers for the first time to run the stratified fivefold cross-validation procedure.
+
+
+
+TABLE 8a |
+Details of the discriminable brain regions in the AD vs. HC task.
+
+
+
+TABLE 8b |
+Details of the discriminable brain regions in the MCIc vs. HC task.
+
+
+
+TABLE 8c |
+Discriminable brain regions in the MCIc vs. MCInc classification task.
+
+
+
+TABLE 8c |
+Continued

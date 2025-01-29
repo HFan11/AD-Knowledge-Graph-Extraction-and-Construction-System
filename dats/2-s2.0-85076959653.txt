@@ -1,0 +1,288 @@
+Convolution neural network–based Alzheimer's disease classification using hybrid enhanced independent component analysis based segmented gray matter of T2 weighted magnetic resonance imaging with clinical valuation
+In recent times, accurate and early diagnosis of Alzheimer's disease (AD) plays a vital role in patient care and further treatment.
+Predicting AD from mild cognitive impairment (MCI) and cognitive normal (CN) has become popular.
+Neuroimaging and computer-aided diagnosis techniques are used for classification of AD by physicians in the early stage.
+Most of the previous machine learning techniques work on handpicked features.
+In the recent days, deep learning has been applied for many medical image applications.
+Existing deep learning systems work on raw magnetic resonance imaging (MRI) images and cortical surface as an input to the convolution neural network (CNN) to perform classification of AD.
+AD affects the brain volume and changes the gray matter texture.
+In our work, we used 1820 T2-weighted brain magnetic resonance volumes including 635 AD MRIs, 548 MCI MRIs, and 637 CN MRIs, sliced into 18,017 voxels.
+We proposed an approach to extract the gray matter from brain voxels and perform the classification using the CNN.
+A Gaussian filter is used to enhance the voxels, and skull stripping algorithm is used to remove the irrelevant tissues from enhanced voxels.
+Then, those voxels are segmented by hybrid enhanced independent component analysis.
+Segmented gray matter is used as an input to the CNN.
+We performed clinical valuation using our proposed approach and achieved 90.47% accuracy, 86.66% of recall, and 92.59% precision.
+
+Introduction
+Alzheimer's disease (AD) is a progressive dementia, which causes a loss of connection between nerve cells in elders.
+Owing to AD, the brain shrinks, hippocampal size decreases, and the brain ventricles enlarge.
+As AD progresses, it debases memory, thinking ability, and the person's expressions to the problem in day-to-day activities.
+Understanding AD, mild cognitive impairment (MCI), and cognitive normal (CN) manifestation is one of the most challenging tasks faced by neurologists from the past few years.
+Physicians are using different clinical methodologies to perform classification of AD.
+Clinically, cerebrospinal fluid (CSF) concentration deals with AD.
+The level of norepinephrine increases in the CSF as the disease progresses.
+The CSF is collected using a ventricular puncture; the physician makes a hole in the skull and collects the CSF directly from one of the brain ventricles
+It is a laborious procedure, and it may have a risk of bleeding in the brain.
+With the development of medical imaging techniques, neuroimaging plays a major role in the diagnosis of structural and functional changes in the brain and encompasses computer tomography, magnetic resonance imaging (MRI), positron emission tomography, functional MRI, and single-photon emission CT.
+MRI is used to analyze structural changes caused by AD, CN, and MCI manifestation because of its ease of accessibility.
+The most common MRI sequences are T1-weighted and T2weighted scans.
+T2-weighted scans are used in this work.
+Neuroimaging techniques help visualize the anatomical changes in the brain.
+In Fig.
+It is evident that the texture of the brain changes as the disease progresses from CN to MCI to AD. Shape transformation in the brain is used as a morphological signature of the brain structure.
+Morphological changes in the brain texture, structure, and volume are used to classify the healthy brain from a diseased brain
+AD is caused by degeneration of brain cells and changes in the brain volume.
+The early effect of AD is observed based on changes in the hippocampus, the size of which is used to classify the AD stage
+Change in the white matter (WM) is estimated to analyze the area of the brain affected due to AD
+The gray matter (GM) is used to analyze AD
+AD is classified using the volume of interest
+Image volume has more number of voxels and high dimensionality.
+The huge information is reduced via wavelet transformation where the classification is carried out in a voxel-by-voxel manner instead of classifying the entire data
+
+Related work
+Since the last few years, computer-aided diagnosis (CAD) is used to assist and give a second opinion to the physicians.
+Many researchers are developing different CAD systems to diagnose AD.
+Most physicians use physical tests and the Mini-Mental State Examination
+Clinically AD classification is performed by collecting different parameters and by developing biomarkers to test the AD stage.
+A 5-stage route map was developed for CSF-based diagnosis of preclinical AD using Ab ratios rather than Ab42
+Recent CAD systems use machine learning as a computational technique to analyze patterns of medical data.
+Different machine learning approaches such as regression, classification, and clustering are used in the CAD system.
+Machine learning approach gives better classification accuracy based on the features that are extracted from the images; to detect the structural and textural changes in the brain MRI, single modalities and multimodalities are used as features
+Brain volume, shape, voxel intensity, CSF measurement, and genetic information are used as features to perform the classification of AD, using random forest
+As AD progresses, it affects brain tissues such as the WM, GM, and hippocampus.
+The WM and GM are segmented from brain MRI using learning vector quantization, an unsupervised approach, and classification was performed using SVM.
+Texture changes in the WM and GM are used to differentiate AD from MCI and CN; texture changes are measured using first-order statistical parameters that are extracted from the histogram, and then the second-order statistical features are extracted from GLCM and Gabor filters
+Hybrid features generated by combining texture and volume information, such as texture features along with GM volume, are used to perform the classification of AD using SVM-random Fourier expression (SVM-RFE)
+Hybrid features extracted from segmented brain image and clinical data are used for multiclass classification of AD from MCI and CN
+As the features are more, the classification accuracy increases, but it makes accurate training of a classifier more complicated; greedy score is used to select the important features, and kernel-based discriminative method is used to perform feature selection of complex features
+Hippocampal volume is used to differentiate AD and MCI
+Hippocampal volume is verified patchwise
+Texture features are extracted patchwise using Gabor filter, and classification is performed using a weak classifier
+In all the aforementioned approaches, features are extracted manually, and it requires expert knowledge in selecting the features.
+In recent years, deep learning framework has achieved greater success in many fields.
+An artificial neural network has more influence on the development of deep learning architecture.
+There are many machine learning approaches adopted to perform classification of medical images using CAD.
+The advantage of neural networks is that the CAD system used in recent days
+In deep convolutional neural networks, hierarchical layers are connected and have the advantage over artificial neural networks.
+Deep learning achieves good performance in medical image analysis
+Deep radiomic features are extracted from the threedimensional MRI image using entropy convolution neural network (CNN) to perform AD classification
+Multimodal three-dimensional CNN is used to extract the features and perform AD classification
+Features from stacked autoencoders and low-level features in combination help to build the classification model
+Extracting texture from the center slices of the MRI image and using those as input for performing AD classification using bootstrap algorithm as the region of interest is used to collect the features from MRI
+Transfer learning using the VGG-16 pretrain model is used to perform the classification of AD-NC-MCI
+Hippocampal volume patches are used to perform the classification using the hybrid classifier CNN and recurrent neural network
+In this article, we propose a CNN classifier for automatic classification of AD from MCI and CN using GM.
+We evaluated the architecture performance using T2weighted MR images collected from a standardized data set, Alzheimer's Disease Neuroimaging Initiative (ADNI).
+The contribution of the article is summarized as follows: to remove the unwanted tissues from the voxels.
+b) We specifically used GM for atrophy detection.
+In this article, GM tissues are segmented using hybrid enhanced independent component analysis (ICA).
+c) CNN architecture is trained using segmented GM voxels.
+d) The trained CNN is evaluated using independent MRI voxels collected from a local MRI center and correlated with clinical information, which achieves remarkable accuracy.
+The aim of this work is to develop a computer-based diagnosis system that provides additional support for the medical staff to support their diagnosis evidence.
+
+Materials
+In our work, a total of 1820 MRI images are obtained from the ADNI database (adni.loni.usc.edu).
+We used 1.5-Tesla, T2-weighted MRI volumes, which are of 420 !
+462 !
+32 voxels.
+We collected AD, MCI, and CN MRIs of individuals of different age groups, both male and female.
+MRIs and their demographic representation are shown in Table
+Overall, we collected 635 AD MRIs, 548 MCI MRIs, and 637 CN MRIs.
+
+Methodology
+In our work, MRIs are initially sliced into voxels.
+These voxels are preprocessed to correct for geometric distortion and reduce noise using Gaussian filter.
+Nonbrain tissues are removed from the voxels using the skull stripping algorithm.
+Structural and texturual changes in the brain are used to differentiate healthy and diseased tissues, and enhanced ICA is used to perform segmentation of the brain into the WM, GM, and CSF.
+Brain tissue atrophy is used to detect AD stage.
+AD is a progressive disease, in which the brain experiences changes in GM and WM texture and volume, as well as expansion of ventricles.
+In our work, we classify the AD based on GM atrophy.
+We used CNN as a classifier which is used in different computer vision techniques, since the past couple of years.
+Our classification approach has 3 major sections: (1) preprocessing; (2) train, test, and validation of the classifier; and (3) perform clinical valuation-as shown in Fig.
+
+Preprocessing
+
+Skull stripping algorithm
+Skull stripping is the most important preprocessing technique.
+For accurate classification of images, unwanted and nonbrain tissues are initially removed from the voxels and the brain tissues are left.
+The proposed skull stripping algorithm has a sequence of steps.
+Before applying skull stripping, the image is enhanced using a Gaussian filter, and detailed information and noise are reduced.
+The enhanced voxels are convolved by a 3 !
+3 filter as given in equation
+The filtered image is segmented into brain and nonbrain tissues using thresholding technique; selection of threshold value is crucial to generate the initial binary image.
+Morphological operation is performed on the binary image to remove the unwanted regions.
+Active contour is applied on the binary image to separate foreground from background and generate a final binary mask.
+On multiplying the final binary mask with the original voxel, the skull is stripped and unwanted tissues such as skull, scalp, dura, eyes, and so forth are removed from the voxel.
+The skull stripping algorithm steps are as follows.
+
+Segmented algorithm
+Blind separation of brain tissues in the MRI is carried out by using an unsupervised segmentation approach.
+In our work, we have used hybrid enhanced ICA.
+K-means and expected maximization (EM) are combined to form a hybrid strategy to cluster the brain tissues in the MRI.
+This combination achieves the capability of providing clusters for welldistributed image pixels and compactness through EM.
+In our proposed hybrid enhanced ICA, the concept of mixture model is introduced and it is characterized into mutually exclusive classes.
+In the modified GMM approach, spatial information is added to GMM using Markov random field (MRF) and takes spatial dependency into account.
+In EM, the expected step is computed using log likelihood with mean and variance calculated using modified K-means and latent variable calculated through Gibbs density function.
+The aforementioned parameters are used as input parameters to hybrid enhanced ICA to perform the segmentation of the brain MRI voxels.
+The algorithm is further explained using the following steps:
+
+Classifier
+The CNN is used for classification.
+In our article, we used 224 !
+224-sized gray segmented images as input to the CNN.
+The performance of the CNN depends on the network architecture and weights that are set.
+The architecture of the CNN depends on the specific task, and the requirements of the data for the network need to be known.
+The size of the MRI slice, filter size, number of kernels, padding, and strides determine the particular convolution layer size.
+Our classifier has 5 convolution layers with 32, 64, 128, 256, and 512 filters with different sizes (4,4),
+The network is trained using back-to-back propagation with 200 epochs; we used Adam optimization.
+Equations (
+g(x, y) is the input image into k identically independent GMMs with parameters q k 5 {m k , E k } Step1: Represent g(x,y) in vector{g i : i 5 1, 2, 3, 4. N} Step2: Modified K-means to find the prior information of the Gaussian mixture model such as mean and covariance {Mixing Coeficient p k : i 5 1, 2 ,3 ,4 .
+N}, g i is the gray level.
+a. Partition of N pixels into K equal sets b.
+Center of each set as a centroid c1, c2, c3, .c
+k c.
+Find the distance between Euclidean distance between g(x, y) and the cluster centers d.
+Find the centroid that is close to the particular g(x, y) e. Recalculate the centroids of each clusters f.
+Repeat the steps from c to e g.
+If the distance between g(x,y) and new cluster center is less than or equal to the previous distance, then g(x,y) will be in the same cluster otherwise it moves to another cluster based on the distance.
+h.
+The process continues until the clusters are convergence i. Collect mean and covariance of the clusters q k 5 {m k , E k } Step2: q k 5 {m k , E k } for i 5 1: pixels for k 5 1: number of k Probability density of the mixture model is considered as pðx i jp; qÞ5
+Step 3: log likelihood of the density function is calculated to find the probability of pixels that belong to the particular Gaussian ln pð5pðXjqÞ5 P N i51 ln pðx i jqÞ , q 5 {z, m, s}, z, latent variable and calculated using expectation and maximization Step 4: E step for I:
+Q ðiÞ ðZ ðiÞ Þ : 5Pðz i jx i ; qÞ Step 5: M Step for all z q:5argmax q P
+Step
+
+Model development and training
+In our work, we used MATLAB R2015b to perform slicing, skull stripping, and segmentation of the image.
+To train deep neural network data, parallel processing is needed, so we used an open-source software package Python, version 3.0, Google Colab to perform the training and validation of the classifier (GPU: 1xTesla K80, having 2496 CUDA cores, compute 3.7, 12 GB [11.439
+GB useable] GDDR5 VRAM).
+We used Keras library over TensorFlow modules to design our proposed model.
+
+Creating training and test set
+Our total data set has 18,017 GM segmented images.
+We shuffled and split the data set in the ratio 80:20 as training and test data sets.
+We used this data set for multiclass classification and binary classification; the data set is summarized in Table
+Our classifier has 5 convolution layers with 32, 64, 128, 256, and 512 filters with different sizes (4,4),
+The networked is trained by Adam optimization using back-to-back propagation with 200 epochs.
+Rectified linear unit used as activation function: f ðxÞ 5 0 for x , 0 x for x 0 (7)
+
+Results
+In this work, a total of 18,016 MRI axial slices are used; these are generated from 1820 T1-weighted MRIs collected from the standard AD data set, the ADNI.
+All the voxels are preprocessed by enhancing them using rotationally invariant Gaussian filters.
+Irrelevant tissues such as scalp, skull, ears, dura, and eyes are removed from the MRI voxels using skull stripping algorithm.
+We focused on the GM for atrophy detection.
+GM tissues are segmented using hybrid enhanced ICA.
+Atrophy in the GM is used to differentiate AD from MCI and CN.
+Our proposed CNN model has 5 convolution layers and 5 fully connected layers; each convolution layer is followed by dropout, padding, and max pooling layers with ReLu as an activation function.
+Preprocessed images are augmented to increase the sample size and train the CNN model.
+We used Keras with TensorFlow to build the proposed CNN model using Python.
+Our proposed approach performs binary classification and multiclass classification to fit the model in a batch size of 128 in 200 epochs using Google Colab.
+It takes around 7 hours to train the model.
+The total architecture is summarized in Table .3.
+We train the model by Adam optimization with a learning rate of 0.001, beta1 of 0.9, and beta2 of 0.999.
+Our classifier is trained with 200 epochs.
+We used it to perform binary clas- We compared the performance of the proposed system with that of different models discussed in literature review as shown in Table
+It is observed that our classifier achieves remarkable performance both in binary classification and multiclass classification.
+Fig.
+We further performed the clinical evaluation using our proposed approach on 21 independent MRI slices collected from Poorvi MRI Center, Chirala and compared the predicted results generated by our system with results diagnosed by the physician.
+The confusion matrix of clinical analysis is shown in Fig.
+We calculated some important performance measurement parameters as follows using Equations (
+We achieve 90.47% accuracy, 86.66% recall, and 92.59% precision in comparison of our system with physician decision.
+Bar diagram of the clinical evaluation is given in Fig.
+
+Conclusion
+Effective diagnosis of AD helps the patient to get a featured treatment.
+Many researchers are focusing on this challenging task; they had developed many CAD systems to perform the diagnosis of AD.
+In our workflow, we developed a deep learning approach to perform the classification based on GM segment, using hybrid enhanced ICA.
+Our proposed framework has more strengths than the previous techniques.
+We use heterogeneous MRI volumes of different age groups and gender.
+In our experiment, we used T2-weighted MRI to perform the classification.
+The GM has neuron cell bodies and non-neuron brain cells called glial cells.
+The GM undergoes development and growth throughout childhood and adolescence; it is used to carry glucose to the brain, and changes in this affect the memory, speech, and motor controls.
+In our work, we mainly focused on the use of the GM to classify AD.
+In our work, we observed that the framework is not affected with noise and data augmentation.
+Our deep learning model got trained and was validated and tested on the MRI collected from the database, and we performed binary classification such as AD-MCI, AD-CN, and MCI-CN and multiclass classification such as AD-MCI and CN.
+We further compared the classifier performance with the physician's decision and achieved good results.
+No other framework performed the comparison of the system with the physician's decision.
+Our system is recommend not to replace but to support the physician decision.
+2. Future directions: System is further improved by adopting multiple image data such as T1, T2 and meta data along with the proposed system to improve evaluation of AD at clinical level.
+
+
+
+Fig. 1 .
+Fig. 1.
+Cross sections from MRI images of CN (the top row), MCI (the middle row), and AD (the bottom row).
+Abbreviations: MRI, magnetic resonance imaging; CN, cognitive normal; MCI, mild cognitive impairment; AD, Alzheimer's disease.
+
+
+
+Fig. 2 .
+Fig. 2. Proposed framework with CNN.
+Abbreviation: CNN, convolution neural network.
+
+
+
+Fig. 3 .
+Fig. 3. Accuracy and loss calculation of AD-CN during training and testing.
+(A) AD-CN accuracy calculation.
+(B) AD-CN loss calculation.
+Abbreviations: AD, Alzheimer's disease; CN, cognitive normal.
+
+
+
+Fig. 4 .
+Fig. 4. Accuracy and loss calculation of AD-MCI during training and testing.
+(A) AD-MCI accuracy calculation.
+(B) AD-MCI loss calculation.
+Abbreviations: AD, Alzheimer's disease; MCI, mild cognitive impairment.
+
+
+
+Fig. 5 .Fig. 6 .
+Fig. 5. Accuracy and loss calculation of CN-MCI during training and testing.
+(A) CN-MCI accuracy calculation.
+(B) CN-MCI loss calculation.
+Abbreviations: CN, cognitive normal; MCI, mild cognitive impairment.
+
+
+sification and multiclass classification.
+During binary classification, we first trained the classifier with AD-CN segmented images and the model resulted in 99.75% training accuracy.
+Then, we trained the classifier with segmented AD-MCI voxels, which achieved 98.72% training accuracy.
+Later, it was trained with segmented CN-MCI images which resulted in 99.87% training accuracy.
+Multiclass classification was performed by the trained classifier, using segmented AD-MCI-CN images which achieved 99.50% training accuracy.
+Training, testing accuracy, and loss graphs are shown in Fig. 3, Fig. 4, Fig. 5, and Fig. 6.
+It is required that our proposed framework is trained and the prediction is made with utmost accuracy.
+
+
+
+Fig. 8 .
+Fig. 8. Confusion matrix for clinical analysis of images.
+
+
+
+Fig. 7 .
+Fig. 7. Proposed system parameters modality wise.
+
+
+
+RESEARCH IN CONTEXT 1 .
+Systematic review: In our work we had used AD data collected from online repository to train the model and test the model using images collected from local MRI center.
+We used 21 MRI slices of different age groups of 60 to 92 years both male and female, and compared the test result of model with a physician decision based on MSME score, to evaluate the system accuracy.
+
+
+
+Table 1
+Demographic representation of MRI images
+
+
+
+Table 2
+Training set, validation set, and test set sizes Classification type Class label Training set Test set Total images No: of Neurons in Convolution layer 5 Convolution width !Convolution Heigh !Number of Filters (4) Fully Connected layer parameters 5 No: of parameters form previous stage!
+No: of nodes in the present layer
+
+
+
+Table 3
+
+
+
+Table 4

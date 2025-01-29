@@ -1,0 +1,159 @@
+Prediction of Progression to Alzheimer's disease with Deep InfoMax
+Arguably, unsupervised learning plays a crucial role in the majority of algorithms for processing brain imaging.
+A recently introduced unsupervised approach Deep InfoMax (DIM) is a promising tool for exploring brain structure in a flexible non-linear way.
+In this paper, we investigate the use of variants of DIM in a setting of progression to Alzheimer's disease in comparison with supervised AlexNet and ResNet inspired convolutional neural networks.
+As a benchmark, we use a classification task between four groups: patients with stable, and progressive mild cognitive impairment (MCI), with Alzheimer's disease, and healthy controls.
+Our dataset is comprised of 828 subjects from the Alzheimers Disease Neuroimaging Initiative (ADNI) database.
+Our experiments highlight encouraging evidence of the high potential utility of DIM in future neuroimaging studies.
+
+I. INTRODUCTION
+According to
+One essential tool for better understanding mental illness is to use noninvasive neuroimaging (e.g., structural magnetic resonance imaging (MRI) images) along with machine learning to learn brain structure.
+Deep Learning has been integral to the successes of machine learning for numerous demanding real-world applications, e.g., state-of-the-art image classification
+While many of Deep Learning's successes involve supervised learning, supervised approaches can fail when data annotation (e.g., labels) is limited or unavailable.
+When there is sufficient data, supervised models can not only perform well on holdout sets but provide representations that generalize well to other supervised settings
+However, when there is insufficient data, a supervised learner tends to discriminate on low-level (e.g., pixel-level, trivial) information, which hurts generalization performance.
+A model that generalizes well Corresponding author: Alex Fedorov, afedorov@mrn.org.
+**Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.edu).
+As such, the investigators within the ADNI contributed to the design and implementation of ADNI and/or provided data but did not participate in analysis or writing of this report.
+needs to extract meaningful high-level information (e.g., a collection of important features at the input level).
+In order to address this, many successful applications of machine learning to neuroscience rely on unsupervised learning
+These representations are then used as input to an off-the-shelf classifier (i.e., semi-supervised learning).
+However, prior work on unsupervised learning of brain imaging data is either linear or weakly nonlinear
+In this work, we explore using DIM
+DIM works by maximizing the mutual information between a high-level feature vector and low-level feature maps of a highly flexible convolutional encoder network by training a second neural network that maximizes a lower bound on a divergence (probabilistic measure of difference) between the joint or the product of marginals of the encoder input and output.
+The estimates provided by this second network can be used to maximize the mutual information of the features in the encoder with the input.
+Unlike other popular unsupervised auto-encoding approaches such as VAE
+Hence it significantly reduces memory requirements of the model for volumetric data.
+We evaluate DIM by performing a downstream classification task between four groups: patients with stable and progressive MCI, with Alzheimer's disease and healthy controls, using only the resulting representation from DIM as input to the classifier.
+We compare DIM to two convolutional networks with AlexNet
+On strict evaluation, we show comparable performance to supervised methods and to previously reported
+
+II. MATERIALS AND METHODS
+
+A. Deep InfoMax
+Let X := {x (i) ∈ X } and Z := {z (i) ∈ Z} be the input and output variables of a neural network encoder, E φ : X → Z with parameters φ, where X , and Z are its domain and range.
+We wish to find the parameters that maximize the following objective:
+where Îθ is the mutual information estimate provided by a different network with parameters θ, and Z = E φ (X) is the output of the encoder.
+A parametric estimator for the mutual information can be found by training a statistics network to maximize a lower bound based on the Fenchel-dual
+The Donsker-Varadhan-based estimator is a consistent, asymptotically unbiased estimator has been shown to outperform nonparametric estimators, and can also be used to improve deep generative models
+However, D KL is unbounded, which can be problematic if the above estimators are used for training deterministic neural network encoders.
+where T θ is a statistics network with parameters θ, sp = log(1+e z ) (softplus function) and X ′ is another input sampled from the data distribution independently from X.
+In addition, the Noise-Contrastive variant of the estimator (NCE)
+Here, X b = {X} X n are a set of samples where X n are a set of negative samples drawn from the data distribution, such that there is exactly one positive example in X b (X occurs exactly once).
+Instead, they show that maximizing the mutual information between the high-level representation, Z = E φ (X) and patches of an input image can achieve highly competitive results.
+The intuition is that this approach encourages the high-level representation to learn information that is shared across the input.
+It is suitable for many classification tasks, as we expect that class-discriminative features should be evident across many spatial locations of the input.
+For a convolutional encoder E, the local DIM objective can be written in a compact form:
+where
+φ (X) is a feature map location from encoder (with a limited receptive field corresponding to an input patch with size M ) at some intermediate layer of the network.
+Due to stronger performance of AlexNet architecture (Section (II-B)) in our experiments (see Section (IV)) we used it as an encoder for DIM method.
+Last linear layer of AlexNet we changed with a layer for 64-dimensional output representation.
+To estimate mutual information using eq.
+(
+First, patches C (i) φ (X) taken from third convolutional layer of AlexNet were mapped using convolutional encoder-and-dot architecture (Tab.
+9 from
+8 from
+Then flattened encoded mappings of patches and representations were combined using the dot product to create real and fake samples efficiently.
+The real sample is a dot product of a "local" patch and its "global" representation mappings, while fake -between mapping of some "local" patch with global representation coming from an unrelated input.
+Eventually we estimated JSD based loss eq.
+(
+(
+Since NCE needs to have more negative samples to be competitive with JSD
+To evaluate the performance of the learned representation by DIM, we trained three additional neural networks using as input features output from last convolutional layer with size 128 × 2 × 2 × 2, the first fully connected layer with 1024 units, and final fully connected layer with 64-dimensional representation, which we call as Conv, FC, and Z.
+The classifiers are composed of one fully-connected layer with 200 hidden units, dropout
+
+B. Supervised baselines
+As baselines we have considered supervised methods -two convolutional networks, one based on a simplified AlexNet
+Both networks use convolutions and max pooling with volumetric kernels, batch normalization, ReLU and two fully connected layers in the end (see Tab. (I) for details).
+The notations in Tab.
+(I) denotes: BN for batch normalization, BB -a basic block, MP (k, s) -max pooling with kernel size k and stride s, for convolutions (i, o, k, s, p) -a number of input and output channels, a kernel size, a stride and a padding respectively).
+Cross-entropy loss used as a training objective.
+
+C. Regularization
+For small datasets, it is common to penalize the number of the model parameters by driving most of them to zero using
+where ω is parameter vector of the model and λ -coefficient.
+L 1 regularization imposes a sparse solution.
+This penalty is added to JSD, NCE and cross-entropy losses in different setting.
+For our experiments we used λ = 1.
+
+III. EXPERIMENTS
+
+A. Datasets and preprocessing
+For the downstream classification task, the data was obtained from the ADNI database adni.loni.usc.edu
+(for up-todate information, see www.adni-info.org).
+We use T1w MRI images of 830 subjects with four different groups: patients with stable, and progressive MCI, Alzheimer's disease and healthy controls.
+Structural MRI (sMRI) data was pre-processed to grey matter volume (modulated) maps using SPM12 toolbox.
+To segment grey matter, the MRI images were spatially normalized and smoothed by 6 mm full width at half maximum (FWHM) 3D Gaussian kernel.
+After quality control, two subjects from ADNI dataset were excluded.
+The final dataset consisted of 828 subjects with a volume size of [121, 145, 121].
+
+B. Experimental setup 1) Data:
+The dataset was divided in approximately 93% and 7% subjects for cross-validation and hold-out test sets using a stratified split.
+Then, 93% subjects were split into five stratified folds.
+For AlexNet and ResNet architectures, we used simple data augmentation of the training dataset to reduce overfitting to the small number of annotated samples available.
+Our augmentation consisted of zero padding and random cropping to size 128 along all dimensions along with randomly flipping the input with probability 0.5 for each axis.
+The whole brain was included in the crop.
+For DIM, we didn't use data augmentation, but we used zero padding to make sure that input size is equal to 128 along all dimensions.
+2) Training: The models were trained using the AMS-Grad
+The training of the supervised architectures was performed for 500 epochs, DIM -for 1000 epochs as pre-training and for 1000 epochs for training the classifiers on top of frozen features from the encoder.
+3) Evaluation: Since the dataset is not completely balanced, the evaluation was performed using balanced accuracy
+4) Implementation and hardware: The implementation was written using Deep Learning frameworks PyTorch
+The DIM code is based on openly available DIM implementation
+The experiments were performed on NVIDIA GeForce Titan X Pascal and 1080 Ti and 8 CPU threads.
+
+IV. RESULTS
+The final trained models used further to evaluate the performance were selected based on the best-balanced accuracy but from a checkpoint where the validation score was lower than the training score.
+We gave the model a burn-in period before applying this rule to deal with initial stochasticity.
+The models notations are as follows: Aug denotes augmentation of Table
+The bold text distinguishes the best scores and the name of the models.
+The last column shows p-value and statistic for the one-sided Wilcoxon test.
+The bold p-values indicate acceptance of the null hypothesis.
+The test was performed to compare each method with the best model (Sparse AlexNet Aug) based on the five values of balanced accuracy on hold-out.
+An alternative hypothesis is that the model Sparse AlexNet Aug is better.
+Fig.
+With all modifications, ResNet shows a lower performance on hold-out (at most 47.14 ± 6.51) than AlexNet.
+It is reasonable since the capacity of the ResNet architecture is larger and the dataset is small.
+For α = 0.05 Wilcoxon test also rejects H0 supporting the worse performance of ResNet.
+Performance of JSD Conv, JSD Conv SS, Sparse JSD Sparse Conv, AlexNet, AlexNet Aug is statistically indistinguishable from that of Sparse AlexNet Aug. Follows that unsupervised DIM has comparable performance to supervised methods.
+Among DIM variants, JSD has higher scores than NCE.
+Lower scores of NCE can be explained by its requirement of a large number of negative samples during training to be competitive with JSD.
+Our dataset is not large enough to support the needed level of negative sampling.
+The best score with convolutional features-48.57
+± 5.27was obtained by an encoder and classifier trained with L 1 regularization which is the Sparse JSD Sparse Conv model.
+For features from the fully-connected layer -JSD FC SS model with 45.36 ± 5.73 using semi-supervised loss was the best.
+However, Sparse JSD Sparse FC has similar results 45.0±3.87 and a smaller mean gap 1.6 but it has a lower mean crossvalidation score by 3.17% .
+For the smallest 64-dimensional representation, semi-supervised model JSD Z SS gives the best performance 44.64 ± 4.19, but similar result 43.21 ± 5.56 were obtained by Sparse NCE Z model.
+Semi-supervised loss and L 1 regularization improved models' generalization by reducing the gap between cross-validation and hold-out scores.
+The observed degradation in performance between Conv, FC, and Z can be explained by the reduced capacity of the features.
+L 1 regularization and dropout could also be adjusted.
+However, a more compact input representation can be of independent use, for example, for dimensionality reduction.
+In previous studies, the best reported accuracy for the ResNet architecture in a 4-class sMRI classification task was 54%
+Our values can't be completely comparable since the evaluation is different.
+Reproduced ResNet can be used as a proxy to estimate performance relative to this prior work.
+Note, however, it is not one of the best-performing methods in our study.
+
+V. CONCLUSIONS
+This work proposes an unsupervised method DIM for learning representations from structural neuroimaging data.
+The evaluation of the prediction of progression to Alzheimer's disease demonstrates results comparable to supervised methods.
+In the future, we will scale up our experiments with increased sample size and address the cases of other diseases.
+Our future efforts will also be focused on the multi-modal fusion of brain imaging data
+
+ACKNOWLEDGEMENT
+This study is supported by NIH grants R01EB020407, R01EB006841, P20GM103472, P30GM122734.
+Data collection and sharing for this project was funded by the Alzheimer's Disease Neuroimaging Initiative (ADNI) (National Institutes of Health Grant U01 AG024904) and DOD
+
+
+
+Fig. 1 .
+Fig. 1.
+Performance of the models
+
+
+
+TABLE I ALEXNET
+AND RESNET ARCHITECTURES AlexNet 3D Conv (1, 64, 5, 2, 0) -BN 3D -ReLU -MP 3D (3, 3) 3D Conv (64, 128, 3, 1, 0) -BN 3D -ReLU -MP 3D (3, 3) 3D Conv (128, 192, 3, 1, 1) -BN 3D -ReLU 3D Conv (192, 192, 3, 1, 1) -BN 3D -ReLU 3D Conv (192, 128, 3, 1, 1) -BN 3D -ReLU -MP 3D (3, 3)
+
+
+
+TABLE II PERFORMANCE

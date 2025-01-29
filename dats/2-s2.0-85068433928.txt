@@ -1,0 +1,403 @@
+Meta-Analysis of Gene Expression and Identification of Biological Regulatory Mechanisms in Alzheimer's Disease
+Alzheimer's disease (AD), also known as senile dementia, is a progressive neurodegenerative disease.
+The etiology and pathogenesis of AD have not yet been elucidated.
+We examined common differentially expressed genes (DEGs) from different AD tissue microarray datasets by meta-analysis and screened the AD-associated genes from the common DEGs using GCBI.
+Then we studied the gene expression network using the STRING database and identified the hub genes using Cytoscape.
+Furthermore, we analyzed the microRNAs (miRNAs), long non-coding RNAs (lncRNAs), and single nucleotide polymorphisms (SNPs) associated with the AD-associated genes, and then identified feed-forward loops.
+Finally, we performed SNP analysis of the AD-associated genes.
+Our results identified 207 common DEGs, of which 57 have previously been reported to be associated with AD.
+The common DEG expression network identified eight hub genes, all of which were previously known to be associated with AD.
+Further study of the regulatory miRNAs associated with the AD-associated genes and other genes specific to neurodegenerative diseases revealed 65 AD-associated miRNAs.
+Analysis of the miRNA associated transcription factor-miRNA-gene-gene associated TF (mTF-miRNA-gene-gTF) network around the AD-associated genes revealed 131 feed-forward loops (FFLs).
+Among them, one important FFL was found between the gene SERPINA3, hsa-miR-27a, and the transcription factor MYC. Furthermore, SNP analysis of the AD-associated genes identified 173 SNPs, and also found a role in AD for miRNAs specific to other neurodegenerative diseases, including hsa-miR-34c, hsa-miR-212, hsa-miR-34a, and hsa-miR-7.
+The regulatory network constructed in this study describes the mechanism of cell regulation in AD, in which miRNAs and lncRNAs can be considered AD regulatory factors.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most well-reported neurodegenerative disease, and seriously affects patients' ability to perform daily activities.
+The characteristic pathological changes of AD are the formation of extracellular amyloid plaques by abnormal amyloid beta accumulation, the formation of intracellular neurofibrillary tangles by tau hyperphosphorylation, and neuronal loss with gliosis proliferation
+The etiology and pathogenesis of AD have not yet been elucidated.
+To identify the genetic variation in AD, large cohort studies have been carried out.
+The expression of stromal interaction molecule 1 (STIM1) protein decreases with the progression of neurodegeneration in AD by triggering voltage-regulated Ca 2+ entry-dependent cell death
+The cerebrospinal fluid levels of C-X3-C motif chemokine ligand 1 which is a chemokine expressed by neurons, are decreased in AD dementia patients compared with controls
+Genome-wide association studies (GWAS) studies have also revealed that some single nucleotide polymorphisms (SNPs) contribute to AD disease onset.
+These include common variants such as estrogen receptor 1 (ESR1), presenilin 1 (PSEN1), cholinergic receptor muscarinic 2 (CHRM2), cholinergic receptor muscarinic 3 (CHRM3), apolipoprotein E (APOE), apolipoprotein C1 (APOC1), and choline acetyltransferase (CHAT)
+EIF2AK3 is a single-pass type 1 membrane protein, which represses global protein synthesis as an endoplasmic reticulum stress sensor
+Several SNPs within EIF2AK3 appear to significantly increase the risk of AD
+Although EIF2AK3 polymorphisms are related to a risk of delayed AD
+Different microRNAs (miRNAs) are also associated with the pathophysiology of several neurodegenerative diseases
+miRNA-377 promotes cell proliferation and inhibits cell apoptosis by regulating the expression level of cadherin 13 (CDH13), thus participating in the development of AD
+The level of miR-221 is downregulated in AD cases compared with controls, and it is potentially a new therapeutic target for increasing ADAM metallopeptidase domain 10 (ADAM10) levels in AD
+Long non-coding RNAs (lncRNAs) are widely reported to be associated with various physiological and pathological processes, such as neurodegenerative diseases
+Brain cytoplasmic (BC) RNA is a lncRNA present at higher levels in the AD-affected region of the brain than in normal brain
+miRNAs function by targeting mRNAs for cleavage or translational repression.
+lncRNAs may affect miRNA activity Abbreviations: DEGs, differentially expressed genes; gTF, transcription factor associated with gene; lncRNA, long non-coding RNA; miRNA, microRNA; mTF, transcription factor associated with miRNA; AD, Alzheimer's disease; SNP, single nucleotide polymorphism; TF, transcription factor; PPI, protein-protein interaction; FFL, feed-forward loop.
+by chelating them, thereby upregulating the expression of the miRNA target genes.
+The study of gene regulatory networks is important for disease analysis
+However, research on the association of these AD markers in the context of biological networks is limited.
+To understand AD correctly, regulatory networks involving genes, miRNAs, transcription factors (TF), and lncRNAs need to be studied.
+
+MATERIALS AND METHODS
+
+Microarray Data Collection
+We used "Alzheimer" as a keyword to search for gene expression studies from different brain tissues in the NCBI-GEO database (
+Only original experimental studies that screened for genes differing between AD and healthy humans were selected.
+Our criteria were as follows: (1) the type of dataset was expression profiling by array; (2) the brain regions were the entorhinal cortex (EC), hippocampus (HIP), and medial temporal gyrus (MTG); (3) for each brain tissue dataset, the total number of available samples were ≥10.
+Finally, the samples from seven studies including three tissues (EC, HIP, and MTG) were screened out.
+We then performed a meta-analysis of three datasets from EC tissue (GSE48350, GSE5281, and GSE26927), five datasets from HIP tissue (GSE5281, GSE36980, GSE1297, GSE29378, and GSE48350), and two datasets from MTG tissue (GSE5281 and GSE84422).
+A detailed description of the microarray datasets is presented in Table
+Detailed descriptions of the samples, including the brain regions, sex, and mean age, are provided in Table
+Searches were executed up to October 2017.
+
+Analysis of Individual Data
+Background correction and normalization of each individual dataset were performed using Robust Multichip Averaging (RMA)
+The differentially expressed genes (DEGs) between AD and healthy control samples (HC) were computed using the limma package
+When multiple probes were matched with the same gene, the average value was used as the expression value.
+
+Meta-Analysis of DEGs
+Datasets from the same brain region (EC, HIP, or MTG) were combined to perform the meta-analysis.
+Initially, the data files were normalized using RMA.
+The normalized datasets were then merged using Fisher's exact test in the MetaDE package
+The differentially expressed genes (DEGs) between AD and HC were selected using a P < 0.05 as the cut-off (Figure
+In addition, the heterogeneity tests and differential expression analysis for each gene were analyzed using the ES algorithm of the MetaDE package in R
+When multiple probes were matched with the same gene, we chose the average fold change of each probe.
+The thresholds of homogeneity were set as meta fold change  > 1, tau 2 = 0, and FDR > 0.05.
+The genes with tau 2 = 0 and FDR > 0.05 were considered homogeneous and unbiased, from which the genes with a P < 0.05 in the Fisher's exact test of the MetaDE package were selected as DEGs.
+Tau 2 represents the difference among study samples and reflects the heterogeneity between studies.
+The smaller the tau 2 value, the smaller the heterogeneity.
+In this study, sub-meta-analyses on males and females with GSEs from different tissues were performed.
+The methods of normalization, meta-analysis, heterogeneity detection of each gene and threshold for selecting DEGs were the same as above.
+
+RNA-Seq Data Analysis
+We searched for gene expression studies from the NCBI-GEO database according to our criteria.
+The criteria were:
+(1) original studies between AD and healthy humans; (2) the type of dataset was expression profiling by high-throughput sequencing; (3) the brain regions used were EC, HIP, and MTG; (4) RNA-Seq data with poor quality controls were excluded.
+Finally, one gene expression dataset was selected, GSE67333, which uses samples from hippocampi brain regions and is based on GPL11154 platform information.
+Detailed information on these RNA-Seq samples is shown in Table
+The available analyzed expression profiles of GSE67333 were used
+
+Construction of the DEG PPI Network, and Identification and Further Analysis of the Hub Nodes
+STRING is a protein interaction network analysis tool.
+The latest version of the STRING database is 11.0
+To determine which proteins encoded by the DEGs play a leading role in AD, the DEGs were subjected to STRING v.11.0 with medium confidence scores of 0.4.
+To identify the hub nodes, we visualized the protein-protein interaction (PPI) network using Cytoscape v.3.6.0 software and analyzed the topological properties of these nodes using the Network Analyzer tool based on the degree parameter
+Then we selected the nodes with high degrees and high closeness centrality values as hubs.
+The degree is the number of protein-specific interactions, and a high value reflects an important role in the network.
+The closeness centrality reflects the ability of nodes to influence other nodes in the network, which reveals the centrality of the node in the network.
+
+Identification of DEGs Associated With AD and Other Neurodegenerative Diseases
+The Gene Radar online tool in GCBI (Shanghai, China,
+mainly uses the disease classification in the Mesh database to mine correspondence between genes and diseases from the PubMed database.
+We used Gene Radar to identify the DEGs associated with AD and those associated with other neurodegenerative diseases.
+
+Analysis of miRNAs Associated With the AD-Associated and Other
+Neurodegenerative Disease-Associated DEGs, and of lncRNAs Associated With These miRNAs DIANA-Tarbase v.8.0, containing 670,000 unique experimentally-supported miRNA-gene pairs
+Then, the miRNAs associated with AD and other neurodegenerative diseases were filtered using the miRdSNP v.11.03 online database
+DIANA-LncBase Experimental v.2, which provides more than 70,000 low-and high-throughput experimentallysupported miRNA-lncRNA interactions
+In our study, experimentally validated (prediction score ≥ 0.90) lncRNAs in human brain tissue were selected.
+
+Differentially Expressed miRNAs in AD by High-Throughput Data
+High-throughput data on miRNAs in AD is rare, so we collected only one miRNA microarray dataset in GEO (GSE16759), which studied miRNA expression in AD patients and controls
+The differentially expressed miRNAs were screened using the GEO2R tool, which is an interactive web tool based on GEO query and limma R packages
+
+Analysis of Transcription Factors Associated With the AD-Associated/Other Neurodegenerative Disease-Associated DEGs and AD-Associated/Other Neurodegenerative Disease-Associated miRNAs
+To study the molecular regulatory mechanisms in AD, we built regulatory networks comprising AD-associated/other neurodegenerative disease-associated DEGs, TFs associated with these genes (gTFs), AD-associated/other neurodegenerative disease-associated miRNAs targeting these genes, and TFs related to these miRNAs (mTFs).
+Information on the TF binding sites associated with these genes were studied using TRANSFAC
+The TRANSFAC database comprises eukaryotic transcription factors, DNA binding sites, and their effects on gene expression
+In our study, the matrix similarity score (MSS) and the core similarity score (CSS) were used to estimate the result.
+The threshold values of MSS and CSS for selection were both score = 1.
+Regulatory information on the TFs associated with these miRNAs was analyzed using TransmiR v.2.0 database, an updated TF-miRNA regulation database
+In our study, the literature-curated TF-miRNA regulations and the TF-miRNA interactions from ChIP-Seq evidence in human neural tissue were selected.
+
+Verification of FFL Between the Gene SERPINA3, hsa-miR-27a and TF MYC
+In order to verify the positive finding, FFL between the gene SERPINA3, hsa-miR-27a, and TF MYC, we collected GSE16759 dataset, which jointly profiled mRNA and miRNA expression in AD patients and controls
+The differentially expressed mRNA and miRNAs were screened using the GEO2R tool
+To further verify the positive finding, GSE46579 dataset which studied miRNA expression in AD patients and controls blood and GSE97760 dataset which studied mRNA expression in AD patients and controls blood were collected.
+The available analyzed expression profiles of GSE46579 were used
+The differentially expressed mRNA were also screened using the GEO2R tool.
+
+SNP Analysis of the AD-Associated DEGs
+To identify the AD-associated SNPs, SNP analysis of the ADassociated DEGs was performed.
+We used miRdSNP v.11.03
+
+RESULTS
+
+Analysis of Individual Datasets
+Each individual dataset selected for use in the meta-analysis were corrected and normalized using the oligopackage
+
+Meta-Analysis of DEGs
+To identify common DEGs in different brain regions between AD and healthy controls, microarray datasets (Table
+Then, with the homogeneity thresholds of meta fold change > 1, tau 2 = 0, and FDR > 0.05, the DEGs with P < 0.05 in the meta-analysis from each tissue were collected and are shown in Table
+The final results identified 183 DEGs in the EC brain region (120 upregulated and 63 downregulated), nine DEGs in the HIP brain region (four upregulated and five downregulated) and 15 DEGs in the MTG brain region (14 upregulated and one downregulated).
+A total of 207 DEGs were identified between the AD and HC samples (Table
+More details about the DEGs are presented in Table
+These 207 genes were identified as DEGs for the subsequent analysis.
+A sub-meta-analysis on females and males was performed using datasets from each brain region (EC, HIP, and MTG).
+The results of the sub-meta-analysis of the EC brain region in males and females revealed that there were 217 DEGs in males (176 upregulated and 41 downregulated), of which 212 were male-specific, and 175 DEGs in females (five upregulated and 170 downregulated), of which 170 were female-specific (Table
+Only five common DEGs were identified in females and males.
+The result of this analysis is also shown in a Venn diagram (Figure
+The results of the sub-meta-analysis of the HIP brain region in males and females showed that there were 11 DEGs in males (one upregulated and 10 downregulated), and 28 DEGs in females (10 upregulated and 18 downregulated).
+No overlapping DEGs were obtained between females and males (Table
+The results of the sub-meta-analysis of the MTG brain region in males and females showed that there were 293 DEGs in males (11 upregulated and 282 downregulated), and 30 DEGs in females (19 upregulated and 11 downregulated) (Table
+Only one common DEG was identified in females and males.
+The result of this analysis is also shown in a Venn diagram (Figure
+
+Analysis of Gene Expression in AD by RNA Sequencing
+To further validate the results from the microarray data with public RNA-Seq data, we selected datasets that used the same brain regions as the microarray datasets.
+Hence, the DEGs between AD and HC were analyzed in the GSE67333 RNA-Seq dataset.
+This revealed that 1102 DEGs were filtered from GSE67333 with a threshold of P < 0.05 and fold change ≥ 1.23
+Detailed information on these DEGs is shown in Table
+Then, we analyzed the common DEGs between the RNA-Seq and microarray data, which revealed 72 common DEGs in the HIP brain region in both the RNA-Seq and microarray data.
+
+Identification of AD-Associated or Other Neurodegenerative Disease-Associated DEGs
+AD-associated and other neurodegenerative disease-associated genes were identified from the DEGs using the Gene Radar tool from the GCBI online software.
+Out of the 207 total DEGs, 57 had previously been shown to be associated with AD (AD-associated genes; 34 upregulated and 23 downregulated), and 43 DEGs had previously been shown to be associated with several other neurodegenerative diseases (other neurodegenerative diseaseassociated genes; 30 upregulated and 13 downregulated), such as multiple sclerosis, Parkinson's disease (PD) and Huntington disease (HD) (Table
+Overall, the number of upregulated genes was greater than the number of downregulated genes.
+These AD-associated or other neurodegenerative disease-associated DEGs are important genes for further research.
+The detailed down/upregulated status of the 57 AD-associated DEGs in each individual dataset is provided in Table
+
+Analysis of the DEG PPI Network and Identification of Hub Nodes
+The 207 DEGs were subjected to STRING v.11.0 to study the PPI network, and 154 nodes were sorted.
+The interaction network was then analyzed using the Network Analyzer tool
+The 154 genes showed varying degrees of distribution, with a maximum degree of 39 and a minimum degree of 1.
+The upper eight nodes (top 5% of all nodes) with high degree and high closeness centrality values were chosen as hub nodes (Table
+These eight hubs (GAPDH, RPS27A, GFAP, B2M, CLU, EEF2, GJA1, and CP) have all previously been found to be involved in the process of AD
+The miRNAs Associated With the AD-Associated and Other Neurodegenerative Disease-Associated DEGs, and the lncRNAs Associated With These miRNAs
+To investigate the interactions between the AD-associated DEGs and non-coding RNAs, miRNAs associated with these genes were analyzed using the DIANA-Tarbase v.8.0 database.
+Of these miRNAs, 48 miRNAs were related to AD (Table
+To investigate the interactions between the other neurodegenerative disease-associated DEGs and non-coding RNAs, 17 miRNAs were identified as being related to AD (Table
+Moreover, most of these miRNAs were in turn regulated by many lncRNAs.
+
+Analysis of miRNA Expression in AD by High-Throughput Data
+To study the predicted expression of the AD-associated miRNAs further, a GEO dataset (GSE16759) studying miRNA was analyzed.
+This revealed 870 differentially expressed miRNAs.
+Detailed information on these miRNAs is shown in Table
+Then, we analyzed the miRNAs common to both GSE16759 and our AD-associated miRNAs, and detected 47 of our AD-associated miRNAs in the GEO data.
+The top 12 significant miRNAs common to both GSE16759 and our AD-associated miRNAs are listed in Table
+
+The Transcription Factors Associated With the AD-Associated/Other Neurodegenerative Disease-Associated DEGs and miRNAs
+By analyzing TF-gene regulation, we found 442 gene-associated TFs (gTFs) associated with 55 AD-associated DEGs (Table
+By studying the regulatory relationships between TFs and miRNAs, we obtained 253 miRNA-associated TFs (mTFs) associated with 50 AD-associated miRNAs (Table
+
+mTF-miRNA-gene-gTF Regulatory Network
+A regulatory network was constructed to study the regulatory interactions further, containing the AD-associated DEGs, the TFs associated with these genes (gTFs), the AD-associated miRNAs associated with these genes, the other neurodegenerative diseaseassociated miRNAs targeting these DEGs, and the TFs related to these miRNAs (mTFs).
+To study the other neurodegenerative disease-associated DEGs further, the TFs associated with these genes (gTFs), the AD-associated miRNAs targeting these genes, and the TFs related to these miRNAs (mTFs) were also analyzed.
+This showed that NFASC and ADAP1 are regulated by the most gTFs, 114 and 111, respectively.
+NFASC is involved in multiple sclerosis
+We also found gTFs for the hub genes Glyceraldehyde-3-phosphate dehydrogenase (GAPDH), ribosomal protein S27a (RPS27A), Glial fibrillary acidic protein (GFAP), Beta-2 microglobulin (B2M), Clusterin (CLU), Eukaryotic elongation factor 2 (EEF2), Gap junction protein alpha 1 (GJA1), and Ceruloplasmin (CP).
+RAB10 and TUBB4B are regulated by the most miRNAs, 25 and 16, respectively.
+Both genes have been reported to be associated with AD
+Analysis of the regulatory network identified the presence of 131 interesting feed-forward loops (FFLs) (Table
+These 131 FFLs involved 22 DEGs (20 ADassociated DEGs and two other neurodegenerative diseaseassociated DEGs), 31 miRNAs (26 AD-associated miRNAs and five other neurodegenerative disease-associated miRNAs), and 28 TFs.
+It was interesting that an FFL was identified between the gene SERPINA3, hsa-miR-27a, and the TF MYC, shown in Figure
+Interestingly, our study found that two other neurodegenerative disease-associated DEGs are involved in such FFLs between the gene STARD7, hsa-miR-433, and the TF SMAD3, the gene STARD7, hsa-miR-31, and the TF SMAD3, the gene TRIM22, hsa-miR-31, and the TF ELK1, the gene TRIM22, hsa-miR-31, and the TF SMAD3, and the gene TRIM22, hsa-miR-31, and the TF SOX4.
+Hsa-miR-433 and hsa-miR-31 have already been reported to be associated with AD.
+Therefore, the associations between AD and the genes STARD7 and TRIM22 were studied further.
+Verification of FFL Between the Gene SERPINA3, hsa-miR-27a, and TF MYC GEO dataset (GSE16759) studying mRNA and miRNA was analyzed.
+This result revealed that SERPINA3 and MYC are upregulated, and hsa-miR-27a is downregulated in AD patients compared with controls.
+Detailed information is shown in Table
+To further verify the results, GSE46579 dataset studying miRNA expression in AD patients and controls blood was analyzed.
+Hsa-miR-27a was shown downregulated in AD patients blood.
+GSE97760 dataset studying mRNA expression was analyzed.
+The expression of SERPINA3 was shown upregulated, however MYC was shown downregulated.
+Detailed information is shown in Table
+
+SNP Analysis of the AD-Associated DEGs
+SNPs corresponding to the AD-associated DEGs were obtained from the MirSNP online database.
+This showed that 1051 miRNAs were related to these SNPs, of which 79 miRNAs were AD associated.
+The results showed that 173 SNPs were related to these 79 miRNAs, and these 173 SNPs were associated with 40 AD-associated DEGs identified in our study.
+The chromosome loci information of these 173 SNPs is shown in Table
+
+DISCUSSION
+In the past decades, research on the progression of AD has been productive, however identification of more potential genes and pathways in the pathogenesis of AD is needed.
+Therefore, large sample studies are essential for studying the effects of genes on the development of AD, and meta-analysis allows new biological insights.
+In this study, we obtained DEGs by meta-analysis merging several AD-related microarray gene expression studies.
+This resulted in eight hubs with high degree and closeness centrality values, which are GAPDH, RPS27A, GFAP, B2M, CLU, EEF2, GJA1, and CP.
+GAPDH co-localizes with most neurofibrillary tangles in the AD brain, and co-immunoprecipitates with abnormal tau antibodies in AD
+The expression level of GAPDH in blood samples from familial AD patients is decreased compared with healthy controls
+RPS27A, a component of the 40S subunit of the ribosome, are associated with AD
+GFAP, an astrocyte-specific intermediate filament, is significantly increased in AD mouse models compared with wildtype mice
+B2M is the light chain of the first major histocompatibility (MHC) antigen.
+Increased plasma B2M results in deposition of amyloid fibrils, which is associated with over 20 degenerative diseases, including AD
+CLU protein, an apolipoprotein, is responsible for clearing amyloid peptide and has neuroprotective effects for AD
+EEF2 is significantly decreased in AD compared with controls
+hsa-miR-27a-3p C1orf132;DLX6-AS1;FLJ37201;IPW;KCNA3;KCNQ1OT1;LINC00548;LINC00662;LOC283070;MIR4534;NEAT1;RASSF8-AS1;RP11-111K18.2;RP11-129M16.4;RP11-175O19.4;RP11-196G18.22;RP11-314B1.2;RP11-361F15.2;RP11-553L6.5;RP11-94L15.2;RP13-735L24.1;RPA3-AS1;SNHG14;TMX2-CTNND1;TOB1-AS1;XLOC_003240;XLOC_008152;XLOC_010463;XLOC_011185;XLOC_013093;XXbac-BPGBPG55C20.2
+
+RPS27A
+(downregulated) hsa-miR-181a-5p AC000403.4;CASC7;CTB-89H12.4;IPW;KCNIP4-IT1;KCNQ1OT1;LINC00506;N4BP2L2-IT2;RP11-10E18.7;RP11-1134I14.8;RP11-147L13.14;RP11-314B1.2;RP11-361F15.2;RP11-707A18.1;RP1-309I22.2;XLOC_003971;XLOC_010463;XLOC_011185;ZNF883;ZNRD1-AS1
+
+SLC17A6
+(downregulated) hsa-miR-27a-3p C1orf132;DLX6-AS1;FLJ37201;IPW;KCNA3;KCNQ1OT1;LINC00548;LINC00662;LOC283070;MIR4534;NEAT1;RASSF8-AS1;RP11-111K18.2;RP11-129M16.4;RP11-175O19.4;RP11-196G18.22;RP11-314B1.2;RP11-361F15.2;RP11-553L6.5;RP11-94L15.2;RP13-735L24.1;RPA3-AS1;SNHG14;TMX2-CTNND1;TOB1-AS1;XLOC_003240;XLOC_008152;XLOC_010463;XLOC_011185;XLOC_013093;XXbac-BPGBPG55C20.2
+hsa-miR-124-3p AL022344.7;ERVK13-1;KCNQ1OT1;LINC00643;LOC284581;NEAT1;RAD51L3-RFFL;RP11-508N22.12;RP11-731J8.2;RP11-74E22.8;TMEM256-PLSCR3;TTTY15;XLOC_006753;XLOC_010853;XLOC_013174;XLOC_013844
+hsa-let-7b-5p AP001055.6;BACE1-AS;CASC7;HOXA10-HOXA9;KCNQ1OT1;NEAT1;RP11-23J9.4;RP11-391M1.4;RP11-438B23.2;RP11-834C11.4;RP11-923I11.8;ST3GAL5-AS1;TRG-AS1;TUG1;XIST;XLOC_000647
+hsa-miR-128-3p hsa-miR-148b-3p CASC7;CTD-2303H24.2;OIP5-AS1;SLMO2-ATP5E;SNHG14 hsa-miR-16-5p AC005540.3;FGF14-IT1;GS1-358P8.4;KCNQ1OT1;LINC00662;RP11-359B12.2;RP11-361F15.2;RP11-96D1.10;RP3-508I15.20;RP6-24A23.7;XLOC_003546;XLOC_006753;XLOC_008207;XLOC_013174
+hsa-miR-17-5p AC006548.28;CTB-89H12.4;CTD-2015H6.3;GABPB1-AS1;HCG11;LINC00657;MIR6080;MIR8072;PWAR6;PWARSN;RP11-162A12.4;RP11-171I2.1;RP11-361F15.2;RP11-363E7.4;RP11-399O19.9;RP11-553L6.5;RP11-81A1.6;RP11-909M7.3;XLOC_011677
+hsa-miR-18a-5p AC000403.4;CASC7;CTB-89H12.4;IPW;KCNIP4-IT1;KCNQ1OT1;LINC00506;N4BP2L2-IT2;RP11-10E18.7;RP11-1134I14.8;RP11-147L13.14;RP11-314B1.2;RP11-361F15.2;RP11-707A18.1;RP1-309I22.2;XLOC_003971;XLOC_010463;XLOC_011185;ZNF883;ZNRD1-AS1
+(Continued) GJA1, also known as connexin 43, shows upregulated mRNA and protein levels in AD
+Specific deletion of astroglial connexin 43 in AD mice improved cognitive dysfunction
+CP, a ferrous oxidase enzyme, plays an important role in regulating iron metabolism and redox reactions.
+CP expression was significantly downregulated in the hippocampus region of AD patients, resulting in memory impairment and increased iron accumulation
+However, the role of these genes in AD is not very clear.
+The importance of these genes requires further study in AD.
+Studies also have shown that there is a difference between different sexes in neuroanatomy and function, so gender differences may be of great significance in the treatment of AD
+More and more attention has been paid to the gender differences in AD prevalence.
+Some evidence showed that the risk of AD due to APOE ε4 allele is different in two sexes: female carriers are at higher risk of AD than male carriers
+Based on our results, there are also a number of genes which specifically expressed in male and female.
+Such as CHC22 protein encoded by CLTCL1 gene was strongly suggested to play important function in affecting neuronal progenitor cells or immature neurons, and CLTCL1 was significantly upregulated in the development of human brain, especially cerebral cortex
+LPIN1 plays a role in abdominal obesity, insulin sensitivity, and hypertriglyceridemia and it is associated to blood pressure regulation, especially in men
+FOLR1 was reported to be overexpressed in ovarian cancer
+ELAVL2 might be critical for normal neuronal and synaptic function in the brain by regulating important genetic pathways participated in human neurodevelopment
+Analysis of FFL identified the bioregulatory relationship between the gene SERPINA3, hsa-miR-27a, and the TF MYC.
+TransmiR information revealed that hsa-miR-27a is repressed by the TF MYC.
+By combining the results of the DIANA-LncBase and TRANSFAC databases, both MYC and hsa-miR-27a were found to regulate the target gene SERPINA3.
+The expression of hsa-miR-27a is downregulated in AD patients compared with controls
+MYC is also physiologically relevant and is increased in vulnerable neurons in patients with AD
+This suggests that this TF may be highly expressed in the brain tissues of AD patients, indicating that MYC downregulates hsa-miR-27a.
+SERPINA3 is also involved in AD
+Therefore, this validates our findings in AD.
+It also verifies that MYC and SERPINA3 have an activation relationship.
+This activation relationship is also verified in the GEO dataset GSE16759.
+However, in GSE97760, the result is different to ours and GSE16759, which may be due to different samples (The samples in GSE16759 were the tissues, however the samples in GSE97760 were blood).
+There were 173 SNPs identified as being associated with 40 AD-associated DEGs, which were in turn regulated by ADassociated miRNAs.
+This enhances the relevance of these 173 SNPs in AD (Table
+The function of these 173 SNPs hsa-miR-16-5p AC005540.3;FGF14-IT1;GS1-358P8.4;KCNQ1OT1;LINC00662;RP11-359B12.2;RP11-361F15.2;RP3-508I15.20;RP6-24A23.7;XLOC_003546;XLOC_006753;XLOC_008207;XLOC_013174
+hsa-miR-186-5p CTA-292E10.9;CTB-89H12.4;CTC-428G20.3;MAGI2-AS3;MIR4534;NEAT1;OIP5-AS1;RP11-61A14.2;RP1-309I22.2;XIST
+hsa-miR-29a-3p AC005154.6;AC006548.28;H19;KCNQ1OT1;LINC00674;MIR4697HG;NEAT1;RP11-314B1.2;RP11-582E3.6;RP4-630A11.3;THUMPD3-AS1;TTTY15;TUG1;XLOC_004366;XLOC_007942;XLOC_008295 was further analyzed using the SNP annotation tool SNPnexus (
+Several SNPs related to hsa-miR-27a were identified.
+Among them were SNPs rs76463641 and rs79339279, located at the BRSK2 and GNB5 loci, respectively, which are both already known to be AD-associated genes
+Therefore, hsa-miR-27a may be an important AD epigenetic biomarker in our study.
+Furthermore, our study identified several SNPs associated with five other neurodegenerative disease-associated miRNAs involved in FFL of the regulatory network.
+Interestingly, SNPs associated with hsa-miR-34c, hsa-miR-212, hsa-miR-34a, and hsa-miR-7 are located at known AD-associated gene loci.
+Thus, these four miRNAs may be associated with AD, although this requires further study for confirmation.
+Although this study is strict, it has some limitations.
+As the power of gene analysis is affected by the sample size, especially the number of cases, the current study may not have the strongest power.
+In addition, not all brain regions were studied.
+The other limitation is that only one dataset on the HIP brain region was selected to validate the microarray results, as RNA-Seq data for the other brain regions we studied (EC and MTG) in AD is lacking.
+So, further study is required, possibly with larger sample sizes, more brain regions.
+Considering the latent effects of the identified biomolecules in the pathogenesis of AD, experimental studies should be conducted to determine the possible roles of these molecules, but are lacking.
+In addition, the FFL between the gene SERPINA3, hsa-miR-27a and the TF MYC possibly provides new candidates
+
+CONCLUSION
+In this study, based on high degree and closeness centrality values in the gene expression network, eight hub genes were identified, all of which have been reported to be associated with AD.
+By analyzing the mTF-miRNA-gene-gTF regulatory network, 131 FFLs were identified, in which an important FFL between the gene SERPINA3, hsa-miR-27a, and the TF MYC was identified.
+Further study on the lncRNA-mediated regulatory network suggested that these lncRNAs may be significant in AD, and these have not been found in previous studies.
+Moreover, 173 important SNPs were identified by SNP analysis, which may be helpful for predicting AD at an earlier stage.
+
+
+FIGURE 1 | P-value vs. number of detected DEGs for individual analysis as well as meta-analysis.
+In each individual dataset, moderated-t statistics was used to generate p-values while adaptive weight and Fisher's methods were utilized to combine these p-values for meta-analysis.
+This figure is generated using the "MetaDE" package in R. (A) The datasets from Entorhinal Cortex; (B) the datasets from Hippocampus; (C) the datasets from Medial temporal gyrus.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Cassette figures of the expression data after standardization.
+
+
+
+FIGURE 3 |
+FIGURE 3 | The number of common genes obtained from entorhinal Cortex (EC) in females and males visualized by a Venn diagram.
+
+
+in R. All results are shown in Additional Figures, parts of which are shown in Figure 2.
+
+
+
+FIGURE 4 |
+FIGURE 4 | The number of common genes obtained from medial temporal gyrus (MTG) in females and males visualized by a Venn diagram.
+
+
+
+FIGURE 6 |
+FIGURE 6 | The interaction network among a FFL nodes.
+The triangle-shaped node represents miRNAs, ellipse-shaped node represents genes, and diamond-shaped node represents transcription factors (TFs).
+
+
+
+TABLE 1 |
+Datasets used in the meta-analysis.
+
+
+
+TABLE 2 |
+DEGs of Alzheimer's disease in different brain regions.
+
+
+
+TABLE 3 |
+Diferentially expressed genes (DEGs) identifed in the meta-analysis of AD datasets.
+
+
+
+TABLE 3 |
+Continued
+
+
+
+TABLE 4 |
+AD and other neurodegenerative diseases associate genes identified from DEGs using GCBI online software.
+
+
+
+TABLE 4 |
+Continued
+
+
+
+TABLE 4 |
+Continued
+
+
+
+TABLE 5 |
+The down/up situation of 57 AD-associate genes identified in the meta-analysis in each individual dataset.
+
+
+
+TABLE 5 |
+Continued
+
+
+
+TABLE 6 |
+The hub genes identified from the meta-analysis DEGs.
+
+
+
+TABLE 7 |
+AD-associate miRNAs associated with the AD-associate DEGs.
+
+
+
+TABLE 7 |
+Continued
+
+
+
+TABLE 7 |
+Continued
+
+
+
+TABLE 8 |
+Other neurodegenerative disease-specific miRNAs associated with the AD-associate DEGs.
+
+
+
+TABLE 8 |
+Continued
+
+
+
+TABLE 9 |
+Su et al.
+Biological Regulation Mechanism in Alzheimer's Disease AD-associate miRNAs associated with other neurodegenerative disease-associate DEGs.
+
+
+
+TABLE 10 |
+The top significant common genes in GSE16759 and our AD-associated miRNA.
+
+
+
+TABLE 11 |
+The expression the gene SERPINA3, hsa-miR-27a, and TF MYC from FFL in different datasets.

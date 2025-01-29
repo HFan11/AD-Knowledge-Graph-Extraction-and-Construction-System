@@ -1,0 +1,341 @@
+Multi-tissue neocortical transcriptome-wide association study implicates 8 genes across 6 genomic loci in Alzheimer’s disease
+Background: Alzheimer's disease (AD) is an incurable neurodegenerative disease currently affecting 1.75% of the US population, with projected growth to 3.46% by 2050.
+Identifying common genetic variants driving differences in transcript expression that confer AD risk is necessary to elucidate AD mechanism and develop therapeutic interventions.
+We modify the FUSION transcriptome-wide association study (TWAS) pipeline to ingest gene expression values from multiple neocortical regions.
+Methods: A combined dataset of 2003 genotypes clustered to 1000 Genomes individuals from Utah with Northern and Western European ancestry (CEU) was used to construct a training set of 790 genotypes paired to 888 RNASeq profiles from temporal cortex (TCX = 248), prefrontal cortex (FP = 50), inferior frontal gyrus (IFG = 41), superior temporal gyrus (STG = 34), parahippocampal cortex (PHG = 34), and dorsolateral prefrontal cortex (DLPFC = 461).
+Following within-tissue normalization and covariate adjustment, predictive weights to impute expression components based on a gene's surrounding cis-variants were trained.
+The FUSION pipeline was modified to support input of prescaled expression values and support cross validation with a repeated measure design arising from the presence of multiple transcriptome samples from the same individual across different tissues.
+Results: Cis-variant architecture alone was informative to train weights and impute expression for 6780 (49.67%) autosomal genes, the majority of which significantly correlated with gene expression; FDR < 5%: N = 6775 (99.92%),
+Bonferroni: N = 6716 (99.06%).
+Validation of weights in 515 matched genotype to RNASeq profiles from the CommonMind Consortium (CMC) was (72.14%) in DLPFC profiles.
+Association of imputed expression components from all 2003 genotype profiles yielded 8 genes significantly associated with AD (FDR < 0.05): APOC1, EED, CD2AP, CEAC AM19, CLPTM1, MTCH2, TREM2, and KNOP1.
+We provide evidence of cis-genetic variation conferring AD risk through 8 genes across six distinct genomic loci.
+Moreover, we provide expression weights for 6780 genes as a valuable resource to the community, which can be abstracted across the neocortex and a wide range of neuronal phenotypes.
+
+Background
+Alzheimer's disease (AD) is a progressive, incurable neurodegenerative disease accounting for 60-70% of all dementia diagnoses
+Late-onset Alzheimer's disease (LOAD) comprises over 95% of AD diagnoses and is composed of a diverse, largely unknown set of etiologies
+The mechanisms of AD remain insufficiently explained, despite clear Alpha-Beta plaque and Tau neurofibrillary tangle neuropathology.
+Additionally, known highly penetrant genetic variants from familial-based cohorts with early-onset Alzheimer's disease (EOAD) implicate genes such as APP, PSEN1, and PSEN2.
+Despite clear pathology and known risk factors, AD therapeutic clinical trials have consistently failed
+Elucidating the mechanisms by which AD genetic risk loci contribute to AD disease and disease progression is instrumental in the development of future impactful therapeutics.
+While genome-wide association studies (GWAS) identified some candidate loci associated with AD risk, genes targeted through cis-genetic risk factors remain unclear
+Likewise, postmortem bulk-cell transcriptomics show vast expression changes across multiple neocortical regions; however, it remains difficult to identify which are driving AD from expression changes merely caused by the disease state of widespread cell death and tissue degeneration
+Transcription-wide association studies (TWAS) help provide this associative bridge and mechanistic direction of effect between genotype, transcript, and disease status
+TWAS leverages the cis-genotype region surrounding an expressed gene to predict the cis-heritable component of a gene's expression, which in turn can be associated to disease status using GWAS summary statistics.
+We modified the FUSION pipeline
+Imputed gene expression was validated in CommonMind Consortium (CMC) DLPFC.
+Using our trained models, we imputed gene expression into a large, recent GWAS cohort
+Following correction multiple testing, joint conditional probability testing (JCP), and summary Mendelian randomization (SMR), we discover eight candidate AD risk genes APOC, EED, CD2AP, CEACAM19, CLPTM1, MTCH2, TREM2, and KNOP1.
+Expanding associated genes into gene sets using coexpression yielded enrichments for specific cell-type marker sets particularly microglial, oligodendrocyte, and astrocyte cell populations and cellular functions such as protease binding, myeloid, and leukocyte regulation/activation, regulation lipid/lipoprotein, RNA splicing, and steroid regulation.
+We identify 8 genes across six distinct genomic loci associated to AD through gene expression attributable to their cis-genetic variation.
+Trained gene expression weights are a community resource which can be abstracted to multiple phenotypes and gain further insights from large genotyped cohorts to maximize the informativeness of invaluable and rare patient material
+To this end, we provide a valuable resource to the community in the form of predictive gene expression weights which can be leveraged across a wide range of neurological phenotypes.
+
+Methods
+
+Ancestry analysis
+Ancestry analysis and clustering was performed to identify individuals with northern and western European ancestry from the combined ROSMAP, Mayo, and MSBB cohort.
+Briefly, phase I 1000 Genomes data
+Genotype data was combined across MSBB, Mayo, and ROSMAP cohorts, filtered for 1000G overlapping SNPs, and combined with 1000G data from the four reference ancestral populations.
+PCA was performed using Plink (v1.9) on SNPs passing filtering: minor allele frequency > 1%, missingness < 0.1, maximum minor allele frequency < 40%, and independent pairwise linkage filter window of 50 Kb at 5 Kb steps and an r-squared threshold of 0.2.
+PCA results were visualized along PC1 (50.7%) and PC2 (31.6%).
+Genotype clustering to identify clustered genotype profiles was performed with the R package GemTools
+The clustering of genotype profiles was performed on all PCs describing greater than 1% of variation.
+Genotypes were recoded for Gem-Tools clustering in plink similar to the PCA but with the added flags: --recode12, --compound-genotypes, --geno 0.0000001.
+Ancestrally matched CEU samples were identified as any sample genotypes belonging to one of the three out of eight clusters to which contained 1000G reference CEU individuals (Additional file 1: Fig.
+Iterative normalization was performed to regress significant covariates for individual studies including, but not limited to, diagnosis, age at death, sex, and post mortem interval (Additional file 2: Table
+Diagnosis was regressed as is common practice in TWAS and eQTL studies as genetic allele risk has been found to be largely condition-independent
+Post quality control and normalization, 888 RNA-Seq samples from all three studies (ROSMAP (DLPFC N = 481), Mayo (TCX N = 248), and MSBB (PHG N = 34, IFG N = 41, STG N = 34, FP N = 50) were matched to 790 CEU ancestrally matched individuals (Fig.
+Genotypes were represented multiple times for a subset of MSBB individuals to create the 888 unique genotype-expression pairs.
+Among the 60 ancestrally matched MSBB genotypes, 15 were profiled in all four tissues, 22 were profiled in three tissues, 10 were profiles in 2 tissues, and 13 were only profiled in one of the four tissues.
+The final training set contained 275 designated AD cases, 181 designated controls, and 432 genotype-phenotype profiles which failed to meet a diagnostic case/control status from neuropath and cognitive assessments.
+
+Defining the TWAS training set
+
+Training TWAS weights
+Multiple regions per-individual were assayed, in such cases both expression profiles were paired to the individual's genotype in the training set.
+The resulting training set consisted of 790 ancestrally clustered genotypes matched to 888 normalized, scaled RNA-Seq profiles with diagnosis regressed.
+Weights predicting gene expression were trained on matched genotype-RNA-Seq profiles and then used to impute the expression components of all 2003 genotypes in our CEU ancestrally defined cohort.
+The FUSION software
+The FUSION pipeline script was altered cross-validating cohorts of multiplesamples per-individual, this capacity also ensured that each cross-fold validation sample was within 5% of the size every other fold and could accept pre-scaled expression values with specification of an additional flag --scale 1. Gemma (v0.98.1) calculated the cis-heritability of scaled expression using all SNPs denoted in the LD-Reference panel and within 1 MB window centered on the gene's TSS for all 13650 autosomal genes.
+Weights were trained using all five TWAS models (blup, bslmm, lasso, top1, enet) for the 6780 genes with a significant cis-heritability (p < 0.01).
+To support the computational requirements of all five models, the FUSION software was altered to run on 5 threads and run in 14x parallel across an AWS c5.18xlarge (72 core 144 MB) EC-2 instance.
+All supporting files for training weights are available on Synapse
+
+Expression imputation and TWAS gene associations
+The heritable component of gene expression was imputed for 6780 genes with trained weights.
+Despite being trained on only the 790 individuals with 888 matched RNA-Seq profiles, expression components based on cisgenotype were able to be imputed for the entire combined Mayo, MSBB, and ROSMAP genotype cohort of 2003 CEU ancestry-matched individuals on an AWS r3.8xlarge (32 core 144 MB) EC-2 instance.
+While expression components were able to be imputed for 2003 genotypes, weight training was only able to be performed on the matched 888 genotype to expression profiles.
+Association of AD cases versus control using Kunkle et.al GWAS summary statistics
+AD case and control designation was specified with strict neuropathological diagnosis criteria cutoffs as specified in supplementary table 5.
+Only 635 out of 2003 ancestrally matched individuals from the combined Mayo, MSBB, and ROSMAP genotypes were designated as AD cases (N = 404) or controls (N = 231) (Fig
+
+CMC DLPFC validation
+CMC count data was ingested and processed similar to the AMP-AD transcriptome data.
+An iterative normalization model was deployed to identify significant covariates and regress them from the expression data before scaling the data (Additional file 2: Table
+Genotype data was profiled with Affymetrix GeneChip Mapping 5.0 K Array and a custom version of the Illumina Infinium CoreExome-24 v1.1 BeadChip (#WG-331-1111).
+Raw data was filtered to remove SNPs with: zero alternate alleles, MAF < 1%, genotyping rate < 0.95, Hardy-Weinberg p value < 1 × 10 -6 , and individuals with genotyping rate < 0.95.
+Imputation was performed using eagle, Minimac, and the HRC Reference Panel
+Imputed variant data was filtered for SNPs present in the LD reference panel using Plink (v1.9).
+CMC data was withheld from training gene weight models for the purpose of validating gene weights in an independent cohort, blinded from the training models.
+Expression values were imputed, and Kendall correlation values were calculated comparing imputed gene expression to the scaled, assayed expression values.
+Correlation test values were FDR corrected for the number of matched comparisons N = 6643.
+
+JCP, SMR, and COLOC analysis
+To assess the independence of these associations within their respective 1 MB windows, JCP testing was performed
+In order to replicate our AD associations, SMR
+Correction for 18 multiple comparisons was applied for replication of associated genes (Additional file 2: Table
+JCP analysis was run on all candidate hit regions with FUSION.post_process.R to disentangle signal within regions with multiple significant genes by examining the probability that multiple associations occur simultaneously (jointly).
+This analysis module helps identify genes which are associated irrespective of surrounding genes (Marginal) from those which rely on surrounding loci (Conditional)
+COLOC analysis was carried out to examine the probabilities that the expression-AD phenotype signals for the remaining targets were driven by the same underlying genomic variant etiology
+
+GWAS enrichments
+In order to examine whether the subset of genes with trained TWAS weights were enriched with variants more likely to regulate gene expression within their centered 1 MB window compared to brain expressed genes without trained weights or the rest of the genome, summary statistics for both Kunkle et al.
+Wilcoxon rank-sum tests were performed comparing p value distributions between SNPs near genes with trained weights versus those without, as well as within and intergenic regions (Additional file 2: Fig.
+
+Gene set expansion and cell type analysis
+To examine functional enrichments and identify potential processes driving AD, we used coexpression to build out a gene set focused on each TWAS associated gene.
+We first wanted to consider the possibility that another gene within the 1 MB window was co-regulated with our identified gene of interest and therefore could be the causative gene.
+For all 6 tissues, Variable Bayes Spike Regression
+If the mean correlation of a gene within the 1 MB cis-regulatory region was greater than 0.1, the additional gene was also correlated to all other transcribed genes for all six tissues.
+The only gene that met this criterion and was added for further analysis was APOE, as it resides within the 1 MB window surrounding APOC1.
+For each gene or in the case of the APOC1 locus, APOC1 and APOE, the mean partial correlations across all 6 neocortical tissues were used to enrich for co-expressed functionally related genes.
+The elbow plots indicating the decay of included genes as the standard deviation of mean partial correlations moves away from the centered mean of zero.
+This was used to draw cutoffs for inclusion into the expanded gene set at values of 0.7 (TREM2), 1.3 (KNOP1, CD2AP, MTCH2, EED), and 1.7 (APOC1) (Fig.
+For cell-type enrichments, TWAS expanded coexpression gene sets were analyzed for enrichment in cluster-specific marker genes from Lake et al.
+Odds ratios were calculated with the percent overlap of a gene set and cell-type specific marker gene list divided by the expected percentage of overlap.
+Significance was calculated with a two-sided exact binomial test, FDR < 0.05 corrected for 35 (Lake) and 41 (Mathys) comparisons.
+For cell process enrichments, a multiscale gene set expansion was employed, foundationally based on small scale enrichment of expanding the candidate TWAS gene to the top 50 bootstrapped partial regression inclusion statistics averaged across all tissues.
+The second expansion was performed by leveraging pathway commons protein-protein interaction databases from Pathway Commons
+All pairwise gene-gene interactions containing a gene member with the initial gene set expansion were extracted, and the total gene set was expanded into a broad and narrow range gene set by including any gene which appears more than once (broad) or more than twice (narrow).
+Ensembl gene IDs were translated to gene symbols and filtered for brain relevance by requiring them to be expressed in at least one brain region.
+These gene sets were then submitted to EnrichR
+
+Results
+
+Training and validating TWAS weights
+A total of 6818 (49.95%) genes had significant cis-heritability estimates (p value < 0.01) and therefore had weights trained for them; only 6780 of 13650
+CMC data was comprised of 515 individually matched genotype to expression profiles with a set of 6756 expressed genes overlapping the trained weights, representing 99.6% of all trained weights.
+Kendall rank correlation values between imputed expression components and observed expression were right-skewed towards one (X = 0.13 ± 0. Given the threshold of expression heritability required to train weights for a given gene, it could be expected that variants regulating gene expression would be enriched within 1 MB of genes with trained weights versus genes which did not meet the heritability threshold.
+We looked for enrichment of low p value SNPs within the 1 MB widow centered on genes with trained weights to test this assumption.
+Variants from Kunkle et al.
+
+S.6a
+).
+The first were the autosomal variants within the 1 MB window of genes which had trained weights; the second consisted of autosomal variants within the 1 MB window of genes which did not meet the 1% heritability threshold to have weights trained for them.
+The final group of variants was termed intergenic and consisted of all variants outside of a 1 MB window centered on any of the 13650 expressed genes in the training dataset regardless of whether predictive weights were able to be trained for the gene.
+Variants within 1 Mb of genes meeting the heritability threshold versus were significantly enriched in lower GWAS p values than those within 1 MB of genes below the heritability threshold (p < 2.22 -16 Wilcoxon rank-sum) as well as intergenic variants (p < 3.70 -15 Wilcoxon rank-sum).
+To confirm this result, the same analysis was performed with variants from Styrkarsdottir et al.'s
+This outgroup confirmed enrichment for associated variants within genes of higher heritability versus those of lower heritability (p < 2.22 -16 Wilcoxon rank-sum) as well as intergenic variants (p < 2.22 -16 Wilcoxon rank-sum).
+Despite potential edge cases, such as genes regulated from long distance LD, genes in MHC regions, and trans-regulatory effects, this analysis suggests that our weights are enriched for genes under a higher degree of cis-genetic modular control, although the rate at which linkage-disequilibrium affects SNP independence is unknown.
+The outgroup bone density GWAS dataset confirms that this enrichment is for genetic variants controlling gene expression irrespective of AD phenotype, and tissue context, supporting these weights as a general resource across neocortical regions for generalizable use across multiple phenotypes.
+
+Alzheimer's disease TWAS
+Imputed gene expression components were associated with AD through implementation of the FUSION pipeline.
+This analysis yielded 18 preliminarily significant associations across 8 regions after correction for multiple comparisons (FDR < 0.05) (Fig.
+JCP testing resulted in dropping 6 preliminary associations as a result of marginal association (Fig.
+FDR correction of the JCP p value resulted in dropping an additional 4 targets due to non-significance.
+Association of all remaining genes was further supported by SMR (Additional file 2: Table
+The remaining 8 genes comprising 6 distinct non-overlapping 1 MB genomic regions and are significantly associated to AD after JCP and SMR with FDR corrected p values are as follows: APOC1 (JCP = 2.22e-22, SMR = 3.41e-4), EED (JCP = 3.373e-5, SMR = 2.50e-4), CD2AP (JCP = 2.96e-5, SMR = 2.66e-4), CEACAM19 (JCP = 3.27e-5, SMR = 1.00e-2),
+CLPTM1 (JCP = 4.04e-3, SMR = 2.58e-3), MTCH2 (JCP = 0.011, SMR = 3.32e-6), TREM2 (JCP = 0.021, SMR = 2.64e-3), and KNOP1(JCP = 0.039, SMR = 2.50e-4).
+All gene associations except MTCH2 and KNOP1 replicated and survived JCP testing when summary statistics from Jansen et al. were used instead of Kunkle et al. summary statistics.
+
+Cell type specificity and pathway enrichment
+Expanded gene sets of genes co-expressed to TWAS nominated AD-associated genes were built empirically for each region's gene set based on membership decay given increasing standard deviation cutoff (Fig.
+Distinct cell type enrichments were seen comparing gene sets to the cell type-specific marker lists observed in Lake et al.
+APOC1 and TREM2 coexpression sets were enriched in astrocyte and microglial markers respectively.
+The CD2AP gene set was enriched within endothelial, pericytes, and oligodendrocyte expression signatures.
+KNOP1, CEACAM19, MTCH2, and EED co-expression gene set was not enriched within any of the cell-type specific expression sets, but showed sporadic enrichments in neuronal cell types (Fig.
+CLPTM1 was enriched across neuronal populations, oligodendrocytes, and astrocytes (Fig.
+Notably, the largest two single-cell marker gene sets, derived from excitatory Table
+Blue denotes those only marginally significant after JCP, while green represents independently significant genes neuronal populations, Ex6 and Ex11, were more prone to enrichment.
+This could have been due to their containing significantly more genes than the other gene sets, which contain 850 (Ex6) and 747 (Ex11).
+Cell process-enriched gene sets were built with a multiscale approach combining pairwise inclusion statistics with protein-protein interactions.
+Both a wide inclusion cutoff and a more stringent inclusion cutoff produced a permissive and conservative gene set for each candidate gene (see the "Gene set expansion and cell type analysis" section).
+APOC1 was enriched for multiple immune response signaling pathways, phagocytosis, and immune activation consistently across both enriched gene sets (Fig.
+CD2AP was enriched for cellular responses to lipids, protein localization, and responses to multiple molecular compounds (Additional file 1: Fig. S.8).
+EED, CLPTM1, and CEACAM19 were consistently enriched for RNA, mRNA processing, RNA splicing, and RNA translation processes.
+In addition to high amounts of transcription relevant overlap between the three candidate genes, distinction of enrichments of viral gene expression response (EED), protein catabolic processes for (CLPTM1), and myeloid/megakaryocyte differentiation (CEACAM19) were observed (Additional file 1:
+
+Discussion
+We trained predictive models to impute gene-expression components attributable to cis-variation across multiple neocortical tissues using a well-powered training set compared to the field of TWAS studies
+This is the first pan-cortical analysis and is broadly abstractable throughout the neocortex, providing a valuable resource to investigate a multitude neurological conditions and disorders.
+While it is commonly accepted practice in TWAS studies to combine tissues to enhance the power of predictive weight models, specifically including a range of neocortical structures relevant to AD, we sought to specifically identify drivers of AD capable of working across these diverse regions while also maximizing the sample size of valuable neuronal tissues derived RNA-Seq samples.
+Beyond AD, there are a number of neuropsychiatric conditions schizophrenia, depression, and ASD to name a few, which affect the neocortex as a whole.
+As AD disease status was regressed, a common practice in TWAS and eQTL studies from training set expression data, our trained weights represent a valuable resource capable of giving insight into the mechanisms of neocortical phenotypes
+We leveraged these weights to perform a TWAS between Alzheimer's cases and controls, revealing 8 candidate genes across 6 distinct regions which passed multiple filters for significance after correction for JCP and SMR replication.
+We used the Jansen et al.
+AD GWAS study
+The two genes that failed to replicate after correction for multiple comparisons were MTCH2 and KNOP1, which were not identified in Jansen et al.
+Importantly, as imputed expression is dependent on genotype, gene expression is associated with AD directly through underlying regulatory cis-genetic risk factors.
+These methods can have difficulty in training expression weights for relevant genes which have a high variance or are regulated under trans-regulation such as miRNA mediated transcript decay.
+Likewise, even though we detect a strong signal for TREM2, a known risk factor predominantly expressed in microglia, a low representation cell type, there remains a possibility that our signal is biased towards cell types of greater representation.
+While bulk RNA sequencing is potentially confounded by cell proportion, our signal supports previous work implicating microglial contribution to AD pathology and disease mechanism.
+As new single-cell genomics technology increases the available datasets on human postmortem cell lineages in future work will be needed to focus on genotype to expression linkage methods such as TWAS in this context.
+Larger sample sizes and a wider array of neocortical tissue types may help mitigate these difficulties; however, the vital nature of these biospecimens makes it understandably difficult to address completely.
+Co-regulation within the cis-genetic window is a possible confounder in any TWAS analysis, as a more stably expressed co-regulated gene could possibly produce a more robust association than the true causative disease-linked gene
+This effect, distributed across a region, can coordinately drive AD disease mechanism through multiple genes within the locus.
+With the exception of APOE being highly coexpressed with APOC1, no other gene within a window is appreciably coexpressed with the TWAS candidate gene, granting confidence in our 8 candidate genes.
+The inclusion of a diverse set of brain regions into the training set may disrupt co-regulation based on tissue-specific expression and differential disease impact across brain regions could introduce variance into the model.
+This is a particular strength of our study.
+However, as AD pathology affects all of our included regions, fundamental driving risk genes could be expected to be identified across our neocortical tissue set.
+more genetic, molecular, and biological process factors are associated with AD, methods such as TWAS represent a vital way to connect lines between these tiers of evidence, building a clearer picture of AD mechanism throughout the brain.
+While it is important to consider the whole locus in the context of our TWAS associations, this evidence supports our associated genes.
+
+CD2AP, Chr6
+JCP analysis supports CD2AP as the most likely linked gene within this locus, an observation that is consistent with broader biological investigations implicating upregulation of CD2AP in AD.
+Colocalization analysis resulted in a 99% probability that GWAS association signal and functional TWAS signal for CD2AD originate from shared causal variants (Additional file 2: Table
+All four of the largest GWAS studies performed looking at AD genetic associations have found variants that point to CD2AP
+The biological role of CD2AP involves dendritic targeting of APP to the intraluminal vesicles (ILV), which functions as the post-synaptic lysosomal complex, for degradation
+Targeting APP to the ILV leads to proteolytic clearance, decreases the shared time spent with BACE within the endosomal complex, and results in decreased amyloid secretion.
+CD2AP knockdown impairs targeted APP degradation, allowing APP and BACE to co-exist within the early endosomal compartment and increasing amyloid production
+Accordingly, CD2AP over-expression drives APP localization from Rab5+ early endosomes to Rab7+ late endosomes, leading to lysosomal degradation and decreased amyloid secretion
+Autosomal dominant AD mutations, associated with EOAD, resulted in enlargement of the early endosomal compartment and elevated levels of the BACE-cleaved APP carboxyterminal fragment (CTFbeta) in cortical neurons derived from IPSCs
+This work supports the emerging viewpoint that perturbations in endocytosis play a fundamental role in AD biology.
+Towards its role in AD, CD2AP operates in concert with BIN1 as a functional regulation mechanism.
+While CD2AP promotes trafficking towards ILV for degradation in the dendrites, BIN1 targets BACE from the early endosome back to the cell surface within axons, preventing the colocalization of APP and BACE in endosomal compartments and decreasing the levels of secreted amyloid.
+While it may be too narrow a perspective to look only at amyloid biogenesis for linkage with disease mechanism, it provides one plausible framework for consideration.
+Expanded gene set enrichment of CD2AP identifies a range of processes implicated in both the regulation of tissue development as well as responses to lipid and organic cyclic compounds (Additional file 1:
+
+Fig. S.8)
+. Other potential biological roles can be seen in mice, where CD2AP is implicated in blood brain barrier function
+CD2AP's role in AD biology has been predominantly examined in neurons, while our cell type enrichments point to the primary involvement of endothelial, oligodendrocyte, pericytes, and astrocytes.
+Future studies exploring the function of CD2AP in non-neuronal cells may prove useful in developing a broader perspective of CD2AP function in AD pathogenesis
+
+EED, Chr11
+EED was identified by Kunkle et al., but not by three other major AD GWAS from the last few years
+One possible explanation is that the EED locus contains PICALM, a known AD risk factor, and could lead EED to be overlooked by other types of studies.
+We do not believe that PICALM explains the TWAS risk identified here for a number of reasons.
+Colocalization analysis yielded a high probability (H4 p = 0.69) that the GWAS signal and EED functional association arise from shared causal variants.
+While there is a non-zero probability (H2 p = 0.18), our signal arises only due to GWAS association, which may be a function of EED risk variants being in linkage with PICALM risk variants (Additional file 2: Table
+PICALM is positively associated with AD as it is involved in clathrin-mediated endocytosis of APP and subsequent generation of amyloid
+This infers that overexpression of the loci's regulated gene target is protective against AD, and this means the valence of the effect runs opposite to PICALM's.
+Given the colocalization results, it is possible that different AD risk variants within this region affect both EED and PICALM transcription and are affected by partial linkage.
+Alternatively, EED is a component of the polycomb repressive complex 2 (PRC2) that functions as a histone methylase depositing the repressive mark H3K27
+Targeting EED and the PRC2 complex plays a role in synaptic plasticity, as genetic ablation of EED impacts long-term potentiation, a surrogate measure to hippocampal memory function
+Additionally, EED promotes neurogenesis within the hippocampus, potentially making the brain more resistant to age-related neurodegenerative changes
+Interestingly, the EED-expanded gene set was enriched for many processes involving translation and RNA splicing, two biological domains that would be impacted by heterochromatin regulation (Additional file 1: Fig. S.9).
+This association remains interesting given the potential roles of both EED and PICALM in AD biology, and further study is needed to fully understand the roles of each gene's contribution to the disease risk.
+
+MTCH2, Chr11
+MTCH2, or mitochondrial carrier 2, a SLC25 family member of transporters, which localizes to the inner mitochondrial MTCH2 has been identified as an AD risk factor
+Previous studies implicated risk variants regulating SPI1
+Knockdown of SPI1 in microglia have implicated its role in regulating of microglial genes involved in phagocytotic activity driving AD as a potential target for treatment.
+MTCH2 is negatively associated with AD (Z value = -5.73
+Table
+This reinforces that MTCH2 is the associated gene over SPI1, as knockdown of SPI1 reduced AD pathology.
+Colocalization analysis of this target feature showed a high probability (H4 p = 0.993) that MTCH2 functional association and GWAS signal arose from shared causal variants.
+This adds confidence GWAS signal from previous AD studies are acting through MTCH2.
+The biological role of MTCH2 in the brain is unclear.
+MTCH2 is known to contribute to adipocyte function and regulation of lipid metabolism
+However, MTCH2 clearly has a role outside of adipocytes, as inhibition of MTCH2 increases products of metabolism, such as pyruvate and pyruvate dehydrogenase
+Our gene set enrichment analysis further supports MTCH2 involvement across a wide array of metabolic processes (Additional file 1: Fig. S.10).
+MTCH2 knockout mice exhibited deficits in both metabolic processes and hippocampal dependent spatial learning tasks
+There are known links between nutrition, specifically cholesterol consumption levels, in AD
+Concordantly, there are associations observed between obesity
+This does not account for the spatial learning deficits, suggesting that this is not the whole answer.
+Yet, consistent with a non-neuronal locus of effect, we did observe that the MTCH2-expanded gene set is enriched for microglial and oligodendrocyte cell type markers (Fig.
+MTCH2 knockout mice exhibit elevated levels of microglia and diminished synaptic density in the basal forebrain, both of which could be explained by perturbations in microglial and oligodendrocyte function
+The mechanisms through which MTCH2 exerts its influence upon AD pathogenesis are currently not fully elucidated; additional studies will be necessary to fully understand the relevant biology.
+
+KNOP1, Chr16
+KNOP1 is a lysine rich nucleolar protein lacking direct publications or much knowledge of its biological function; downregulation is associated with AD risk (Table
+The KNOP1 gene resides within the IQCK locus, and Kunkel et al.
+IQCK was a novel genomewide locus from the Kunkle et al.
+What data exists for KNOP1 suggests that it associates condensed chromatin during mitosis, which is partially supported by AP2M1 a KNOP1 yeast twohybrid binding partner identified by the Human Reference Interactome (HuRI)
+This preliminary evidence aligns with the KNOP1 expanded gene set enrichment which shows a strong signal for mitotic cell phase transition and regulation of DNA-binding transcription factor activity (Additional file 1: Fig. S.11).
+Intriguingly, the entire locus, similar to variants in the MTCH2 locus, is implicated in obesity
+Colocalization analysis yielded a high probability that GWAS and functional associations were driven by shared genetic risk factors (H4 p = 0.809) (Additional file 2: Table
+We hope that the finding that KNOP1 is associated with the AD risk will inspire future studies into its specific function.
+
+TREM2, Chr6
+Identification of TREM2 in this study is consistent with previous work and knowledge in AD, as TREM2 is one of the most widely studied genes in Alzheimer's disease, with links to both amyloid and tau pathology.
+TREM2 is expressed almost exclusively in the microglia, and it is a sentinel gene linking neuroinflammation to AD
+TREM2 null mutant mice crossed onto APP-PS1 AD transgenics exhibit deficits in microglial recruitment to amyloid plaques and increased spread of pathological tau
+Coding variants in TREM2 are estimated to confer a 2-4-fold increase in AD risk, higher than any gene other than APOE
+Interestingly, APOE binds to TREM2, leading to activation and recruitment of the microglial cells, which elicits both phagocytic and proinflammatory responses
+While microglial cells seem to be represented in a greater proportion in AD brains, scRNA-Seq studies have found microglial populations to be a small fraction of total cell types regardless of disease status
+Consistent with TREM2 function, our expanded TREM2 gene set expression was enriched for immune myeloid cellular lineages and cell process enrichments of immune and leukocyte (Fig.
+Interestingly, our TREM2 Z score is -4.52 (Table
+However, TWAS analysis associates only the genetic component of TREM2 expression, inferring that TREM2 genetic risk could function through disruption and dysregulation of TREM2 endogenous function.
+Furthermore colocalization analysis of this target yields a high probability (H1 p = 0.924) that this signal is driven from cis-regulatory variants affecting Trem2 expression but not contributing to the GWAS signal.
+This is consistent with the rare disruptive TREM2 coding variants and recessive loss of function associations with AD versus common expression modulating variants with lower effect sizes.
+
+APOC1 -CEACAM19 -CLPTM1, Chr19
+APOC1, CLPTM1, and CEACAM19 were identified within this study, and all three genes reside within 600 Kb, less than a 1 Mb distance threshold, of each other.
+Due to this proximity, there appears to be complicated co-regulation in this region with upregulation of APOC1 and CEACAM19 associated with AD but downregulation of CLPTM1 associated with AD.
+Interestingly, all three of these genes were also identified in recent GWAS studies
+This locus is particularly infamous for harboring the APOE genes, the largest known LOAD risk allele.
+APOE was the most coexpressed gene to APOC1, and this coexpressed pair had the highest average coexpression of any gene within a cis-locus to an associated gene, strongly supporting the co-regulation of APOC1 and APOE.
+Colocalization analysis for APOC1 and CEAC AM19 exhibit a high probability (H4 of p = 0.996 and p = 1, respectively) that the GWAS signal from this region and the functional gene association are driven from different causal variants.
+This is likely a result of LD within this region (Additional file 2: Table
+Little is known about the specific role of APOC1 in AD; however, as it is also a lipid carrier transport protein that, like APOE, is known to recruit the innate immune system, it may also have a role in regulation of microglial activation.
+More specifically, there are isolated studies which demonstrate linkage between APOC1 and declining cognition and memory in specific ethnic groups
+Consistent with the APOC1 role in lipid transport and immune activation, our expanded cell process enrichments specifically identified phagocytosis and activation of immune response (Fig.
+While APOC1, CEACAM19, and CLPTM1 are associated with AD, both in this study and previous studies
+However, there is a small literature pointing to a role for CLPTM1 in the regulation of GABA receptor trafficking from the ER to the plasma membrane, suggesting that CLPTM1 could regulate inhibitory neurotransmission
+Unlike APOC1 and CEACAM19, colocalization yields high probabilities that this association and GWAS signal arise from shared causal variants (H4 p = 0.359) as well as a high probability that this signal arises only from GWAS signal (H2 p = 0.574).
+While this speaks to the high LD within this window and the dominating signal from APOE, there remains evidence for a distinct regulatory schema for CLPTM1 (Additional file 2: Table
+The regulation of GABA currents could be a synaptic scaling factor, adjusting the responsiveness of synaptic firing.
+Ge et al.
+A recent literature meta-analysis looking at neurotransmitter synaptic dysregulation in AD found decreased levels GABA in AD patients, supporting the potential dysregulation of GABAergic signaling in AD
+
+Conclusions
+We have presented here a TWAS analysis of Alzheimer's using weights trained from RNA-Seq expression values derived from 6 distinct cortical regions to associate genetic risk to expression differences in 404 cases and 231 controls.
+This methodology has shown its power in resolving additional mechanistic insights in the impact of risk variants on transcripts responsible for AD pathology.
+We provide a resource of trained expression weights for 6818 genes which is broadly abstractable across the neocortex and when used in combination with summary GWAS statistics can perform powerful associations across a broad range of neocortical phenotypes.
+
+
+Fig. S1c) which contained 2003 individuals across all cohorts (Additional file 1: Fig. S1[b,d]).
+Broader admixture was observed in the MSBB cohort compared to ROS-MAP and Mayo representative of study recruitment and population (Additional file 1: Fig. S1[e-h]).
+After filtering for variants present within the LD-Reference panel, the final European ancestry filtered population of 2003 individuals was represented by 1,069,623 variants (Fig. 1a).
+Expression profiling from high-throughput sequencing from all three studies: ROSMAP (DLPFC N = 632), Mayo (TCX N = 262), and MSBB (PHG N = 161, IFG N = 187, STG N = 191, FP N = 214) were normalized within study.
+For description of the individual expression data and processing, see supplementary methods (Additional file 1: Supplementary methods sections 3-4).Iterative normalization was performed to regress significant covariates for individual studies including, but not limited to, diagnosis, age at death, sex, and post mortem interval (Additional file 2: TableS1).
+Diagnosis was regressed as is common practice in TWAS and eQTL studies as genetic allele risk has been found to be largely condition-independent
+Post quality control and normalization, 888 RNA-Seq samples from all three studies (ROSMAP (DLPFC N = 481), Mayo (TCX N = 248), and MSBB (PHG N = 34, IFG N = 41, STG N = 34, FP N = 50) were matched to 790 CEU ancestrally matched individuals (Fig.1b, c, TableS4-S5).
+Genotypes
+
+
+
+Fig. 1
+Fig. 1 Experimental design.
+a Sample cohorts from MSBB, Mayo, and ROSMAP were combined across platforms by consensus SNP variant sites.
+Ancestry analysis was performed, and sites within the 2003 CEU ancestrally matched populations were filtered for consensus with the LD reference panel.
+b RNA-Seq samples originated from 6 distinct neocortical regions.
+c The training set data for training TWAS weights consisted of 888 RNA-Seq samples matched to 789 individual variant profiles
+
+
+
+Fig. 2
+Fig.2Transcriptome-wide association study results.
+a Log 10 TWAS association p values by gene shown by genomic location are indicated in black and grey.
+Features passing initial correction for multiple comparisons (above the dotted line), but marginally significant after joint conditional probability (JCP) are shown in purple.
+Those features which are no longer significant after JCP are shown in light blue, while genes surviving JCP are shown in yellow.
+b QQplot of all TWAS p values.
+c An example plot of a region tested for JCP.
+The candidate genes found to be marginally significant, NUP160 and PTPRJ, are colored blue while those found to be jointly significant, MADD and MTCH2, are colored green (upper), while individual SNP p values are colored grey before and blue after conditioning (lower)
+
+
+1 Interaction ( N= 1167 ) vascular endothelial growth factor receptor signaling pathway regulation of phosphatidylinositol 3-kinase signaling Fc receptor mediated stimulatory signaling pathway Fc-gamma receptor signaling pathway Fc-gamma receptor signaling pathway involved in phagocytosis immune response-regulating cell surface receptor sig.
+pathway invpl/ in phagocytosis ERBB signaling pathway phosphatidylinositol 3-kinase signaling inositol lipid-mediated signaling phosphatidylinositol-mediated signaling Fc receptor signaling pathway response to insulin positive regulation of MAP kinase activity immune response-activating cell surface receptor signaling pathway positive regulation of protein kinase B signaling cellular response to peptide immune response-regulating cell surface receptor signaling pathway phagocytosis regulation of protein kinase B signaling response to peptide hormone protein kinase B signaling positive regulation of protein kinase activity regulation of cell activation positive regulation of MAPK cascade positive regulation of kinase activity immune response-activating signal transduction response to peptide immune response-regulating signaling pathway activation of immune response cellular response to organonitrogen compound CEU ancestrally matched genotype cohort of 2003 individuals (Additional file 1: Fig. S.2).
+Imputed expression components based on cis-genotype contribution were correlated to actual expression values for all 888 matched genotype to RNA-Seq profiles which was the inclusion criteria of the training set.
+Kendall correlations were calculated for all 6780 imputed to actual gene expression, resulted in 6775 (99.93%;
+FDR < 0.05, N = 13650) imputed gene profiles significantly correlated with the actual expression and 6716 (99.06%) were significantly correlated after Bonferroni correction (Additional file 1: Fig. S.3a).
+The distribution of correlations was right-skewed towards one (X = 0.24 ± 0.09) (Additional file 1: Fig. S.3b).
+Comparing imputed expression components to actual gene expression for four representative weights (Additional file 1: Fig. S.5) confirmed that weights were not biased by tissue type or cohort, and our regression normalization and expression scaling coupled with changes to the FUSION trained weights specific to the continuous heritable expression difference across our training set (Additional file 1: Fig. S.4[a-d]).
+
+
+11) (Additional file 1: Fig. S.5b).
+FDR correction for multiple comparisons yielded 4874 (72.14%) genes with significant, positive correlations between imputed and actual DLPFC expression (Additional file 1: Fig. S.5a).
+Genes with a significant p value (FDR < 0.05) and positive correlation values all had correlation values greater than 0.061 (Additional file 1: Fig. S.5c).
+
+
+Fig. S.9, S13-14).
+MTCH2 was enriched for purine, deoxynucleotide, and ribo-deoxynucleotide metabolism (Additional file 1: Fig. S.10).
+KNOP1 was the smallest gene set within both the permissive and conservative cutoff groups.
+Nominal enrichments for mitotic cell phase transition and Wnt signaling point to a potential a role in cell-cycle progression (Additional file 1: Fig. S.11).
+TREM2-expanded gene sets showed enrichment for immune response activation, T cell and leukocyte activation, and cell motility and phagocytosis (Additional file 1: Fig. S.12).
+
+
+49.67%) could have non-zero variance expression components

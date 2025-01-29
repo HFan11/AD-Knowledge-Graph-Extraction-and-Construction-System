@@ -1,0 +1,181 @@
+Identification of exon skipping events associated with Alzheimer’s disease in the human hippocampus
+Background: At least 90% of human genes are alternatively spliced.
+Alternative splicing has an important function regulating gene expression and miss-splicing can contribute to risk for human diseases, including Alzheimer's disease (AD).
+Methods: We developed a splicing decision model as a molecular mechanism to identify functional exon skipping events and genetic variation affecting alternative splicing on a genome-wide scale by integrating genomics, transcriptomics, and neuroimaging data in a systems biology approach.
+In this study, we analyzed RNA-Seq data of hippocampus brain tissue from Alzheimer's disease (AD; n = 24) and cognitively normal elderly controls (CN; n = 50) and identified three exon skipping events in two genes (RELN and NOS1) as significantly associated with AD (corrected p-value < 0.05 and fold change > 1.5).
+Next, we identified single-nucleotide polymorphisms (SNPs) affecting exon skipping events using the splicing decision model and then performed an association analysis of SNPs potentially affecting three exon skipping events with a global cortical measure of amyloid-β deposition measured by [ 18 F] Florbetapir position emission tomography (PET) scan as an AD-related quantitative phenotype.
+A whole-brain voxel-based analysis was also performed.
+Results: Two exons in RELN and one exon in NOS1 showed significantly lower expression levels in the AD participants compared to CN participants, suggesting that the exons tend to be skipped more in AD.
+We also showed the loss of the core protein structure due to the skipped exons using the protein 3D structure analysis.
+The targeted SNP-based association analysis identified one intronic SNP (rs362771) adjacent to the skipped exon 24 in RELN as significantly associated with cortical amyloid-β levels (corrected p-value < 0.05).
+This SNP is within the splicing regulatory element, i. e., intronic splicing enhancer.
+The minor allele of rs362771 conferred decreases in cortical amyloid-β levels in the right temporal and bilateral parietal lobes.
+
+Background
+Alzheimer's disease (AD) is a progressive neurodegenerative disorder pathologically characterized by an accumulation of both toxic amyloid-β plaques and neurofibrillary tau tangles in the brain
+Twin studies as well as more recent large-scale genome-wide association studies (GWAS) have demonstrated that genetic susceptibility factors play an important role in the development of the AD, although there is still a substantial portion of missing heritability to be identified
+Increasing evidence suggests that widespread transcriptional changes accompany the onset and progression of AD
+In particular, the aberration in the control of gene expression by alternative splicing is implicated in AD
+Previous whole transcriptome sequencing analyses revealed gene expression and alternative splicing changes in the AD-affected brain regions
+Several alternatively spliced AD candidate genes such as CLU and CD33 were reported to be associated with AD pathogenesis
+Thus, it could provide valuable information on the underlying pathology associated with the AD to identify other alternative spliced genes and AD-associated single-nucleotide polymorphisms (SNPs) affecting splicing regulation.
+Alternative splicing is the process by which a single gene can produce multiple RNA isoforms through the splicing in and out of different portions of the transcript.
+Although it is an important mechanism for increasing biological complexity through generating tissue-specific transcript, miss-splicing can lead to different disease states.
+For example, in humans, more than 90% of genes are alternatively spliced
+alternately spliced exons)
+Furthermore, such transcripts or certain exon skipping are expressed in the tissue-and disease-specific manner.
+Especially more genes are alternatively spliced in the brain than other tissues
+SRE is an ancillary cis-acting element as a part of the splicing machinery that assists a spliceosome to correctly recognize the exon-intron boundary by recruiting activator or repressor Trans-acting RNA-binding proteins (RBP)
+There are four types of SREs, exonic splicing enhancers (ESEs), exonic splicing silencers (ESSs), intronic splicing enhancers (ISEs), and intronic splicing silencers (ISSs).
+Mutation in any sites of SREs changes the binding accuracy of spliceosome to the splice sites and potentially result in the aberrant exon skipping events producing disease-causing proteins.
+Furthermore, 15% of diseasecausing mutation is estimated to be associated with splicing including SREs and splice sites
+It remains difficult to identify novel genes and molecular mechanisms associated with splicing that underlie AD pathological hallmarks due to the nature of studying the brain and neuropathological traits.
+This study explores how transcriptomics, genomics and neuroimaging endo-phenotypes can be leveraged as a means to clarify our understanding of the genetic architecture of AD.
+Using RNA-Seq data from cognitively normal elderly controls and AD-affected human hippocampal tissues, alternative splicing isoforms were evaluated by measuring exon skipping.
+A computational pipeline to identify exon skipping events using RNA-Seq data and a splicing decision model to identify actionable loci among common SNPs for gene regulation were applied in this study to gain insights into the functionality of the variations and emphasized their importance for the AD pathology
+We identified SNPs affecting exon skipping by analyzing sequence-driven alternative splicing models and by scanning the genome for the regions with putative splicing regulatory elements (SREs) motifs
+Aberrant alternative splicing sites were detected that associate with the AD using SNPs within regions affecting the exon skipping as associated with AD-related neuroimaging biomarkers, a global cortical measure of amyloid-β deposition measured by [ 18 F] Florbetapir position emission tomography (PET) scans.
+These results provide a new link between alternative splicing changes and AD.
+
+Methods
+Study sample and RNA-sequencing data analysis RNA-Seq data (bam files) were downloaded from the Allen Brain Atlas (
+RNA was isolated from the hippocampus tissue of brains of AD patients (AD; n = 24) and non-AD elderly controls (CN; n = 50) from the Adult Changes in Thought (ACT) study.
+The ACT study is a longitudinal population-based prospective cohort study of brain aging and incident dementia in the Seattle metropolitan area, as described in detail in previous studies
+RNA sequencing was performed using an Illumina HiSeq 2500 with v4 chemistry, producing a minimum of 30 M 50 bp paired-end clusters per sample.
+Raw read files (bam files) were aligned to the GRCh38 reference genome, as described in detail (
+The average reads of all individual participants (n = 74) were 55,015,989.
+
+Identification of exon skipping events
+A bioinformatics splicing decision model based on our previous study
+First, to estimate the normalized usage for each exon, total reads for each exon were counted from RNA-seq data (bam files with the mapped reads) using HTSeq
+Junction reads are crucial information to know which exon structure is changed.
+However, as we obtained the exon reads from the bam files, we run DEXSeq to measure exon expression level that basically uses exon reads only
+Next, expressed exons (exon skipping events) between AD and CN were identified using a generalized linear regression model in DEXSeq.
+The statistical cutoff as a significantly differentially expressed exon (exon skipping) was false discovery rate (FDR)-corrected p-value < 0.05 and fold change > 1.5, which was calculated with p.adjust function in R, i.e., correction for multiple comparisons was performed using the FDR-based multiple comparison adjustment with the Benjamini-Hochberg procedure at a 0.05 level of significance.
+
+Identification of SNPs in splicing regulatory elements associated with exon skipping events
+We have developed a splicing decision model for identifying SNPs affecting splicing regulatory elements (SREs) with exon skipping by using alignment information for four alternative splicing datasets from the UCSC genome browser: mRNAs from GenBank
+We searched for all potential SRE sites that are perfectly matched with any of these hexamers in intragenic regions (exons and introns).
+Our study included three types of SREs available for this time, ESE, ESS, and ISE according to its location and function without ISS as the data of ISS hexameric sequences are not available.
+We then compiled genotype data and SRE regions with skipping of the adjacent exon to intron or skipping of the exon embedding SRE region, which is a definition of splicing decision model that computationally predict the Fig.
+Using the splicing decision model, we identified SNPs within SREs associated with exon skipping events.
+
+Functional annotation of differentially expressed exons
+The impact of exon skipping events on protein structure and function was evaluated in silico.
+The skipped exons are translated into a functional domain, lead to out of frame through a frameshift, and change their corresponding protein structure using UniProt web browser and RaptorX
+Neuroimaging and genotyping analysis [ 18 F] Florbetapir PET scans downloaded from the Alzheimer's Disease Neuroimaging Initiative (ADNI) were pre-processed as described
+[ 18 F] Florbetapir PET scans were intensity normalized by the whole cerebellum.
+The normalization yielded standardized uptake value ratio (SUVR) images.
+The ongoing ADNI study was launched in 2003 to test whether serial magnetic resonance imaging (MRI), PET, other biological markers, and clinical and neuropsychological assessment could be combined to measure the progression of MCI (mild cognitive impairment) and early AD, as published previously
+Genotyping for ADNI was performed using three different Illumina genotyping platforms.
+We imputed un-genotyped SNPs separately in each platform using MACH and the HRC (Haplotype Reference Consortium) data as a reference panel after standard sample and SNP quality control procedures and selection of only non-Hispanic Caucasian participants
+
+Association of SNPs affecting exon skipping with ADrelated neuroimaging endophenotype
+First, an association analysis was performed for SNPs that potentially affect identified exon skipping events with a global cortical measure of amyloid-β deposition as measured by PET scans in an AD-related quantitative phenotype.
+The global cortical amyloid-β level was calculated as a mean regional SUVR value extracted for the frontal, parietal, temporal, limbic, and occipital lobes using the MarsBaR toolbox implemented in the Statistical Parametric Mapping 8 (SPM8) software (
+Also, a detailed whole brain-based neuroimaging analysis was performed using multivariate models for amyloid-β levels on voxel-by-voxel bases.
+Age at baseline, sex, and years of education were used as covariates for the association test.
+Correction for multiple comparisons was performed using false discovery rate (FDR) correction method at a 0.05 level of significance.
+
+Results
+This study analyzed RNA-Seq data of hippocampus brain tissues from 74 participants from the ACT study.
+Participants were diagnosed as cognitively normal elder controls (CN) or AD patients.
+As shown in Table
+
+Differentially expressed exons in AD hippocampus tissue
+Using the computational pipeline described in Fig.
+After adjusting for multiple comparisons using the FDR method, we identified three exon skipping events in two genes, RELN and NOS1, as significantly associated with the AD (FDR-corrected p-value < 0.05 and fold change > 1.5).
+Two exons in RELN, exons 24 and 37, showed significantly lower expression levels in AD patients compared to CN participants, suggesting that the exons tend to be skipped more in the AD (Fig.
+The exon 24 was predicted to encode a hEGF domain region (PF00008, Fig.
+Furthermore, for AD participants, we investigated whether the Braak stage is associated with the exon skipping event.
+In 24 AD participants, 19 were in the Braak stages 4, 5 and 6.
+Among the 19 AD participants in higher Braak stages, 15 showed significantly lower expression levels of the exon 24 compared to the other 4 AD participants (one-way chi-squared test, p-value = 0.01), suggesting that the exon tends to be skipped more in higher Braak stages of AD participants.
+In NOS1, exon 23 had lower expression levels in AD patients compared to CN participants (Fig.
+Our results suggest that these exon skipping events may affect the function of the corresponding protein products.
+
+Prediction of the effect of the identified exon skipping events on protein
+To characterize the potential impact of the variants on the protein, each variant was analyzed using UniProt web browser and RaptorX.
+All of three skipped exons in RELN and NOS1 resulted in producing a coding sequence which is out-of-frame, potentially generating an undesired protein product.
+As presented in Fig.
+The adjacent exon 23 and 25 showed similar levels of difference but not significant (FDR = 0.154 for both exons, fold change = 1.39 and 1.37, respectively).
+The transcript (transcript1) retaining the exon 24, which encodes the hEGF, likely results in a functional version of the RELN gene, while the transcript which lacks exon 24 will lose the hEGF domain and thus produce the truncated protein product due to the out-of-frame of the exon length (Fig.
+Structural analysis of the truncated version of the protein suggests that exon skipping may be implicated in functional changes of RELN in the AD (Fig.
+The other exon (exon 37) in RELN is presented in Additional file 1: Figure
+Additionally, exon 23 was identified as being skipped in NOS1 (Fig.
+AD participants had significantly lower expression levels of the exon compared to CN (Fig.
+The transcript (transcript1) retaining the exon 23, which encodes a part of the NO_synthase, can be translated into the protein with normal functions of NOS1.
+In contrast, the transcript with the skipping of exon 23 may not only lose the NO_synthase domain but also produce the truncated protein due to the out-offrame of the exon length.
+We also showed the partial loss of the protein structure due to the skipped exon using the protein 3D structure analysis (Fig.
+
+Association of SNPs affecting exon skipping with ADrelated neuroimaging phenotypes
+Next, we performed an association analysis of SNPs affecting exon skipping events with a global cortical measure of amyloid-β deposition as an AD-related quantitative phenotype.
+Using the splicing decision model, we first identified 46 and 11 SNPs in RELN and NOS1, respectively, potentially affecting the identified three exon skipping events (MAF > 1%) from HRC-based imputed ADNI GWAS data.
+We identified one SNP (rs362771) in intron adjacent to the skipped exon 24 in RELN as significantly associated with cortical amyloid-β levels (Fig.
+Furthermore, we performed an unbiased whole-brain-based imaging association analysis using age, sex, years of education as covariates to assess the effect of rs362771 on whole-brain amyloid-β deposition and identified significant associations after adjustment for multiple comparisons using cluster-wide FDR procedure.
+The minor allele of rs362771 conferred decreases in cortical amyloid-β levels in the right temporal and bilateral parietal lobes (Fig.
+As shown in Fig.
+
+Discussion
+Here we developed a computational pipeline for the identification of exon skipping and a splicing decision model for the identification of SNPs affecting exon skipping.
+Altered expression patterns (exon skipping events) within two distinct exon regions of RELN and NOS1 in the human hippocampus affected by Alzheimer's disease (AD) were identified.
+Interestingly, expression levels of identified alternatively spliced exons are decreased in the AD and the minor allele of one SNP in RELN potentially affecting exon skipping negatively correlate with a global cortical amyloid-β burden.
+Our results indicate that essential exon regions for the RELN and NOS1 genes are alternatively spliced in the AD hippocampus compared to cognitively normal elderly controls.
+It was previously reported that RELN delays amyloid-β fibril formation and rescues cognitive deficits in an AD model
+Two major neuropathological hallmarks of the AD are the accumulation of toxic levels of amyloid-β molecules and hyper-phosphorylated tau protein that leads to neurofibrillary tangles.
+Although it was known that RELN and NOS1 were associated with neurologically related traits, the methodology presented here suggests new possible mechanisms by which they may influence AD pathology
+RELN is an extracellular matrix glycoprotein that plays a number of important roles in the central nervous system (CNS) and its dysfunction is associated with AD
+Many studies have found associations between genetic variation in RELN and neurological traits, often using case-control study design
+Characterization of these genetic associations is important however, it lacks mechanistic insight that can be provided with interrogating specific regions of the gene, or incorporating other molecular information, such as gene expression.
+By utilizing a neuroimaging endophenotype, along with transcriptomic information in relation to alternative splicing, we identified differential expression levels among exons in RELN.
+The function of the RELN protein is to help mediate cell migration during brain development by activating a signaling pathway through binding of cell surface proteins
+These pathways mediate the process of tau phosphorylation and a reduction of RELN expression can significantly accelerate amyloid-β deposition in transgenic AD mice
+Thus, differential exonic usage with respect to the AD may produce an isoform of RELN protein that potentially accelerates amyloid-β deposition and/or mis-regulation of tau phosphorylation, both leading to AD-related phenotypes.
+Specific exonic expression appears to play an important role.
+Thus, understanding the role of exon skipping may lead to more consistent conclusions with respect to the role of RELN and other proteins
+NOS1, the other gene identified in this work, has also been of significant interest in relation to heart and neuronal function since nitric oxide (NO) is an important signaling molecule that is produced by NO-producing enzymes, such as NOS1
+NOS can produce significant amounts of reactive oxygen species (ROS) that can lead to damaged proteins.
+Therefore, mis-splicing of NOS1 could lead to increased ROS, and thus increased protein mis-folding and aggregation associated with neurodegenerative diseases (i.e.
+AD).
+Both increased and decreased expression of NOS1 have been associated with a cognitive disruption in relation to the AD
+Therefore, it will be interesting to characterize how the expression of different isoforms and exons contributes to the spectrum of phenotypes related to AD in future work.
+Although both genes had previous connections with neuronal development and splicing
+Since both RELN and NOS1 could exacerbate different mechanisms by which AD arises, it would be interesting for future work to investigate the co-occurrence of variants in these genes and how it impacts neurological function.
+While many advantages of the methodology employed here have been described in detail, it is also valuable to point out some limitations to avoid over-interpretation and reflect on what improvements need to be addressed in future work.
+For instance, our sample size was moderate for this study with respect to the expression analysis.
+Thus, we may have missed some genes with alternative splicing intragenic regions (exons and introns)
+Finally, here we only explored AD, but the methods applied here could be employed to understand the complex gene-trait relationship among other neurological diseases.
+In summary, through our integrative analysis of RNA-Seq, genomics, and neuroimaging data, the RELN and NOS1 genes were identified as having differential exon usages with respect to the AD.
+This work also suggests applying an imaging genetics approach, along with utilizing SRE variants, will help shed light on previously unidentified gene-trait relationships.
+Our study was not able to recapitulate a statistically significant exon skipping or spliced isoforms in any of the historical genes (i.e., including APP
+However we observed there were the marginal signals of ten exons in those genes at the unadjusted p-value < 0.05 and fold changes between -1.5 and 1.2, which might be due to the following reasons, 1) alternative splicing events occur in the tissue-and cell type-specific manner and are even more specific to brain regions
+
+Conclusion
+In conclusion, this study provides evidence that our novel approach can identify significant exon skipping events and genetic variation potentially affecting exon skipping in Alzheimer's disease.
+Between RELN and NOS1, three exons are altered in their expressions in the human hippocampus affected by Alzheimer's disease.
+It also suggests that the functional relationship between exon skipping and protein structures for RELN and NOS1 may be altered in AD pathology.
+Further studies are needed to better understand the functional role that identified exon skipping and SNPs affecting exon skipping play in AD pathophysiology.
+Integration of multiple omics and neuro imaging data in a systems biology approach will provide valuable insights into a possible mechanism underlying AD pathology through exon skipping, thus potentially helping identify novel therapeutic targets.
+
+
+
+Fig. 2
+Fig. 2 Two AD-associated exon skipping events in RELN. a Comparison of the expression levels of each exon between AD and CN participants, indicating two significant exon skipping events (exons 24 and 37) in the AD.
+b Exon structure and the hEGF domain encoded by the skipped exons (UCSC genome browser)
+
+
+
+Fig. 3
+Fig. 3 One AD-associated exon skipping event in NOS1. a Comparison of the expression levels of each exon between AD and CN participants, indicating a significant exon skipping event (exon 23) in the AD.
+b Exon structure and the NO_synthase domain encoded by the skipped exon (UCSC genome browser)
+
+
+
+Fig. 4 Fig. 6 Fig. 5
+Fig. 4 Functional impact of the AD-associated exon skipping event (exon 24) in RELN. a Schema of the potential functional implication of exon skipping and splicing-associated SNP.
+b Normalized expression levels for exon 24 between AD and CN participants.
+c Structure alignment of the pair of transcript1 retaining exon 24 (green) and transcript 2 with the exon skipping (red)
+
+
+
+Table 1
+Demographic characteristics of 74 study samples

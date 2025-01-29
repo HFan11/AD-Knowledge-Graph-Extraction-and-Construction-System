@@ -1,0 +1,302 @@
+A 3D deep learning model to predict the diagnosis of dementia with Lewy bodies, Alzheimer’s disease, and mild cognitive impairment using brain 18F-FDG PET
+Purpose The purpose of this study is to develop and validate a 3D deep learning model that predicts the final clinical diagnosis of Alzheimer's disease (AD), dementia with Lewy bodies (DLB), mild cognitive impairment due to Alzheimer's disease (MCI-AD), and cognitively normal (CN) using fluorine 18 fluorodeoxyglucose PET (18F-FDG PET) and compare model's performance to that of multiple expert nuclear medicine physicians' readers.
+Materials and methods Retrospective 18F-FDG PET scans for AD, MCI-AD, and CN were collected from Alzheimer's disease neuroimaging initiative (556 patients from 2005 to 2020), and CN and DLB cases were from European DLB Consortium (201 patients from 2005 to 2018).
+The introduced 3D convolutional neural network was trained using 90% of the data and externally tested using 10% as well as comparison to human readers on the same independent test set.
+The model's performance was analyzed with sensitivity, specificity, precision, F1 score, receiver operating characteristic (ROC).
+The regional metabolic changes driving classification were visualized using uniform manifold approximation and projection (UMAP) and network attention.
+The proposed model achieved area under the ROC curve of 96.2% (95% confidence interval: 90.6-100) on predicting the final diagnosis of DLB in the independent test set, 96.4% (92.7-100) in AD, 71.4% (51.6-91.2) in MCI-AD, and 94.7% (90-99.5) in CN, which in ROC space outperformed human readers performance.
+The network attention depicted the posterior cingulate cortex is important for each neurodegenerative disease, and the UMAP visualization of the extracted features by the proposed model demonstrates the reality of development of the given disorders.
+Conclusion Using only 18F-FDG PET of the brain, a 3D deep learning model could predict the final diagnosis of the most common neurodegenerative disorders which achieved a competitive performance compared to the human readers as well as their consensus.
+
+Introduction
+Neurodegenerative dementias have a huge negative impact on the healthcare systems globally, especially with increasing older population.
+According to the World Health Organization, there are 50 million persons around the world suffering from dementia and 10 million new cases are anticipated every year
+Alzheimer's disease, which is considered to be the most common neurodegenerative disorder, accounts for approximately 60% of all dementia
+Dementia with Lewy bodies (DLB) is another common neurodegenerative disorder, accounting for up to 30% of all cases of dementia
+Mild cognitive impairment (MCI) is a prodromal form of dementia, defined by cognitive impairment not interfering with activities of daily living, leading to AD, DLB, or other degenerative dementias
+The diagnosis of such disorders is challenging, even for experienced neurologists, making the decision of the use of the appropriate treatment difficult in some cases.
+Therefore, physicians use diagnostic tests such as neurofunctional imaging in order to provide more accurate clinical assessments
+18F-FDG PET scans, which measure cerebral glucose metabolism, have been reported as a useful biomarker for the discrimination of the above-mentioned neurodegenerative disorders
+Deep learning (DL) methods have recently gained more popularity in medical image analysis and in specific in neurodegenerative diseases
+This wide recognition is due to its capability to learn complex representations in imaging data that are not easily detectable by humans
+Most DL models applied in neurodegenerative diseases mainly focus on binary
+However, the utility of such models is limited to the AD population solely, which makes them unable to discriminate from non-AD patterns.
+In addition, it is difficult to validate their robustness in the presence of non-AD dementias.
+The proper diagnosis of dementia patients requires going beyond binary classification and at least recognizing the differences among cognitively normal (CN), MCI and other types of dementia, especially the most common ones such as AD and DLB considering the 3D nature of such scans.
+This study introduces a 3D-CNN model that can predict the final clinical diagnosis of CN, MCI due to AD and patterns of some types of dementia which can represent a challenge in their differentiation for the average reader, like AD and DLB.
+We hypothesized that a well-designed 3D-CNN model could take the advantage of the 3D 18F-FDG PET scans, detect features or patterns in these kinds of patients, and match or even provide better results than the experienced human readers, improving the final diagnostic classification of individuals.
+The model interpretation results indicate specific brain regions which makes the most discriminations among the included neurodegenerative disorders that confirm the findings from the clinical studies.
+
+Material and method
+
+Data acquisition
+The retrospective scans were collected from two different sources (Fig.
+The anonymized scans from patients with probable DLB were collected from the European DLB (EDLB) Consortium,
+The scans were performed according to the European Association of Nuclear Medicine (EANM) guidelines
+Recruited patients were referred to and assessed at outpatient clinics including memory, movement disorders, geriatric medicine, psychiatric, and neurology clinics as previously described in
+Given the retrospective nature of the present study, diagnosis of probable DLB was originally Fig.
+Since Alzheimer's disease neuroimaging initiative (ADNI) includes a larger set of Alzheimer's disease (AD), mild cognitive impairment due to AD (MCI-AD), and cognitively normal (CN), we included those that have no artefacts up to 200 cases per each disorder (except dementia with Lewy bodies (DLB) which the European DLB consortium (EDLB) provided) made according to diagnostic criteria for probable DLB as defined by
+The EDLB also provided several normal cases that we added to the CN database.
+In order to have comparable sample sizes with DLB, up to 200 scans with AD, MCI, and CN were downloaded from the Alzheimer's disease neuroimaging initiative (ADNI)
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.
+Detailed 18 F-FDG PET imaging protocols can be found at ADNI.
+For each case, the latest scans were included.
+ADNI also provides information regarding the conversions from MCI to AD.
+Therefore, the MCI cases are confined to MCI-AD where the latest scans of the MCI cases before conversion to AD during the follow-up period were included in this study.
+For both datasets, final clinical diagnosis was used as the ground truth label.
+Ninety percent of the final dataset (684 cases) was used for model training and internal validation.
+The remaining 10% (73 cases) was used as an independent test set for the model and comparison of the reader's clinical interpretations.
+
+Data preprocessing
+The original DICOM/NIFTI formats were used.
+The PET scans were spatially normalized to match the International Consortium of Brain Mapping template
+The probability maps of gray matter, white matter, cerebrospinal fluid, bone, and soft tissue/air were extracted.
+The skull stripping was done by retaining the voxels with high probability of being gray matter, white matter, or cerebrospinal fluid while discarding those likely being bone and soft tissue/air.
+The normalized and skull stripped scans were then visually inspected to assess their normalization quality and ensure that the spatial normalization converged to an acceptable solution.
+All the brains were positioned approximately in the center of the volume.
+The first 10 layers as well as the last 9 layers of each scan were excluded as they contain very small objects, resulting in having a 3D volume of (95 × 79 × 60).
+Since scans are from various sites, feature-wise normalization was performed using image data preprocessing library in Keras,
+Particularly, we treated each scan as a sequence of 2D images along the axial plane.
+We applied feature-wise normalization for each scan separately such that each 3D voxel was normalized by subtracting feature-specific mean then dividing by the feature-specific standard deviation per each scan.
+
+Model training
+The 3D-CNN model is designed with reference to the architecture of VGG16 CNN
+The model development and training were conducted using Keras library on a computer with Linux Ubuntu 18.09 operating system, one Nvidia Quadro GV100 GPU card with 32 GB of memory, and 36 CPU core Xenon with 128 GB of memory.
+We performed end-to-end training using mini-batches of size 6 and Adadelta optimizer with 0.01 learning rate for 50 epochs.
+Dropout layers with 0.5 rate are used as a regularization method, forcing the network to learn more robust features.
+To prevent the model from overfitting, an early stopping condition was used by monitoring the validation loss in order to end the model training when the model performance stops improving (i.e. less than 0.0001 change in validation loss for 10 epochs).
+The model training was performed through 20 rounds of k-fold cross validation with k ∈ [2, 10] on the training set and then accuracy is reported with confidence intervals (CI).
+The model with the highest validation accuracy is chosen for further fine-tuning using the training set with a stochastic gradient descent optimizer, 0.0001 learning rate, and 0.9 momentum for 50 epochs.
+
+Model interpretation and visualization
+To visualize the attention of the network towards a specific class, we performed an occlusion experiment
+The results show the cross-entropy response of the network given such occluded data as a function of the position of the occlusion box.
+The assumption is that when ignoring a relevant region for the correct classification, the cross-entropy response will be high.
+The maps are then projected using a mosaic of the slices 5 to 54 (to create a 7 × 7 grid) on the axial direction and over layered with the average brain.
+To visualize the metabolism patterns within each clinical diagnosis related to the highlighted brain regions in the occlusion heatmaps, the average normalized brain scan per each class is calculated over all available cases.
+UMAP is a type of dimensionality reduction algorithm
+We used the unsupervised UMAP to visualize (1) the original normalized data and (2) the extracted features by 3D-CNN model (before the classification layer).
+
+Clinical interpretations
+Four board-certified nuclear medicine physicians, R1, R2, R3, and R4, with 16, 13, 8, and 3 years of experience, respectively, performed independent interpretations of the independent test set (73 cases).
+The scans were available in axial, sagittal, and coronal views illustrated using Papaya.js
+volume viewer
+Readers could log in whenever they want, interact with the viewer, and insert their readings including their diagnosis (among the four classes) into the portal.
+Only scans were visible to the readers (unlike natural clinical situations), the same as what had been used to train the deep learning model.
+The inter-rater agreement among the four readers using Fleiss's kappa
+
+Evaluations
+For the external validation, receiver operating characteristic (ROC) curves of the model on the independent test set (i.e., 10% hold-out data) were plotted and the area under the ROC curve (AUC) was calculated with 95% CI.
+For each scan in the independent test set, the majority voting of readers was taken as the consensus clinical diagnosis.
+In case of no consensus, the labels are scattered among the annotated labels, e.g., if an AD case is labeled as AD by two readers, MCI-AD by one reader, and CN by one reader, we calculate it as 0.5, 0.25, and 0.25 for AD, MCI-AD, and CN respectively.
+The sensitivity and specificity of readers' performance and their consensus were plotted in the same ROC space.
+Sensitivity, specificity, precision, F1 score, and the confusion matrix with discussion on the misdiagnosed cases were reported for both the model and the consensus of human readers.
+Cohen's kappa was calculated among consensus diagnosis and model predicted diagnosis.
+
+Model robustness
+In order to investigate the model sensitivity and robustness to other similar dementia (i.e., something that the model has not been trained for), 18F-FDG PET scans for eight frontotemporal lobar degeneration (FTLD) cases were downloaded from the frontotemporal lobar degeneration neuroimaging initiative (FTLDNI) database.
+FTLDNI was funded through the National Institute of Aging, and started in 2010.
+The primary goals of FTLDNI were to identify neuroimaging modalities and methods of analysis for tracking frontotemporal lobar degeneration (FTLD) and to assess the value of imaging versus other biomarkers in diagnostic roles.
+he FTLD scans were pre-processed with the same procedure mentioned before and using the proposed 3D-CNN model; we plot the UMAP as well as the occlusion maps besides the output of the model for these eight FTLD cases.
+
+MMSE-based classification
+To perform further classification analysis and enhance the translational potential of the proposed model, a new model with different split strategies for training and testing datasets was developed using MMSE scores.
+MMSE score is used to assess changes to patients suffering from dementia such low score indicates severe dementia while high score indicates early or mild conditions of dementia.
+Thus, scans associated with high MMSE scores can be challenging for diagnosis.
+We performed data stratification according to MMSE to force the model to get trained on severe cases and tested on mild ones.
+After sorting the cases in each clinical diagnostic class, 80% (439 cases with low MMSE score) were used for training and remaining 20% (112 cases having high MMSE scores in each category) for testing.
+We trained the model using KFCV for 10 rounds.
+Several performance metrics including accuracy, ROC curve, AUC, classification results, and UMAP visualization of dataset using the new model are reported.
+The average age of the patients was 77.6 years for men (between 56 to 92 years old) and 76.2 years for women (between 56 and 96 years old) in the ADNI dataset.
+In the EDLB set, the average age for men was 72.7 (between 48 to 91 years old) and 72.9 for women (between 50 and 86 years old).
+The overall percentage of women in the ADNI set was 35.2% (196 of 556), and in the EDLB set, was 40.2% (81 of 201).
+
+Results
+
+Demographics
+Initially 200 scans (50 per each class) were sampled using stratified random sampling as the independent test set; but eventually 73 cases were read by all four readers.
+
+Clinical interpretations
+Fleiss's kappa among four readers was 0.19 when discriminating between the diagnoses of AD, MCI-AD, DLB, and CN solely based on metabolic patterns, which is considered as a slight agreement
+There were 10 cases in which there was no majority voting among readers (two AD, two CN, five DLB, and one MCI-AD cases).
+In 8 of these 10 cases, the correct clinical diagnosis was among the readers' labels, meaning that two readers could diagnose the correct disorder while the other two voted for another disorder.
+The consensus accuracy of the readers was 0.57, and it is higher than each individual reader.
+The accuracies of R1, R2, R3, and R4 are 0.56, 0.50, 0.46, and 0.39, respectively which are positively associated with the readers' experience.
+More detailed readers' labeling information is provided in Table
+The Fleiss' kappa is also calculated per each disorder to illustrate the inter-rater agreements in detail.
+Out of the 24 labels from the four readers for 6 MCI-AD cases, there were 9 (37.5%)
+CN, 9 MCI-AD, 4 (16.7%)
+AD, and 2 (8.3%)
+DLB, showing MCI-AD is commonly misdiagnosed as CN, which is very common in the clinical interpretation
+There was only one CN case where all the readers voted for CN, and in the remaining ones, votes were scattered mainly among MCI-AD and CN, that explains very low agreement in CN cases.
+Readers had the highest agreement in AD, with 0.21 as the Fleiss's kappa.
+In three of 22 AD cases, all four readers correctly labeled them as AD and in other three cases, three readers converged to AD. Lastly, there was one DLB case where there was no agreement among the readers.
+Performance metrics for readers are shown in Table
+In general, readers have higher performance metrics in DLB compared to other clinical diagnoses.
+Readers are performing very high in ruling out cases having no DLB (100%); all of 52 non-DLB (i.e., MCI-AD, AD, or CN) labels were truly non-DLB.
+On the contrary, their performance metric for MCI-AD is relatively low, which is in line with the results from
+
+Model training
+
+Evaluations
+The performance metrics for the trained model is shown in Table
+The ROC curves of the model and the readers are shown in Fig.
+Both the model and readers are performing higher in DLB cases and lower in MCI cases.
+The model reached a perfect performance in DLB cases with 86% sensitivity (18 out of 21 DLB cases were detected), 100% specificity (52 non-DLB cases by the model were correctly ruled out), and 100% precision (18 cases labeled as DLB were correctly classified), and F1 score 92%.
+The proposed model performed better than all the readers and their consensus, in some cases even statistically significant.
+As depicted in Fig.
+For instance, R1 has higher sensitivity in diagnosing CN, while R3 has higher specificity in the same disorder.
+Cohen's kappa among consensus diagnosis and model predicted label was 0.54, which is considered as moderate agreement.
+Among 13 misdiagnosed cases by the model, there were 5 MCI-AD cases, 2 AD, 3 CN, and 3 DLB cases as illustrated in Table
+We looked into these cases and compared them to the readers' labeling.
+In MCI-AD cases, one case was correctly diagnosed by both the model and the readers, and the remaining 5 cases, all were misdiagnosed both by the consensus of the readers and the model, that explains the high agreement between consensus of the readers and the model (Cohen's kappa 0.68).
+In total, among these 13 model-misdiagnosed cases, 11 cases were also consensus-misdiagnosed, and 6 cases were similarly consensusmisdiagnosed to the same disorder.
+
+Model interpretation and visualization
+As shown in UMAP visualizations in Fig.
+The other interesting pattern in this figure is the distribution of cases from CN to MCI-AD and then to AD, which is happening also in reality.
+DLB cases are very well separated and cases from CN to AD are spread from CN to MCI-AD and to AD, which explains the development of AD.
+The extracted features of the proposed model were able to separate these four classes well enough, although using unsupervised UMAP.
+The test cases with red circles in Fig.
+They are mainly those cases that have happened to be in the middle of the wrong class or in the borders of two classes.
+It is worth mentioning again that the ground truth labels for the whole dataset (both the ADNI and EDLB) are the final clinical diagnosis obtained from these sources and we are not aware if necropsy evaluation has been performed in any of those cases.
+The results of the occlusion experiment which indicated the network attention are illustrated in Fig.
+The highlighted regions in each disorder indicate which brain regions were of more attention in the proposed model in its prediction.
+In AD (Fig.
+In MCI-AD (Fig.
+Furthermore, the posterior cingulate cortex is also taking an important role in differentiating DLB cases (Fig.
+And finally, in CN (Fig.
+The posterior cingulate cortex is important for all the given neurodegenerative disorders, i.e., AD, MCI-AD, and DLB, and not in CN.
+It shows the pattern in this brain region makes the most difference in a cognitively normal brain compared to dementia-involved ones.
+The average over all normalized brain scans for each clinical diagnosis is illustrated in Fig.
+The hypometabolism pattern in the posterior cingulate cortex differs the most among the different disorders as expected from Fig.
+
+Model robustness
+Among the eight FTLD cases, three cases were classified as CN while the remaining five cases were classified as AD by the model.
+Figure
+All the eight cases are mapped close to each other in the UMAP space.
+Interestingly, the generated representation reflects the similarity of FTLD cases with CN and AD cases and not to DLB.
+What is expected to observe in FTLD is low FDG uptake in the frontal and temporal lobes
+A patient with a chronic AD can eventually have involvement of the frontal lobes and look like a FTLD.
+These five FTLD cases are very probable to have involvement not only of the frontal and temporal lobes but even the parietal lobes might be involved.
+We performed the occlusion experiments using FTLD cases to investigate further the highlighted regions in these brain scans.
+As shown (see Fig.
+Hence, the learned patterns by the model correspond to the metabolism patterns within each disorder.
+
+MMSE-based classification
+The new model trained on low MMSE scores achieved best accuracy 80%, 82%, 66% for training, validation, and testing accuracy, respectively.
+The validation accuracy is higher than the validation accuracy of the proposed model trained without MMSE stratification, while the testing accuracy is lower.
+The decay in performance is expected, due to the stratification that forces the model to get trained on easy cases and tested on hard cases to predict.
+The test set contained 112 cases, out of which 33 were misclassified.
+Figure
+The ROC curves and AUCs are shown in Fig.
+Compared to the random split results, no change in DLB and MCI-AD is observed, but AD and CN experienced a drop of 5 and 10% in AUC respectively.
+Figure
+In the random split, the misclassification errors happened both in low and high MMSE scores in CN and MCI-AD groups, while in AD and DLB, the few misclassified test cases occurred close to the high MMSE scores.
+However, in the stratified split, the misclassified test cases are not different from the correctly classified test cases in terms of MMSE score.
+
+Discussion
+Today, nuclear medicine specialist physicians make pattern recognition decisions on FDG PET scans using visual and qualitative readings, which is complex and challenging and needs years of experience.
+In this study, we proposed a 3D-CNN model to predict the diagnosis based on 18F-FDG PET scans.
+The datasets were achieved from ADNI and EDLB.
+The performance of the model was shown to be robust across the studied disorders: DLB, AD, MCI-AD, and CN and also in comparison to the nuclear medicine readers.
+The proposed model reached a competitive performance compared to an experienced reader and also the consensus of them.
+With further validation with more diverse datasets and extending to include more similar disorders, the proposed model can be used as an augmentation to the provided 18F-FDG PET software, improving the diagnosis of such This study has several strengths and contributions that are briefly explained here.
+First, the dataset is relatively diverse since it contains cases from ADNI and EDLB sources, in specific the CN cases were a combination of both sources and DLB cases were from 7 different sites in Europe.
+The MCI cases were confined to those that further developed AD and not including MCI as a generic cognitive impairment.
+Second, the test set was relatively big (n = 73) compared to the similar studies, for example (n = 40) within the independent test set as reported in
+The CN cases in the test set were selected balanced from the two sources ADNI and EDLB not to be biased towards ADNI which is more dominant in providing our CN cases.
+Recently, substantial work in the area of applying DL methods has been done for the classification of different brain disorders
+However, most of the work has been performed using structural imaging of the brain and very little work has been presented by applying DL, particularly CNNs, using functional imaging, specifically 18F-FDG PET scans.
+In Table
+In summary, the proposed model takes the advantage of the 3D 18F-FDG PET scans and provides high predictive performance as well as strong generalizability with the diagnosis of multiple neurodegenerative disorders.
+Differently from existing methods, the presented model can distinguish cases of AD, CN, MCI-AD, and DLB with AUC of 96.4%, 94.7%, 71.4%, and 96.2%, respectively.
+The model robustness test over a few FTLD cases (which was not part of the training process), revealed that the learned metabolism by the model are relevant and consistent to the expected patterns.
+One of the limitations of the study was that all AD and MCI-AD disorders were obtained from ADNI, which makes the robustness of the proposed model in these two cases limited to the clinical distribution of ADNI datasets.
+Furthermore, the number of MCI-AD cases in the independent test set was small.
+Performance dropped somewhat for the classification of MCI-AD cases, but this was analogous to the performance of the readers.
+The second limitation is that the proposed model predicted the diagnosis based on 18F-FDG PET scans only, the same with the human readers in this study.
+But, in real practice, clinicians make the final decision based on several other clinical evaluations.
+We believe if other clinical evaluations of the patients are added to the model, the performance will even reach higher values.
+On the other hand, the proposed model is able to be embedded to the 18F-FDG PET software devices that nuclear medicine specialists are normally using without any extra patient information needed and still be able to discriminate among several neurodegenerative disorders with high performance.
+Third, we only include DLB as a non-AD disorder.
+It is worth trying to include more neurodegenerative disorders to check the robustness of the algorithm in the presence of other similar diseases.
+One of the future works alongside with providing solutions to the above-mentioned limitations will be to investigate integrating the proposed algorithm into clinical workflow as a decision support tool.
+We will look into how to add more explanations to the outcome of the provided model to increase transparency and trust.
+Funding Open access funding provided by Halmstad University.
+This study was part of a collaborative project between Center for Applied Intelligent System Research (CAISR) at Halmstad University, Sweden, and Department of Clinical Physiology, Department of Radiology and the Center for Medical Imaging Visualization (CMIV) at Linköping University Hospital, Sweden, and the European DLB consortium, which was funded by Analytic Imaging Diagnostics Arena (AIDA) initiative, jointly supported by VINNOVA (Grant 2017-02447), Formas and the Swedish Energy Agency.
+VG was supported by the Swiss National Science Foundation (projects 320030_169876, 320030_185028) and the Velux Foundation (project 1123).
+RB is a senior postdoctoral fellow of the Flanders Research Foundation (FWO 12I2121N).
+
+Data availability
+
+
+
+Fig. 2
+Fig. 2 The 3D convolutional neural networks architecture of the introduced model.
+The model utilizes 3D 18F-FDG PET scans after being normalized via feature-wise normalization.
+We consider the
+
+
+
+Figure 3
+Figure 3 depicts the 95% confidence intervals for training and validation accuracy for each k.
+The highest validation accuracy of 78.9% was achieved with 608 samples and the validation accuracy was computed using the remaining 76 samples of the training set.
+
+
+
+Fig. 3 Fig. 4
+Fig. 3 Confidence intervals (95% CI) for training and validation accuracy during k-fold cross validation.
+KFCV, k-fold cross validation
+
+
+
+Fig. 5
+Fig.
+The red circles denote the misclassified testing samples.
+(AD, Alzheimer disease; MCI-AD, mild cognitive impairment due to AD; DLB, dementia with Lewy bodies; CN, cognitively normal; UMAP-D, uniform manifold approximation and projection dimension)
+
+
+
+Fig. 6
+Fig. 6 Results of the occlusion experiments for a Alzheimer disease (AD), b mild cognitive impairment due to AD (MCI-AD), c dementia with Lewy bodies (DLB), and d cognitively normal (CN).
+The results are projected by creating a mosaic of slices in the axial direction.
+The cross-entropy maps have been over layered with the average brain ◂
+
+
+
+Fig. 7 Fig. 8
+Fig. 7 The average brain scan for all normalized cases with a Alzheimer disease (AD), b mild cognitive impairment due to AD (MCI-AD), c dementia with Lewy bodies (DLB), and d cognitively normal (CN)
+
+
+
+Fig. 9
+Fig. 9 Results of training a new model with MMSE-based data split, a the UMAP visualization of training/testing datasets with misclassified test cases identified with red circles, b receiver operating characteristic (ROC) curve for model predictions with testing dataset
+
+
+Part of data collection and sharing for this project was funded by the Alzheimer's Disease Neuroimaging Initiative (ADNI) (National Institutes of Health Grant U01 AG024904) and DOD ADNI (Department of Defense award number W81XWH-12-2-0012).
+
+
+
+Fig. 10
+Fig. 10 MMSE-based classification results: a random split, b stratified split where low MMSE scores are used for training and high ones for test
+
+
+
+Table 1
+
+
+
+Table 1
+Demographics of datasets.
+(a) Alzheimer's disease neuroimaging initiative (ADNI) and the European DLB consortium (EDLB) datasets, (b) train set (used for model training and internal validation), and the independent test set (used for model testing and comparison to readers) 15 cases with no registered MMSE score, where one of them reported language barrier as the reason ** No MMSE score collected for normal cases in EDLB *** One DLB case contained no age-sex information AD, Alzheimer disease; MCI-AD, mild cognitive impairment due to AD; DLB, dementia with Lewy bodies; CN, cognitively normal
+
+
+
+Table 2 Confusion
+Numbers in parentheses show the percentage of the whole labels collected for all scans per each disorder AD, Alzheimer disease; MCI-AD, mild cognitive impairment due to AD; DLB, dementia with Lewy bodies; CN, cognitively normal
+
+
+
+Table 4 (

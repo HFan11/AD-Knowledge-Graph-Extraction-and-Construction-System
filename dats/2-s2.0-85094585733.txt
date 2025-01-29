@@ -1,0 +1,354 @@
+Robust parametric modeling of Alzheimer's disease progression
+Quantitative characterization of disease progression using longitudinal data can provide long-term predictions for the pathological stages of individuals.
+This work studies the robust modeling of Alzheimer's disease progression using parametric methods.
+The proposed method linearly maps the individual's age to a disease progression score (DPS) and jointly fits constrained generalized logistic functions to the longitudinal dynamics of biomarkers as functions of the DPS using M-estimation.
+Robustness of the estimates is quantified using bootstrapping via Monte Carlo resampling, and the estimated inflection points of the fitted functions are used to temporally order the modeled biomarkers in the disease course.
+Kernel density estimation is applied to the obtained DPSs for clinical status classification using a Bayesian classifier.
+Different M-estimators and logistic functions, including a novel type proposed in this study, called modified Stannard, are evaluated on the data from the Alzheimer's Disease Neuroimaging Initiative (ADNI) for robust modeling of volumetric magnetic resonance imaging (MRI) and positron emission tomography (PET) biomarkers, cerebrospinal fluid (CSF) measurements, as well as cognitive tests.
+The results show that the modified Stannard function fitted using the logistic loss achieves the best modeling performance with an average normalized mean absolute error (NMAE) of 0.991 across all biomarkers and bootstraps.
+Applied to the ADNI test set, this model achieves a multiclass area under the ROC curve (AUC) of 0.934 in clinical status classification.
+The obtained results for the proposed model outperform almost all state-of-the-art results in predicting biomarker values and classifying clinical status.
+Finally, the experiments show that the proposed model, trained using abundant ADNI data, generalizes well to data from the National Alzheimer's Coordinating Center (NACC) with an average NMAE of 1.182 and a multiclass AUC of 0.929.
+
+Introduction
+Alzheimer's disease (AD) is the most common type of dementia and leads to progressive neurodegeneration, affecting memory and behavior according to regional damage * Corresponding Author.
+* * Data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.edu).
+As such, the investigators within the ADNI contributed to the design and implementation of ADNI and/or provided data but did not participate in analysis or writing of this report.
+A complete listing of ADNI investigators can be found at
+Email address: mehdipour@biomediq.com
+(Mostafa Mehdipour
+The hippocampus, which is the center of learning and memory, is often one of the first regions of the brain to be damaged.
+It has also been shown that cerebrospinal fluid (CSF) biomarkers can become abnormal in the presymptomatic phase of the disease, preceding positron emission tomography (PET) and magnetic resonance imaging (MRI) biomarkers followed by clinical markers
+Currently, the cause of AD is not clear, and there is no cure or effective treatment to stop its progression, but early diagnosis of the disease, especially in the presymptomatic stages, can provide time to treat symptoms and plan for the future.
+However, early diagnosis of AD is challenging mainly because elderly subjects can suffer from different age-related pathologies and normal aging besides AD.
+Therefore, methods to stage and identify at-risk individuals are critical to dementia research.
+Disease progression modeling uses longitudinal studies to develop data-driven quantitative models that describe the evolution of the disease over time.
+The approach can, therefore, provide a complete perspective of the disease by computationally exploring the available data to help with a better understanding of the disease for diagnostic, staging, monitorization, and prognostic purposes.
+Parametric disease progression modeling methods can be divided into two categories, continuous fitting for modeling the dynamics of biomarkers and discrete ordering for biomarker abnormality detection, both relying on unsupervised learning, e.g., by using maximum-likelihood estimation.
+The discrete methods focus on temporally ordering of biomarkers becoming abnormal during the disease stages by discretizing the disease progression trajectory using generative, eventbased models
+Continuous parametric methods for modeling the progression of Alzheimer's disease have been inspired by hypothetical models assuming a sigmoidal evolution of AD biomarkers
+The goal of these methods is to model biomarker values as a function of disease progression
+Accordingly, a variety of approaches have been applied to fit a continuous function to the longitudinal dynamics of each biomarker using statistical models such as differential equations and mixed-effects models
+These methods are simple and require less data, but parametric assumptions on the biomarker trajectories limit the flexibility of the fits.
+Recently, nonparametric disease progression modeling methods have been introduced to model biomarkers jointly while taking temporal dependencies among measurements into account using Gaussian processes
+These methods are flexible, make fewer assumptions for modeling, and do not require alignment of the trajectories of the individuals.
+However, a multivariate gaussian process with monotonicity constraints is computationally expensive to fit due to large covariance matrices, and deep learning methods are less interpretable, hard to train in cases when the data is sparse or irregular, and cannot easily be applied for prediction when the unseen data has fewer biomarkers than what was used for training.
+As shown in Figure
+Alternating least squares is applied to fit a sigmoid function to the longitudinal dynamics of each biomarker.
+In this method, biomarker trajectories are fitted independently and the biomarker dependencies are only considered when the algorithm alternates to estimate the subject-specific (age) parameters, which in turn can cause difficulties for the convergence of the alternating algorithm.
+Furthermore, the proposed model is not robust to outliers that can be found in more contaminated data.
+The first two problems have been tackled by
+Maximum likelihood type estimation (M-estimation) is introduced as a robust regression method
+Left: A flexible function is used to fit the asymmetric shape of the simulated data points.
+Middle: A constrained function is utilized to estimate the exact dynamics of the biomarker.
+Right: A robust estimator is applied to fit a curve to the simulated data contaminated with outliers.
+cope with outliers by minimizing a loss function designed to de-emphasize outliers (see Table
+The model fit can further be improved by utilizing a more flexible function (see Table
+However, increasing the number of parameters needs to be penalized as it can increase the model complexity and result in overfitting.
+Figure
+In this paper, a robust extension of
+The estimated parameters are quantified using bootstrapping via Monte Carlo resampling, and the inflection points are used to temporally order the biomarkers in the disease course.
+Kernel density estimation with normal bases is applied to the estimated DPSs for clinical status classification using a Bayesian classifier.
+Different loss and logistic functions are considered, including a modified version of the Stannard function
+The obtained results indicate that the modified Stannard function fitted using the logistic loss achieves the best modeling performance over different bootstraps, and it consistently outperforms the basic algorithm of
+The main contribution of this study is four-fold.
+First, we introduce a novel generalized logistic function, called modified Stannard, which better fits the AD biomarker trajectories compared to using other logistic functions.
+Second, the use of M-estimation suppresses the effect of outliers on the fit.
+Third, the across-cohort generalizability of the proposed model is evaluated by applying the model trained using ADNI data to the test data from the NACC cohort with fewer biomarkers.
+Finally, an end-to-end approach is introduced that performs biomarker trajectory modeling (unsupervised learning), biomarker inflection point detection (event ordering), and clinical status classification (supervised learning).
+This is a holistic way to implement a system suitable for both research and clinical applications to better study, detect, and monitor AD.
+
+The proposed method
+The main objective of this work is to minimize the error of parametric disease progression modeling while making the estimates stable and robust to outliers.
+This is achieved by fitting a constrained logistic function using an M-estimator.
+
+Modeling dynamics of biomarkers
+Two sets of parameters are estimated in the model: observed biomarker-specific parameters, which are assigned
+for fitting the biomarker curves, and hidden subject-specific (age-related) disease progression parameters that are defined for aligning the trajectory of subjects.
+Assume that y i,j,k is the k-th biomarker's value at the j-th visit of the i-th subject and f (s; θ) is an S-shaped logistic function of DPS s with parameters θ.
+Each biomarker measurement is defined as
+where σ k is the standard deviation of the k-th biomarker with θ k parameters, i,j,k is additive white Gaussian noise (random effect) with i.i.d.
+assumption, and s i,j is the DPS for the j-th visit of the i-th subject and is obtained as
+where t i,j is the age of subject i in visit j, and α i ∈ R >0 and β i ∈ R are the rate and onset of disease progression of subject i, respectively.
+Finally, the multiobjective optimization for robust nonlinear regression is defined as
+where ρ(•) is a maximum likelihood-type function and w i = 1/N i is a weighting factor for normalizing the objective function with the number of available points per subject (N i ).
+For fitting the longitudinal trajectories of biomarkers, four logistic functions are considered (Table
+All functions have the same range (0, 1) and can produce the same inflection points at c ∈ R, to be later used for biomarker ordering.
+We candidate utilization of a modified flexible logistic function based on the Stannard function
+This function tends to better describe asymmetrical sigmoid patterns of the biomarker trajectories with modeling both slow and rapid growths at the beginning or the end of the disease period.
+In the defined functions, b ∈ R >0 and γ ∈ R >0 denote the growth rate and symmetry parameter of the curves, respectively.
+The reason for restricting b to the positive real numbers is to make parameters of the estimation identifiable.
+It can also be deduced from Table
+Moreover, Gompertz's function
+Finally, the upper and lower asymptotes of the curves can be adjusted by two additional parameters
+The range parameters, a and d, can be set to fixed values when the exact range of biomarkers is given, which is the case with cognitive tests.
+This, in turn, not only reduces the number of optimization parameters but also increases the stability of the estimation.
+For other biomarkers, if there are, for example, sign constraints which are the cases with nonnegative CSF and PET measurements, both parameters can be constrained to lower and/or upper bounds, but otherwise remain unconstrained.
+
+Model fitting
+Alternating approach, as an efficient optimization technique, is applied to solve the problem where the algorithm iteratively estimates θ using fixed values of α and β and vice versa until the parameters converge.
+The proposed algorithm can be summarized as follows Initialization: initialize {α (0) , β (0) , θ (0) } using measurements.
+Table
+
+Loss function
+Optimization: iterate l until convergence.
+Biomarker fitting: estimate the biomarker-specific parameters using values of all subjects and visits.
+Age mapping: estimate the subject-specific parameters using values of all biomarkers and visits.
+where N i corresponds to the number of measurements among all biomarkers and visits available for the i-th subject.
+This way, in contrast to
+The degrees of freedom of the fit is equal to k (N k -|θ k |)-2I, where N k is the number of measurements among all subjects and visits available for the k-th biomarker, |θ k | denotes the number of biomarkerspecific parameters for the k-th biomarker, and I is the number of subjects.
+Therefore, the algorithm can be applied in case the data contains more than k |θ k | + 2I points, and if any subject has at least two distinct points considering all biomarkers and visits.
+The utilized maximum likelihood-type functions for robust regression
+These estimators attempt to diminish the influence of the outliers while fitting curves.
+In general, M-estimators use a tuning parameter called τ to scale the functions as τ 2 ρ(r/τ ) in order to yield 95% asymptotic efficiency with respect to the standard normal distribution.
+The corresponding tuning constants for the utilized functions are also reported in Table
+Finally, the obtained DPSs are standardized with respect to the scores of the available cognitively normal visits of subjects in order to calibrate all biomarker trajectories in different experiments.
+This process removes the mean of the normal visits' distribution of DPSs and scales the range to give a better intuition of timing of disease progression in the course of AD.
+In this case, it would be necessary to properly update the parameters as
+where µ cn and σ cn are the mean and standard deviation of the DPSs in the available cognitively normal visits of subjects, respectively.
+
+Biomarker value prediction
+Biomarker values can be predicted using the fitted model parameters.
+Age mapping part of the proposed algorithm is applied to estimate the subject-specific parameters using Equation (2) based on the values of those biomarkers of the test subject that have available estimated biomarkerspecific parameters in the fitted model.
+Next, biomarker values are predicted as f (s i,j ; θ k ) using the estimated test DPSs where f (•) is the logistic function applied to model fitting.
+
+Clinical status classification
+In order to predict the clinical status of test subjects per visit, kernel density estimation (KDE)
+Assume that (s 1 , s 2 , . . .
+, s N ) is a set of N i.i.d.
+DPSs sampled from an unknown distribution with density function p(s|c i ), where c i denotes the i-th class label.
+KDE is expressed as
+where K(•) is a smooth (kernel) function with a smoothing bandwidth w > 0. Here, the Gaussian kernel is used as the smoothing function.
+The clinical status is classified based on the DPSs with a Bayesian classifier that uses the KDE-based fitted likelihoods as
+where p(c i ) is the data-driven prior probability for the i-th class, p(c i |s) is the posterior probability for predicting the test DPS that belongs to the class c i , and the term in the denominator specifies the evidence and can be dropped because the maximum a posteriori estimation is used for classification.
+
+Experimental setup
+
+Data
+The data used in this work is obtained from the ADNI and the NACC databases.
+
+ADNI
+The ADNI was launched in 2003 as a public-private partnership, led by principal investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial MRI, PET, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment and early Alzheimer's disease.
+We use The Alzheimer's Disease Prediction Of Longitudinal Evolution (TADPOLE) challenge dataset
+The labels cognitively normal (CN), significant memory concern (SMC), and normal (NL) are merged under CN; mild cognitive impairment (MCI), early MCI (EMCI), and late MCI (LMCI) under MCI; and AD and dementia under AD.
+In addition, subjects converting from one clinical status to another, e.g., MCI-to-AD, are assigned the latter label (AD in this example).
+The utilized ADNI data includes T1-weighted brain MRI volumes of ventricles, hippocampus, whole brain, fusiform, and entorhinal cortex, PET scan measures of fludeoxyglucose (FDG-PET) and florbetapir (AV45-PET), CSF measures of Amyloid beta, total tau, and phosphorylated tau, as well as the cognitive tests of clinical dementia rating sum of boxes (CDR-SB), Alzheimer's disease assessment scale 13 items (ADAS-13), mini-mental state examination (MMSE), functional activities questionnaire (FAQ), Montreal cognitive assessment (MOCA), and Rey auditory verbal learning test of immediate recall (RAVLT-IR).
+Detailed information about the utilized biomarkers can be found in Table
+
+NACC
+The NACC, established by the National Institute on Aging of the National Institutes of Health in 1999, has been developing a large database of standardized clinical and neuropathological data from both exploratory and explanatory Alzheimer's disease research
+The data has been collected from different Alzheimer's disease centers across the United States and among others contains measurements from different modalities such as MRI, PET, and cognitive tests.
+Labels with numerical cognitive status of one (normal cognition) and two (impaired-not-MCI) are merged under CN, and cognitive status of three (MCI) and four (Dementia) are set to MCI and AD, respectively.
+It should be noted that we only keep subjects with primary etiologic diagnosis of normal, AD, or missing.
+This is to exclude subjects diagnosed with other types of dementia, non-neurodegenerative disease, or a non-neurological condition.
+The used NACC data includes T1-weighted brain MRI volumes of hippocampus and whole brain, and the cognitive tests of MMSE, MOCA, FAQ (sum of the 10item scores), and CDR-SB using the CDR R Dementia Staging Instrument.
+
+Data filtering
+For our analysis, in each of the ADNI and NACC datasets, measurements outside known biomarker ranges, e.g., RAVLT-IR < 0, are rejected and assumed as missing values.
+The volumetric MRI outliers observed in the ADNI dataset are removed by assuming intracranial volume (ICV) estimates that are proportionally smaller than estimated corresponding MRI measurements, i.e., MRI / ICV > 1, as missing values.
+Clinical follow-up visits with reverting clinical diagnoses are removed per subject considering the neighboring visits.
+In the ADNI dataset, clinical follow-up visits with wrongly ordered dates are discarded per subject.
+Also, MRI, PET, and CSF measurements that are already matched to the cognitive visits with any extreme time gaps are excluded.
+The acceptable time gap is obtained based on the data statistics and is set to three months.
+In the NACC dataset, we perform the matching of MRI and clinical visits.
+However, due to the relatively smaller sample size in NACC compared with ADNI, matches more than three months apart are kept and treated as two distinct visits.
+In this analysis, we assign a missing clinical status for any MRI visits that do not fall within the 3-month window.
+In order to be able to apply the proposed method, measurements and clinical diagnoses with missing date information per visit are set to missing values, and subjects with less than two distinct visits are omitted.
+This results in 219 ADNI subjects and 151 NACC subjects being excluded.
+Note that both datasets include missing values and missing clinical status, the latter indicated as 'Missing'.
+
+Data preprocessing
+In the ADNI dataset, the volumetric measurements were obtained using two different versions of the public FreeSurfer software package
+Therefore, the MRI measurements need to be corrected for FreeSurfer version
+In addition, biological difference in brain size hinders direct utilization of MRI measurements for disease progression estimation.
+Total intracranial volume (TIV) or ICV is a commonly used measure for normalization to correct for head size.
+To overcome both aforementioned problems of difference in cohort/software (version) and head size, we employ the residual approach
+The corrected measurements can thus be calculated as the estimated residuals R of the volumes using the regression parameters obtained from the control data as
+where ROI i,j,k,v is the k-th MRI volume for subject i at visit j calculated (observed) using software or software version v, ICV is the corresponding intracranial volume, and βcn and αcn are the intercept and slope of the regression estimated from the CN group.
+Finally, the estimated residuals are standardized per cohort/software (version) so that all variables have zero mean and unit variance.
+
+Data partitioning and bootstrapping
+To evaluate the algorithms, each of the ADNI and NACC datasets is partitioned into two non-overlapping sets for training and testing.
+To be more specific, based on the first and last available diagnoses of subjects, i.e., CN-CN, CN-MCI, ..., AD-AD, we divide each of these types of pairs into two groups including few and many visits using the median number of visits as threshold and randomly select 20% of the subjects from each group for testing.
+Additionally, bootstrapping is used in the experiments for quantification of the estimation, and in each bootstrap, a subset of the training subjects is randomly sampled with replacement based on the first and last available pair of diagnoses and the number of available visits per subject, to make sure each bootstrap sampling contains data from any diagnostic status and sequence lengths.
+The unused subjects are assigned for validation and account for 1/e ≈ 0.37 of the subjects where e is the base of the natural logarithm.
+This also means that the estimated variance using the bootstrapped model will account for approximately 63% of the total variance.
+To facilitate future research in AD progression modeling and comparison with the current study, all the data splits, including each bootstrap split, are also provided on arXiv as ancillary files.
+
+Evaluation metrics
+Robust Bayesian information criterion (BIC) is used as a criterion for model selection among the robust models
+The criterion is penalized with the number of parameters to avoid overfitting, where the model with the lowest BIC is preferred, and it is defined as
+train is the training loss at the optimum iteration number L opt obtained through biomarker fitting using Equations (
+The mean absolute error (MAE) is used to assess the modeling performance as a measure less sensitive to outliers
+It is calculated based on the absolute differences between actual and estimated values as follows
+where N k is the number of measurements among all subjects and visits available for the k-th biomarker, and y i,j,k and f (s i,j ; θ k ) are the ground-truth and estimated values of the k-th biomarker for the i-th subject at the j-th visit.
+Absolute errors of different biomarkers can be normalized with the corresponding standard deviation of the biomarkers and averaged across all normalized biomarkers to obtain a single performance measure called normalized MAE (NMAE).
+The modeling performance of two different methods is statistically compared using the paired, two-sided Wilcoxon signed-rank test
+Additionally, multiclass area under the receiver operating characteristic (ROC) curve (AUC)
+where n c is the number of distinct classes, n i denotes the number of available observations belonging to the i-th class, and SR i is the sum of the ranks of posteriors p(c i |s i ) after sorting all concatenated posteriors {p(c i |s i ), p(c i |s k )} in an ascending order, where s i and s k are vectors of DPSs belonging to the true classes c i and c k , respectively.
+Likewise, SR k is the sum of the ranks of posteriors p(c k |s k ) after sorting all concatenated posteriors {p(c k |s k ), p(c k |s i )} in an ascending order.
+
+Initialization of the algorithm and optimization
+Since the fitting algorithm is iteratively performed using an alternating approach starting from values optimized in the previous step, initialization is an important step for efficiently reaching the optimum.
+We initially set α (0) and β (0) to 1 and 0, respectively.
+Moreover, we initialize the slope of the trajectories (λ) to either -1 or 1 depending on the diagnoses.
+A positive slope is considered when the average of the k-th biomarker's values for cognitively normal visits is less than that for AD visits and vice versa.
+Next, the parameters of the logistic functions are initially estimated as
+where d k and a k are the minimum and maximum of the k-th biomarker's values, respectively, provided that the slope λ k is positive, and vice versa if the slope is negative.
+Finally, we repeat the alternating procedure using the logistic functions and the trust-region algorithm
+
+Stopping criteria
+To avoid overfitting, the optimal parameter values are selected according to the optimum generalization loss ob-tained using the following criteria
+where
+valid is the validation loss at the l-th iteration obtained through biomarker fitting using Equations (
+The minimum number of iterations, L min , is set to 10 to allow for enough training progress.
+The maximum number of iterations, L max , is set to 50.
+This avoids unnecessary computations since it was empirically observed that E valid attained a minimum well within this iteration range in all cases.
+
+Results and discussion
+
+Biomarker modeling
+First, the proposed method is applied to model the dynamics of the ADNI biomarkers.
+Table
+The combination of the modified Stannard function for biomarker fitting and the logistic loss achieve the best modeling performance with both the lowest average BIC and the smallest standard deviation and a validation NMAE of 0.985 ± 0.029.
+This configuration will be used in all the remaining experiments.
+To further investigate the stability and robustness of the model with the chosen configuration of logistic and loss functions, we visualize the fitted trajectories for each of the 100-bootstrap runs together with their average per biomarker in Figure
+
+Temporal ordering of biomarkers
+To indicate the timing and the dynamics of the different biomarkers relative to each other, Figure
+The distribution of the inflection points of the biomarkers, quantified through bootstrapping, can be used to see how biomarkers proceed in the course of AD with respect to each other.
+The inflection point is considered a turning point at which the direction of biomarker curvature changes.
+Figure
+As can be seen, CSF and PET biomarkers, as well as RAVLT-IR, precede all other biomarkers followed by MRI biomarkers and cognitive tests.
+These findings are in line with the results of
+More interestingly, RAVLT-IR starts becoming abnormal early in the disease course which is consistent with several clinical studies concluding that some cognitive tests including RAVLT are significant predictors that can predict neurodegenerative changes up to 10 years before clinical diagnosis
+However, some of the MRI biomarkers such as the ventricles and whole-brain are noisy measurements for modeling the progression of AD in this dataset, as also seen in Figure
+It is important to note that the inflection points are utilized to order the biomarkers in the disease course.
+These points do not measure when the biomarkers start becoming abnormal and hence, cannot be used for early abnormality detection.
+
+DPS distribution versus biomarker timing
+Figure
+As can be seen, there are moderate overlaps between the DPS distributions of CN-MCI and MCI-AD The best result is shown in boldface and its corresponding configuration is selected for the remaining experiments.
+
+classifying clinical status
+To evaluate the diagnostic predictive performance, the obtained training DPSs are used to estimate classconditional likelihood functions per bootstrap using KDE and fed to a three-class Bayesian classifier with prior probabilities proportional to the number of training observations in each class.
+The classifiers, one for each bootstrap, are applied to the test DPSs estimated as described in Section 4.4 to compute the posterior probabilities of the clinical labels.
+The proposed model achieves an AUC of 0.931 ± 0.004 in classifying the clinical status of the test ADNI subjects per visit, which reveals the effect of modeling on classification performance.
+The obtained posterior probabilities from the different classifiers can be combined using ensemble learning techniques to potentially improve prediction performance and The proposed method 0.991±0.023
+0.833±0.061
+1.182±0.087
+robustness
+For example, by fusing the posteriors based on taking the average of the withinclass posteriors over an ensemble of models from different bootstraps (bagging), the AUC of the proposed method increases to 0.934.
+
+Comparison with state-of-the-art results
+In order to fairly compare our results with those of stateof-the-art methods, we apply the proposed method to the TADPOLE training and test subsets of D1 and D2 using the same 16 ADNI biomarkers.
+The proposed model achieves an average AUC of 0.937 which is on a par with the best performance of TADPOLE with an average AUC of 0.931
+Besides, our obtained average MAE of 3.93 for ADAS-13 outperforms the best reported result with an average MAE of 4.70.
+However, the proposed model does not perform well on the normalized ventricles compared to the best reported result with an average MAE of 0.0086 vs.0.0041.
+Next, we employ the same ADNI data splits and biomarkers as used by
+This also enables a head-to-head comparison with both
+To do so, biomarker trajectories need to be described as a function of time-from-AD-conversion. Hence, inspired by
+The corresponding DPSs are then mapped to the obtained times from the AD conversion of the selected subjects using a linear regression model.
+These estimates can later be used to calculate the time-from-AD-conversion for any subjects visits using the estimated DPSs.
+Since the time-from-ADconversion is a linear function of DPS, i.e., m0 + m1 s i,j , we can adjust the biomarker parameters as b k = b k / m1 and c k = m0 + m1 c k to obtain biomarker trajectories as a function of time-from-AD-conversion.
+The obtained results indicate that the proposed model outperforms
+
+Generalizability across cohorts
+As the final set of experiments, the generalizability of the proposed model to an independent cohort is assessed using the NACC data.
+First, the same configuration of logistic function and M-estimator, i.e., the modified Stannard and logistic loss is applied to model the progression of AD within NACC. Figure
+Second, the optimal model previously trained on ADNI is utilized to predict the NACC test measurements using the estimates of the common ADNI-NACC biomarkers, i.e., CDR-SB, MMSE, FAQ, MOCA, hippocampus, and whole brain.
+Table
+As it can be noticed from the obtained results, the previously selected configuration for training ADNI data is also a good choice when applied to NACC data.
+Moreover, the proposed model significantly (p < 0.001) outperforms the analogous model of
+Additionally, modeling performance of the proposed method degrades less than that of the analogous model of
+It should also be noted that the utilized NACC subset have fewer biomarkers and measurements than the used ADNI subset, which likely is the reason why it results in a smaller within-cohort modeling error.
+We also apply the ADNI and NACC trained classifiers to the estimated test NACC DPSs to classify the clinical status per subject per visit.
+The proposed method achieves AUCs of 0.929 ± 0.012 and 0.928 ± 0.016, respectively.
+This reveals that diagnostic performance improves when applying the ADNI-trained model to the NACC test set.
+
+Conclusions
+In this paper, a robust parametric model of Alzheimer's disease progression was proposed based on alternating M- estimation using the logistic loss to address potential curvefitting problems such as outliers.
+The proposed method linearly transformed individuals' ages to disease progression scores and jointly fitted modified Stannard functions to the longitudinal dynamics of biomarkers.
+The estimated parameters were then used to temporally order the biomarkers in the disease course and to predict biomarker values as well as to classify the clinical status per subject visit in an independent test set.
+The obtained results showed the superiority of the proposed method over the state-of-the-art results in terms of prediction performance, and this method generalizes well across cohorts.
+The proposed approach can be applied to different timeseries data including missing data points and labels, or to biomarkers with other characteristics than the monotonic behavior that one typically encounters in, for example, neurodegenerative disease progression modeling using MRI/PET biomarkers, as long as suitable functions are used for biomarker modeling.
+Moreover, as an alternative to using M-estimators, resistant estimators such as the least trimmed sum of squares and least median of squares
+Though, this will result in an additional parameter to be optimized for the coverage (range) needed for trimming the residuals.
+
+
+
+Figure 1 :
+Figure 1: An illustration of the AD progression modeling method proposed by Jedynak et al. (2012, 2015).
+Left: A Sigmoid function is fitted to the biomarker measurements of each subject.
+Middle: The biomarker trajectories are aligned by linearly transforming subject age to DPS.
+Right: The aligned biomarker fit is obtained for all subjects.
+
+
+loss function, MAE = 4.0 Robust loss function, MAE = 2.9
+
+
+
+Figure 3 :
+Figure 3: Estimated curves per bootstrap (in gray) for the ADNI biomarkers using the modified Stannard function and the logistic loss.
+The average of the bootstrapped curves per biomarker is shown as the black curve.
+
+
+
+4. 4 .
+Predicting biomarker valuesThe biomarker-specific parameters estimated using the bootstrapped training set are applied to map the ages of test individuals to DPSs using Equation (2).
+The obtained DPSs are then fed to the estimated biomarker functions in each bootstrap.
+Table6shows the test NMAEs of the 100-times bootstrapped ADNI dataset for the proposed model and the analogous model by
+
+
+
+Figure 4 :Figure 5 :
+Figure 4: The average of the normalized curves of the ADNI biomarkers across 100 bootstraps.
+Temporal Ordering
+
+
+
+Figure 6 :
+Figure6: Estimated class-conditional likelihoods using the DPSs obtained from 100 ADNI-trained bootstraps.
+The box plots indicate the 25th to 75th percentiles of the estimated inflection points per biomarker, centrally marked with the median, and they are extended to the most extreme non-outlier inflection points using dashed lines.
+
+
+
+Figure 7 :
+Figure 7: Estimated curves per bootstrap (in gray) for the NACC biomarkers using the modified Stannard function and the logistic loss.
+The average of the bootstrapped curves per biomarker is shown as the black curve.
+The last subfigure shows the average of the normalized curves of the NACC biomarkers across 100 bootstraps.
+
+
+
+Table 1 :
+Details of the utilized logistic functions for AD progression modeling.
+Note that the range of each function can be controlled by two additional parameters.
+
+
+
+Table 3 :
+Demographics of the obtained datasets after filtering across visits.
+
+
+
+Table 4 :
+Statistics of the visits per dataset after filtering.,098
+visits between August 2005 and May 2017, and the six NACC biomarkers are acquired from 239 subjects (75 males and 164 females) in 1,672 visits between October 2005 and July 2018.All subjects in both datasets have at least one cognitive test.In the NACC data, 203 subjects underwent MRI imaging while in the ADNI data, 1,515 and 1,220 subjects underwent MRI and PET imaging, respectively, and 1,088 subjects have CSF measures.Table3 and Table
+
+
+
+Table 5 :
+Modeling performance as BIC (mean±SD) ×10 4 for the 100-times bootstrapped ADNI training subsets using different logistic and loss functions.
+
+
+
+Table 6 :
+Test modeling performance of different methods as NMAE (mean±SD) for ADNI and NACC biomarkers.
+Note that ADNI has 16 biomarkers while NACC has only 6 biomarkers in common between the two datasets.
+All the NMAEs are significantly different (p < 0.001).
+
+
+
+Table 7 :
+Detailed information about the utilized ADNI biomarkers.

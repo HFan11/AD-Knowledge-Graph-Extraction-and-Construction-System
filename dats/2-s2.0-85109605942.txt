@@ -1,0 +1,409 @@
+Prediction of differentially expressed microRNAs in blood as potential biomarkers for Alzheimer’s disease by meta-analysis and adaptive boosting ensemble learning
+Background: Blood circulating microRNAs that are specific for Alzheimer's disease (AD) can be identified from differentially expressed microRNAs (DEmiRNAs).
+However, non-reproducible and inconsistent reports of DEmiRNAs hinder biomarker development.
+The most reliable DEmiRNAs can be identified by meta-analysis.
+To enrich the pool of DEmiRNAs for potential AD biomarkers, we used a machine learning method called adaptive boosting for miRNA disease association (ABMDA) to identify eligible candidates that share similar characteristics with the DEmiRNAs identified from meta-analysis.
+This study aimed to identify blood circulating DEmiRNAs as potential AD biomarkers by augmenting meta-analysis with the ABMDA ensemble learning method.
+Methods: Studies on DEmiRNAs and their dysregulation states were corroborated with one another by metaanalysis based on a random-effects model.
+DEmiRNAs identified by meta-analysis were collected as positive examples of miRNA-AD pairs for ABMDA ensemble learning.
+ABMDA identified similar DEmiRNAs according to a set of predefined criteria.
+The biological significance of all resulting DEmiRNAs was determined by their target genes according to pathway enrichment analyses.
+The target genes common to both meta-analysis-and ABMDAidentified DEmiRNAs were collected to construct a network to investigate their biological functions.
+
+Background
+Alzheimer's disease (AD) is subcellularly characterized by the presence of extracellular amyloid-beta (Aβ) plaque deposition and intracellular neurofibrillary tangles of hyperphosphorylated tau proteins
+The aberrant protein aggregates are accompanied by activation of neuroinflammation, and loss of synaptic functions
+In the progression of AD, irreversible loss of neurons and synaptic functions gradually develops over decades before the manifestation of cognitive symptoms
+Because the root causes of pathological Aβ accumulation and hyperphosphorylated tau proteins are not clear, drug development for AD often fails and current AD treatments alleviate symptoms only.
+The failure of most clinical trials in AD has been partially attributed to the lack of sensitive biomarkers to identify potential AD
+The National Institute of Neurological and Communicative Disorders and Stroke and the Alzheimer's Disease and Related Disorders Association (NINCDS-ADRDA) and the National Institute on Aging and Alzheimer's Association (NIA-AA) proposed that the diagnosis of AD should be dependent on biomarkers rather than solely dependent on clinical symptoms
+Aberrant levels of Aβ and tau proteins in cerebrospinal fluid (CSF) and blood have been evaluated as biomarkers for AD diagnosis
+CSF levels of total and hyperphosphorylated tau proteins are correlated with neurofibrillary tangle load, and CSF levels of Aβ are inversely correlated with amyloid load
+However, a review concluded that these CSF biomarkers are more useful for ruling out AD, than for indicating a definite diagnosis
+To avoid the side effects of invasive CSF sampling, such as positional headache, Fei et al.
+However, another review has reported that lower plasma Aβ42/Aβ40 ratios might not be associated with increased AD risk
+The plasma phosphorylated tau 217 is proposed to distinguish AD from non-AD neurodegenerative individuals, since its level increases more steeply in non-demented individuals with amyloid positivity than those without amyloid positivity
+The limitations to use Aβ or tau proteins as biomarkers in blood might be due to several reasons.
+First, Aβ in both CSF and blood tends to self-aggregate
+Second, the entrance of Aβ and tau proteins into body fluid is hindered by the extent of blood-brain barrier (BBB) leakage
+Thus, there is a need to identify other potential non-invasive biomarkers to aid the diagnosis of AD.
+An ideal AD biomarker would allow for mass screening to identify patients at high risk of developing AD in the presymptomatic stage with adequate reliability.
+MicroRNAs (miRNAs) are a class of single-stranded non-coding RNAs that are 18-25 nucleotides in length and bind to the 3′ untranslated region of target mRNAs to modify the target mRNAs' expression in a posttranscriptional manner
+Each miRNA simultaneously targets hundreds of mRNAs, and over 2500 mature miRNAs have been recorded in the latest version of the miRBase database
+Out of all recorded miRNAs, 300 have been associated with neurodegenerative diseases and 131 miRNAs are specific for AD
+Downregulated expressions of miR-29a/b-1, miR-29c, and miR-339-5p have been reported to upregulate the expression of BACE1 in AD brain, thereby increasing Aβ production
+The expression of miR-15/107 in cerebral cortical gray matter is correlated with amyloid plaque density
+The AD-dysregulated miRNAs in brain have been associated with neuroinflammation and cell cycle regulation
+These stable AD-dysregulated miRNAs in blood may reflect the composition of dysregulated miRNAs in brain, suggesting that they may be potential biomarkers of AD.
+The dysregulated miRNAs were found in plasma and serum of AD patients
+Compared with biomarkers in brain or CSF, blood circulating biomarkers are preferable for their higher accessibility.
+However, before establishing any miRNAs as AD biomarkers, it is necessary to first evaluate their reliability and consistency among different studies of differentially expressed miRNAs (DEmiRNAs) in AD patients, and their biological significance to understand their roles in the pathogenesis of AD.
+Thus far, the development of blood circulating DEmiRNAs as AD biomarkers has been hindered by inconsistent and unreliable studies.
+For example, Denk et al.
+Only one DEmiRNA, miR-146a-5p, was common between the two studies.
+Further, the studies reported the same miR-146a-5p to have opposite directions of dysregulation in AD.
+This inconsistency can be attributed to differences in the AD patients recruited for the trials, including the presence of other disease conditions that might influence the levels of biological molecules in blood, and the stages of disease progression
+A meta-analysis of these inconsistent DEmiRNA results may resolve discrepancies and enhance generalizability of the results.
+Takousis et al.
+They applied Stouffer's method to integrate the P values of every DEmiRNA from each independent study and found 32 statistically significant DEmiRNAs in blood.
+However, Stouffer's method does not include information about dysregulation states of DEmiRNAs and its use of P values is outdated in terms of the methodology of metaanalysis; thus, the results were probably biased by the number of studies reporting the same DEmiRNAs.
+The results of these metaanalyses demonstrate that some blood circulating DEmiRNAs may be useful for AD diagnosis, but there has not been extensive identification of DEmiRNAs that may serve as AD biomarkers.
+Structural and functional patterns of similar DEmiR-NAs can be identified by machine learning, which has been applied to the identification of AD biomarkers.
+Studies using different machine learning techniques have identified different DEmiRNAs for AD diagnosis with up to 89% accuracy
+Until recently, machine learning mainly focused on fine tuning the set of DEmiRNAs identified from differential miRNA expression profiling studies to obtain a smaller panel of miRNAs for AD diagnosis.
+As an emerging trend, machine learning is being used to predict potential DEmiRNAs as AD biomarkers based on DEmiRNAs identified from differential expression profiling studies.
+For example,
+ABMDA is a supervised learning approach with validation against the Human MicroRNA Disease Database (HMDD)
+Its clustering algorithm is based on kmeans distance, and its boosting technique combines classifiers by their corresponding weights to form a stronger classifier.
+The ABMDA ensemble learning method relies upon the initial set of DEmiRNAs to predict additional DEmiRNAs.
+In the present study, we used meta-analysis to enhance the reliability of the initial DEmiRNAs and augment the prediction performance of the ABMDA ensemble learning method.
+This study aimed to identify blood circulating DEmiR-NAs as potential AD biomarkers by augmenting the DEmiRNAs identified by meta-analysis with the ABMDA ensemble learning method.
+The meta-analysis was conducted under the guidance of the PRISMA statement
+
+Methods
+The present meta-analysis was mainly conducted using R and Python packages and is illustrated in Fig.
+If an included study contained several comparisons, the DEmiRNAs from each comparison were collected independently.
+The sample sizes of control and AD groups, and DEmiRNAs and their dysregulated states from each independent comparison were extracted.
+The names of all reported DEmiRNAs were standardized based on the miRBase database
+A metaanalysis for the DEmiRNAs was performed when more than one comparison reported the same DEmiRNA.
+Statistically significant DEmiRNAs from the meta-analysis were collected as positive miRNA-AD associations for the ABMDA ensemble learning method to further increase the number of positive miRNA-AD associations.
+The ABMDA-identified miRNAs with scores higher than the predefined criteria, together with the DEmiRNAs identified by the meta-analysis, were treated as potential AD biomarkers in blood.
+The biological significance of the identified DEmiRNAs was studied by a biological pathway enrichment analysis and network analysis of their corresponding target genes.
+The combination of meta-analysis and ABMDA ensemble learning might be beneficial to resolve the existing inconsistencies and perform systematical predictions based on reliable results.
+The case-control studies reporting differential miRNA expression in blood from AD and healthy participants were included.
+The included studies had to report the differential expression profiling methods, sample sizes of the disease and control groups, and statistical significance for each DEmiRNA.
+Studies were excluded if they
+
+Differential miRNA expression studies selection
+
+Meta-analysis
+For each study, the following data were extracted for the meta-analysis:
+(3) differential miRNA expression profiling method; (4) number of AD cases; (5) number of control cases; and (6) DEmiRNAs and their dysregulated states.
+For studies that reported both screening and validation results of differential miRNA expression, only the results from validation methods were collected.
+The names of extracted DEmiRNAs were standardized using the miRNAmeConverter
+For each DEmiRNA that was reported by more than one comparison, a meta-analysis was performed using the metafor
+The meta-analysis was conducted for each qualified DEmiRNA, independently, under a random-effects model.
+For each qualified DEmiRNA from independent comparisons, that was reported as binary dysregulation (i.e., upregulation or downregulation) in AD group compared with healthy control group.
+The effect sizes of binary data were calculated as log e odds ratios (logORs) based on the number of dysregulation events in both disease and control samples.
+The heterogeneity of each DEmiRNA was reported as tau square (τ 2 ) based on the restricted maximum-likelihood estimator and I 2 statistics.
+The outcomes were logORs with a 95% confidence interval (CI), P values, τ 2 , and I 2 .
+For each DEmiRNA in the ith study, the effect size (θ i ) based on the numbers of dysregulation events in both AD and control samples was calculated according to the formula, log( A i ÃD i B i ÃC i ), where A i and B i (C i and D i ) represent the number of upregulated and downregulated cases in the disease (control) group, respectively.
+Then the overall effect was computed according to formula,
+, where W i is the weight and is equal to 1/(v i + τ 2 ), where v i is the sample variance.
+A larger sample size has more weight on the overall effect size.
+The P values were adjusted by false discovery rate (FDR), and DEmiRNAs with FDRadjusted P values less than 0.05 were regarded as statistically significant.
+Statistically significant DEmiRNAs with logORs above or below 0 were considered upregulated or downregulated, respectively, in AD compared with healthy controls.
+Subgroup analysis was conducted based on the DEmiRNAs collected from the included differential miRNA expression studies.
+The DEmiRNAs were split into four different subgroups based on the blood sample sources, i.e., whole blood, plasma, serum, and peripheral blood mononuclear cell (PBMC).
+
+ABMDA identification of DEmiRNAs
+ABMDA ensemble learning was used to identify potential miRNA-disease associations.
+The original miRNAdisease associations with significant dysregulation in the "circulation_biomarker_diagnosis" category were extracted from HMDD, in which the associations are experimentally verified.
+DEmiRNAs identified in the metaanalysis with adjusted P values less than 0.05 were input into the ABMDA ensemble learning method as positive miRNA-AD associations to further increase the number of positive miRNA-AD associations.
+In addition to initial miRNA-disease associations, ABMDA ensemble learning also requires disease-disease similarity and miRNA-miRNA functional similarity.
+The disease-disease similarity was determined using the DOSE
+The miRNA-miRNA functional similarity was retrieved from the database MISIM
+The ABMDA-identified DEmiRNAs were sorted by their prediction scores, and the DEmiRNAs with top prediction scores were collected until the first predicted DEmiRNA that was reported statistically insignificant in the meta-analysis.
+The names of predicted DEmiRNAs were standardized using the miRNAmeConverter package for R software with the miRBase database
+The ABMDA-identified DEmiRNAs with the top prediction scores, together with the meta-analysis DEmiRNAs were considered potential AD biomarkers.
+Biological significance of DEmiRNAs from meta-analysis and ABMDA by independent and synergic biological enrichment analysis Each miRNA regulates a large number of genes to exert a profound influence on genetic expression in specific cellular functions, and the primary function of each miRNA can be understood by identifying its target genes.
+The target genes of the DEmiRNAs from the meta-analysis and ABMDA identification were obtained using the multiMiR
+The target genes of two DEmiRNA categories were collected separately to conduct two independent enrichment analyses and were also combined to conduct a synergic enrichment analysis.
+The biological enrichment analysis was conducted using the clusterProfiler
+The pathways with FDR-adjusted P values less than 0.05 were considered statistically significant.
+
+Collaborative biological function of DEmiRNAs from meta-analysis and ABMDA by network analysis
+The target gene semantic similarity measurements of the DEmiRNAs identified from the meta-analysis and ABMDA were computed using the DOSE package for R. The target genes with semantic similarity over 0.95 were treated as common target genes in the two DEmiRNA categories.
+The DEmiRNAs and common target genes of the two DEmiRNA categories were used to construct a DEmiRNA-gene network based on the data from STRING (version 11)
+Only interactions with the highest confidence (0.9) were kept from the STRING.
+
+Risk of bias
+The risk of bias for each included study was evaluated according to the Minimum Information for Publication of Quantitative Real-time PCR Experiments (MIQE)
+This guideline is designed to assess the quality of qRT-PCR data and describes the minimum information required to ensure that experimental results can be comprehensively interpreted and independently verified.
+In the present study, the guideline was used to assess the quality of the expression profiling analysis of the included studies, including experimental design, sample annotation, experimental procedure, data processing pipeline, and result presentation.
+The evaluation was performed by two authors (SCY and XNL), independently.
+Disagreements between the authors were resolved by discussion with the other authors.
+Items with low risk were counted + 1, suggesting high reproducibility; items with unclear risk were counted 0, suggesting ambiguous reproducibility; and items with high risk were counted -1, suggesting low reproducibility.
+
+Results
+
+Differential miRNA expression studies included in the analysis
+The selection process of the differential miRNA expression studies is shown in Fig.
+After a systematic search, 47 studies met the eligibility criteria and were included in the present study
+The characteristics of the included studies are shown in Table
+The studies mainly focused on four blood elements: serum, plasma, whole blood, and peripheral blood mononuclear cells.
+Serum (n = 19) was the most extensively studied, followed by plasma (n = 16).
+
+Identification of DEmiRNAs from meta-analysis
+After DEmiRNA name standardization, there were 115 DEmiRNAs reported in 54 independent comparisons of 47 differential expression studies that compared AD blood samples with healthy blood samples.
+Eight-eight DEmiRNAs were found in one blood element, 25 DEmiRNAs were found in two blood elements, two DEmiRNAs were found in three blood elements, and no DEmiRNAs were found in all four blood elements.
+The most frequently reported DEmiRNAs in AD blood were miR-146a-5p and miR-26a-5p, which were dysregulated in five independent comparisons (Table
+Of the 115 DEmiRNAs, 43
+Based on the currently available data, none of the inconsistent DEmiRNA results were resolved in this meta-analysis.
+In the meta-analysis of 43 dysregulated miRNAs, 18 DEmiRNAs were found to be statistically significant (Table
+Among the 18 DEmiRNAs identified in this study,
+The discrepancy could be due to that we only included the literature with qRT-PCR as validation results, and we treated comparisons independently even that those comparisons were from the same literature.
+Meanwhile, 13 DEmiR-NAs of our meta-analytical results
+The most significantly downregulated DEmiRNA was miR-107, which was identified in four independent comparisons.
+MiR-106b-39 was the most significantly upregulated DEmiRNA among four independent comparisons.
+Downregulation of miR-107 has been reported to increase BACE1 expression
+The dysregulation of miR-106b-3p is negatively correlated with MMSE score
+Most DEmiRNAs identified in the meta-analysis were associated with mediating Aβ generation, tau protein phosphorylation, and neuronal functions maintenance.
+For subgroup analysis, among 54 comparisons, 7, 17, 23, and 7 comparisons investigated the DEmiRNAs in whole blood, plasma, serum, and PBMC, respectively.
+The statistically significant DEmiRNAs from the subgroup meta-analysis are shown in Table
+Two miRNAs, miR-103a-3p in plasma and miR-181c-5p in serum, were found statistically significant in the subgroup analysis, but not in the meta-analysis.
+MiR-103a-3p is recently reported to be related to AD progression via regulating NPAS3 expression
+
+Identification of potential biomarkers by the ABMDA ensemble learning method
+A total of 1751 known miRNA-disease associations between 413 miRNAs and 227 diseases were obtained from the "circulation_biomarker_diagnosis" category in HMDD, including 17 known miRNA-AD associations.
+Identification of miRNA-disease associations by metaanalysis increased the number of positive miRNA-AD associations by 15 for the ABMDA identification after removing duplicates.
+The eleventh miRNA from the ABMDA results was determined to be statistically insignificant in the meta-analysis.
+Therefore, the first 10 miR-NAs with prediction scores ranging from 9.45 to 7.88 were collected (Table
+Most of these 10 miRNAs have been associated with multiple types of cancer as diagnostic or prognostic biomarkers
+Only one miRNA, miR-155, has been reported as a biomarker in AD for mediating neuroinflammation
+MiR-339-5p is upregulated to alleviate neuroinflammation by inhibiting HMGB1
+Current literature suggests that NF-κB might be the main downstream effector for the DEmiR-NAs identified by ABMDA in the present study.
+
+Enrichment analysis
+There were 3496 and 2938 target genes in total for 18 and 10 DEmiRNAs from the meta-analysis and ABMDA results, respectively (Additional file 3).
+These target genes were subjected to two independent enrichment analyses based on KEGG to obtain the functional annotations of the DEmiRNAs (Fig.
+Most pathways targeted by the meta-analysis and ABMDA DEmiRNAs were commonly found in the two independent enrichment analyses, even though the DEmiRNAs in the two categories were not identical.
+This indicated that multiple DEmiRNAs target either common or different mRNA transcripts that functionally converge on the same pathways.
+Most dysregulated pathways in the enrichment analysis were involved in AD development via modulation of neuroinflammation, including the AGE-RAGE signaling pathway in diabetic complications, cell cycle, cellular senescence, Hippo signaling pathway, and FoxO signaling pathways.
+In addition, multiple cancerous pathways were also implicated.
+Compared with the two independent enrichment analyses, the synergic enrichment analysis unifying the two categories of DEmiR-NAs might provide better insight for AD development.
+In the synergic enrichment analysis, the dysregulated pathways were more statistically significant (Fig.
+Also, the pathways that were found in only one independent enrichment analysis (such as the Hippo signaling pathway from the meta-analysis and cell cycle from     ABMDA) were both statistically significant in the synergic enrichment analysis.
+The synergic enrichment analysis suggested that the two DEmiRNA categories interact functionally and complement each other.
+In the synergic enrichment analysis, the AGE-RAGE signaling pathway in diabetic complications was identified as the second most statistically significant.
+The AGE-RAGE pathway is involved in diabetic microvascular complications.
+Elevated levels of AGE and RAGE have also been reported in AD patients, and increased RAGE activity has been detected in patients with early AD symptoms
+RAGE also interacts with Aβ oligomers to induce BBB leakage
+Elevated neuroinflammation increases the expression of secretases for Aβ production
+Elevated levels of proinflammatory cytokines and Aβ increase cell cyclerelated kinases, such as PKA, CAMKII, Fyn, and mTORC1, inducing neuronal cell cycle re-entry (CCR)
+Aberrant CCR results in neuronal hyperploidy, which alters neuronal circuit function and reduces synaptic activity
+Aberrant CCR is also induced by malfunction of PI3K/AKT/mTOR, a cell survival pathway disrupted in both AD and cancer, though in opposite directions
+Further, aberrant CCR is a causative factor for the majority of neuronal death in early AD development and might be a potential biological mechanism to link AD and multiple cancerous diseases.
+Aberrant Aβ accumulation and proinflammatory cytokines from dying neurons further enhance neuroinflammation and oxidative stress, inducing cellular senescence and dysregulating the Hippo and FoxO signaling pathways.
+Cellular senescence is a permanent state of cellular rest that is involved in the onset of AD
+The Hippo signaling pathway is a kinase cascade relevant for cellular homeostasis, and is upregulated by Aβ-mediated neurotoxicity to enhance neurodegeneration with JNK in AD
+The FoxO signaling pathway is involved in the relationship between ROS, insulin resistance, and AD pathology
+Under persistent oxidative stress, the FoxO signaling pathway increases the transcription of apoptotic proteins
+
+Network
+In total, 5222 target genes were identified for the DEmiRNAs from the meta-analysis and ABMDA, and 1865 target genes with semantic similarity over 0.95 were identified as common target genes in the two DEmiRNA categories, suggesting an overlap of the two categories in biological functions.
+The common target genes were used to retrieve the corresponding proteinprotein interactions according to STRING and construct a network.
+The network comprised 1865 common target genes as nodes, and 18750 edges among the common target genes.
+The DEmiRNAs let-7b-5p and miR-155 identified by ABMDA shared the most common target genes with the DEmiRNAs miR-93-5p and miR-128-3p identified by the meta-analysis.
+The common target genes UBC, UBB, and RPS27A, which are core members in the ubiquitin-proteasome system (UPS), exhibited the highest connection degree in the network.
+The UPS is imperative not just in Aβ clearance
+The   function of the UPS can be adversely influenced by neuroinflammation.
+Under neuroinflammation, J2 prostaglandins are generated from prostaglandin D2, which is the most abundant prostaglandin in the brain
+J2 prostaglandins enhance the expression levels of COX2 to transition acute neuroinflammation to chronic neuroinflammation and oxidize the UPS units to promote disassembly
+The impaired UPS induces ectopic expression of cell cycle-related genes and causes neuronal CCR, as the metabolisms of cyclin and cyclin-dependent kinases are dependent on the UPS.
+A recent study
+
+Quality assessment of studies
+The MIQE guideline was used to access the expression profiling analysis of the included studies.
+The results of the quality assessments were shown in Fig.
+Among the 47 expression profiling studies, miR-39 and U6 RNAs were frequently used as internal normalization controls for qRT-PCR.
+Around 85% of the included studies provided sufficient information about data processing, including statistical analysis and quantification methods.
+About 70% of the included studies provided sufficient information about sample annotation, but 16 studies did not provide details of the storage or extraction methods of serum or plasma.
+Approximately 60% of the included studies did not provide the number of replicates in the experimental design, and 77% did not provide the quantification cycle value in the actual data processing.
+The parameters of qRT-PCR methods were missing in 14 studies.
+For the annotation of PCR, most studies provided the full details of reference miRNAs for quantification, but primer information was missing in 19 studies.
+
+Discussion
+There is a need for blood circulating biomarkers that can be mass screened accurately and conveniently to identify high risk individuals of AD.
+The identification of DEmiRNAs as biomarkers from differential miRNA expression studies has been successful in cancers
+DEmiRNAs associated with AD pathology, such as Aβ production and neuroinflammation, are potentially important biomarkers because the presence of Aβ and proinflammatory cytokines are considered to be key factors for predicting whether patients with mild cognitive impairment are progressing to AD
+In this study, we used a meta-analysis approach based on differential miRNA expression studies from blood to identify reliable miRNA-AD associations.
+The associations were subsequently used for the prediction of potential AD biomarkers using the ABMDA ensemble learning method.
+We identified 28 DEmiRNAs (18 and 10 from meta-analysis and ABMDA, respectively) as potential AD biomarkers in blood.
+The DEmiRNAs identified with the meta-analysis involved in Aβ metabolism, including APP expression, Aβproduction enzyme regulation, and Aβ clearance, tau protein phosphorylation, and also contribute to neuronal function during AD progression, including pathogenic neuroinflammation, apoptosis, mitochondrial oxygen chain activity, and neuronal microtubule maintenance.
+The meta-analytical results of DEmiRNAs mediate Aβ synthesis via several targets, and some of them are also involved in tau protein phosphorylation and neuronal functions.
+MiR-107 is negatively correlated with BACE1 and ADAM10 expression and is downregulated in the early stage of AD
+The downregulation of miR-107 also dysregulates the expression of CDK5R1, which is involved in neuronal survival
+Downregulation of miR-181c dysregulates the expression of SPTLC1 [152], to increase Aβ deposition, and increases proinflammatory cytokines
+MiR-22-3p and miR-29c also regulate Aβ deposition via targeting MAPK14 and BACE1, respectively
+Besides Aβ synthesis, Aβ  is also interfered by the meta-analytical results of DEmiRNAs.
+MiR-128 and miR-93 are reported to be involved in Aβ phagocytosis and UPS for Aβ clearance by targeting cathepsin and NEDD4L, respectively
+For Aβ-induced toxicity, upregulation of miR-34c enhances Aβ-induced synaptic failure to suppress the memory formation by targeting SIRT1 and VAMP2
+MiR-200a-3p coregulates BACE1 and PRKACB to protect neurons against Aβ-induced toxicity and tau protein hyperphosphorylation
+The meta-analytical results of DEmiR-NAs were also involved in the tau protein phosphorylation.
+MiR-132 is consistently downregulated in different brain area, and negatively correlated with Braak stage, suggesting that it has an important role in cognitive capacity and correlated with tau protein phosphorylation
+The downregulation of miR-132 is reported to increase the expression of ITPKB and SIRT1 for tau pathology and Aβ generation, respectively
+Meanwhile, miR-132 is also involved in caspase
+MiR-483-5p and miR-106b target MAPT and FYN for tau protein synthesis and phosphorylation, respectively
+For neuronal function, miR-222 targets CDKN1B to influence cell cycle and apoptosis
+The potential mechanisms of miR-126-5p, miR-148-5p, and let-7d in AD are not well known.
+MiR-126-5p targets JNK-interacting protein 2 to mediate inflammatory response in infectious conditions
+The expression of miR-148-5p is reported to be positively correlated with MMSE score
+Compared with other let-7 family members, let-7d does not significantly trigger the release of TNF-α from microglia
+DEmiRNAs from ABMDA also relate to neuroinflammation mainly via modulation of NF-κB.
+The DEmiRNAs identified in the present study are compatible with the first two differential miRNA expression studies in AD, which reported that the DEmiRNAs are associated with dysregulated inflammation
+Independent enrichment analysis in the present study indicated disrupted signaling of AGE-RAGE, cellular senescence, Hippo, FoxO, and cell cycles, and these dysregulated pathways were more statistically significant in the synergic enrichment analysis.
+The dysregulated pathways were associated with neuroinflammation, in which neuroinflammation increases the production of Aβ by modulation of secretase, suggesting a biological significance of the 28 DEmiRNAs in AD development.
+The similarity of biological functions of the two DEmiRNA categories fits the ABMDA assumption that the miRNAs associated with the same disease should be functionally related.
+In the network, 1865 target genes were commonly found from the two DEmiRNA categories, and the highly connected target genes involved UBC, UBB, and RPS27A, which are involved in the neuroinflammatory process and CCR through mediating the UPS.
+Comparison of DEmiRNA results from the metaanalysis and ABMDA revealed that the cell cycle pathway was identified as significant only with ABMDA.
+The majority of neuronal death in AD is due to the dysregulated cell cycle, in which the differentiated neurons in AD-affected brain regions re-enter the cell cycle in the presymptomatic disease
+The ectopic expression of developmentally regulated genes in AD links AD Fig.
+Green color represents a low risk of bias, in which the authors clearly provided full details of the methods.
+Yellow color represents an unclear risk of bias, in which the authors provided methods without full details pathophysiology with aberrant CCR correlates with cognitive decline
+CCR markers are expressed in Aβ-cultured neurons within hours, suggesting CCR is an initial event in response to Aβ
+These findings indicate that neuronal CCR induces rapid neuronal loss after exposure to Aβ. Neuronal CCR in AD results from Aβ-induced activation of multiple protein kinases at the plasma membrane, and tau protein phosphorylation by these proteins.
+The absence of β-secretases, or blockage of the Aβ receptor, inhibits CCR
+Aβ incorporates into the lipid rafts of neuronal membranes by Fyndependent kinase
+The phosphorylated tau proteins subsequently modify mTORC1 activity to induce CCR.
+Aβ also induces a rapid loss of the insulin receptor in the brain and impairs insulin receptor autophosphorylation to reduce brain insulin signaling
+CCR can also be initiated by JNK, which is activated when Aβ binds to receptors, such as RAGE, or by
+Once CCR is initiated, neurons do not complete the cell cycle
+The hyperploidy of neurons results in hypertrophy of neuronal cell bodies in ADaffected regions
+The number of hyperploid neurons is higher in preclinical AD individuals than in healthy individuals, and initially increases followed by a gradual decrease in AD development
+The hyperploidy gradually decreases the synaptic inputs, which correlates with reduced activity of PSD-
+Further, loss of chromosomal homeostasis induces neuronal death
+Neurotrophins, such as nerve growth factor (NGF) and brain-derived neurotrophic factor (BDNF), elicit prosurvival functions, whereas their precursors, proNGF and proBDNF, elicit apoptotic functions.
+The levels of neurotrophins and their precursors are downregulated and upregulated in AD, respectively
+Additionally, CCR induces dysregulation of cyclin metabolism to activate the transcription factor, FOXO1.
+The cyclin B-CDK1 complex, which is upregulated in
+Thus, CCR is a key mechanism to functionally connect Aβ and tau proteins in the early phase of AD development and connects the seemingly unrelated pathologies between AD and cancer, and between AD and insulin signaling impairment
+This convergence of pathology points to the importance of CCR in AD development and significance of miRNAs involved in CCR. Figure
+Although it remains unclear whether neuroinflammation is the primary cause of AD development or a secondary event to other primary pathologies, neuroinflammation is an imperative and early event for Aβmediated toxicity and has been suggested to contribute as much as Aβ in AD pathology
+The level of neuroinflammation assessed by microglial activation has been correlated with worse cognitive decline in a PEG imaging study of AD participants
+Neuroinflammation is progressively increased during AD development, as indicated by elevated levels of proinflammatory cytokines
+Proinflammatory cytokines have been identified around amyloid plaques
+Neuroinflammation impairs the microglial Aβ degradation ability
+Several genome-wide association studies have reported that immune-related genes are involved in AD pathogenesis
+An epigenome-wide association study
+ANK1 encodes Ankyrin 1 to maintain the actin cytoskeleton, and the upregulation of ANK1 in AD microglia has been reported, which supports the significance of the microglial response in AD development
+The perpetuation of inflammation influences synaptic plasticity and induces neuronal damage, resulting in neurodegeneration
+Synaptic loss results primarily from the increased levels of proinflammatory cytokines and activated microglial cells
+However, the importance of neuroinflammation in AD has been questioned because of the failure of nonsteroidal anti-inflammatory drugs (NSAIDs) for treating AD.
+An early AD clinical trial reported the failure of both cyclooxygenase-nonselective (naproxen) and cyclooxygenase-selective (celecoxib) NSAIDs in cognitive function improvement
+Another study
+The trials suggest that the efficacy of NSAIDs is disease stage dependent and that the choice of NSAID is a determining factor.
+A COX nonselective NSAID, tarenflurbil, has shown some positive results at a high dosage for individuals with mild symptoms in a post hoc analysis of a phase II clinical trial
+One possible reason for its failure is the low penetration of the drug from plasma CSF.
+A recent study indicated that intranasal delivery of tarenflurbil can increase the drug concentration in the brain [207], but no clinical trials have yet been carried out with this route of delivery.
+The miRNA expression profile in blood is representative of dysregulation in all tissues.
+The DEmiRNAs could be biased by the presence of multiple comorbidities, although the extent of how specific comorbidities influence DEmiRNAs in AD is not fully known.
+The miRNAs encapsulated in membrane vesicles can penetrate the BBB
+Peripheral inflammation interferes with immunological processes in the brain through the entry of activated peripheral immune cells that exacerbate or initiate neuroinflammation.
+A growing body of evidence supports that peripheral inflammation is a driver of AD.
+For example, obesity and type 2 diabetes mellitus increase the risk of AD development through mediating neuroinflammation
+The AD pathogenetic factor APOE ε4 allele has been reported to impair macrophage efferocytosis, which subsequently induces tissue inflammation and increases the circulating levels of proinflammatory cytokines
+Elevated levels of proinflammatory cytokines in the blood of AD patients have been reported in metaanalyses
+Peripheral inflammation is positively associated with cognitive decline and could detrimentally impact brain function
+The entry of peripheral immune cells disrupts synaptic plasticity to induce neuroinflammation, increasing the risk of cognitive decline
+Neuroinflammation also releases antigens to activate T cells in CSF.
+The activated T cells enter the brain and differentiate into effector T cells, which can produce cytokines
+Abnormalities in T cells have been reported in AD patients compared with controls
+
+Limitations
+Current approaches to diagnose AD (e.g., FDG-PET and CSF-based Aβ and tau protein levels) require sophisticated equipment or lumbar puncture, which could be avoided with the use of blood-based biomarkers.
+The strength of this study is the integration of meta-analysis and the ABMDA ensemble learning method to identify potential AD biomarkers in blood.
+However, there are some limitations.
+First, most of the included miRNA expression studies only conducted qRT-PCR as a validation approach to identify DEmiRNAs, and only 17 of the included studies reported both screening and validation approaches.
+This means that the present identification of DEmiRNAs was dependent on those selected by researchers in previous studies, and not an objective manner.
+This implies that the number of DEmiRNAs in AD is likely larger than the number of DEmiRNAs identified in the present study.
+Second, although most DEmiRNAs from the meta-analysis and ABMDA identification were associated with neuroinflammation, their function was not distinguishable between acute and chronic neuroinflammation.
+Acute neuroinflammation is beneficial for microglial clearance of Aβ, whereas chronic neuroinflammation results in neurodegeneration by mediating functional and structural damage to neurons
+Third, there were 9 DEmiRNAs from the meta-analysis extracted from the independent comparisons of only one study, suggesting that the meta-analytical results might be biased by the unidentified correlation within the recruited population.
+Forth, disease stages of AD patients were not fully and consistently provided in most included differential miRNA expression studies, resulting in the performance of subgroup analysis based on disease stage was not currently applicable.
+Also, the results of original studies might be influenced by the lack of adjustment for the disease stages.
+Fifth, all the included differential miRNA expression studies were non-longitudinal studies, suggesting that the miRNAs extracted from these studies were not repeated observations over periods of time.
+
+Conclusion
+This study identified 28 DEmiRNAs as potential AD biomarkers in blood by meta-analysis and ABMDA ensemble learning in tandem.
+The DEmiRNAs identified by both meta-analysis and ABMDA were related to neuroinflammation, and those identified solely by ABMDA were related to neuronal CCR.
+Fund of Henan Institute of Medical and Pharmacological Sciences (2021BP0113) from Zhengzhou University.
+
+
+Differential miRNA expression studies were collected from PubMed from inception until January 10, 2020, from ScienceDirect and Web of Science between 1993 and 2019.
+The search strategy is shown below: For PubMed, ("Alzheimer's disease" [MESH Terms] OR "Alzheimer's disease" [All Fields] OR "alzheimer*" [MESH Terms] OR "alzheimer*" [All Fields]) AND ("microRNA*" [MESH Terms] OR "microRNA*" [All Fields] OR "miRNA*" [MESH Terms] OR "miRNA*" [All Fields]) For ScienceDirect and Web of Science, (microRNA OR miRNA) AND Alzheimer After the search, two authors (SCY and XNL) screened all titles, abstracts, and full texts independently
+
+
+
+Fig. 1
+Fig. 1 Overall study design.
+The italic font and normal font on the right-hand side of the arrows represent the R package and python-based algorithm, respectively.
+The name of each database is shown on the left-hand side of the arrow
+
+
+[106].
+HMGB1 encodes high mobility group box 1 to produce proinflammatory cytokines by binding to receptors for advanced glycation end products (RAGE) [107] and inhibiting IKK-β and IKK-γ, which are key elements of NF-κB signaling [108].
+NF-κB signaling can also be modulated by the identified DEmiRNAs through multiple mechanisms.
+Both miR-203a-3p and let-7b-5p target IGF1R, which encodes insulin-like growth factor 1 receptor, to alleviate tumor necrosis factor (TNF)-induced activation of NF-κB [109, 110].
+MiR-155 and miR-625-5p decrease the expression of SHIP and AKT2, which encode Src homology 2-
+
+
+
+Fig. 2
+Fig. 2 Flow diagram of the differential miRNA expression study selection, including the identification, screening, eligibility, and inclusion stages
+
+
+
+Fig. 3
+Fig.3Biological pathway analysis of the target genes of DEmiRNAs identified by A meta-analysis; B ABMDA; and C both the metaanalysis and ABMDA.
+The x-axis represents the number of genes in each of the KEGG pathway, the y-axis represents the name of each KEGG pathway, and the color represents the FDR-adjusted statistical significance
+
+
+
+Fig. 5
+Fig. 5 Mechanism of action of neuronal CCR in AD
+
+
+
+Table 1
+Characteristics of the included differential miRNA expression studies
+
+
+
+Table 1
+Characteristics of the included differential miRNA expression studies (Continued)
+
+
+
+Table 2
+DEmiRNAs reported by the included differential miRNA expression studies.
+The bold DEmiRNAs were reported by at least two independent comparisons and were qualified for the subsequent meta-analysis
+
+
+
+Table 2
+DEmiRNAs reported by the included differential miRNA expression studies.
+The bold DEmiRNAs were reported by at least two independent comparisons and were qualified for the subsequent meta-analysis (Continued)
+
+
+
+Table 2
+DEmiRNAs reported by the included differential miRNA expression studies.
+The bold DEmiRNAs were reported by at least two independent comparisons and were qualified for the subsequent meta-analysis (Continued)
+
+
+
+Table 2
+DEmiRNAs reported by the included differential miRNA expression studies.
+The bold DEmiRNAs were reported by at least two independent comparisons and were qualified for the subsequent meta-analysis (Continued)
+
+
+
+Table 2
+DEmiRNAs reported by the included differential miRNA expression studies.
+The bold DEmiRNAs were reported by at least two independent comparisons and were qualified for the subsequent meta-analysis (Continued)
+
+
+
+Table 3
+Statistically significant DEmiRNAs identified the meta-analysis Statistically significant DEmiRNAs identified by the meta-analysis in subgroup analysis
+
+
+
+Table 4
+Statistically significant DEmiRNAs identified the meta-analysis in subgroup analysis
+
+
+
+Table 5
+AD-related DEmiRNAs identified by ABMDA

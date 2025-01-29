@@ -1,0 +1,360 @@
+Alzheimer's Disease Classification With a Cascade Neural Network
+Classification of Alzheimer's Disease (AD) has been becoming a hot issue along with the rapidly increasing number of patients.
+This task remains tremendously challenging due to the limited data and the difficulties in detecting mild cognitive impairment (MCI).
+Existing methods use gait [or EEG (electroencephalogram)] data only to tackle this task.
+Although the gait data acquisition procedure is cheap and simple, the methods relying on gait data often fail to detect the slight difference between MCI and AD.
+The methods that use EEG data can detect the difference more precisely, but collecting EEG data from both HC (health controls) and patients is very time-consuming.
+More critically, these methods often convert EEG records into the frequency domain and thus inevitably lose the spatial and temporal information, which is essential to capture the connectivity and synchronization among different brain regions.
+This paper proposes a cascade neural network with two steps to achieve a faster and more accurate AD classification by exploiting gait and EEG data simultaneously.
+In the first step, we propose attention-based spatial temporal graph convolutional networks to extract the features from the skeleton sequences (i.e., gait) captured by Kinect (a commonly used sensor) to distinguish between HC and patients.
+In the second step, we propose spatial temporal convolutional networks to fully exploit the spatial and temporal information of EEG data and classify the patients into MCI or AD eventually.
+We collect gait and EEG data from 35 cognitively health controls, 35 MCI, and 17 AD patients to evaluate our proposed method.
+Experimental results show that our method significantly outperforms other AD diagnosis methods (91.07 vs. 68.18%) in the three-way AD classification task (HC, MCI, and AD).
+Moreover, we empirically found that the lower body and right upper limb are more important for the early diagnosis of AD than other body parts.
+We believe this interesting finding can be helpful for clinical researches.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common cause of cognitive impairment and is one of the diseases with the highest incidence among the elderly.
+In 2006, 26.6 million people on the earth suffered from AD, and the number is still rapidly increasing every year
+More critically, AD has become the seventh leading cause of death
+Conventional AD diagnosis methods often use scale screening and brain imaging equipment such as functional Magnetic Resonance Imaging (fMRI), Computer Tomography (CT), and Positron Emission Tomography (PET).
+These methods require experienced clinicians as well as exhaustive examinations.
+Recently, many studies
+However, it is challenging to classify AD precisely for the following reasons: on the one hand, the prodromal stage of AD, namely mild cognitive impairment (MCI), has a light symptom, making it hard to detect; On the other hand, extracting robust features for AD detection is very challenging due to the limited volume of medical data.
+Previous studies on AD classification exploit gait data
+They often extract hand-crafted features from the input gait data (e.g., skeleton) and classify AD relying on these features.
+However, designing hand-crafted features for AD classification requires expert knowledge, and it is difficult to generalize the hand-crafted features to other tasks.
+Recently, some researchers
+However, existing EEG-based methods often
+In this sense, these methods will inevitably lose the information in the spatial and time domains of EEG data, which, however, is very important for capturing the coherence and synchronizations among different brain regions.
+It is worth noting that existing methods use one modal only (gait or EEG data) and suffer from the following limitations:
+We contend that considering the two modalities (i.e., gait and EEG data) simultaneously helps achieving faster and more accurate classification.
+To this end, we propose a cascade neural network with two steps for the early diagnosis of AD using both gait data and EEG data simultaneously.
+In the first step, we use gait data to classify HC and patients.
+For the purpose of reducing the psychological disturbance to the subject, we follow
+Regrading the non-Euclidean skeleton data, we propose to use attentionbased spatial temporal graph convolutional networks (AST-GCN) to model the relationships among body key points and automatically extract powerful features for distinguishing between HC and patients.
+In the second step, we use the original EEG data to distinguish MCI and AD patients further.
+Unlike other methods that convert EEG data to the frequency domain, we propose spatial temporal convolutional networks (ST-CNN) to directly extract the spatial and temporal features from original EEG data and use them to classify MCI and AD.
+In this manner, the EEG data from HC are no longer required, saving a lot of data collection time.
+We collect a data set consisting of gait and EEG data from 35 cognitively health controls, 35 MCI patients, and 17 AD patients to evaluate our proposed method.
+Our main contributions are summarized as follows:
+• We propose a cascade neural network that uses both gait and EEG data to classify AD, which achieves a high accuracy rate with less manual participation.
+This is the first attempt to consider two modalities for AD classification to the best of our knowledge.
+• We propose attention-based spatial temporal graph convolutional networks to automatically extract the features from gait data and leverage them to classify AD. • Moreover, we also propose spatial temporal convolutional networks to fully extract the spatial and temporal features from the original EEG data in both space and time domains.
+• The accuracy rate of our proposed cascade neural network in the three-way classification of HC, MCI, and AD reaches 91.07%, which is much higher than the method using one modal (68.18%).
+The accuracy of HC vs. MCI/AD is up to 93.09%.
+The rest of the paper is arranged as follows: Related work is concentrated on section 2; Section 3 details the proposed framework and the modules in it; Experimental results are exhibited in section 4; Section 5 concludes this paper.
+
+RELATED WORK
+Gait data has been used extensively to classify AD.
+Wang et al.
+(3) developed a device to collect the inertial signals of subjects.
+They designed an algorithm to leverage the inertial signals to detect and calculated the features of the stride.
+Then they selected the salient features to classify HC and AD.
+The classification accuracy rates in the female and the male groups are 70.00 and 63.33%, respectively.
+They converted the PSD features into images, and then used the convolutional neural networks for the early diagnosis of AD, achieving an accuracy of 89.8% in the binary classification and 83.3% in three-way classification.
+Bi and Wang
+They designed a DCssCDBM with a multi-task learning framework, achieving an accuracy of up to 95.05%.
+These deep learning methods all need to convert EEG data into frequency domain information.
+This way will lose the information in the spatial and temporal domains of EEG data, which is essential for capturing coherence and synchronization among different brain regions.
+We directly use the original EEG data containing both spatial and temporal information.
+We propose spatial temporal convolutional networks to extract the temporal and spatial implicit features of EEG data.
+The methods mentioned above leveraged either gait data or EEG data only for the early diagnosis of AD.
+The gait data collection procedure is simple, short in time, and easy to operate, but there is no significant difference in gait features between MCI and AD
+Conversely, EEG data can provide promising cues to classify AD and MCI, but the acquisition process is complicated and takes a long time.
+We consider gait and EEG data simultaneously to achieve a fast and accurate classification of AD.
+
+PROPOSED METHOD
+Notation.
+Let S = {s i } N s i=1 be the subject set that includes N s subjects, where s i represents the i th subject.
+denote clip set where N g clips are sampled from the gait data of the i th subject s i , where
+denote the epoch set containing N e epochs sampled from the EEG data of the i th subject s i , where ε e i represents the e th epoch.
+Problem Definition.
+Given gait clip set G i and EEG epoch set E i of subject s i , the classification of AD aims to map physiological signals, G i and E i , into HC, MCI, and AD groups corresponding to the state of subject s i .
+This task is very challenging due to the limited volume of data and the subtle differences among the three groups, especially for HC and MCI.
+
+Pipeline Overview
+Existing methods used either gait data or EEG data only for the classification of AD.
+However, as discussed in
+For the EEG data that are more sensitive to the differences between MCI and AD, some studies used EEG data to classify AD.
+However, collecting EEG data from both HC and patients takes a lone time.
+We believe that combining the two is able to make the early diagnosis of AD faster and more accurately.
+This drives us to propose a cascade neural network for the early diagnosis of AD with both gait and EEG data.
+Given gait clip g j i and EEG epoch ε e i of subject s i , we conduct the classification in two steps.
+Firstly, we use gait data to distinguish HC and MCI/AD patients.
+In this step, we select key points from g j i to form key-point skeleton sequences first.
+Then we input the key-point skeleton sequences into attention-based spatial temporal graph convolutional networks (AST-GCN) to extract features.
+Finally, we use these features to classify HC and MCI/AD by a standard SoftMax classifier.
+We further distinguish AD from MCI with EEG epoch ε e i in the second step.
+We input ε e i into the spatial temporal convolutional networks (ST-CNN) to extract the implicit features in spatial and temporal domain.
+We then used the features extracted by ST-CNN for the binary classification of MCI vs. AD.
+In our method, the EEG data from HC are not required.
+The architecture of our proposed framework is shown in Figure
+
+Attention-Based Spatial Temporal Graph Convolutional Networks
+Existing methods that use gait data for the early diagnosis of AD rely on handcrafted features, which are inefficient and cannot fully use implicit information in gait data.
+We need to automatically extract the implicit features in gait data for the early diagnosis of AD, which is the strength of deep learning.
+Our gait data is composed of skeleton sequences recognized by the Kinect devices.
+Traditional deep learning methods such as convolutional networks cannot handle such non-Euclidean data.
+The ST-GCN proposed by
+We apply it as our basic model to the classification of AD and propose attention-based spatial temporal graph convolutional networks (AST-GCN) according to our task and data characteristics.
+Based on clinical experience and experimental comparison results, we found that different body parts have different importance in the classification of AD.
+For this reason, given skeleton sequences, we first perform key point filtering to form our keypoint skeleton sequences and then input it into the proposed attention-based spatial temporal graph convolution networks.
+The extracted spatial and temporal features are finally used for classification.
+In the next few subsections, we will first briefly introduce ST-GCN, then we will introduce how we do key point filtering and the proposed attention-based spatial temporal graph convolutional networks.
+
+Spatial Temporal Graph Convolutional Networks
+Firstly, a spatial temporal graph is constructed from skeleton sequences, as shown in Figure
+The edges of the spatial temporal graph consist of two parts.
+One part is the natural
+where f in denotes the feature map of the clip composed of the coordinates of input skeleton sequences, which is a D × T × V matrix, where D = 3 corresponds to Three coordinates (x, y, z), T represents the time points i.e., the number of frames of the skeleton sequences, V is the number of nodes that constitute the spatial graph in each frame.
+W is the weight function; is the degree matrix of the spatial graph; A is the adjacency matrix of the spatial graph; I is the self-connection matrix.
+Moreover, M is proposed as a learnable edge weight, which has the same size as the adjacency matrix.
+It is used in every layer of spatial temporal graph convolution.
+Then the Equation (1) can be written as:
+where notes the element-wise multiply.
+Spatial temporal convolution module consists of a convolution in the spatial graph and a convolution in the temporal graph.
+The structure of spatial temporal convolution module is shown in Figure
+
+Key Points Filtering
+Several studies
+This means that the joints of the lower body, such as the ankles, are more critical for the early diagnosis of AD.
+Besides, Most subjects are right-handed.
+It is clinically believed that the left hemisphere of right-handed patients is more sensitive to AD and more likely to be affected.
+When we observe the learnable parameter M of the basic model after it converges, we find that the connections among the joint points of the lower body and the right upper limb are given higher weights, which means that these joint points are more important than other parts.
+Through experimental comparison, we also verified that performance classification with the skeleton sequences composed of the joint points of the lower body and the right upper limb are better than that with the skeleton sequences composed of other parts.
+Therefore, we select the joint points of the lower body and the right upper limb to form key-point skeleton sequences.
+
+Hourglass Attention Module
+From the description above, we can see that different parts are of different importance for the early diagnosis of AD.
+We argue that even in the key-point skeleton sequences we construct, joints in some parts are more important than other parts, such as ankles and wrists.
+Therefore, to drive the model further focus on important joints, we introduced an hourglass attention module with a structure similar to the attention module in
+However, we replaced the pooling layer with a convolutional layer in the time domain with a stride of 4. The structure of the hourglass attention module is shown in Figure
+
+Spatial Temporal Convolutional Networks
+Existing deep learning methods that use EEG data for the classification of AD convert EEG data into frequency domain information, then calculate PSD features and convert them into images.
+This way will lose the information in the time domain or even the spatial domain, which is essential to capture coherence and synchronization among different brain regions.
+The EEGnet proposed by
+However, its feature extraction in the spatial domain of EEG data simply uses a convolution layer to map the data to a single value.
+We believe that this is not able to fully extract the spatial features of EEG data.
+We propose the spatial temporal convolutional networks to extract features from original EEG data.
+Each ST-CNN module consists of a spatial convolution layer with a kernel size of K s × 1 and a temporal convolution layer with a kernel size of 1 × K t similar to
+In this way, the EEG data is alternately convoluted in the space domain and the time domain through multiple ST-CNN layers to fully extract the implicit features in space and time.
+The structure of spatial temporal convolutional networks is shown in Table
+
+Gait Data
+
+Data Acquisition
+Gait data of 52 MCI and AD patients and 35 control subjects are collected in the Neurology and the Geriatrics Departments of Shenzhen People's Hospital, respectively.
+Our data collection settings are similar to
+We use Microsoft Kinect V2.0 cameras as our data acquisition devices.
+The subjects are asked to walk at their natural and comfortable speed and posture under the devices.
+They walk a round trip on a straight path about 10 m.
+We deploy 8 and 6 devices in the Neurology and Geriatrics Department, respectively.
+The deployment diagram is shown in Figure
+The tilt angle of all devices was set 27 • .
+
+Data Preprocessing
+Our gait data consists of the skeleton sequences recognized by the devices.
+Each skeleton is composed of three-dimensional coordinates of 25 joints.
+Their indexes are shown in Figure
+In each recording, the devices estimate the skeleton joint coordinates from both the front and back views.
+However, the skeletons estimated from the back view are less accurate than those from the front view.
+Therefore, we only select the skeletons from the front view as gait data.
+Due to the venue restrictions, the data acquisition devices for patients and the devices for heath controls are deployed in different environments, which may cause differences in absolute coordinates of key points.
+To eliminate these differences, we follow
+Since our devices are mounted on the ceiling, and there is an angle of 27 • with the horizontal, we first rotate the coordinates x, y, z around the x-axis by -27 • by calculating
+In this way, the skeleton sequences are in a horizontal position relative to the cameras.
+We then move the origin of the coordinates to the base of the human spine, namely point 0, by computing
+where v τ p is a coordinate vector of pth joint point of the skeleton in τ th frame.
+Moreover, the time lengths of gait records are different.
+Similar to
+We set the sliding window with a size of 60 frames and a stride of three frames.
+In this way, we have a total of 5,519 clips, and each gait clip g j i is a matrix with a dimension of D × T × V, where D = 3, T = 60, V = 25.
+
+EEG Data
+
+Data acquisition
+The EEG data are collected by the Neurology Department, Shenzhen People's Hospital.
+Due to a large mount of artifacts (e.g., myoelectricity) during human walking, the collected EEG data are in low quality.
+We follow
+We collect the EEG data of the patients with eyes closed and with eyes open for 8 min each.
+We place 64-channel EEG electrodes on the patient's scalp at the standard locations during data acquisition as shown in Figure
+The EEG signals are recorded at a sampling frequency of 5,000 Hz.
+
+Data preprocessing
+After EEG records are collected, we first remove artifacts from EEG records, such as electrooculograms and myoelectricity.
+Then we re-reference the data.
+The EEG signals of the Ref and Gnd electrodes are removed, and the average value of the remaining 62 channels is used as a reference value to recalculate the value of the EEG data.
+Using the original EEG data with a sampling rate of 5,000 Hz in our ST-CNN will inevitably incur large computation cost.
+Specifically, the input size is 5,000 × 62 when the epoch duration is set to one second.
+In this paper, we follow Toll et al.
+Similar to
+We set the sliding window with a size of 256, which is about 1 s.
+The epochs sampled from the data collected with the eyes open and the eyes closed are concatenated in the time dimension.
+Finally, we copy it for three times in depth dimension.
+In this way, we have a total of 5,519 epochs, and each epoch ε e i is a 3 × C × 2T matrix, where C = 62 is the number of channels of EEG data, T = 256 denotes the number of time points.
+
+Implementation Details
+We randomly select 75% of the subjects.
+We use their corresponding data clips as our training set, including 3,277 data clips.
+The remaining data clips serve as our test set, including 2,242 data clips.
+We train the model for 50 epochs, using a stochastic gradient descent (SGD) optimizer with an initial learning rate of 0.05 and a batch size of 64.
+All experiments are conducted on a single GTX 1060 GPU.
+As for EEG data, we randomly select 75% of the EEG epochs as our training set, containing 4,680 epochs, and the remaining EEG epochs serve as our test set, including 1,560 epochs.
+We train the model for 70 epochs, using a stochastic gradient descent optimizer with an initial learning rate of 0.005, and with a batch size of 64.
+All experiments are conducted on a single GTX 1060 GPU.
+
+Comparisons With Other AD Diagnosis Methods
+We compare our proposed method with other existing methods.
+The results is listed in Table
+Firstly, we compare our proposed attention-based spatial temporal graph convolutional networks with the methods using handcrafted features.
+We extract the same features as
+The accuracy of the two classifiers are much lower than our proposed attention-based spatial temporal graph convolutional networks (93.09%).
+These results demonstrate that our proposed attention-based spatial Temporal graph convolutional networks is able to extract more powerful features for the diagnosis of AD.
+Then we compare the proposed spatial temporal convolutional networks with several baselines on the collected EEG dataset.
+The baselines include EEGnet
+standard
+The bold values indicates the best performance that method obtain in that experiment.
+We conduct experiments on gait data to study the effectiveness of key point filtering and the hourglass attention module.
+In Table
+With both components, we achieve the best performance with an accuracy rate of 93.09%.
+We believe the reason is that both components can guide the model to focus more on the points more critical to the diagnostic task.
+Key point filtering removes insignificant points and noise points, and the attention module drives the model to further focus on the important points in key points.
+
+Which Key Points Are Essential for AD Diagnosis?
+In Figure
+We find that the whole body joint performs best.
+We consider that this is because all joints can provide more information for diagnosis.
+In addition, we observe that the lower body joints perform better than upper body joints.
+We believe the reason is that the behavior of lower body is more relative to early AD diagnosis.
+Clinically, it is believed that the left hemisphere of righthanded patients is more sensitive and easier to be affected by AD.
+As the left hemisphere controls the movement of the right body part, for the right-handed patients, their behaviors of the right body part may provide more information for AD diagnosis.
+To study this empirically, we further divide the body joints into two more fine-grained groups, namely "lower body + right upper limb" and "lower body + left upper limb."
+All subjects in the collected dataset are right-handed.
+In Figure
+these results are consistent with the clinical perspective.
+Based on such observation, we select the skeleton sequence of "lower body + right upper limb" as a default setting in all experiments.
+
+Where Should We Use the Hourglass Attention Module?
+We explore the performance of our model with different placements of the attention module.
+We try to add the hourglass attention module after the third, sixth, and ninth layer of the basic model, respectively, and add three hourglass attention modules after the 3rd, 6th, and 9th layers.
+The experimental results are shown in Table
+We see that using three attention modules additionally includes 67.78% parameters more than  The bold values indicates the best performance that method obtain in that experiment.
+The bold values indicates the best performance that method obtain in that experiment.
+using one attention module while decreasing the performance.
+It is worth nothing that the model with three attention modules outperforms that with one attention module (99.75 vs. 98.04%) in the training phase, but it leads to a worse accuracy (87.97 vs. 90.14%) in the testing phase.
+We conjecture that adding three attention modules may incur the overfitting issue since a larger network is more likely to lead to overfitting in the case of a limited amount of data
+We see that adding one attention module after the ninth layer of the basic model achieves the best performance.
+Therefore, we use the model with an attention module after 9th as the default setting.
+
+The Efficiency of Our Method
+We conduct an ablation study to validate the effectiveness and efficiency of our method.
+We replace ST-CNN (classification model with EEG data) in our cascade network with AST-GCN (classification model with gait data).
+The experimental results are shown in Table
+Our proposed method with two models significantly outperforms the baseline with one modal (i.e., gait data) while enjoying a faster inference speed (3.99 vs. 7.06 ms) and less parameters (4.72 vs. 9.42M).
+Since we do not have the EEG data collected from HC regarding the difficulty of collecting them in our experimental environments, we did not compare our method with the EEG-based method, and we leave it for our future work.
+
+CONCLUSION
+In this paper, we have exploited both the gait and EEG data to achieve a faster and more accurate classification of AD.
+To this end, we have proposed a cascade neural network.
+Our proposed neural network consists of two parts.
+In the first part, we used gait data to distinguish HC from patients.
+For the purpose of modeling the natural connection among the human joints, we have proposed attention-based spatial temporal graph convolutional networks to extract features to classify the HC and patients.
+In the second part, we further classify MCI and AD patients with EEG data.
+Compared with the methods that convert EEG data into the frequency domain, we extract the spatial and temporal features from the original EEG data to distinguish the AD patients from MCI patients.
+The proposed cascade network has the following advantages:
+(2) The accuracy of our proposed framework in the three-way classification of HC, MCI, and AD is 91.07%, which is much higher than the method using one modal only (68.18%), and the accuracy in the binary classification of HC vs. MCI/AD reaches 93.09%.
+It would be interesting to extend this framework to the diagnosis task of other neurological diseases, and we leave it for future work.
+
+
+
+FIGURE 1 |
+FIGURE 1 | Cascade neural network for the early diagnosis of AD.
+We perform key point screening on gait data to form key-point skeleton sequences.
+Then we use attention-based spatial temporal graph convolutional networks (AST-GCN) to extract features and classify the subject into HC or MCI/AD with features.
+If the subject is classified into MCI/AD, we will input the EEG data into spatial temporal convolutional networks (ST-CNN) to extract features and perform MCI vs. AD binary classification.
+
+
+
+FIGURE 2 |
+FIGURE 2 | (A) Spatial temporal graph of skeleton sequences.
+(B) The "Spatial Configuration" strategy.
+(C) The architecture of ST-GCN.
+
+
+
+FIGURE 4 |
+FIGURE 4 | The deployment diagram of Kinect V2.0 devices: (A) The deployment diagram of devices in the Neurology Department.
+(B) The deployment diagram of devices in the Geriatrics Department.
+(C) The diagram of the actual data acquisition scene.
+
+
+
+1 .
+Data Acquisition and Preprocessing We collect gait data in cooperation with the Shenzhen Institute of Advanced Technology, Chinese Academy of Sciences and the Shenzhen People's Hospital, and the EEG data are collected by the Shenzhen People's Hospital.
+All MCI and AD patients are diagnosed by experienced neurologists based on the Montreal Cognitive Assessment(MoCA) and Mini-Mental State Examination (MMSE).
+We divide the subjects into three groups: HC, MCI, and AD.
+These groups include 35 cognitively healthy controls, 35 MCI patients, and 17 AD patients with mildto-severe AD, respectively.
+The grouping criteria are shown in Table
+
+
+
+FIGURE 5 |
+FIGURE 5 | (A) The 25 markers on human skeleton recognized by Kinect.
+(B) 64 EEG electrode locations in the International 10-20 System.
+
+
+
+4. 4 .
+Ablation Studies 4.4.1.
+The Effectiveness of the Proposed Component
+
+
+
+FIGURE 6 |
+FIGURE 6 | The performance comparison of the basic model on the skeleton sequences composed of different parts: (A) The performance of the basic model on the skeleton sequences composed of the lower body, the upper body, and the whole body.
+(B) The performance of the basic model on the datasets of skeleton sequences composed of the whole body, the lower body + the right upper limb, and the lower body + the left upper limb.
+
+
+
+into handcrafted feature based-methods and deep learning methods. Anderer
+
+
+
+TABLE 1 |
+The structure of spatial temporal convolutional networks, where K s and K t are the size of the kernel used in the spatial convolution layer and the temporal convolution layer in a ST-CNN module, respectively.
+
+
+
+TABLE 2 |
+The grouping criteria for HC, MCI, AD.
+
+
+
+TABLE 3 |
+Comparison with other methods.Standard CNN represents the model we substitute 2D convolution layers with a kernel size of Ks × Kt for ST-CNN modules.
+"Handcrafted features + SVM" and "Handcrafted features + RF" indicate the methods using different classifiers with the handcrafted features same as
+
+
+
+TABLE 4 |
+Ablation study of key point filtering and hourglass attention module on gait data.
+We believe that the reason is that ST-CNN can extract the spatial and temporal features from EEG data better.
+Finally, we test our proposed neural network on our test set.
+The accuracy of binary classification is 93.09%, and the accuracy of the three-way classification is 91.07%.
+In addition, we introduce a voting mechanism to improve the fault tolerance of the entire framework.
+We randomly select a subject s i from the test set and input his gait clip set G i into AST-GCN for classification.
+If more than 50% of the clips are classified into MCI and AD, all the EEG epochs in E i will be inputted into ST-CNN to perform binary classification of MCI vs. AD.
+Otherwise, s i is finally classified into HC.
+If more than half of the epochs are classified into MCI(AD), then s i is finally classified into MCI(AD).
+
+
+
+TABLE 5 |
+Performance comparison of the models with different hourglass attention module locations.
+
+
+
+TABLE 6 |
+Comparison of the performance and inference speed with different models.

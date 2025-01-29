@@ -1,0 +1,218 @@
+Cohort discovery and risk stratification for Alzheimer's disease: an electronic health record‐based approach
+We sought to leverage data routinely collected in electronic health records (EHRs), with the goal of developing patient risk stratification tools for predicting risk of developing Alzheimer's disease (AD).
+Method: Using EHR data from the University of Michigan (UM) hospitals and consensus-based diagnoses from the Michigan Alzheimer's Disease Research Center, we developed and validated a cohort discovery tool for identifying patients with AD.
+Applied to all UM patients, these labels were used to train an EHR-based machine learning model for predicting AD onset within 10 years.
+Results: Applied to a test cohort of 1697 UM patients, the model achieved an area under the receiver operating characteristics curve of 0.70 (95% confidence interval = 0.63-0.77).
+Important predictive factors included cardiovascular factors and laboratory blood testing.
+Conclusion: Routinely collected EHR data can be used to predict AD onset with modest accuracy.
+Mining routinely collected data could shed light on early indicators of AD appearance and progression.
+computational analyses on large-scale datasets, without requiring labor-intensive chart review.
+To this end, we first developed and validated a cohort discovery tool that can be applied to EHR data for automatic classification of AD individuals.
+Second, we applied this tool to a large cohort of patients and used machine learning techniques to develop and validate a model for estimating patient risk of developing AD within a 10-year prediction horizon.
+Applied more broadly, such an approach could help in identifying risk factors that arise well in advance of clinical symptoms.
+
+METHODS
+We describe the inclusion/exclusion criteria that were applied to two datasets to obtain our study cohorts, one for building the cohort discovery tool and another for building the predictive model.
+
+Study cohorts
+Our analyses relied on two study cohorts: (1) the cohort discovery tool-cohort and (
+These cohorts were extracted from the Michigan Alzheimer's Disease Research Center (Michigan-ADRC) and the University of Michigan's Research Data Warehouse (RDW).
+The Michigan-ADRC, which focuses on memory and aging research, contains data for 789 participants from ∼2005 to 2019.
+All participants received a consensus-based clinical diagnosis using the National Alzheimer's Coordinating Center Uniform Dataset criteria.
+The RDW contains records of patient encounters (defined as inpatient and outpatient visits) with Michigan Medicine for more than 4 million patients dating from ∼2000 to 2019.
+These data consist of all clinical data associated with the encounter (eg, medications).
+This study was approved by the Institutional Review Board at the University of Michigan.
+The first cohort, the cohort discovery tool-cohort, included all Michigan-ADRC participants with at least one RDW encounter at or after the age of 65 years.
+Only this age group was considered, because most cases of AD occur in that population.
+This age range allowed for a relatively large study population.
+We excluded patients with an AD diagnosis before 68 years.
+Here, AD refers to probable AD, because AD cannot be officially diagnosed until after death and because this diagnosis was commonly used throughout this period.
+to AD: diagnosis codes for AD, medications for AD, procedure codes for psychological/cognitive testing, and procedure codes involving moderate to high complexity medical decision making (details in Appendix S1 in supporting information).
+For example, one rule labeled RDW encounters with a current or previous AD diagnosis code and a prescription for an AD-associated medication as AD .
+We also evaluated an existing tool from the Phenotype Knowledge Base (PheKB),
+Applied to a set of encounters in RDW for a patient, the first encounter that met the EHR-based criteria was labeled as "AD" by the cohort discovery rule.
+Because AD is currently irreversible,
+
+Cohort discovery tool
+The labels produced by each EHR-based rule were compared to the Michigan-ADRC diagnoses at the patient level.
+Michigan-ADRC participants are followed longitudinally, and thus may have multiple timestamped diagnoses (eg, cognitively normal, mild cognitive impairment, AD).
+As ground truth, we labeled the 6 months preceding the first AD diagnosis from the Michigan-ADRC and anytime thereafter as AD.
+Prior work has shown that clinical diagnoses of AD have good diagnostic accuracy to histopathology-confirmed AD.
+Using these time frames as ground truth, comparisons to the corresponding RDW encounters were made as follows (Figure
+Only those whose RDW and ground truth time windows overlapped were included during evaluation.
+If at least one AD-diagnosed RDW encounter was within
+
+Predictive model
+In the following sections, we frame the problem of predicting AD over a 10-year horizon using EHR-extracted data.
+We describe feature engineering, including which EHR components were used, and model training.
+We then describe model evaluation in terms of predictive performance and influential features.
+
+Outcome
+To control for the effect of age on risk of developing AD, we aligned patients in our risk stratification cohort (Section 2.1) based on their earliest visit between 68 and 72 years.
+Patients were labeled according to the cohort discovery tool (Section 2.2) as converting to AD within 10 years or not.
+The date of conversion was defined as the date of the first encounter meeting the cohort discovery tool's criteria.
+Patients were labeled positive if they converted within 10 years of alignment and negative otherwise.
+
+Variable extraction
+Given the "alignment visit", each patient was represented by a high- with FIDDLE (Flexible Data-Driven Pipeline),
+Feature vectors for each patient were constructed by concatenating their time-invariant and time-dependent data corresponding to the 1,000 days prior to alignment.
+
+Model training
+
+Model evaluation
+Overall performance of our predictive model was measured using the area under the receiver operating characteristics curve (AUROC) and a confusion matrix measuring sensitivity, specificity, PPV, and accuracy We also analyzed the model's most important features using permutation importance,
+The most important features were identified as those with the largest drop in AUROC, taken as the median over 100 permutations and whose lower bound on an empirical 95% confidence interval was above zero.
+
+RESULTS
+In the following sections, we identify the best EHR-based rule for cohort discovery.
+We then summarize performance of the predictive model in terms of AUROC, calibration, and learned risk factors.
+
+Cohort discovery tool
+From 789 Michigan-ADRC volunteers, 624 (79%) were 65 years and older and had encounters with Michigan Medicine (details in Appendix S4 in supporting information); 24.8% of the 624 volunteers converted to AD.
+Among several cohort discovery rules (Figure
+
+Predictive model
+Applying the cohort-discovery rule with the highest F1-score to RDW (Figure
+FIDDLE Overall, data on laboratory test results, procedures, and healthcare utilization had the most predictive power (Figure
+Predicting using laboratory test results alone was able to achieve an AUROC of 0.62 (95% CI = 0.55-0.69).
+However, the best performance was achieved when all categories of EHR data were combined.
+Using longitudinal data from all previous encounters up to 1000 days prior to alignment also improved performance, compared to when data from only the encounter of alignment was used AUROC = 0.54 (95% CI = 0.47-0.61; Figure
+The top 10 important features pertained to health-care utilization, procedures involving laboratory blood testing, and cardiovascular risk factors (Figure
+
+4
+Research in predicting AD risk
+Most related studies focus on cohort discovery,
+We differ from previous work in that we focus on only AD, while prior work has focused on AD and related dementias.
+We chose to focus on AD alone, because it is the most common form of dementia.
+Previously proposed identification rules required at least five encounters with a dementia diagnosis code or AD associated medication.
+On RDW, this rule had a lower F1 score compared to our proposed rule.
+In addition, we differ from previous risk stratification models in that we consider AD specifically, 36,37 use a 10-year horizon instead of 5 years
+We also control for age to a larger extent, as it has been demonstrated that previous models performed similarly to predicting based on age alone.
+mpared to curated datasets like ADNI, EHR data present additional challenges.
+In the context of AD, EHRs do not have a set of ground truth diagnoses.
+We relied on the fact that a subset of individuals in RDW were also volunteers in the Michigan-ADRC for whom we had ground truth diagnoses.
+In addition, data from prospective studies such as ADNI are collected at fixed time intervals, while EHR data are irregularly sampled.
+Despite these challenges, there are many advantages in working with EHR data.
+First, EHR data may contain more longitudinal data per patient than ADNI.
+For example, 25% of ADNI participants had >10 encounters, compared to more than 50% in our study population.
+This allowed us to predict AD onset over longer horizons (10 years)   with modest performance.
+Approximately half of the patients who converted between 8.4 and 10 years after alignment were correctly identified, demonstrating the possibility of early detection.
+The ability to pre-dict over longer horizons could be crucial, as the physiological changes in the brain are suspected to take place at least 20 years before symptom onset.
+has reported an increase in health-care use one year prior to AD diagnosis.
+In addition, many of the important features related to laboratory blood tests have been previously associated with AD.
+Specifically, Chen et al. and Winchester et al. found that changes in blood cell composition may be associated with AD development.
+ng et al. found an association between vitamin B12 and AD development.
+In line with Cao et al. and Le Page et al., we identified immune system biomarkers as beneficial in early detection.
+In terms of comorbidities we identified as associated with increased risk, hypertension has previously been identified.
+In addition, urine tests are associated with diabetes testing,
+terms of procedures, mastoid procedures could act as a possible surrogate for hearing loss, which has been suspected to be associated with AD.
+Importantly, all of the predictive factors identified in our retrospective analysis are merely associations and not necessarily indicative of a causal relationship.
+Our study is not without limitation.
+We relied on imperfect labels from our discovery tool.
+As a result, the model may not generalize to predicting the full spectrum of patients that convert to AD.
+In addition, inaccuracies in labeling the date of AD onset may introduce additional noise.
+Another limitation stems from our decision to exclude censored patients.
+We excluded censored patients because they did not have sufficient follow-up to assign a label.
+Going forward, approaches for incorporating censored patients could increase the size of the study population.
+Furthermore, although we aligned patients between 68 and 72 years to control for the effects of age on our prediction task, age appeared as an important predictor.
+Though aligning patients at a single age (eg, 68 years) could have mitigated this effect, this ultimately would have decreased the size of the study population.
+In summary, we demonstrated the potential for EHRs as a novel source of data for developing models that characterize AD progression.
+Going forward, such analyses could be applied to other EHRs to generate hypotheses regarding novel early predictors and mechanisms of AD.
+In addition, longitudinal clinical studies involving early interventions may selectively target recruitment efforts toward "at-risk" patients well before symptom onset.
+
+
+Using diagnoses provided by the Michigan-ADRC, we investigated the accuracy of different EHR-based rules for identifying AD patients in RDW.
+Each rule aimed to identify RDW encounters associated with patients with an AD diagnosis and was based on EHR variables related RESEARCH IN CONTEXT 1. Systematic review: We searched the literature for reports on predictive modeling and cohort discovery in Alzheimer's disease (AD).
+Previous research has analyzed data not routinely collected in clinical care, has focused on relatively short prediction horizons (eg, 3 years), or is limited in the scope of electronic health record (EHR) data considered.
+2. Interpretation: We developed and validated an EHRbased cohort discovery tool for AD patients.
+This tool facilitates analyses of EHR data without requiring manual chart review.
+Using this tool, we developed and validated an EHR-based model for predicting AD onset up to 10 years in advance.
+Covariates associated with the outcome align in part with the AD literature.
+Novel associations included forms of health-care use and urine tests.
+Such findings can be used to stimulate hypothesis generation and/or aid in longitudinal study recruitment.
+3. Future directions: Associations identified by our model require further investigation.
+Model performance could be improved with additional longitudinal data and the inclusion of censored individuals.
+
+
+
+F I G U R E 1
+Comparing Michigan Alzheimer's Disease Research Center (MIchigan-ADRC) and Michigan Medicine's Research Data Warehouse (RDW) encounters for a sample patient.
+Each row represents a timeline for the respective dataset, and encounters are indicated with squares.
+Shading along the Michigan-ADRC timeline indicates consensus-based diagnoses.
+A true positive is counted if at least one identified Alzheimer's disease (AD) RDW encounter overlaps with the Michigan-ADRC defined AD window (eg, the encounters in the blue circles) the Michigan-ADRC-defined AD window, the patient was considered to have been correctly identified by the EHR-based rule (true positive).
+We defined false positives as those with at least one ADdiagnosed RDW encounter but no Michigan-ADRC diagnosis for AD within the Michigan-ADRC-defined AD time window.
+True negatives were defined as those not identified by the EHR-based rule and who never received a Michigan-ADRC diagnosis for AD, while a false negative had a Michigan-ADRC diagnosis for AD, but was missed by the EHR-based rule.
+Results were summarized by the true positive rate (sensitivity), false positive rate (specificity), positive predictive value (PPV), and F1 score (F1).
+We measured a population-adjusted PPV, since the Michigan-ADRC dataset is enriched compared to the general population (details in Appendix S2 in supporting information).When evaluating EHR-based rules against each other, we prioritized maximizing the F1 score to balance the population-adjusted PPV and sensitivity.
+In the case of ties, we considered the adjusted PPV, unadjusted PPV, specificity, and sensitivity, in that order.Given the rule with highest F1 score, we evaluated when patients received the diagnosis within RDW relative to the Michigan-ADRC, by measuring the time from the first AD Michigan-ADRC diagnosis to the first AD-labeled encounter in RDW.
+We also examined our ability to identify AD at the encounter level.
+Using the ground truth labels outlined earlier, a confusion matrix was constructed to show the number of encounters (AD/not AD) that were correctly and incorrectly identified by the EHR-based rule.
+Results are reported as the median with an empirical 95% confidence interval (CI), over 1000 bootstrapped samples.
+Statistical significance relative to the best rule was determined by whether the upper bound of the 95% CI for the F1 score was below the lower bound F1 score of the best rule.
+
+
+Data were split using an 80%-20% training-test random stratified split.
+Using the training data, we performed model selection.
+Minimizing the L2-regularized hinge loss, we trained a linear-support vector machine to predict AD onset for patients aligned between 68 and 72 years over a 10-year horizon.
+The amount of regularization was tuned using five-fold cross-validation on the training set, sweeping C = (0.001-1000) on a logarithmic scale.
+Analyses were performed in Python 3.6 using SciKitlearn.
+
+
+
+F I G U R E 2
+Cohort discovery results.
+Comparison of results from cohort discovery tools which tested a single electronic health record (EHR) component, were previously published, or whose median F1 score was >0.5.
+Each color corresponds to the identification tool indicated in the figure legend.
+Complexity in medical decisions was measured by the amount and variety of patient data examined by a physician, patient risk, and treatment options.
+A "*" in the figure legend denotes criteria whose F1 score was significantly worse than the best cohort discovery tool based on a threshold at the 65 th percentile on the held-out test set.We measured model calibration using the Brier score
+Additionally, we examined the model's ability to classify AD converters among patients with memory impairments, reporting the AUROC and confusion matrix (details and results in Appendix S9 in supporting information).
+We report all model evaluation results as empirical 95% confidence intervals generated using 1000 bootstrapped samples unless otherwise stated.We also assessed the model's ability to predict over the 10-year horizon by examining the number of correctly predicted converters with respect to their time to conversion (time between alignment and first AD diagnosis).
+Because the model outputs a continuous risk score, we classified patients as "high risk" if their risk score was above the 65 th percentile and as low risk otherwise.
+We examined five nonoverlapping conversion windows, reporting the sensitivity for each.Beyond model performance, we examined which categories of EHR information (eg, diagnoses vs procedures) were the most informative for prediction by comparing the AUROCs on models trained with different subsets of features (eg, training only on diagnosis features or training only on procedural features).
+
+
+in supporting information; median F1-score = 0.73 [95% CI = 0.68-0.78],
+median adjusted PPV = 0.77 [95% CI = 0.71-0.82],
+median sensitivity = 0.70 [95% CI = 0.65-0.74]).
+The PheKB tool 20 performed significantly worse in terms of median F1-score = 0.55 (95% CI = 0.48-0.62,
+P < .05)
+and median sensitivity = 0.45 (95% CI = 0.31-0.51,
+P < .05).
+Among the true positives identified by our best rule, the first RDW diagnosis occurred on average 177 days before (95% CI = 278 before-68 days after) the first AD Michigan-ADRC diagnosis.
+At the encounter level, this rule yielded a median PPV of 0.59 (95% CI = 0.56-0.63)
+and a median sensitivity of 0.82 (95% CI = 0.72-0.83;
+details in Appendix S5 in supporting information).
+
+
+Figure S2a in supporting information) and a Brier score of 0.028 (95% CI = 0.025-0.029;
+Figure S1 in supporting information).
+Thresholding
+
+
+has focused on datasets specifically curated for the purpose of studying AD (eg, Alzheimer's Disease Neuroimaging Initiative [ADNI]). 29
+While such studies can be used to identify predictors of disease progression, many of the studied variables, for example, CSF composition, are not collected during routine clinical care, especially in the decades before symptom onset.
+Moreover, because of the costs associated with such data collection, study populations are relatively small (∼1700 patients) and prediction horizons relatively short (2-4 years).
+In contrast, EHR data consist of routinely collected data, have been collected for over a decade at some institutions, and are available for a large portion of the population, as highlighted byStephan et al.
+Given this potential, we sought to explore the utility of EHRs in modeling the progression of AD 10 years before clinical diagnosis.
+We developed and validated an automated EHR-based cohort discovery tool for identifying AD patients and then applied this tool to a large cohort of patients aligned between 68 and 72 years.
+Using these data and machine learning techniques, we developed a model for predicting AD conversion within 10 years.
+
+
+
+F I G U R E 4
+Comparison of electronic health record (EHR) data contributions.
+A, Analysis of individual EHR data fields.
+Comparison of model performance when trained with specific fields of EHR data.
+In this experiment, all data up to 1000 days prior to alignment were used.
+Error bars represent 95% confidence intervals.
+B, Analysis of longitudinal data.
+Comparison of model performance when trained on information from all encounters up to 1000 days prior to alignment versus training on information from up to 500 days before alignment and information from alignment only.
+In this experiment, data from all EHR components were used.
+Error bars represent 95% confidence intervals.
+The black dashed line represents the receiver operating characteristic curve for random predictions.
+C, Analysis of individual features.
+Broad categories in which the features from Table 2 can fall.
+Number correspond to those found in Table
+
+
+1Over time, as more EHR data are collected, we may be

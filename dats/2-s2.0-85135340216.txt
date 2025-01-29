@@ -1,0 +1,408 @@
+Early diagnosis of Alzheimer’s disease using machine learning: a multi-diagnostic, generalizable approach
+Background: Early and accurate diagnosis of Alzheimer's disease (AD) is essential for disease management and therapeutic choices that can delay disease progression.
+Machine learning (ML) approaches have been extensively used in attempts to develop algorithms for reliable early diagnosis of AD, although clinical usefulness, interpretability, and generalizability of the classifiers across datasets and MRI protocols remain limited.
+We report a multi-diagnostic and generalizable approach for mild cognitive impairment (MCI) and AD diagnosis using structural MRI and ML.
+Classifiers were trained and tested using subjects from the AD Neuroimaging Initiative (ADNI) database (n = 570) and the Open Access Series of Imaging Studies (OASIS) project database (n = 531).
+Several classifiers are compared and combined using voting for a decision.
+Additionally, we report tests of generalizability across datasets and protocols (IR-SPGR and MPRAGE), the impact of using graph theory measures on diagnostic classification performance, the relative importance of different brain regions on classification for better interpretability, and an evaluation of the potential for clinical applicability of the classifier.
+Our "healthy controls (HC) vs. AD" classifier trained and tested on the combination of ADNI and OASIS datasets obtained a balanced accuracy (BAC) of 90.6% and a Matthew's correlation coefficient (MCC) of 0.811.
+Our "HC vs.
+MCI vs. AD" classifier trained and tested on the ADNI dataset obtained a 62.1% BAC (33.3% being the by-chance cut-off ) and 0.438 MCC.
+Hippocampal features were the strongest contributors to the classification decisions (approx.
+25-45%), followed by temporal (approx.
+13%), cingulate, and frontal regions (approx.
+8-13% each), which is consistent with our current understanding of AD and its progression.
+Classifiers generalized well across both datasets and protocols.
+Finally, using graph theory measures did not improve classification performance.
+In sum, we present a diagnostic tool for MCI and AD trained using baseline scans and a follow-up diagnosis regardless of progression, which is multi-diagnostic, generalizable across independent data sources and acquisition protocols, and with transparently reported performance.
+Rated as potentially clinically applicable, our tool may be clinically useful to inform diagnostic decisions in dementia, if successful in real-world prospective clinical trials.
+
+Introduction
+Alzheimer's disease (AD) is one of the most prevalent health conditions in aging, affecting over 32 million people worldwide
+It is a neurodegenerative disease characterized by an initial asymptomatic stage, which occurs about 20 years before symptom onset, and during which neuronal damage takes place
+The subsequent early symptomatic stage is characterized by a cognitive decline, which is referred to as "mild cognitive impairment due to AD" (herein referred to as MCI) when the clinicians consider the cognitive decline to be the result of the prodromal stage of AD (as opposed to other types of dementia, medication, depression, or other causes)
+As a diagnosis, MCI is useful in predicting future AD, with about 15% of MCI patients converting to AD every year
+Although there is no cure for AD, an early diagnosis of the disease is important to start therapies that can slow down its progression and improve its management
+However, the diagnosis of MCI is difficult, as cognitive decline is present in healthy aging.
+This calls for the use of MCI as well as AD diagnostic biomarkers.
+For both diagnoses, one of the most widely used measures to support the clinical decision is medial temporal atrophy (MTA) as detected by visual inspection of a structural magnetic resonance imaging (MRI) scan
+However, this biomarker is not particularly useful for the early diagnosis of MCI, as MTA does not occur until late into the disease progression
+Other common biomarkers for MCI and AD, such as fluorodeoxyglucose or amyloid positron emission tomography and cerebrospinal fluid measures, are less accessible, more expensive, and more invasive compared to MRI ones
+Given the limitations of the current diagnostic biomarkers, it is necessary to develop a diagnostic tool that can detect early manifestations and accurately diagnose both MCI and AD.
+Recently, there have been efforts to develop such a tool using machine learning (ML) methodologies, with structural MRI, which are high-performing in distinguishing "healthy controls (HC) vs. AD" (80-100% accuracy), "MCI vs. AD" (50-85% accuracy), "HC vs. MCI" (60-90% accuracy), and "HC vs.
+MCI vs. AD" (59-77% accuracy)
+Importantly, these studies often use the diagnosis at the time of scanning as the "ground-truth" label to train the ML algorithm, limiting the classifier to be only as good as the clinician.
+However, clinical accuracy is limited at this initial stage, with 20% of MCI patients transitioning to AD and 16% reverting to normal cognition after approximately 1 year
+Therefore, the latest possible diagnosis by the clinician should be used as groundtruth in classifier design, despite in vivo diagnosis still being imperfect even when at later stages (with 10% of patients diagnosed with probable AD not meeting pathological criteria in autopsy
+An imprecise ground-truth limits the quality of the statistical model and its clinical usefulness when an early diagnosis is sought.
+Some studies consider progression from MCI to AD during a follow-up period, differentiating stable from progressive MCI
+However, to our knowledge, no study using machine learning for MCI and AD diagnosis has considered other conversions from initial diagnosis, specifically MCI reversion to HC and HC progression to MCI.
+It is unclear whether studies that consider progression from MCI to AD include subjects with other conversions in their sample and, if so, whether the baseline or the current diagnosis is used as a label.
+Not including these subjects could inflate the performance of classifiers aiming at future diagnosis and also limits their applicability.
+Thus, to increase classifier quality, in the current study, we considered all types of transitions and used ground-truth diagnostic labels at a minimum of 1-year follow-up and a maximum of 3-year follow-up.
+Importantly, in the present study, we aimed to develop an MRI-based multi-diagnostic classification biomarker.
+This classifier is multi-diagnostic in the sense that it differentiates HC, MCI, and AD simultaneously, which the vast majority of studies that consider HC, MCI, and AD do not
+Furthermore, we used data from multiple datasets and MRI acquisition protocols.
+Specifically, surpassing a common limitation in the literature, we assessed our classifiers' generalizability across two publicly available independent datasets
+Secondly, we assessed generalizability across the two most common T1-weighted acquisition protocols: a magnetization-prepared rapid gradient echo (MPRAGE) sequence and a spoiled gradient echo with inversion recovery preparation (IR-SPGR) sequence.
+The acquisition protocol has also been shown to impact brain atrophy rate measurements
+ML-based diagnosis classification biomarkers should stem from a careful trade-off between complexity and interpretability, such that they explore complexity to achieve statistical power but retain pathophysiological interpretability which can be informative and reassuring to the clinician.
+Most previously published classifiers largely lack interpretability and do not provide any insight into how the classification decision was reached
+We exclusively used simple linear ML algorithms and tree-based algorithms, so that feature importances could be extracted from the classifiers, to retain some level of interpretability, while also combining classifiers into a complex ensemble.
+To further increase complexity, above using raw morphometric structural features extracted from the MRI scan, previous studies have built ML classifiers using structural T1-weighted MRI graph theory (GT) features for AD diagnosis.
+GT morphometry-derived features allow the classifiers to account for complex inter-dependence between brain regions, thus potentially increasing predictive power.
+Studies using GT features have obtained a good performance in "HC vs. AD" classification (87.0-92.4% area under the receiver operating characteristic curve (AUC))
+MCI vs. AD" classification (72.9% AUC)
+However, only one of these studies
+Since GT metrics may reduce classifier interpretability, these should only be used if the improvement obtained outweighs the loss of interpretability.
+In the present study, we build classifiers with and without GT metrics to determine whether including such metrics is preferable.
+We used structural MRI GT features which have all been previously associated with AD (degree
+However, unfortunately, we could not herein predict the direction of these effects, as they can depend on edge definition
+The ML biomarker literature is also rife with unclear reports, which hinders comparability between findings and an insight into their clinical applicability
+We aimed to report classifier performance transparently and comprehensively.
+Along with commonly reported metrics such as sensitivity, specificity, and AUC, we also report more robust metrics such as MCC
+We also report performance stratified by sex, which may be relevant in clinical practice, as well as confusion matrices where possible, allowing readers to calculate additional (unreported) metrics.
+Finally, we sought to evaluate our classifier using our own biomarker evaluation framework published in 2014
+In sum, we report a ML-based diagnostic tool for MCI and AD which tackles limitations of previous studies, specifically by being (1) multi-diagnostic; (2) trained and tested across 2 independent data sources with multiple acquisition protocols; (3) with tests of generalizability across datasets and protocols, the latter being completely novel in the context of AD; (4) based on baseline scans and a follow-up diagnosis, regardless of progression;
+
+Materials and methods
+
+Datasets
+Data used in the preparation of this article were obtained from the publicly available Alzheimer's Disease Neuroimaging Initiative (ADNI) database (adni.loni.usc.
+edu) and the Open Access Series of Imaging Studies (OASIS) project database.
+The most recent visit in which a diagnosis was made was considered the best available "ground-truth" to train the classifiers.
+Furthermore, the most recent diagnosis visit must have been at least 1 year after the selected scan for classifier training.
+The maximum follow-up time was of 3 years.
+Furthermore, diagnosis transitions must have occurred at least 6 months after the MRI scan.
+For each subject, we selected their earliest available structural MRI scan that fulfilled our study's requirements (in the next section).
+Differences between diagnoses in age and sex (which are known to impact brain structure
+
+ADNI
+The ADNI was launched in 2003 as a public-private partnership, led by principal investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial MRI, positron emission tomography, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.
+From ADNI, 570 subjects were included (211 HC, 188 MCI, 171 AD).
+To ensure diagnostic criteria equivalence across the different ADNI samples (ADNI, ADNI2, ADNIGO, and ADNI3), besides the diagnosis attributed by the clinician based on a clinical interview and exam results, subjects had to fulfill additional criteria based on the ADNI2 procedures manual.
+Specifically, HC must have a Mini-Mental State Exam (MMSE) score of at least 24 and a Clinical Dementia Rating (CDR) of 0; MCI patients must have an MMSE score of at least 24 and a CDR of 0.5 with a Memory Box score of at least 0.5; and AD patients must have an MMSE score below 27 and a CDR of at least 0.5.
+
+OASIS
+From the OASIS-3 dataset of the OASIS project, 531 subjects were included (463 HD, 70 AD)
+OASIS subjects had to fulfill the same MMSE and CDR requirements used for ADNI subjects and must have been diagnosed by a clinician based on a clinical interview and exam results.
+
+MRI acquisition ADNI
+All ADNI subjects underwent a T1-weighted 3.0 T MRI scan using a MPRAGE (TR = 2300 ms, TE = 2.84-3.25 ms, TI = 900 ms, FA = 8°/9°) or a IR-SPGR (TR = 6.98-7.65 ms, TE = 2.84-3.20 ms, TI = 400 ms, FA = 11°) sequence.
+Scans using parallel imaging acceleration techniques were excluded because, while some evidence shows that parallel imaging has little impact on brain atrophy rate measurements
+As ML methods are more sensitive to peculiarities in the data, acceleration could impact classifier performance.
+Out of 864 subjects in the ADNI dataset with 3.0 T MRI scan and a follow-up time of at least 1 year, 294 were excluded due to inclusion criteria for acquisition parameters, leaving the final sample of 570 subjects.
+
+OASIS
+All OASIS subjects underwent a T1-weighted 3.0 T MRI scan (TR = 2400 ms, TE = 3.16 ms, TI = 1 s, FA = 8°) using an MPRAGE sequence with a parallel imaging acceleration in-plane factor of 2 (not excluded as all acquisitions used parallel imaging).
+
+MRI analysis Morphometric features
+MRI preprocessing was performed using the FreeSurfer v6.0.0 standard pipeline
+The cortical structure of each hemisphere was parcellated into 34 regions of interest (ROIs).
+For each ROI, 8 measures were obtained (surface area, volume, average cortical thickness, standard deviation of the cortical thickness, integrated rectified mean curvature, integrated rectified Gaussian curvature, folding index, and intrinsic curvature index).
+Additionally, volumes were extracted from 40 subcortical ROIs and 64 white matter ROIs.
+This set of measures was decided a priori because they reflect morphometric alterations associated with MCI and AD, specifically brain atrophy
+Finally, each hippocampus was segmented into 13 subfields
+These hippocampal subfield volumes were extracted because this region has been extensively associated with AD and its progression
+Overall, 694 structural features were extracted.
+
+Graph theory features
+GT features were derived from the morphometric data.
+ROI volumes (209 features) were used to compute a binary graph.
+The edges of the graph were calculated with the following ratio: Four different thresholds were used for graph binarization (0.3, 0.5, 0.7, and 0.9).
+From each subject's graph, 4 node-wise measures were derived: degree (the number of nodes connected to a given node), clustering coefficient (the fraction of a node's neighbors that are neighbors of each other), node betweenness centrality (the fraction of all shortest paths in the network that contain a given node), and eigenvector centrality (a measure of the influence of a node in a network).
+These measures were calculated using the Brain Connectivity Toolbox -comprehensive details about these measures can be found in the article accompanying the toolbox
+Overall, 836 GT-based features were computed for each subject at each threshold.
+
+Machine learning classification
+The proposed method for multi-diagnostic classification of HC, MCI, and AD is an ensemble of 3 binary classifiers.
+The approach for each binary classifier and their combination is illustrated in Figs.
+
+Binary classifiers for morphometric data
+For each binary classifier, data was split into training (70%) and test (30%) sets in a stratified fashion, and 7 different classifiers were trained: (1) a linear support vector machine (l-SVM), (2) a decision tree (DT), (3) a random forest (RF), (4) an extremely randomized tree (ET), (5) a linear discriminant analysis classifier (LDA), (6) a logistic regression classifier (LR), and (7) a logistic regression classifier with stochastic gradient descent learning (LR-SGD).
+These algorithms were chosen for exposing feature
+importances and outputting probabilities.
+Feature importance was determined from the weight assigned to the features, except for tree methods (DT, RF, ET), for which it was determined based on impurity.
+Overall feature importances for the binary classifier were calculated by averaging the feature importances of each classifier voting in that binary decision.
+See the "Machine learning classification" section for a detailed explanation.
+l-SVM, linear support vector machine; DT, decision tree; RF, random forest; ET, extremely randomized tree; LDA, linear discriminant analysis; LR, logistic regression; LR-SGD, logistic regression with stochastic gradient descent learning; MCC, Matthews correlation coefficient; CV, cross-validation; X, average; σ, standard deviation.
+Green color indicates classifiers using only structural features and blue indicates classifiers using only GT features
+During training, for feature selection and classifier parameter tuning, data was split into 5 stratified crossvalidation (CV) folds, meaning 20% of the dataset was iteratively used for the testing and the remaining 80% for training.
+Within each fold, features were scaled between 0 and 1, and a percentile of best features (between 0 and 100% in steps of 10%) was selected using mutual information, ANOVA F-values, or chi-square statistics, and then the classifier was fit.
+A simple evolutionary algorithm
+The evolutionary algorithm evolved over 10 generations, with 10 individuals per generation, a gene mutation probability of 30%, and a crossover probability of 50%, with a tournament size of 3.
+These parameters were selected based on preliminary tests run on a subset of the ADNI MPRAGE training set.
+We changed two of these hyper-parameters from their default values.
+First, we lowered the population size from 50 to 10, because our overall population size was relatively low, and also because this improved training speed.
+We also increased the gene mutation probability from 10 to 30% as we noticed classifiers were not converging after 10 generations or were getting stuck at local minima.
+The evolutionary algorithm was optimized for the MCC metric, which is more robust than more commonly used metrics such as accuracy or AUC
+The 7 binary classifiers were ranked based on their performance in the training set folds, according to a custom ranking metric which selects for classifiers that have good performance and low variability across folds (mean MCC across folds minus the standard deviation of MCC across folds).
+Classifiers performing above the mean of the 7 classifiers Fig.
+See the "Machine learning classification" section for a detailed explanation.
+CV, cross-validation; SVM, support vector machine.
+Green color indicates classifiers using only structural features and blue indicates classifiers using only GT features were refitted on the entire training dataset using the tuned hyper-parameters.
+Finally, the selected classifiers were combined into a single one by simple voting.
+
+Binary classifiers for GT data
+The training of classifiers using GT data followed the same approach explained in the previous section, except that those 7 classifiers were trained for each graphbinarization threshold, for a total of 28 classifiers.
+Since GT features are harder to interpret, we only included GT-based classifiers in the voting if improvement was expected based on their performance (i.e., if they ranked above the selected morphometric-only based classifiers, replacing whichever of the selected morphometric-only classifiers were worst.)
+
+Multi-diagnostic classifiers
+To combine the output from the binary classifiers, we fitted a linear SVM classifier using a one-vs-one multidiagnostic strategy on the higher-class probabilities output by each binary.
+We optimized the C parameter using a 5-fold stratified CV approach and refitted the classifier on the entire training set before testing.
+Overall feature importance for the multi-diagnostic classifier was calculated by weighting the feature importances of each binary classifier by the coefficient of the linear SVM which combines the binary classifiers.
+
+Classifier performance evaluation
+All reported performances are those of the test set.
+We opted to use a test set instead of a CV scheme because cross-validation cannot be used to estimate performance in all of our experiments, as for some experiments the training set data has different characteristics from the testing set data (e.g., in experiment A3, the training set is ADNI MPRAGE and the testing set is ADNI IR-SPGR, meaning there is only one possible split into training and testing, i.e., all ADNI MPRAGE being in the training set and all ADNI IR-SPGR being in the testing set).
+The test sets were age-matched across diagnosis groups, to ensure that any learning bias introduced by age would not be reflected in our test metrics.
+Furthermore, the test sets were split evenly between sexes to ensure that sex proportions in the training set would not inflate test results and to allow us to report data stratified by sex with the same confidence interval for both sexes.
+Finally, the test set had the same proportions of transitions as the training set (i.e., 30% of cases from each type of transition were assigned to the test set).
+95% confidence intervals for each metric were estimated using 2000 bootstrapped samples of the test set.
+Similarly, to compare classifiers' performance, two-tailed p-values were estimated using 2000 bootstrapped samples from the test set of each of the classifiers being compared, with statistical significance threshold set at 0.05.
+Balanced accuracy (BAC) was calculated as the average of recall obtained on each class.
+As PPV and NPV should be adjusted for the prevalence of the disease in the diagnostic tests to be useful in the clinical context
+MCI = 18.6%,
+AD = 26.3%,
+non-AD cognitive impairment = 13.1%)
+
+Experiments Using ADNI: generalizability across acquisition protocols
+Using the ADNI dataset, we focused specifically on the impact of MPRAGE and IR-SPGR protocols on classifier performance.
+Five diagnostic classification tasks were performed on different subsets of the ADNI dataset (i.e., experiments A1-A5): (A1) MPRAGE only, (A2) IR-SPGR only, (A3) training on MPRAGE and testing on IR-SPGR, (A4) training on IR-SPGR and testing on MPRAGE, and (A5) full ADNI dataset.
+Of the 570 ADNI subjects, 423 had MPRAGE scans (149 HC, 145 MCI, 129 AD) and 152 had IR-SPGR scans (62 HC, 48 MCI, 42 AD).
+For classifiers using both types of scans, only the MPRAGE scan is used for the 5 subjects with both scan types.
+For classifiers using both datasets in training and testing, MPRAGE and IR-SPGR proportions were balanced across diagnosis to prevent the classifier from extrapolating diagnosis information from diagnosis irrelevant characteristics associated with the acquisition protocol.
+Experiments A6-A10 are the corresponding classifiers that received both morphometric and morphometric-derived GT metrics as inputs.
+Finally, a classifier was trained for the distinction between MPRAGE and IR-SPGR scans.
+
+Using ADNI and OASIS: generalizability across datasets
+The second set of experiments focused on the combination of the ADNI and OASIS datasets.
+Since the OASIS scanning protocol parameters were most similar to ADNI MPRAGE, we only used ADNI MPRAGE scans on this set of experiments.
+Five diagnostic classification tasks were performed on different combinations of the 2 datasets using morphometric features (i.e., experiments B1-B5): (B1) ADNI MPRAGE only, (B2) OASIS only, (B3) training on ADNI MPRAGE and testing on OASIS, (B4) training on OASIS and testing on ADNI MPRAGE, and (B5) training and testing on both OASIS and ADNI MPRAGE.
+As above, for classifiers using both datasets in training, the dataset was balanced across diagnosis.
+Experiments B6-B10 correspond to the classifiers that received both morphometric and morphometric-derived GT metrics as inputs.
+Additionally, a classifier was trained for the distinction between the OASIS and ADNI scans.
+A summary of all diagnostic classification experiments is shown in Table
+
+Diagnosis transition
+Since we have follow-up data for all patients, we describe the ground-truth either as "stable" (meaning the diagnosis has not changed between the time of scanning and the most recent clinical follow-up) or as a "transition" (meaning the clinical diagnosis at the time of scanning is different from the most recent clinical follow-up available) and compare performance between "stable" patients and those who "transitioned" within the follow-up time.
+We did not exclude any transition cases, including diagnosis regression, to avoid artificially inflating model performance, which could arise from only including reliable or progressive diagnosis.
+
+Clinical applicability potential
+We sought to evaluate the potential for clinical applicability of our most inclusive diagnosis-wise and protocolwise biomarker without GT features ("HC vs.
+MCI vs. AD"; experiment A5) and our most inclusive dataset-wise biomarker without GT features ("HC vs. AD"; experiment B5), as a first step towards informing on their potential clinical usefulness.
+For this, we utilized our own biomarker evaluation framework
+
+Results
+
+Cohort characteristics
+The demographic and diagnostic data of the study's subjects are shown in Table
+In the ADNI dataset, there was a statistically significant difference between diagnoses in age at the time of scanning (F(2, 570) = 4.19, p = 0.016) such that AD subjects were older than HC (t(382) = 2.88, p = 0.004), with no significant difference between MCI and AD (t(359) = 1.87, p = 0.063) or MCI and HC subjects (t(399) = 0.888, p = 0.375), and in sex between diagnosis (X 2 (2, N = 570) = 8.18, p = 0.017).
+There was no statistically significant difference in "time from MRI to most recent diagnosis" between diagnoses (F(2, 570) = 2.84, p = 0.059).
+In the OASIS dataset, there
+
+Table 1 Summary of diagnostic classification experiments
+'GT metrics' refers to whether graph theory metrics were given as an input to classifiers, regardless of whether the classifier selected them or not.
+For each of the experiments A1 through A10, 4 classifiers were built ("HC vs. MCI"; "HC vs. AD"; "MCI vs. AD"; and "HC vs.
+MCI vs. AD").
+For each of the experiments B1 through B10, only 1 classifier was built ("HC vs. AD", as OASIS did not have MCI subjects available)
+
+Experiment
+Training
+
+Feature importance
+The relative contribution of features to the "HC vs. AD" classifier using ADNI MPRAGE and IR-SPGR for both training and testing (experiment A5) is illustrated grouped by anatomical region (Fig.
+Anatomical regions are grouped according to Supplementary Information 2 and detailed contributions for each morphometric feature type-region pair are reported in Supplementary Table
+We report this experiment as it was the most inclusive, using both scan types in training and testing, and we chose the "HC vs. AD" because it was the best performing binary, giving us confidence that the feature importances are clinically meaningful.
+Despite, it is important to note that the degree of predictive of features does not necessarily reflect the degree of biological contribution to the disease
+We report the classifier without GT features as no improvement was obtained from including those features.
+
+Comparison between stable and transitioning diagnoses
+Predictions concerning disease progression by the multi-diagnostic classifier ("AD vs MCI vs HC") from experiment A5 are reported in
+
+Clinical applicability potential
+Using our own biomarker evaluation framework published in 2014
+MCI vs. AD" classifier (experiment A5) as a biomarker with a "Quality of Evidence" grade of 2 (out of 4), given it is a controlled study with a biomarker defined a priori, based on previous evidence regarding structural MRI alterations in MCI and AD.
+In terms of "Effect Size, " we converted the AUC metric (77.7% CI 95%: 77.2-82.6%)
+into odds ratio (OR)
+which corresponds to a grade 4 (out of 4).
+The overall sum score of 6 (out of 8) indicates this classifier has potential for clinical applicability and thus should be further evaluated in future randomized controlled trials (RCTs) to compare it to current practices and clinical prediction, in order to determine its real-world clinical usefulness.
+
+OASIS vs. ADNI Classifier performance
+Results from all ADNI vs. OASIS diagnostic experiments using only morphometric features are presented in
+
+Feature importance
+The relative contribution of features for the "HC vs. AD" classifier using ADNI MPRAGE and OASIS subjects for both training and testing (experiment B5) are illustrated grouped by anatomical region (Fig.
+Features are grouped by region according to Supplementary Information 2 and detailed contributions for each type-region pair are reported in Supplementary Table
+We report this experiment as it was the most inclusive, using both datasets in training and testing, and without GT features (as no improvement was obtained from including those features).
+
+Clinical applicability
+Using our own biomarker evaluation framework published in 2014
+In terms of "Effect Size, " we converted the AUC metric (97.4% CI 95%: 94.9-99.3%)
+into odds ratio (OR)
+The overall sum score of 6 (out of 8) indicates this classifier has potential for clinical applicability and thus should be further evaluated in future RCT to compare it to current practices and clinical prediction, in order to determine its real-world clinical usefulness.
+
+Discussion
+Early diagnosis of MCI and AD is essential for early therapies and better disease management
+For this, we developed a ML-based tool which is (1) multi-diagnostic;
+(2) trained and tested across 2 independent data sources with multiple acquisition protocols; (3) with tests of generalizability across datasets and protocols, the latter being completely novel in the context of AD (4) based on baseline scans and a follow-up diagnosis, regardless of progression;
+Results showed our tool was well-performing in differentiating AD, MCI, and HC (0.438 MCC; 62.1% BAC; 77.7% AUC), showing an accuracy above chance level (i.e., 33.3% BAC given the 3 possible diagnoses), regardless of diagnosis at the time of scanning, when tested against a follow-up diagnosis of at least 1 year and a maximum of 3 years.
+Our tool also performed equally well when being tested on data from datasets and acquisition protocols not used in training, meaning it is likely to generalize well to independent data.
+Additionally, since our classifiers perform equally well without GT features, which add complexity to the classifiers, we found no advantage in including GT features.
+Finally, we reported the relative importance of different brain regions and morphometric feature type for the diagnostic classification, which might aid in clinical interpretability of the classifiers.
+Table
+PPV/NPV "prevalence" are calculated with an AD prevalence of 38.5% (this corresponds to the prevalence of AD relative to HC based on prevalence estimates from the first visit in the clinical setting of 42.0% for HC and 26.3% for AD)
+PPV/NPV "standard" are calculated with a prevalence of 50% to allow for comparison with other studies
+
+A MRI-based ML classifier: performance comparison with previous reports
+Several recent studies claim classifier interpretability or report feature weights for the classifiers.
+Those which developed classifiers for AD diagnosis ("HC vs. AD") obtained accuracies of 85.0%
+Importantly, all these studies, except
+Only one study
+Another study
+While feature weights where not reported, the authors mention having extracted them from the classifiers.
+Finally, a study
+This Fig.
+Relative contributions are grouped by anatomical region (A) and by morphometric feature type (B).
+CSF, cerebrospinal fluid; HPC, hippocampus; StDev Thickness, standard deviation of the cortical thickness study, however, might have suffered from data leakage in the form of biased transfer learning
+Our achieved performance on the ADNI dataset alone for the multi-diagnostic "HC vs.
+MCI vs. AD" (experiment A5: 62.1% BAC, whereas a random classifier would have a BAC of 33%) is comparable to that of recent studies which also report feature weights for the classifiers or claim classifier interpretability.
+These range from 51.9 to 71.2% in accuracy
+One study
+MCI vs. AD" accuracy (albeit unbalanced) of 71.2% using a region abnormality score obtained using a deep neural network which, despite providing individual-level abnormality scores, does not make evident how the characteristics of the scan contribute to a region's abnormality score.
+Furthermore, this study only considered baseline diagnosis for this classifier, with MCI subjects who had transitioned to AD being labeled as MCI.
+A second study
+MCI vs. AD" multi-diagnostic BAC similar to ours of 62.5% on the ADNI dataset using an ensemble of random forest classifiers, which is highly interpretable.
+A third study
+MCI vs. AD" multi-diagnostic BAC of 51.9%, which was lower than ours.
+A fourth study
+ours) "HC vs.
+MCI vs. AD" multi-diagnostic BAC of 61.9% using an ensemble of linear SVMs, but do not report feature importances, only the frequency with which each feature was selected by the ensemble.
+Finally, the latter three studies only considered MCI-to-AD transitions when labeling subjects
+
+Hippocampal and cingulate, frontal, and other temporal changes contribute most
+Extracted feature contributions by brain regions obtained from the "HC vs. AD" classifiers (experiments A5 and B5, in Figs.
+Hippocampal features were the strongest contributors to the classification, at approximately 25-45%, which is consistent with the understanding that hippocampal atrophy is a structural hallmark of AD in the brain
+Temporal regions were the next most highly weighted, at approximately 13%, followed by cingulate and frontal regions, each contributing approximately 8-12% for the classifier decision, and all have been independently associated with AD and its progression
+The remaining regions combined contribute approximately 25-40%, and all regions make meaningful contributions to the decision, speaking to the fact that AD is a disease with brain-wide effects.
+
+Volume changes contribute most
+Extracted feature contributions by feature type obtained from the same "HC vs. AD" classifiers as above (experiments A5 and B5, in Figs.
+The combination of gyrification measures (mean curvature, Gaussian curvature, folding index, and curvature index) contributed 12-17% to the decision, which is consistent with previous evidence associating cortical gyrification with AD
+While we did not investigate the performance gained from introducing different types of measures, we show that all types of measures used had an important contribution to the classification decision.
+Furthermore, care should be taken not to interpret these contributions outside of the classification context, as the predictive value of features does not necessarily reflect biological contribution to the disease
+
+MRI morphometric-based graph theory complexity may be unnecessary
+When introducing complex features, such as GT-based ones, it is important to determine whether this brings an improvement, as complexity sacrifices clinical interpretability in ML.
+In fact, we did not observe a statistically significant improvement when GT features were used as input along with morphometric features (p = 0.060-0.998).
+However, the fact that both the classifier built to distinguish protocols ("ADNI MPRAGE vs. ADNI IR-SPGR") and the classifier built to distinguish datasets ("OASIS vs. ADNI") did not "choose" to use GT-based metrics even when these were given as input, this indicates that GT metrics may be more robust to protocol and dataset differences, which could have implications in classifier generalizability.
+It is important to note, as a limitation, that since models were trained exclusively on either morphometric or graph theory data, complementarity of these data might have been lost.
+The same is true for complementarity across GT binarization thresholds.
+This loss of complementarity could be particularly relevant when using larger datasets and more complex models.
+Altogether, the fact that no improvement is obtained from inputting GT metrics suggests that these may be unnecessary when small sample sizes and simple models are used and that the benefit of their inclusion (which might be observed with larger samples and more complex algorithm) should be evaluated as they introduce additional complexity in the models.
+
+Generalizability across the two most common acquisition protocols
+Comparing the results of experiments A1 and A2 with those of experiment A5 from Table
+MCI vs. AD": 0.350 MCC for MPRAGE-only (p = 0.285) and 0.263 MCC for IR-SPGR-only (p = 0.160) vs. 0.438 MCC for the combination).
+Importantly, the considerably larger training set for the combination classifier (n = 379 for the combination vs. n = 106 for the IR-SPGRonly classifier and n = 295 for the MPRAGE-only classifier) did not result in any improvement, suggesting that the disease effects are fairly large and can be detected with small sample sizes using simple ML classifiers and thus that more complex models for AD diagnostic may be unnecessary.
+Moreover, the results from experiments A3 and A4 demonstrate that despite the protocols being almost perfectly distinguishable by the classifiers, a classifier trained on one protocol can classify scans of another protocol with similar performance as a classifier trained on that other protocol ("HC vs.
+MCI vs. AD": 0.350 MCC on experiment A1 vs. 0.372 MCC on experiment A4 (p = 0.766); 0.262 MCC on experiment A2 vs. 0.424 MCC on experiment A3 (p = 0.207)).
+This similarity in performance shows that a biomarker using our features and algorithm, although trained in one dataset, is well adapted to classify patients whose scan is acquired using other MRI acquisition protocols.
+This is the case because the underlying physiopathology dominates in the algorithm's decision as opposed to eventual sequence differences or image signal differences.
+Finally, we demonstrated that MPRAGE and IR-SPGR protocols are almost perfectly distinguishable using only morphometric features (0.968 MCC; 99.2% BAC) -ascertaining that these protocols should not be merged without balancing them across diagnoses, as otherwise a classifier might be biased if it learns to use disease-irrelevant protocolrelated differences in features to attribute labels.
+
+Generalizability across independent patient datasets
+Similarly to what was observed in the acquisition protocol comparison, comparing the results of experiments B1 and B2 with those of experiment B5 from Table
+These results demonstrate that combining data from different sources can be preferential to training a classifier for each data source, as not only performance can significantly increase, but also a more robust classifier is being trained, as it can classify subjects from multiple sources.
+Importantly, the OASIS-only classifier from experiment B2 had a larger training sample than the dataset combination classifier from experiment B5 (n = 365 and n = 295, respectively), meaning that the increase in performance observed cannot be attributed to a larger training set.
+Furthermore, when showing that ADNI and OASIS datasets are not perfectly distinguishable (MCC = 0.680; 83.6% BAC), we consequently also show that that applies to the MPRAGE scans with a 2-factor acceleration (which were used in OASIS) vs. those with non-accelerated MPRAGE scans (used in ADNI).
+This contrasts with the "MPRAGE vs. IR-SPGR" distinction (0.968 MCC; 99.2% BAC), which was nearly perfect, and is consistent with previous evidence showing that acceleration has little impact on brain atrophy metrics, with effects being dominated by MPRAGE vs. IR-SPGR differences
+Finally, results from experiments B3 and B4 demonstrate that a classifier trained on one dataset can classify scans of another dataset with similar performance as a classifier trained on that other dataset ("HC vs. AD": 0.814 MCC on experiment B1 vs. 0.722 MCC on experiment B3 (p = 0.211); 0.564 MCC on experiment B2 vs. 0.641 MCC on experiment B4 (p = 0.461)).
+These results are in line with previous evidence showing that a classifier trained on ADNI data can be used to classify OASIS data with similar performance as a classifier trained on OASIS data
+
+Sex-stratified results
+Sex-stratified data showed no difference in performance between males and females within the ADNI dataset for the multi-diagnostic classifier (experiment A5) (0.424 MCC females, 0.454 MCC for males, 0. MCC overall, p = 0.438), nor in the combined ADNI and OASIS datasets for the "HC vs. AD" task (experiment B5) (0.875 MCC females, 0.749 MCC for males, 0.811 MCC overall, p = 0.219).
+Despite no differences being observed in our biomarkers, reporting sex-stratified data remains important as differences in performance between sexes have implications on the potential translation of the classifiers into clinical practice.
+Balancing testing sets for sex is essential to ensure that sex proportions in the training set do not inflate test results, especially when there is a significant difference between diagnoses in sex, such as in our datasets.
+While sex proportions could be adjusted in the training set, this could mean reducing the size of the test set, and also it would not allow for reporting of sex-stratified results with the same confidence for both sexes.
+
+Performance in stable and transitioning diagnoses
+Our classifier from experiment A5 performed equally well with stable (0.420 MCC) and transition cases (0.327 MCC), which suggest that imaging changes might precede diagnostic changes.
+Importantly, the classifier performed poorly on the HC to MCI progression and MCI to HC regression transitions.
+Given the small number of these transitions in the test set (7 MCI-to-HC and 6 HC-to-MCI), their estimated performance has a wide error margin.
+Nonetheless, the poor performance estimated for these cases demonstrates that excluding transitions we cannot reliably predict may artificially inflate model performance.
+This is due to the fact that when using the classifier as intended, there is no way to exclude these transitions, as the future state of the patient is unknown (which is exactly what the classifier is being used to predict).
+Therefore, it is important to train and test the classifier with a population that best resembles the intended use of the classifier (i.e., including all possible transition cases) even if including these transitions reduces classifier performance.
+Furthermore, while many studies differentiate stable from progressing MCI
+For example, accurately predicting future MCI in currently HC patients indicates that their brain already shows some pattern of structural change before symptom onset.
+Early intervention in these cases (recommending mentally stimulating activities, monitoring the appearance of symptoms, etc.) could result in better outcomes and delayed onset of symptoms.
+Similarly, predicting regression from MCI to HC could be a good indicator that the current clinical intervention and therapies are working.
+
+Clinical applicability and usefulness
+Both the classifiers we evaluated obtained a clinical applicability score of 6 ("HC vs.
+MCI vs. AD" from experiment A5 and "HC vs. AD" from experiment B5).
+Despite the better performance of the second classifier, we consider that the multi-class has more potential to be clinically useful, as it more closely approximates the decision the clinicians face.
+Given this evidence, we consider that the present MRI biomarker should undergo evaluation in future RCT to compare it to current practices in terms of real-world clinical usefulness, which should include measures of risk, convenience, cost, number-needed-to-assess and outcome relevance, at least
+
+Limitations and future work
+The present study was limited by the fact that only one of the data sources included patients with MCI.
+Furthermore, the testing set is not identical to the clinical situation faced by physicians in the clinical decision process.
+This or any future classifier built using the proposed approach on a larger, longitudinal, multi-site dataset would have to be thoroughly evaluated in the clinical setting before it can be adopted.
+As such, as mentioned in the previous section, future work should assess the clinicians' performance with and without the information from the algorithm so its potential impact on patients can be understood.
+Also, our classifiers did not make use of cognitive features or scores, which could be of high predictive value and can be easily acquired.
+Finally, while we provide some insight into the classifier decision with the goal of improving interpretability, whether classifier outputs would be correctly interpreted by clinicians without a good understanding of the statistical rationale behind ML algorithms remains to be verified.
+
+Conclusions
+In sum, our approach allowed us to develop ML classifiers with high performance in the distinction between HC and patients with AD, as well as with reasonable performance in the multi-diagnostic distinction of HC, MCI, and AD subjects.
+Importantly, these classifiers are robust to transition cases and identify some future AD cases earlier than clinicians.
+Our approach of using an ensemble of classifiers using linear or tree-based algorithms allowed for the development of a complex classifier which outputs the importance that each brain region had on the classifiers' predictions, which may allow for easier interpretation by clinicians.
+It also outputs a probability of a diagnosis which allows clinicians to consider the confidence of the classifier when evaluating its output.
+Our work also demonstrated the possibility of combining different MRI protocols and datasets in the training of these algorithms and opens the road for the future development of algorithms using a similar strategy and features with larger and more diverse datasets.
+Given the performance of our most inclusive multi-diagnostic classifiers, they may be clinically useful provided they are successful in future prospective RCT controlled studies
+
+
+
+Fig.
+Fig.1Classification approach for binary classifiers.
+See the "Machine learning classification" section for a detailed explanation.
+l-SVM, linear support vector machine; DT, decision tree; RF, random forest; ET, extremely randomized tree; LDA, linear discriminant analysis; LR, logistic regression; LR-SGD, logistic regression with stochastic gradient descent learning; MCC, Matthews correlation coefficient; CV, cross-validation; X, average; σ, standard deviation.
+Green color indicates classifiers using only structural features and blue indicates classifiers using only GT features
+
+
+confidence interval, MCC Matthew's correlation coefficient, ROC AUC area under the receiver operating characteristic curve, BAC balanced accuracy, Sens sensitivity, Spec specificity, PPV positive predict value, NPV negative predictive value, TN true negatives, FP false positives, FN false negatives, TP true positives.
+The most global classifier is highlighted
+
+
+
+Table 4 .
+In the test set for that classifier, 38 subjects out of 164 changed diagnosis between the time of scanning and the most recent visit.
+Considering stable and transition cases separately,
+
+
+
+Table 2
+Descriptive statistics of demographic and clinical variables
+
+
+
+Table 3
+Classifier performance using only morphometric features for classifiers using ADNI subjects with IR-SPGR or MPRAGE scans
+
+
+
+Table 3 (
+[48]inued) morphometric and GT features used as input.PPV/NPV "prevalence" are calculated with an MCI prevalence of 30.7% for the "HC vs. MCI" classifiers; an AD prevalence of 38.5% for the "HC vs. AD" classifiers; and an AD prevalence of 58.6% for the MCI vs. AD classifier (these correspond to the relative prevalence of the positive class based on prevalence estimates from the first visit in the clinical setting of 42.0% for HC, 18.6% for MCI, and 26.3% for AD)[48].
+PPV/NPV "standard" are calculated with a prevalence
+
+
+
+Table 5 .
+(Results from the corresponding classifiers which received both morphometric and GT features as Relative contribution of features for the "HC vs. AD" classifier from experiment A5.
+Relative contributions are grouped by anatomical region (A) and by morphometric feature type (B).
+CSF, cerebrospinal fluid; HPC, hippocampus; StDev Thickness, standard deviation of the cortical thickness
+
+
+
+Table 4
+Classifier confusion matrix for the multi-diagnostic classifier from Experiment A5.

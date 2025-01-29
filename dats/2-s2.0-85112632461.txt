@@ -1,0 +1,371 @@
+A large-scale brain network mechanism for increased seizure propensity in Alzheimer’s disease
+People with Alzheimer's disease (AD) are 6-10 times more likely to develop seizures than the healthy aging population.
+Leading hypotheses largely consider hyperexcitability of local cortical tissue as primarily responsible for increased seizure prevalence in AD.
+However, in the general population of people with epilepsy, large-scale brain network organization additionally plays a role in determining seizure likelihood and phenotype.
+Here, we propose that alterations to large-scale brain network organization seen in AD may contribute to increased seizure likelihood.
+To test this hypothesis, we combine computational modelling with electrophysiological data using an approach that has proved informative in clinical epilepsy cohorts without AD.
+EEG was recorded from 21 people with probable AD and 26 healthy controls.
+At the time of EEG acquisition, all participants were free from seizures.
+Whole brain functional connectivity derived from source-reconstructed EEG recordings was used to build subject-specific brain network models of seizure transitions.
+As cortical tissue excitability was increased in the simulations, AD simulations were more likely to transition into seizures than simulations from healthy controls, suggesting an increased group-level probability of developing seizures at a future time for AD participants.
+We subsequently used the model to assess seizure propensity of different regions across the cortex.
+We found the most important regions for seizure generation were those typically burdened by amyloidbeta at the early stages of AD, as previously reported by in-vivo and post-mortem staging of amyloid plaques.
+Analysis of these spatial distributions also give potential insight into mechanisms of increased susceptibility to generalized (as opposed to focal) seizures in AD vs controls.
+This research suggests avenues for future studies testing patients with seizures, e.g.
+co-morbid AD/epilepsy patients, and comparisons with PET and MRI scans to relate regional seizure propensity with AD pathologies.
+
+Introduction
+Alzheimer's disease (AD) is a neurological disorder characterised by pathological accumulation of amyloid-beta (Aβ) peptides and hyperphosphorylated tau protein in cortical tissue and neurodegeneration, resulting in progressive cognitive decline
+AD patients have a 6-10 fold increased risk of developing seizures compared to controls
+In rodent models, seizure phenotype has been related to hyperexcitable cortical tissue believed to be a consequence of AD pathology
+Understanding seizures in AD is crucial for developing novel treatments and a fuller understanding of both disorders, since the rate of occurrence of seizures are believed to be positively correlated with the rate of cognitive decline in AD
+A leading hypothesis for hyperexcitability in AD is that Aβ deposition leads to neurodegeneration and abnormal hyperactivity including seizures, which in turn result in increased amyloid burden, leading to a self-amplifying neurodegenerative cascade
+In rodents, it has been observed that excessive neuronal activity can increase amyloid deposition
+Computational modelling of this activity dependent degeneration has recreated alterations to electroencephalographic (EEG) recordings observed in humans with AD including slowing of oscillations and altered functional connectivity
+Similar effects were observed along with cortical hyperexcitability by targeting degeneration towards regions with high Aβ burden in empirical PET recordings
+Tau pathology may also play a leading role in epileptogenesis in AD
+Tau levels may also mediate Aβ toxicity and synaptic impairments
+Additional key factors which may influence seizure likelihood in AD are vascular dysregulation, metabolic alterations and increased inflammation, resulting in neuronal activity dysregulation
+data request form at
+The computational model and underlying source codes described in this publication are available freely for academic use at
+While these hypotheses potentially explain increased excitability of local tissue in AD, evidence suggests the propensity of a brain to generate seizures is not only a result of local network excitability, but is also related to its large-scale functional network structure
+Alterations to large-scale functional network structure have widely been reported in AD based on studies from neuroimaging modalities including electroencephalography (EEG)
+It is therefore possible that altered long-range functional connectivity in AD may contribute to increased susceptibility to seizures and, under the hypothesis of cyclical amplification of AD pathology and local excitability, facilitate the spread of pathological cortical hyperexcitability.
+Similarities have been observed between altered resting-state functional connectivity in humans with AD and epilepsy
+Furthermore, epilepsy patients with co-morbid AD have increased likelihood of generalized seizures than those without AD
+In this manuscript, we hypothesise that the large-scale functional networks of people with AD are more susceptible to seizures than those of cognitively healthy controls.
+To examine this hypothesis, we use the brain network ictogenicity (BNI) computational modelling framework
+We assume that abnormal networks co-occur with increased cortical excitability for seizures to emerge in people with AD, and hence we analysed electrophysiological data in which functional network alterations have been observed in AD compared to controls
+To understand the effect that these alterations might have on seizure generation, we used a mathematical model of seizure transitions in which cortical excitability was a free parameter
+Our aim was to simulate an increase in cortical excitability in both healthy and AD brains and observe whether the concurrent abnormal network structure and increased excitability makes people with AD more likely to generate seizures in silico than controls.
+We also hypothesise that the regions primarily responsible for seizure generation in AD participants (as suggested by the computational model) correspond to those typically exhibiting high Aβ burden
+We test this hypothesis by calculating node ictogenicity (NI)
+
+Materials and methods
+
+Ethics statement
+All procedures were approved by the National Research Ethics Service Committee South West Bristol (Ref.
+09/H0106/90).
+Participants provided written informed consent before participating and were free to withdraw at any time.
+
+Methodology
+The methodology of the study is outlined in Fig 1 .
+Source-space functional connectivity derived from the EEG was used to specify a network in a computational model of seizure transitions.
+To assess the susceptibility of the network to seizures, the excitability of cortical tissue was increased, and the fraction of time the simulated neural dynamics spent in the seizure state (called brain network ictogenicity, BNI) was calculated.
+The details of these calculations are described below.
+
+Data and functional networks
+The current dataset has previously been analysed
+Below, a brief overview of the data and analysis pipeline are given.
+A very similar pipeline has been used to calculate functional networks for modelling BNI in source-space from scalp EEG in epilepsy patients
+Participants.
+The cohort consisted of patients with a diagnosis of probable AD (n = 21, 13 female, 8 male) and age-matched cognitively healthy controls (n = 26, 12 female, 14 male).
+The AD group was recruited from memory clinics in the South West of England on a consecutive incident patient basis following clinical assessment.
+The diagnosis of probable AD was determined by clinical staff using the results of family interview, neuropsychological and daily living skills assessment according to DSM-IV
+Age-matched controls were recruited from the memory clinics' volunteer panels; they had normal general health with no evidence of a dementing or other neuropsychological disorder, according to NINCD-S-ADRDA guidelines
+All participants were free from medication known to affect cognition and had no history of transient ischemic attack, stroke, significant head injury, psychiatric disorder, or neurological disease with non-AD aetiology.
+All participants had no clinical history of seizures, but no extensive electrophysiological workup was performed to definitively rule out subclinical epileptiform activity
+Participant demographics have previously been reported
+People with AD had significantly lower cognitive test scores than controls as assessed with the mini-mental state examination (MMSE), and there was no significant difference in age or sex between groups
+EEG acquisition and pre-processing.
+A single twenty second, eyes-open resting-state epoch of 64-channel EEG sampled at 1 kHz was analysed per participant.
+Visual and cardiac artifacts were manually rejected using independent component analysis, and data was bandpass filtered at 1-200 Hz, demeaned, detrended, and re-referenced to average using the Fieldtrip toolbox
+Source reconstruction.
+The Fieldtrip toolbox was used for source reconstruction.
+For all participants, we used a template forward model implemented in Fieldtrip.
+The source-model was the canonical cortical surface implemented in Fieldtrip consisting of 5124 dipoles distributed along the cortical sheet.
+Dipoles were oriented normal to the surface
+The volume conduction model was Fieldtrip's template 3 layer boundary element method model
+Template head models have been demonstrated to perform well compared to individual models derived from MRI
+Source reconstruction used exact low resolution electromagnetic tomography (eLORETA)
+eLORETA is suited to the study of whole-brain phase synchronization
+The 5124 dipole source-space was parcellated into 40 regions of interest (ROIs) based on the Brainnetome atlas
+The time course of the first principal component of all voxels in the ROI is a single time series whose value at each time point is minimally different to the activity of all voxels, i.e. it accounts for a maximal spatial variance.
+For the list of ROIs, see S1 Table.
+Functional networks.
+Computation of functional networks used in this study followed previously described methods
+Time courses of ROIs were bandpass filtered into the theta-band (4-8 Hz), and the Hilbert transform used to estimate instantaneous phases.
+Functional networks were constructed by calculating the phase locking value (PLV)
+Potentially spurious edges were rejected based on a null distribution of PLV values constructed from 99 pairs of iterative amplitude adjusted Fourier transform surrogates
+PLV values that did not exceed 95% significance vs the surrogates were rejected.
+Furthermore, to reduce the likelihood of spurious connections due to source leakage, PLV values with zero phase-lag were rejected.
+Zero-phase lag here corresponds to a mean phase difference smaller than the phase resolution at 4 Hz, given the sampling rate, i.e. if the mean phase difference was less than (2π × 4)/f sample = 0.008π radians, the edge was set to zero.
+The Dijkstra algorithm was used to compute the length of the shortest path between all pairs of nodes, and edges with an indirect shortest path (i.e. the shortest path is not the single edge between the pair of nodes) were also rejected
+Surrogate-corrected PLV derived from resting-state EEG have been shown to be useful for BNI modelling in both sensor-
+
+Computational model of seizure transitions
+Computational model.
+To test the hypothesis that altered network structure and increased cortical excitability makes people with AD more prone to develop seizures than healthy controls, we used a phenomenological model of seizure transitions in which we could control cortical excitability, namely the theta-model
+Each ROI is described by a phase oscillator θ i whose activity is given by
+which comprises the excitability I 0 of the ROI, noisy inputs ξ (i) (t) from remote brain regions, and the interaction of ROI j connected to i as defined by the adjacency matrix A = (a ji ) (i.e. the PLV values of the functional network).
+K is a global scaling constant weighting network interactions relative to cortical excitability and noise.
+N is the number of ROIs.
+θ (s) is a stable phase to which the oscillators converge in the absence of noise and interaction (see e.g.
+A phase oscillator is at rest if I i (t) < 0 or rotating if I i (t) > 0. The transition at I i (t) = 0 corresponds to a saddle-node on invariant circle (SNIC) bifurcation (see Fig
+For simplicity, we assumed that all ROIs had the same cortical excitability I 0 and consequently the same θ (s) .
+The noise ξ (i) (t) was modelled as Gaussian noise with zero mean and unit standard deviation, with noise magnitude σ = 6 as in previous studies
+Simulations used a stochastic Euler method with time step δt = 10 -2 (arbitrary units) and total integration time T = 4 × 10 6 .
+All parameters used for simulations and their descriptions are given in Table
+Brain network ictogenicity (BNI).
+We are interested in the effect of increasing I 0 on the propensity of a network to generate seizures.
+To quantify this seizure susceptibility, we used the concept of brain network ictogenicity (BNI)
+First, we defined the average proportion of time spent in seizures, P sz , for a given I 0 as
+where t ðiÞ sz ðI 0 Þ is the time that ROI i spends in the rotating phase (i.e. in the seizure state) during a simulation time T (we used T = 4 × 10 6 (arbitrary units) as in previous studies
+P sz (I 0 ) is in the range zero (no seizures) to one (always in the seizure state).
+We computed the BNI as
+where the range [λ 1 , λ 2 ] was chosen so that all brain networks assessed had P sz varying from zero to one.
+Increasing I 0 results in increasing the input currents of all the oscillators in the network, which in turn makes them more likely to rotate.
+Our hypothesis is that networks from people with AD may require a lower I 0 for their P sz to be higher than 0 than healthy people.
+Consequently, we expect the BNI from people with AD to be higher than the BNI from healthy people, since the inflection point of the BNI curve would occur for smaller values of I 0 .
+For the comparison between the two groups to be meaningful, the BNI was computed using the same parameters K, λ 1 and λ 2 for all participants.
+
+Node ictogenicity (NI).
+Each ROI has its own unique set of connections to other ROIs implying that each ROI may have a different contribution for the network's ability to generate seizures.
+To measure the contribution of each ROI to BNI, we computed the node ictogenicity (NI)
+The calculation of NI consists of measuring the BNI upon the removal of a ROI from the network to infer the ROI's importance for the generation of seizures.
+The NI of ROI i is given by
+where BNI pre is the BNI before removing ROI i, whereas BNI post is the BNI after removing ROI i (and all its connections) from the network.
+NI can be interpreted as follows.
+If node i has no influence on seizure generation, then there will be no change in BNI following removal of the node and hence BNI ðiÞ post ¼ BNI pre and NI (i) = 0. Conversely if node i is entirely responsible for seizure generation in the network, then seizures are suppressed completely following the removal of the node, and hence BNI ðiÞ post ¼ 0 and NI (i) = 1.
+In most real cases, removal of an ROI will reduce seizure propensity but not completely suppress seizures, and hence 0 < BNI ðiÞ post < BNI pre and 0 < NI (i) < 1, where larger values indicate seizures are more suppressed following removal of the node.
+A negative value of NI (i)
+
+Statistical analysis
+All statistical analysis used non-parametric measures, which do not rely on assumptions about the distribution of the data.
+All pairwise comparisons used the Mann-Whitney U test, for which we report the U-statistic and its z-score
+For paired group-level statistics we use Friedman tests and report χ 2 as a measure of effect size.
+For testing which ROIs contribute most significantly towards the generation of seizures, we use a null hypothesis that all nodes contribute equally, and use a non-parametric bootstrap to calculate a null distribution under this null hypothesis.
+Specifically, if the empirical data is represented as N participant × N ROIs nNI values, we generate 10,000 surrogate nNI data sets with the same dimensions but with entries bootstrap-sampled from the original data.
+This destroys any effect of ROI on the nNI distribution.
+We then compare the median (over participants) nNI value for each ROI against the same statistic from the surrogates to obtain a p-value, which is then controlled for multiple comparisons using the Benjamini-Hochberg false discovery rate procedure.
+For comparisons of NI/nNI distributions between groups, multi-variate pattern analysis (MVPA) was performed with the MVPA-Light toolbox
+Classification used logistic regression, with the 5-fold cross-validated area under the ROC curve (AUC) as the performance metric.
+20 repetitions of this procedure were performed and the average AUC was used in subsequent analysis (i.e.
+statistical testing via permutation analysis, described below).
+The AUC metric is reported as mean ± standard deviation across folds and repetitions.
+Permutation testing was used to assess significance of differences between groups, following the same methodology as the original data (e.g. the same cross-validation folds and number of repetitions).
+No regularization or feature selection was used to reduce overfitting, and hence MVPA classification rates may not be robust or generalizable to new populations of data.
+However, each permutation used the same cross-validation folds and hence the degree of overfitting is equal in the original and permuted data sets.
+Therefore any difference in AUC between permuted and empirical data suggests that there is an association between NI/nNI distribution and disease group in the empirical data which is not present after permutation.
+
+Results
+
+Elevated brain network ictogenicity in AD
+We first tested whether brain networks in people with AD had a higher propensity to generate seizures than controls by quantifying BNI.
+BNI was calculated as the area under the curve of percentage of time spent in seizure as cortical excitability (I 0 ) is increased.
+The lower bound for I 0 , which we term λ 1 , was chosen to be a value at which no participant exhibits seizures in the simulation.
+This reflects the fact that at the time of EEG acquisition no participants exhibited seizures.
+Therefore baseline excitability in the model, i.e.
+I 0 = λ 1 (black arrow in Fig 2B ), represents a non-seizure state for all participants.
+We found that BNI was significantly larger for AD than controls (U = 403, z = 2.7710, p = 0.0056;
+
+Spatial distribution of regions responsible for seizures in AD simulations
+Having identified that brain networks from AD participants have a greater propensity to generate seizures than controls, we next studied which ROIs are responsible for emerging seizures in the simulations for these patients.
+To do this, we calculated the NI of each ROI in the network, which quantifies the importance of ROIs for simulated seizure generation by quantifying the reduction in seizures after removing the ROI from the network.
+To avoid weighting results more strongly towards participants with higher total NI, we normalised NI distributions to unit sum for each participant, i.e. we used nNI values (Eq 6).
+We first tested whether there were 'seizure driving' ROIs in the AD participants, i.e. whether certain ROIs had consistently higher nNI across AD participants than others, and therefore the distribution of nNI was not homogeneous over the cortex.
+A Friedman test found this to be the case, since nNI score significantly depended on ROI (χ 2 = 75.87,
+p = 3.69 × 10 -4 ).
+We therefore subsequently examined which ROIs contributed most to seizure generation in the AD simulations.
+Interestingly, as a group-level observation we note that these regions seem to be consistent with those with the largest and earliest staged Aβ burdens in AD
+
+Comparison of node ictogenicity with controls
+Cognitively healthy participants may also develop epilepsy, so it is of interest to examine whether the most likely ROIs to be responsible for seizure generation in our model are consistent between the control and patient groups.
+Here we compare the spatial distribution of NI values in people with AD against controls.
+However, since MVPA identified no significant differences in nNI distributions (which controls for mean NI) between AD and controls (AUC = 0.5220 ± 0.165, p = 0.4080), differences between groups in spatial patterns were primarily due to the decrease in mean NI in AD rather than different spatial topographies of NI values.
+
+Discussion
+In this manuscript, we used a computational model of seizure transitions in brain networks
+At present, most conceptual models for development of seizures in people living with AD focus on the mechanisms of increased local excitability of cortical tissue
+However, largescale functional network structure also likely plays a crucial role in determining the propensity of a brain to generate both focal and generalized seizures
+A key result of our study is that previously reported alterations to functional connectivity in AD
+This was quantified using the brain network ictogenicity (BNI) framework
+This result fits closely with the self-amplifying cascade hypothesis for epileptogenisis in AD, which suggests that AD pathologies induce hyperexcitability
+For a review of this cascade hypothesis, see the Introduction,
+While at present this is an untested hypothetical model, under this hypothesis we can interpret increased BNI in AD as follows.
+At baseline, all participants have a level of cortical excitability such that no seizures are observed, here modelled by setting I 0 equal to λ 1 for all participants (black arrow in
+As initial amyloid/ tau deposits form, cortical excitability is increased.
+The AD participants are more likely to develop seizures than controls as a result of this increased excitability (yellow arrow in Fig
+The increased seizure propensity is a direct consequence of the altered functional network structure, as this is the only difference between AD and control simulations in our study.
+This hyperactivity mediates an increase in Aβ and tau burden
+Future work should involve testing this hypothetical self-amplifying cascade within our model framework.
+It would be particularly interesting to longitudinally track the evolution of BNI throughout cognitive decline, as it is currently unclear whether seizure likelihood evolves with disease progression.
+To quantify the importance of an ROI for ictogenesis in our model, we removed the ROI and recalculated BNI.
+The resulting change in BNI is termed the node ictogenicity (NI) for that ROI
+This was repeated for all ROIs, to calculate a distribution of local ictogenicity.
+Interestingly, the cingulate, fusiform, and orbital cortices had greatest NI (Fig
+These same regions are also those affected by tau burden at middling stages (Braak stages III-IV) of the disease
+Furthermore,
+However, a 15-20% loss of grey matter in the temporoparietal region was additionally reported which does not correspond to our results.
+These associations support a group-level relationship between seizure propensity and regions stereotypically affected by AD at the earliest stages, which should be tested on an individuallevel using multimodal imaging in future work.
+When distributions of NI were controlled for individual mean effects, there was no difference in the NI distribution between AD and controls.
+A potential interpretation of this result in our model is that the primary difference between AD and control participants is that the cascade of excitability vs pathology happens more quickly in AD due to large-scale network structure, and not that certain regions are more strongly targeted than others e.g. as a result of pathology.
+Future work should examine this hypothesis.
+Another interesting finding from the local analysis was lower mean NI and spatial standard deviation of NI distributions in AD participants than controls (Fig
+Lower mean NI in AD suggests that, on average, removing a single node from the brain network will be less likely to suppress seizures in our simulations than in controls, and hence more distributed groups of nodes are likely to be responsible for driving seizures.
+Lower standard deviation of NI distributions in AD suggests that there is more spatial homogeneity in the importance of nodes to drive seizures than in controls (heterogeneity suggests some nodes play a key role in driving seizures while other nodes have very minor role).
+Combined, these results are suggestive of a generalized (as opposed to focal) mechanism for seizures in AD.
+For focal seizures, one might expect the seizure onset zones to have higher NI than other ROIs and removal of these foci to drastically reduce BNI, while other ROIs may be less influential, resulting in a high spatial variance in NI scores
+In contrast, decreased variability in the importance of nodes for generating seizures combined with an overall decreased mean NI suggests that ictogenicity is more homogeneously distributed across the cortex in people with AD than controls, which in turn may imply that people with AD are more susceptible to generalized seizures than controls.
+In the general population of people living with epilepsy, generalized onset tonic-clonic seizures are the main seizure type in approximately 10% of cases
+epilepsy with interictal transient amnestic dementia-like symptoms without an AD aetiology) this prevalence is as low as 4%
+Conversely, in people with AD and other dementias with comorbid epilepsy, the prevalence of generalized onset tonic-clonic seizures is 15-40%
+These reports are therefore in line with our results, and therefore large-scale brain network structure is likely an important factor in determining seizure phenotype in AD.
+
+Methodology
+There are several methodological considerations to this study, as functional network structure is likely to be dependent on analysis pipeline and influences the BNI/NI results
+Here, we chose a priori a single pipeline that was appropriate to for the scientific question at hand.
+The methods used for construction of functional connectivity were derived from a previous study
+A similar pipeline was additionally used in a previous source-space study for BNI analyses demonstrating usefulness for the model-based ictogenicity analysis
+We analysed a single 20 second epoch of resting-state EEG per participant.
+Studies of phase locking have demonstrated reliable estimates can be made with as little as 12 second segments of data
+However, it is also known that over periods of several hours or days there are fluctuations in functional connectivity statistics
+Other methodological choices may influence the resulting functional network.
+These included the choice of frequency band
+The methodology used to construct the networks used in this study was discussed in detail in previously work
+The alpha frequency band has been chosen for several studies using computational models to assess seizure likelihood from functional connectivity
+These studies were all performed with eyes-closed data, where the alpha band dominates the EEG.
+However, this study used eyes-open data, in which the alpha network is less powerful and differs in functional network structure
+Therefore here the theta-band was used, motivated by past studies which have demonstrated theta-band alterations to EEG functional connectivity in AD
+eLORETA was used for source reconstruction.
+eLOR-ETA has been demonstrated to outperform other source reconstruction algorithms for resting-state data
+eLOR-ETA has also been shown to be useful for computational modelling of BNI in source space
+We used phase locking value (PLV) to calculate functional connectivity.
+A key limitation of PLV is that it may be influenced by leakage in the source reconstruction solution.
+To minimize the effects of leakage, we used a low resolution atlas consisting of only 40 ROIs
+This methodology is likely to be less conservative than the use of leakage-correction schemes such as orthogonalization of source time series
+In spite of potential influence of leakage, PLV has been demonstrated to be a powerful tool for source functional connectivity analysis.
+Simulation studies have demonstrated that PLV (in the absence of leakage correction) can accurately capture functional connectivity in the source space solution
+Furthermore, PLV is a useful measure of large-scale connectivity for simulating seizure dynamics
+These results justify our use of PLV in this study.
+
+Limitations and future work
+All participants in this study had no history of seizures at the time of data acquisition, and while AD patients are 6-10 times more likely to develop seizures than controls
+Future work should additionally introduce two cohorts of people with seizures-those comorbid with AD and those without AD.
+While the work presented here potentially gives insights into the network-level mechanisms of increased seizure prevalence in AD, the comparison between people with AD who develop seizures and those who don't would help further elucidate the specific network mechanisms which contribute to seizure propensity in AD.
+Another key factor which should be examined in future work is APOE genotype, a known risk factor for both Alzheimer's disease and epilepsy [100, 101].
+However, it is likely that later stage AD participants or people with epilepsy will be treated by potentially EEG-altering pharmacological interventions; one key advantage to this study of early stage AD participants is that all participants were free from medication at the time of data acquisition.
+In this work, we identified spatial distributions of regions with high seizure propensity in AD, and observed a resemblance to stereotypical patterns of Aβ pathology in AD patients.
+A limitation to further exploring this observation and quantifying statistical effects is the absence of amyloid PET scans in our cohort.
+Future work should involve integration of multi-modal neuroimaging data, including functional data (EEG/MEG/fMRI), structural MRI, and PET, to quantify the relationship between spatial patterns of NI and Alzheimer's pathologies, cortical atrophy, vascular dysregulation, metabolic alterations, inflammation, etc. on an individual level.
+A limitation of the modelling methodology is the use of a static functional network which is independent of cortical excitability.
+This separation of local and network mechanisms has been shown to be informative in previous applications to epilepsy
+It lies between a standard functional connectivity analysis on the one hand, and the full inversion of a biophysical model on the other.
+The latter would simultaneously estimate intrinsic excitability of nodes and connectivity between them, thereby capturing the role of local dynamics in shaping large-scale functional connectivity
+However, reliable estimation of the large number of parameters in such a model is challenging.
+In addition, future work involving more biophysically realistic modelling could incorporate activity dependent degeneration
+Our modelling also assumes homogeneity of local dynamics across regions of the brain, which is also likely to be of limited biophysical realism.
+Integration with other imaging modalities such as PET/MRI would allow for spatial heterogeneity in local excitability related to statistics such as amyloid/tau burden, vascular/metabolic dysfunction, inflammation, or neurodegeneration.
+
+Conclusions
+In this study we have demonstrated potential large-scale brain network mechanisms for increased seizure propensity in people living with Alzheimer's disease.
+In a computational model in which functional connectivity was the only subject-specific parameter, AD participants were more likely to develop seizures than healthy controls in response to an increase in excitability of cortical tissue.
+No patients in this study had seizures at the time of EEG acquisition, so results should be interpreted as a group-level probability of developing seizures at a future time.
+Examination of ROIs necessary for seizure generation in the model uncovered two main findings.
+Firstly, the most important ROIs for seizure generation were those typically burdened by Aβ at the early stages of AD.
+Secondly, alterations to the large scale network structure in AD potentially play a role in determining seizure phenotype, namely an increased likelihood of generalized seizures in AD.
+Future work should involve contrasting seizure-free AD participants with co-morbid AD/epilepsy participants, as well as integration of multimodal neuroimaging data and biophysically realistic modelling to gain further insight into the mechanistic relationships between regional seizure propensity and AD pathology.
+
+S1 Table. A list of
+
+
+
+Fig 1 .
+Fig 1. Calculation of BNI.
+Clockwise from top: Sensor EEG was source reconstructed using the eLORETA algorithm.
+The source solution was parcellated into 40 ROIs given by the Brainnetome atlas.
+Functional networks were calculated from the parcellated time courses of the 40 regions using theta-band phase locking factor.
+BNI was calculated by placing the network into a model of seizure transitions, and increasing the excitability of cortical tissue in the model.
+For each value of the excitability parameter I 0 (visualised by node size in the figure), the fraction of time spent in the seizure state by the simulated dynamics was calculated.
+BNI was the area under the curve of fraction of seizure time against I 0 .
+https://doi.org/10.1371/journal.pcbi.1009252.g001
+
+
+Fig 2A, with median BNI curves shown in Fig 2B).
+Hence, as we increase cortical excitability in the model, AD patients develop seizures for smaller values of I 0 than controls.
+Since the only individual differences in the model are the functional brain networks, this suggests AD brain networks are more susceptible to seizure generation.
+A consequence of this result is that for a given level of cortical excitability (e.g. the yellow arrow in Fig 2B), an AD simulation is statistically more likely to have seizures than controls.
+The global coupling constant K is a free parameter of the model.
+For the results shown in Fig 2, we used K = 10.
+S1 Fig shows that the results are consistent for other values of K.
+For the remainder of the analysis, we therefore focus on K = 10.
+
+
+
+Fig 2 .
+Fig 2. Functional brain networks in AD are more susceptible to seizure generation in response to increase cortical excitability than controls.
+(A) Violin plots of BNI in people with AD and controls.
+BNI is significantly higher in AD. (B) Plots of seizure likelihood, P sz , against excitability, I 0 .
+Lines show median values over all participants within a group, while shaded regions show interquartile ranges.
+Circles show the grid of values on which I 0 was simulated.
+The values of BNI shown in subplot A are the area under these curves for each participant.
+The black arrow shows a hypothetical 'current' baseline, in which no participants have seizures.
+The yellow arrow shows that if cortical excitability increases, AD participants are more likely to experience seizures than controls.
+Parameters: K = 10, λ 1 = -1.7,
+and λ 2 = -0.5.
+https://doi.org/10.1371/journal.pcbi.1009252.g002
+
+
+Fig 3A shows the distribution of nNI values over the cortex.
+To test the degree to which different regions deviate from the null hypothesis of homogeneously distributed nNI, we used a non-parametric bootstrap test (see Materials and methods).
+The null median nNI scores were normally distributed (S2 Fig), so for visualization of deviation from the null distribution we show z-scores for each ROI against the surrogate distribution in Fig 3B.
+The bilateral cingulate, orbital, and fusiform cortices had the largest deviations, with bilateral cingulate, right fusiform, and left orbital exceeding the 5% significance level against the null distribution (Benjamini-Hochberg corrected non-parametric bootstrap).
+
+
+
+Fig 3 .
+Fig 3. Spatial distributions of seizure generating regions in AD simulations.
+(A) Median nNI over participants for each ROI.
+(B) z-scores of median nNI against the surrogate distribution.
+Red scores suggest the nNI score was larger than expected from a homogeneous distribution, suggesting these regions are most strongly responsible for generating seizures.
+(C) nNI values for regions sorted by median over participants by descending nNI.
+Background colour shows z-score.
+The shaded grey region shows empirical 95% confidence intervals on the surrogate data, while the full (Gaussian) probability density function of the surrogate data is shown on the right.
+ROIs marked by an asterisk were significant to (FDR corrected) p < 0.05.
+Full names of ROIs along with the abbreviations given here are given in S1 Table.
+Parameters are those given in Fig 2.
+
+
+https://doi.org/10.1371/journal.pcbi.1009252.g003
+
+
+
+Fig 4
+shows differences in NI distributions between groups.
+Both mean (U = 141, z U = -2.81,
+p = 0.0049, Mann-Whitney U test; Fig 4A) and standard deviation (U = 149, z U = -2.64,
+p = 0.0082, Mann-Whitney U test; Fig 4B) of NI were significantly lower in AD participants.
+We next examined whether the spatial patterns (as opposed to global statistics such as mean and standard deviation) differed between groups (Fig 4C).
+To do so, we used multivariate pattern analysis (MVPA), treating NI scores at each ROI as features.
+MVPA demonstrated a significant difference in the spatial distributions of NI (AUC = 0.7231 ± 0.165, p = 0.0060).
+
+
+
+Fig 4 .
+Fig 4. Analysis of NI scores in AD relative to controls.
+(A) Mean NI across nodes.
+(B) Standard deviation of NI across nodes.
+(C) Effect sizes of differences in NI between AD and controls for each ROI, quantified by the z-score of the U-statistic.
+Parameters are those given in Fig 2.
+
+
+https://doi.org/10.1371/journal.pcbi.1009252.g004
+
+
+ROIs for parcellation of source data, based on the coarse grained Brainnetome atlas [63] used in Tait et al. (2019) [33].
+For each ROI, we give a full name, and the abbreviation used in Fig 3. (PDF)
+
+
+
+Table 1 . Participant demographics. The
+columns showing age and mini-mental state examination (MMSE) scores show means and standard errors over participants.
+
+
+
+Table 2 . Parameters, their meanings, and their standard values used in the simulations.
+All parameters have arbitrary units.
+
+
+suggests that this node suppresses seizures, and hence removal of the node increases seizure propensity (i.e.
+BNI ðiÞ post > BNI pre ).
+To assess group averages it is convenient to further define a normalised NI (nNI),

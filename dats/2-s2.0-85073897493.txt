@@ -1,0 +1,127 @@
+Graph Convolutional Neural Networks For Alzheimer’s Disease Classification
+Graph convolutional neural networks (GCNNs) aim to extend the data representation and classification capabilities of convolutional neural networks, which are highly effective for signals defined on regular Euclidean domains, e.g.
+image and audio signals, to irregular, graph-structured data defined on non-Euclidean domains.
+Graph-theoretic tools that enable us to study the brain as a complex system are of great significance in brain connectivity studies.
+Particularly, in the context of Alzheimer's disease (AD), a neurodegenerative disorder associated with network dysfunction, graph-based tools are vital for disease classification and staging.
+Here, we implement and test a multi-class GCNN classifier for network-based classification of subjects on the AD spectrum into four categories: cognitively normal, early mild cognitive impairment, late mild cognitive impairment, and AD.
+We train and validate the network using structural connectivity graphs obtained from diffusion tensor imaging data.
+Using receiver operating characteristic curves, we show that the GCNN classifier outperforms a support vector machine classifier by margins that are reliant on disease category.
+Our findings indicate that the performance gap between the two methods increases with disease progression from CN to AD.
+We thus demonstrate that GCNN is a competitive tool for staging and classification of subjects on the AD spectrum.
+
+INTRODUCTION
+Alzheimer's disease, a neurodegenerative disorder that currently affects over 30 million people worldwide, is associated with dysfunction of the brain connectivity network and is considered a connectopathy or connectivity disorder.
+A number of recent studies have attempted to diagnose and stage AD using image-derived brain connectivity graphs
+Graph-based classifiers are becoming increasingly significant in the field of connectomics which uses advanced neuroimaging techniques to map brain connectivity with the ultimate goal of unraveling mechanistic details of cognition, behavior, and disease
+Graphs are generic data representation forms that are associated with irregular, non-Euclidean domains.
+In recent years, convolutional neural networks (CNNs) have revolutionized data analytics for signals with underlying Euclidean structure e.g.
+audio and images.
+CNN-based techniques for data representation and classification have outperformed more traditional machine learning approaches for datasets with Euclidean structure by a staggering margin.
+The non-Euclidean nature of the domains in which graph signals are defined implies that common concepts such as local neighborhood definitions (at the domain level) and shift invariance or equivariance (at the system level) do not have natural definitions for these datasets.
+Consequently, the convolution operation, which lies at the crux of CNN architectures, is not well-defined on such non-Euclidean domains.
+Very recently, there has been a series of endeavors toward deep geometric learning with the goal of extending CNN models to non-Euclidean datasets defined on irregularly-structured domains such as graphs and manifolds
+In this paper, we implement and validate a multi-class graph CNN (GCNN) classifier for AD.
+The classifier uses structural connectivity inputs in the form of graph Laplacians derived from diffusion tensor imaging (DTI) to generate the cognitive status category label as its output.
+Four class labels are used in our work: cognitively normal (CN), early mild cognitive impairment (EMCI), late mild cognitive impairment (LMCI), and Alzheimer's disease (AD).
+The GCNN implementation details and the DTI data processing pipeline are presented in section 2. Training and validation details and GCNN performance measures are provided in section 3. Section 4 provides a summary of this work and comments on future directions.
+
+METHODS
+
+Graph Convolutions
+Two key properties that are leveraged by CNNs and which account for their efficiency are local connectivity and shift in variance.
+CNN feature extraction is based on receptive fields that operate on local neighborhoods.
+This leads to global parameter sharing across spatial locations thus exploiting translation invariance.
+Parameter sharing in neural networks significantly reduces the number of unknown parameters or weights to be computed in the training phase and drastically reduces the computing overhead.
+Though these ideas are fundamental to images and time series, a direct generalization of these for graphs is nontrivial, as real-world graphs lack a grid structure, and not all nodes have the same number of neighbors following the same order.
+The problem could either be tackled in the spectral domain, or locality may be extended to graph signals by utilizing their irregular neighborhood structure with varying numbers of neighbors per node.
+A graph is defined as  = (, ℰ), with a set of nodes (or vertices) V = {1,2,… p}and a set of edges ℰ ⊂  ×  connecting the nodes.
+In case of an undirected graph, the condition (i, j) ∈ ℰ iff ( j, i) ∈ ℰ holds.
+Typically, graph representations rely on an adjacency matrix W ∈ ℝ  ×  , where each element of W is an edge weight, i.e., a connection strength between a pair of nodes.
+The normalized graph Laplacian is defined as L = I -D -l/2 WD -l/2 , where D = diag i ∑ j ≠ i w i j is The diagonal degree matrix.
+In a brain connectivity network, the nodes typically represent either individual voxels or supersets of voxels representing anatomically meaningful parcellations of the brain.
+Edges, in a brain network, are indicative of connection strengths.
+These connections may be structural (e.g.
+brain networks based on DTI) or functional (e.g.
+brain networks based on PET or fMRI).
+We have optimized a GCNN paradigm adapted to brain networks
+In this construction of CNNs, the adjacency matrix is utilized to create eight edgeto-edge layers, one edge-to-node, and one node-to-graph layer (in that order).
+It has been shown that an edge-to-edge filter over the graph  is equivalent to a filter over a line graph ℒ with a k-hop factor of 1, which in turn, may be expressed as a generalized convolution
+The to-node filter creates a unitary output at each node by accumulating the convolutions of the adjacency matrix with one-dimensional spatial row and column filters.
+The graph-to-node filter is a one-dimensional spatial filter that furnishes a single response from all nodes.
+
+GCNN Implementation
+We implemented a GCNN multi-class classifier using the Caffe deep learning suite.
+The implementation was based on the architecture described in Fig.
+The network contained eleven layers including nine convolutional layers (denoted Conv), two fully connected layers (the first one with 32 units and the second one with 10 units), each followed by a rectified linear unit (denoted ReLU), and a softmax output layer computing class-membership probabilities.
+
+Data Description
+DTI data for this study was derived from the Alzheimer's Disease Neuroimaging Initiative (ADNI)
+The primary labeled 4-class (CN, EMCI, LMCI, and AD) datasets used used for training and validation were obtained from ADNI.
+Subject demographics are provided in Table
+
+Data Augmentation
+We utilize the adaptive synthetic sampling (ADASYN) approach
+This approach extends the synthetic minority oversampling technique (SMOTE)
+All 4 data classes (12 original datasets per class) were augmented to a size of 132 datasets per class.
+Of these, 100 were used for training, and the remaining were used for validation.
+
+Data Processing
+Structural networks were computed from a series of diffusion MR images with anatomical reference information obtained from corresponding Tl-weighted MR scans.
+A sample diffusion image and the corresponding Tl-weighted MR are shown in Fig.
+White matter fiber tracts were reconstructed from the diffusion MR images via tractography using the software MedlNRIA.
+Prior to tractography, distortions and possible misregistrations of diffusion MR image due to eddy currents and/or motion are corrected via the FSL toolbox.
+The final step of the pipeline is the computation of adjacency matrices via fiber counting.
+To do so, first, the Tl-weighted anatomical reference images were segmented using an atlas after deformable registration to match the FreeSurfer anatomical template shown in Fig.
+This step generated a segmented image volume based on the Freesurfer Desikan-Killiany atlas (Fig.
+The segmented T1 MR was then registered to the diffusion images.
+Fiber counting was performed on the segmented diffusion image volumes to derive pairwise inter-region connection strengths thereby yielding an adjacency matrix.
+A series of 112 × 112 adjacency matrices were computed.
+Fig.
+
+RESULTS
+
+Evaluation Metric and Reference Approach
+To evaluate the classifier performance, we resorted to the receiver operating characteristic (ROC) curve, which is a graphical plot of the true positive rate (TPR = sensitivity) vs. the false positive rate (FPR = 1 -specificity) for a classifier as the discrimination threshold is varied.
+ROCs are commonly used for binary classifiers.
+For our multi-class classifier, we computed separate ROCs for each class which reflect the overall accuracy for a given class relative to all other classes.
+As a reference approach to determine relative accuracy of classification, we rely on a multi-class support vector machine (SVM) classifier.
+SVM performs classification by determining the hyperplane that best separates two classes after nonlinearly mapping the data to a high-dimensional projection space.
+Unlike representation learning techniques, SVMs are reliant on a predefined set of input features.
+Here node degrees and clustering coefficients computed from the graphs were used as SVM inputs.
+
+Classification Performance
+The GCNN was trained and tested using the Caffe platform on a Thinkmate VSX R5 540V4 workstation with an NVIDIA 1080 Ti 11 GB graphics card.
+During training, an L 2 loss function was minimized using the stochastic gradient descent (SGD) algorithm.
+The algorithm parameters were set to the following: learning rate 0.0003, batch size 10, learning momentum 0.9, weight decay 0.0001, and 200 training epochs.
+The final ROC curves comparing the GCNN classifier and the SVM classifier are shown in Fig.
+The two classifiers showed near-perfect performance for the CN category with ample data samples.
+For the EMCI, LMCI, and AD categories, GCNN greatly outperformed SVM.
+The performance gap between the two methods increased with increase in levels of disease progression from CN to AD.
+For robust assessment, we adopted a 10-fold cross-validation strategy.
+Average accuracy, maximum accuracy, and standard deviation of accuracy across runs are reported in Table
+
+CONCLUSION
+We have implemented and validated a multi-class GCNN classifier for classification of subjects on the AD spectrum.
+We trained and validated the network using structural connectivity graphs based on DTI.
+ROC analysis results show that the GCNN classifier outperforms SVM by margins that are reliant on disease category.
+Our findings show that the performance gap between the two methods increases with disease progression from CN to AD.
+Our result is important from a technical standpoint because it elucidates the potential for the GCNN classifier to yield high performance under low-sample-size settings.
+The initial implementation relies on simple L 2 loss function.
+As future work, we will extend this classifier to larger datasets, test alternative loss functions, and test various GCNN architectures and implementations.
+Architecture of the proposed graph convolutional neural network consisting of several convolutional layers (Conv) alternating with rectified linear units (ReLu), one or more fullyconnected layers (FullyConn), and a softmax output layer.
+ROC curves comparing GCNN and SVM performance for each of four classes: CN, EMCI, LMCI, and AD.
+
+
+
+Fig. 1 .
+Fig. 1.
+
+
+
+Fig. 2 .
+Fig. 2. Sample brain images (transverse views): (A) High-resolution Tl-weighted anatomical MR scan, (B) Diffusion MR scan, (C) Anatomical template in native (FreeSurfer) space, (D) FreeSurfer atlas with 112 anatomical regions, (E) Fiber bundles reconstructed via tractography, and (F) Adjacency matrix computed via fiber counting.
+
+
+
+Fig. 3 .
+Fig. 3.

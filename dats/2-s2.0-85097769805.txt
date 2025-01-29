@@ -1,0 +1,327 @@
+Radiomics Analysis of Magnetic Resonance Imaging Facilitates the Identification of Preclinical Alzheimer’s Disease: An Exploratory Study
+Diagnosing Alzheimer's disease (AD) in the preclinical stage offers opportunities for early intervention; however, there is currently a lack of convenient biomarkers to facilitate the diagnosis.
+Using radiomics analysis, we aimed to determine whether the features extracted from multiparametric magnetic resonance imaging (MRI) can be used as potential biomarkers.
+This study was part of the Sino Longitudinal Study on Cognitive Decline project (NCT03370744), a prospective cohort study.
+All participants were cognitively healthy at baseline.
+Cohort 1 (n = 183) was divided into individuals with preclinical AD (n = 78) and controls (n = 105) using amyloid-positron emission tomography, and this cohort was used as the training dataset (80%) and validation dataset (the remaining 20%); cohort 2 (n = 51) was selected retrospectively and divided into "converters" and "nonconverters" according to individuals' future cognitive status, and this cohort was used as a separate test dataset; cohort three included 37 converters (13 from the Alzheimer's Disease Neuroimaging Initiative) and was used as another test set for independent longitudinal research.
+We extracted radiomics features from multiparametric MRI scans from each participant, using t-tests, autocorrelation tests, and three independent selection algorithms.
+We then established two classification models (support vector machine [SVM] and random forest [RF]) to verify the efficiency of the retained features.
+Five-fold cross-validation and 100 repetitions were carried out for the above process.
+Furthermore, the acquired stable high-frequency features were tested in cohort three by paired two-sample t-tests and survival analyses to identify whether their levels changed with cognitive decline and impact conversion time.
+The SVM and RF models both showed excellent classification efficiency, with an average accuracy of 89.7-95.9% and 87.1-90.8% in the validation set and 81.9-89.1% and 83.2-83.7% in the test set, respectively.
+Three stable high-frequency features were identified, all based on the structural MRI modality: the large zone high-gray-level emphasis feature of the right posterior cingulate gyrus, the variance feature of the left
+
+INTRODUCTION
+Alzheimer's disease (AD) is an evolving medical challenge that represents the largest unmet medical need because of its epidemiology and irreversible as well as incurable nature
+A series of disappointing large-scale clinical trials in symptomatic patients have resulted in clinical consensus that efforts should move forward to the early stages of the disease
+According to the latest National Institute on Ageing-Alzheimer's Association (NIA-AA) diagnostic framework, cognitively healthy individuals with brain amyloid-β (Aβ) deposition have already entered the irreversible Alzheimer's continuum
+These individuals can be defined as preclinical AD patients.
+The accurate ultraearly diagnosis of the preclinical stage of AD exactly provides a window of opportunity for intervention and is thus of great clinical importance and being the first imperative.
+As Aβ deposition is the criterion standard for the diagnosis of preclinical AD, its detection has become a crucial issue.
+Currently, the internationally recognized state-of-the-art biopsy assessment for brain Aβ depends on amyloid positron emission tomography (PET) imaging and cerebrospinal fluid analysis
+Hence, there is an urgent need for a convenient and inexpensive diagnostic technique.
+Magnetic resonance imaging (MRI) has been widely used in the clinical evaluation of neurodegeneration and has been incorporated into the AD diagnostic framework
+Considerable research progress has been made in the discrimination of mild cognitive impairment (MCI) and dementia through the use of these different imaging modalities
+Radiomics, a method of high-dimensional minable data analysis, can quantitatively examine a large set of phenotypic features and has previously been successfully applied to the evaluation of multiparametric MRI (MPMRI) and PET as imaging biomarkers in AD
+Many studies have shown changes in the volumetric and morphometric indices of specific brain regions, including the hippocampus, thalamus, callosum, and cingulate gyrus, in the prophase of cognitive decline
+Recent studies of texture analysis have suggested that abnormalities of textural features occur early
+Relative to controls, both AD-MCI and AD-dementia patients showed widespread changes in multiple indices of DTI
+These findings highlight the potential use of MPMRI radiomics analysis as a measure of neurodegenerative processes in AD, which may contain unique information about changes at the microscopic level that can occur before changes at the macroscopic level, such as atrophy.
+However, to the best of our knowledge, no such studies focusing on preclinical AD have been previously reported.
+Deep learning is another effective classification method, but it requires a large number of image datasets, and clinicians cannot obtain interpretable features as imaging biomarkers
+With this study, we aimed to (a) explore novel imaging biomarkers based on radiomics analysis of MPMRI [structural MRI (sMRI), fMRI, and DTI]; and (b) employ classification models to discriminate preclinical AD based on radiomics features.
+
+MATERIALS AND METHODS
+
+Study Design
+The comprehensive workflow is shown in Figure
+
+Participants
+The study was part of the Sino Longitudinal Study on Cognitive Decline (SILCODE), an ongoing prospective cohort study (C) Radiomics features were extracted from each modality, and a novel method characterized by the combination of function perturbations (t-test, autocorrelation test, and three independent algorithms) and sample perturbations (five-fold cross-validation and 100 repetitions) was performed to select features from the training dataset (80% of cohort 1).
+(D) Retained features were incorporated into classification models and verified in the validation (the remaining 20% of cohort 1) and test dataset (cohort 2), respectively.
+Furthermore, during the process of selection, stable high-frequency features were identified that were undisturbed by perturbations and correlated with the SUVR values, which played a good role in predicting prospective cognitive decline (cohort 2).
+(E) Levels of stable high-frequency features were tested to determine whether they change with cognitive decline or impact the conversion time.
+ADNI, Alzheimer's Disease Neuroimaging Initiative; MRI, magnetic resonance imaging; sMRI, structural MRI; fMRI, functional MRI; DTI, diffusion tensor imaging; MPMRI, multiparameter MRI; PET, positron emission tomography; FA, fractional anisotropy; MD, mean diffusivity; AD, axial diffusivity; RD, radial diffusivity; SUVR, standard uptake value ratio; Aβ, amyloid β; Lasso, least absolute shrinkage and selection operator; mRMR, max-relevance and min-redundancy; SVM, support vector machine; RF, random forest; ROC, receiver operating characteristic; AUCs, areas under curve; NC, normal control; CI, cognitive impairment.
+(ClinicalTrials.gov identifier: NCT03370744; the protocol can be accessed at ClinicalTrials.gov)
+The SILCODE project is a constellation of interconnected substudies, and one of its aims is to assess the diagnostic application of imaging in different stages of the cognitive continuum.
+Therefore, baseline standardized clinical evaluation and MPMRI were offered to all participants, resulting in the enrollment of 1,594 individuals with different diagnoses and ranging from being cognitively unimpaired to a confirmed diagnosis of dementia.
+In this study, we established three cohorts from the database and the Alzheimer's Disease Neuroimaging Initiative (ADNI, 1 ) with high selectivity.
+In cohort 1, 183 cognitively healthy participants with amyloid-PET imaging were recruited between July 2016 and November 2018 sequentially, all from the SILCODE project (Supplementary Figure
+In cohort 2, 51 participants were included; they participated in the SILCODE project between December 2009 and December 2015, were selected retrospectively, and were interviewed every 10-15 months until the end of 2019, with 24 later experiencing cognitive decline and 27 remaining healthy (Supplementary Figure
+In cohort 3, the 24 "converters" 1 www.loni.ucla.edu/ADNI
+from cohort 2 and an additional 13 individuals from ADNI were included; they all underwent MPMRI examinations at baseline and also when cognitive deterioration was first identified.
+The entry criteria for healthy individuals have been described previously
+The diagnosis of dementia was based on the guidelines of the NIA-AA workgroups
+Participants in cohort 1 underwent a dynamic scan with Florbetapir F-18 (AV45).
+The whole brain voxel-wise standardized uptake value ratio (SUVR) was normalized to the whole cerebellum, representing the mean cortical SUVR.
+For the dichotomy, amyloid-PET positivity (that is, participants who in the preclinical stage of the Alzheimer's continuum) was defined a priori with the established cutoff of >1.18
+The results for each participant were confirmed by two senior radiologists who were blinded to any clinical information and made positive or negative judgments.
+If the judgment was inconsistent, a third radiologist was consulted to arbitrate in the dispute.
+Informed consent was obtained from all participants.
+Further details regarding the rigorous evaluation of our participants are presented in Supplementary Figure
+
+Imaging Acquisition and Preprocessing
+The MRI data of participants from SILCODE project were acquired using a 3.0-T MRI scanner (Magnetom Sonata; Siemens Healthineers AG, Erlangen, Germany) before 2016, or an integrated simultaneous 3.0-T time-of-flight PET/MR (SIGNA; GE Healthcare, Chicago, IL, United States) after that time point.
+Before undergoing imaging, subjects were instructed to keep their eyes closed but not fall asleep, relax their minds, and move as little as possible during imaging.
+Foam pads and headphones were used to minimize head movement and scanner noise.
+The sMRI was obtained with a magnetization prepared rapid gradient echo sequence (Siemens/GE): repetition time (TR) = 1,900 ms/6.9 ms, echo time (TE) = 2.2 ms/2.98 ms, slice number = 176/192; fMRI was obtained with a single-shot gradient-echo echo planar imaging (EPI) sequence (Siemens/GE): TR = 2,000 ms/2,000 ms, TE = 40 ms/30 ms, slice number = 28/28; and a single-shot spinecho diffusion-weighted EPI sequence was used for the DTI data (Siemens/GE): TR = 11,000 ms/16,500 ms, TE = 98 ms/95.6 ms, slice number = 60/75.
+The detailed protocols can be found in the Supplementary Material.
+The images of the ADNI participants were downloaded from the ADNI database.
+Detailed information regarding the acquisition protocol is publicly available on the LONI website
+The standardized preprocessing of amyloid PET and MPMRI has been described in previous studies
+The original DICOM data were converted to the NIfTI file format by using DCM2NII
+We then processed the MPMRI and amyloid-PET imaging data separately for each participant.
+For sMRI, the images were normalized and showed a spatial resolution of 91-mm × 109-mm × 91mm with a 2-mm × 2-mm × 2-mm voxel size after being segmented into gray matter, white matter, and cerebrospinal fluid tissues.
+We then smoothed them using an isotropic Gaussian smoothing kernel with a full width at half maximum of 4 mm × 4 mm × 4 mm.
+For fMRI, the first 10 time-point images were discarded for magnetization balance.
+After that, the remaining 230 time-point images were corrected and aligned to the first time-point image to correct for head movements.
+The resulting motion-corrected volumes were coregistered to the anatomical T1-weighted images and normalized to the Montreal Neurological Institute template, resampling to a 3-mm cube voxel resolution.
+For DTI, we employed the Eddy Correct tool to correct the head motion and eddy current distortions
+We then adopted the DTIFIT tool to fit the diffusion tensor at each voxel and produced four parameter maps encompassing fractional anisotropy, mean diffusivity, axial diffusivity, and radial diffusivity
+For amyloid PET, the structural images were individually registered to the averaged PET images.
+We then performed segmentation of all the coregistered structural images, spatially normalizing the PET images to the Montreal Neurological Institute standard space by using the forward parameters (estimated during the segmentation), and smoothed the images with an 8-mm full width at half maximum Gaussian kernel.
+The sMRI and fMRI images were preprocessed using the Data Processing Assistant for resting-state fMRI (DPASF;
+DTI was performed using the pipeline for analyzing brain diffusion images (PANDA) implemented based on the FMRIB Software Library
+
+Feature Extraction
+Feature extraction was performed for each modality separately.
+For sMRI, 43 texture features and 172 wavelet features of each region of interest (ROI; 116 in total, based on the AAL template) were extracted.
+For fMRI, 43 texture features of each ROI were extracted.
+For DTI, we calculated the white matter tracts and viewed the fractional anisotropy, mean diffusivity, axial diffusivity, and radial diffusivity as features.
+All extracted features were adjusted before selection using linear regression to control for the impact of age, gender, and education.
+Feature extraction of the sMRI and fMRI data was performed using the Texture Toolbox from radiomics tools developed by
+Further details are described in the Supplementary Table
+
+Feature Dimensionality Reduction and Selection
+This step was achieved using MATLAB.
+More specifically, we performed a five-fold cross-validation on the dataset of cohort 1; that is, the data were randomly divided into a training set (80%) and a validation set (the remaining 20%).
+In the training set, three steps including t-tests, autocorrelation tests, and three independent algorithms [Fisher score, least absolute shrinkage and selection operator (Lasso), and max-relevance and minredundancy (mRMR)] were adopted to filter the redundant and meaningless features.
+The remaining features were retained and incorporated into classification models.
+Importantly, we repeated the above steps 100 times.
+More details can be found in the Supplementary Material.
+In addition, for each type of the above three algorithms, we calculated the number of occurrences of each retained feature, ranging from 0 to 500.
+The top 10 most frequently appearing features were defined as high-frequency features, and the stable high-frequency features represented the overlaps among the three perturbations.
+
+Classification Experiments
+The support vector machine (SVM) and random forest (RF) are both popular and mature machine learning algorithms with a solid theoretical basis
+Here, these two classification models were established to verify the performance of retained features in the validation (20% of cohort 1) and test set (cohort 2), respectively.
+The SVM model employed three different kernels: sigmoid, linear, and radial basis.
+Corresponding to the retained features, there were 500 permutation experiments using the Fisher score, Lasso, or mRMR algorithm.
+The final accuracy, sensitivity, and specificity results were presented as average values ± standard deviation (SD) for each model.
+In addition, receiver operating characteristic (ROC) analyses were performed to evaluate the ability of each stable highfrequency feature in predicting prospective cognitive decline of participants in the test set, and the areas under curve (AUCs) were calculated.
+The analysis was performed using SPSS 13.0 software (SPSS Inc., Chicago, IL, United States).
+Further details are provided in the Supplementary Material.
+
+Longitudinal Analyses
+As an independent longitudinal research study, this aspect of the study aimed to further clarify the role of the stable highfrequency features identified from the training dataset (80% of cohort 1) in another separate test dataset, that is, cohort 3. The feature extraction was identical to that mentioned above.
+In order to test whether the levels of stable high-frequency features changed with cognitive decline, we performed comparisons at two different time points of cognitive stages and verified whether these features affected the conversion time of individuals using survival analyses.
+
+Statistical Analysis
+The demographic data of participants are summarized as numbers (%) or mean ± SD for categorical and continuous variables, respectively.
+The between-group comparisons were performed using the χ 2 test for categorical variables or the twosample t-test for continuous variables (two-tailed).
+A p < 0.05 was considered statistically significant.
+In the process of dimensionality reduction, the two-sample t-test was two-tailed and considered significant when p < 0.05; for the autocorrelation test, we calculated the Pearson correlation coefficients between features and considered the paired features to have a high correlation when values in the pairwise correlation were greater than 0.8.
+Furthermore, in order to better understand the association between radiomics features and iconic pathological changes in AD, we created Pearson correlations to evaluate the relationship between stable high-frequency features and mean cortical SUVR values and acquired the results after adjusting for age, gender, education, and Montreal Cognitive Assessment (MoCA) scores.
+In the longitudinal analyses, we mapped out the changing trajectory of each stable high-frequency feature at the individual level and performed paired two-sample t-tests at the group level (two-tailed, p < 0.05).
+In the survival analyses, individuals of cohort 3 were divided into two parts, the high-level group (n = 18) and low-level group (n = 19), according to the median level of each stable high-frequency feature.
+Subsequently, cumulative probabilities of clinical conversion by the two groups were displayed according to the Kaplan-Meier method, and the survival curves were compared between groups in a univariate analysis using the log-rank test.
+These above analyses were performed in SPSS or MATLAB.
+
+RESULTS
+
+Participants
+In cohort 1,183 healthy participants were included.
+Their clinical and MPMRI examinations were almost continuous, and amyloid PET was performed within 3 months of the MPMRI scan.
+Eventually, 78 amyloid-positive and 105 negative participants were identified.
+Compared to the negative individuals, individuals who were positive were older (p = 0.039) and had a higher AV45 SUVR (p < 0.0001), but there were no statistical differences in the other clinical data collected (Table
+In cohort 2, an additional 51 healthy participants were dichotomized according to their future cognitive outcomes.
+They were interviewed every 10-15 months, and we found the cognition of 24 of these participants deteriorated after an average of 41.2 months [interquartile range (IQR), 24.5-52.7],
+with 23 progressing to MCI and one to dementia.
+The others remained healthy after at least three follow-up visits (54.8 months; IQR, 48.9-58.9).
+As shown in Table
+Cohort 3 included the 24 converters from cohort 2 as well as 13 from ADNI.
+Their average score on the MoCA scale dropped from 23.7 ± 2.7 at baseline to 20.5 ± 3.8 at the follow-up time point.
+The average conversion time of ADNI participants was 62.1 months (IQR, 55.1-66.5),
+compared to 48.1 months (IQR, 27.8-61.7)
+across the whole group.
+The individuals from ADNI were used as an additional supplement, with 12 progressing from cognitively healthy individuals to MCI and one to dementia.
+Other data are shown in Table
+
+Radiomics Features Selection
+For each participant in the three cohorts, 30,128 features were extracted, including 24,940 features from sMRI, 4,988 from fMRI, and 200 from DTI.
+To avoid overfitting, these features were screened before being included in the classification models.
+In the training set, 9,000-11,000 features were retained after the two-sample t-tests (p < 0.05) and 2,200-2,500 types of uncorrelated features were reserved after the autocorrelation tests.
+The remaining features were further filtered by three independent selection algorithms.
+More specifically, we retained the top 50 ranked features using the Fisher score test, 50-70 features using the Lasso method, and the top 50 ranked features after the mRMR test.
+Generally, the retained features were consistent in repeated experiments.
+As shown in Table
+For the features selected from the disturbance containing the Fisher score test, the frequency was 420-500 times, mainly originating from the posterior cingulate (left, 3/10; right, 3/10).
+For the features selected from Lasso, the frequency was 383-468, and no specific regions were identified.
+Regarding the features selected from  Under the sample disturbance of five-fold cross-validation, we carried out three different kinds of composite function disturbances separately to screen features in the training dataset and repeated the process 100 times.
+We calculated the number of occurrences of each retained feature, ranging from 0 to 500, and listed the top 10 most frequently appearing features here; they all originated from the sMRI modality.
+Three stable high-frequency features were verified, and their identification numbers were 11517, 27442, and 6489.
+The kurtosis feature belongs to the "global" category; the homogeneity and variance features belong to the "gray-level co-occurrence matrix" category; the GLN, ZSN, LZHGE, SZLGE, LZLGE, and ZSV features belong to the "gray-level size zone matrix" category; and the strength, coarseness, busyness, complexity, and contrast features belong to the "neighborhood gray-tone difference matrix" category.
+Notably, the variance and contrast features could also originate from the "global" and "gray-level co-occurrence matrix" category, respectively.
+The "R" represents weights to bandpass sub-bands in wavelet filtering.
+Lasso, least absolute shrinkage and selection operator; mRMR, max-relevance and min-redundancy; ID, identify number; sMRI, structural magnetic resonance imaging; L, left; R, right; Post, posterior; Sup, superior; Inf, inferior; Mid, middle; Orb, orbital; Ant, anterior; GLN, gray-level nonuniformity; ZSN, zone-size nonuniformity; LZHGE, large zone high-gray-level emphasis; SZLGE, small zone low gray-level emphasis; LZLGE, large zone low-gray-level emphasis; ZSV, zone-size variance.
+Frontiers in Cell and Developmental Biology | www.frontiersin.org
+mRMR, the frequency was 320-495, also mainly from the posterior cingulate (left, 4/10; right, 2/10).
+Three stable high-frequency features were identified during the process as follows: the large zone high-gray-level emphasis (LZHGE) feature of the right posterior cingulate gyrus on sMRI (ID: 11517; 459 times on average), the variance feature of the left superior parietal gyrus on sMRI (ID: 27442; 450 times on average), and the coarseness feature of the left posterior cingulate gyrus on sMRI (ID: 6489; 387 times on average).
+They were undisturbed by the combined disturbances and may be of great importance in the preclinical stage of AD.
+Additionally, among features and the number of occurrences greater than 300, another two were also identified as overlaps: the LZHGE feature of the left posterior cingulate gyrus on sMRI (ID: 6486; 458 times on average) and the zone-size variance feature of right cerebellum-crus2 on sMRI (ID: 28977; 319 times on average).
+Other retained features that occurred more than 300 times and the meanings of stable high-frequency features are described in Supplementary Table
+
+Classification Performance
+We introduced two types of models to determine whether the retained features were compatible for classification analysis.
+Table
+As shown, the SVM model (radial basis kernel) showed excellent classification efficiency, with an average accuracy of up to 90.2-95.9%
+(sensitivity, 85.9-92.8%;
+specificity, 93.7-98.3%) in the validation set and 84.5-88.9%
+(sensitivity, 79.8-82.9%;
+specificity, 86.0-96.7%) in the test set.
+Similar results were obtained in the RF model (Table
+In contrast, the average accuracy of pure clinical data-based models in diagnosing preclinical AD reached only random-level accuracy at 55.9-56.0%
+(details are presented in the Supplementary Table
+We further verified the classification efficiency of stable highfrequency features on the test set and found that their individual AUCs ranged from 0.649 to 0.761, and when we combined them, the predictive ability improved (AUCs = 0.839; Figures
+In addition, feature 6486 also had a good classification effect (AUCs = 0.739) and improved the AUCs to 0.863 when combined with the three stable features (Supplementary Figure
+In contrast, the performance of feature 28977 was too poor to create an ROC curve.
+These results indicate that radiomics analysis is a reliable feature extraction method in the preclinical stage of AD and provides promising imaging biomarkers for identifying cognitively healthy individuals that go on to experience future cognitive decline.
+
+Correlation Analysis
+In order to further understand the association between radiomics features and pathological changes in AD, we performed a correlation analysis between stable high-frequency features and mean cortical SUVR values on amyloid PET and found that they were highly correlated.
+In detail, feature 6489 levels were positively correlated with SUVR values (r = 0.433, p < 0.0001, Figure
+p < 0.0001, Figure
+p < 0.0001, Figure
+Similar results were found for feature 6486 (r = -0.400,
+p < 0.0001, Supplementary Figure
+The correlation results did not change after adjusting for age, gender, education, and MoCA score (Supplementary Figure
+Our findings revealed high correlations between the levels of these features and Aβ deposition, suggesting that radiomics features based on MPMRI may reflect pathological changes in the brain and can be used for the diagnosis of AD.
+
+Longitudinal Analyses
+In this study, 37 participants from cohort 3 were followed up until cognitive impairment was identified.
+First, we detected the longitudinal changes of each stable high-frequency feature.
+As shown, features 6,489 and 11,517 did not show isotropic changes in the two cognitive stages at the individual level (Figures
+Similar results were obtained for feature 6486 (Supplementary Figures
+Although some individuals had a heterogeneous change pattern of feature 27442 (Figure
+Second, we performed survival analyses of these features.
+In detail, the median baseline levels of features 6489, 11,517, and 27,442 were 0.0297356, 17228.308,
+and 0.865647, respectively; Figures
+Notably, in the comparison between paired groups, only grouping by feature 27,442 was meaningful (log rank p = 0.015).
+The result of feature 6,486 was also unsatisfactory when grouped by the median level of 48.967 (log-rank p = 0.442; Supplementary Figure
+These results indicated that the levels of feature 27,442 decreased with cognitive decline, and the deterioration occurred earlier when the baseline level was less than 0.865647.
+However, considering the limited sample size, the value is for reference only, and it is more accurate to state that the baseline level can affect the conversion time.
+
+DISCUSSION
+Using cross-validations with widely used machine learning techniques, this study demonstrated that radiomics features appear to be robust imaging biomarkers of preclinical AD.
+The real pathophysiological process of AD is thought to begin several decades before symptom onset and is generally followed by a rigid progress pattern, such as Aβ accumulation-neurofibrillary tangles-neuronal damage; neurons are already damaged to some extent when cognitive impairment begins
+Radiomics analysis can extract high-dimensional features of MPMRI and may identify imaging patterns in the preclinical stages that cannot be recognized by human readers; however, there is a paucity of published literature assessing the radiomics features of individuals in the preclinical stage of AD and those who go on to develop future cognitive decline.
+In this ongoing prospective cohort study, we adopted a novel composite method to select features from the training  dataset, established classification models, and verified them in the validation and test sets.
+We found that both models could distinguish whether individuals were in the preclinical stage of AD or whether their cognition will decline in the future, with an accuracy of more than 80%.
+In addition, three stable high-frequency features were identified, which were independent of perturbations, correlated with Aβ deposition, and classified the test set accurately (AUCs 0.649-0.761).
+In the independent longitudinal analyses, we further verified that levels of the feature 27,442 (variance feature of the left superior parietal gyrus on sMRI) decreased with cognitive decline and affected individuals' conversion time.
+Together, these data showed that radiomics features of MPMRI could be important imaging biomarkers for identifying patients with preclinical AD.
+Our previous studies confirmed that cognitively normal individuals at high risk of developing AD already appeared to have altered brain functional networks (fMRI), white matter networks (DTI), or some refined areas (sMRI)
+As expected, the pure clinical data-based classification models were meaningless at this stage, and the traditional volumetric and functional indices were also not sensitive enough (details are presented in the Supplementary Table
+Although it is generally believed that radiomics analysis is more sensitive, current studies are still limited to the symptomatic stages of the disease
+By using hippocampal features, researchers can distinguish AD-dementia with an accuracy of 86.7 and 70.5% of MCI
+Identical conclusions were obtained in a recent large-scale multicenter study where the hippocampal features served as robust biomarkers for clinical identification of ADdementia/MCI and further predicted whether MCI patients would convert to dementia
+In contrast, the deep learning method can indeed acquire slightly better diagnostic capabilities in the Alzheimer's continuum
+Here, in distinguishing preclinical AD patients or clinical converters, the accuracy of our models reached 81.9-95.9%,
+even higher than when distinguishing symptomatic patients from controls.
+We believe that several reasons may account for this.
+First, compared with extracting features solely on sMRI, we utilized MPMRI.
+Second, instead of selecting regions based on prior knowledge, we adopted template segmentation and extracted features.
+Third, among the 30,128 features, we used an innovative selection method to improve robustness.
+Four, we diagnosed individuals based on Aβ profile and not purely on clinical data, significantly reducing the heterogeneity of participants.
+Moreover, the use of different types of models further verified the reliability of our findings.
+The Aβ deposition associated with neuronal degeneration may have resulted in subtle alterations in MRI signal intensity; therefore, we speculate that radiomics features could reflect changes at the microscopic level during the early pathological stages, which occur before changes at the macroscopic level.
+In addition to the computer-aided classification, three stable high-frequency features that were not affected by function perturbations (three different algorithms) and sample perturbations (five-fold cross validation and 100 repetitions) were identified during the selection process: the LZHGE feature of the right posterior cingulate gyrus, the variance feature of the left superior parietal gyrus, and the coarseness feature of the left posterior cingulate gyrus (all on the sMRI modality).
+Importantly, the earliest accumulation of Aβ deposition is also in the superior parietal gyrus and posterior cingulate
+More specifically, in symptomatic AD patients, previous autopsy findings and amyloid-PET studies have suggested that the parietal lobe and posterior cingulum are vulnerable to Aβ invasion during the early stages of AD
+In cognitively normal individuals, the annual increase in Aβ also localizes to these two regions
+From other perspectives, Aβ deposition is associated particularly with cortical atrophy of the superior parietal gyrus
+These developments prove the accuracy of the identified anatomical locations and support our findings that these features were correlated with SUVR values and played a good role in predicting future cognitive decline (AUCs 0.649, 0.729, and 0.761, respectively; 0.839 when combined) and thus probably represent the imaging biomarkers of preclinical AD.
+Interestingly, we found that retained features only came from the sMRI modality, which is probably in part due to the relatively small number of fMRI and DTI features utilized in our study.
+Additionally, a recent study concluded that DTI parameters are not useful for the identification of preclinical AD
+To the best of our knowledge, this is the first time that texture analysis of fMRI has been applied to the field of AD
+Uncertainty still exists, and the significance of DTI and fMRI radiomics features cannot be completely ruled out in this exploratory study.
+In the longitudinal analyses, we found that the variance feature of the left superior parietal gyrus on sMRI decreased with cognitive impairment, suggesting that it may be of great importance in the whole cognitive continuum and not just in the preclinical stage.
+This feature is extracted from the gray-level co-occurrence matrix category and is an indicator of dispersion of the unit values around the mean.
+With cognitive decline, the cortical accumulation of Aβ will increase continuously to a certain extent
+Next, we conducted survival analyses to compare the conversion time between groups within cohort 3. The median value was chosen subjectively for grouping; coincidently, we found that the variance feature can affect the conversion time, further suggesting its predictive effects on clinical outcome.
+Our study had some limitations.
+First, the small sample number limited the statistical power of our data.
+We tried to overcome this issue by enrolling participants from other subcenters and the ADNI, but the requirement of amyloid PET, long-term follow-up, or MPMRI data greatly limited the quantity of potential participants.
+Moreover, the performance of our models may differ when using different imaging protocols.
+Second, considering there is no standard definition of "unstable preclinical AD", we referred to the 36 months of "unstable MCI" and required the nonconverters to remain cognitively stable for at least three follow-up visits.
+The average conversion time of converters was 41.2 months, which needs to be verified.
+Third, other anatomical regions, such as the anterior cingulate, are also susceptible to Aβ attack
+However, we did not find any stable features in these regions; some high-frequency features came from regions that are not or are weakly related to AD, such as the cerebellum, and it is difficult to associate these regions with clinical significance.
+Fourth, in cohort 3, most of the patients were limited to the MCI stage and few to the dementia stage at the follow-up time point; thus, it is not clear whether features were related to the degree of cognitive deterioration.
+Fifth, the positive result of Study two was not significant (p = 0.0403), and the feature levels of some individuals increased disparately, which was probably due to the heterogeneity of MCI and the relatively older age of the ADNI participants.
+Sixth, age may cause differences in our results because of its impact on Aβ and atrophy.
+Seventh, the positive rate of amyloid PET (42.6%) was higher than that reported in previous studies (10-30% mostly)
+This bias may increase uncertainty.
+Eighth, different guidelines have inconsistent definitions of preclinical AD
+The latest NIA-AA 2018 definition requires additional evidence of tau deposition in patients with preclinical AD
+Considering these limitations, multicenter collaboration to include more participants is needed in the future.
+In conclusion, radiomics analysis of MPMRI is expected to become a new evaluation method for Aβ deposition and future cognitive decline in cognitively healthy individuals, which would be of great importance in diagnosing preclinical AD and targeting ultra-early secondary prevention clinical trials.
+Additionally, we have proposed a novel feature extraction paradigm and preservation method for feature subsets, solving the problem of instability and nonrepeatability for future studies.
+
+
+
+FIGURE 1 |
+FIGURE 1 | Workflow diagram.
+(A) Three cohorts were enrolled.
+Cohort 1 (n = 183) and cohort 2 (n = 51) were both from the SILCODE project and divided qualitatively by Aβ status or future cognitive outcomes, respectively.
+Cohort 3 (n = 37) included 24 "converters" from SILCODE and 13 from the ADNI.
+All participants were cognitively healthy at baseline and were evaluated in a standardized protocol.
+(B) Preprocessing of amyloid PET and MPMRI was performed for each modality.
+(C) Radiomics features were extracted from each modality, and a novel method characterized by the combination of function perturbations (t-test, autocorrelation test, and three independent algorithms) and sample perturbations (five-fold cross-validation and 100 repetitions) was performed to select features from the training dataset (80% of cohort 1).
+(D) Retained features were incorporated into classification models and verified in the validation (the remaining 20% of cohort 1) and test dataset (cohort 2), respectively.
+Furthermore, during the process of selection, stable high-frequency features were identified that were undisturbed by perturbations and correlated with the SUVR values, which played a good role in predicting prospective cognitive decline (cohort 2).
+(E) Levels of stable high-frequency features were tested to determine whether they change with cognitive decline or impact the conversion time.
+ADNI, Alzheimer's Disease Neuroimaging Initiative; MRI, magnetic resonance imaging; sMRI, structural MRI; fMRI, functional MRI; DTI, diffusion tensor imaging; MPMRI, multiparameter MRI; PET, positron emission tomography; FA, fractional anisotropy; MD, mean diffusivity; AD, axial diffusivity; RD, radial diffusivity; SUVR, standard uptake value ratio; Aβ, amyloid β; Lasso, least absolute shrinkage and selection operator; mRMR, max-relevance and min-redundancy; SVM, support vector machine; RF, random forest; ROC, receiver operating characteristic; AUCs, areas under curve; NC, normal control; CI, cognitive impairment.
+
+
+FIGURE 2 |The ROC curves of stable high-frequency features and correlation analysis.
+(A-D) Show the ROC curves of stable high-frequency features in the test dataset; they all have high discriminating power.
+In detail, the 6489 feature AUCs = 0.649 (A), 11517 feature AUCs = 0.729 (B), and the 27442 feature AUCs = 0.761 (C).
+The value increased to 0.839 when combined (D).
+E-G show the correlations between the levels of these features and the mean cortical SUVR values in participants of cohort 1.
+The features were the coarseness feature of the left posterior cingulate gyrus on sMRI (ID: 6489; A,E), the LZHGE feature of the right posterior cingulate gyrus on sMRI (ID: 11517; B,F) and the variance feature of the left superior parietal gyrus on sMRI (ID: 27442; C,G).
+LZHGE, large zone high-gray-level emphasis; SUVR, standardized uptake value ratio; ROC, receiver operating characteristic; AUCs, areas under curve; sMRI, structural magnetic resonance imaging; Num, number.
+
+
+
+FIGURE 3 |
+FIGURE 3 | The longitudinal changes and survival analyses of stable high-frequency features.
+In Study 2, 37 participants were included.
+Their cognition was normal at baseline and impaired during follow-up, with two progressing to dementia and 35 to mild cognitive impairment.
+We compared the levels of each stable high-frequency feature between the two time points.
+(A-C) Show the changing trajectory at the individual level; (D-F) are at the group level, with paired two-sample t-tests (two-tailed, p < 0.05).
+Furthermore, these individuals were stratified into high-level (n = 18) and low-level group (n = 19) groups by the baseline median level of each stable high-frequency feature.
+(G-I) Show Kaplan-Meier curves demonstrating the cumulative probabilities of conversion of the two groups (shaded area represents the 95% confidence interval); differences are displayed by log-rank tests (p < 0.05).
+Only feature 27,442 was different at the two time points (p = 0.0403), and its low-level group had a shorter conversion time than the high-level group (p = 0.015).
+The features were the coarseness feature of the left posterior cingulate gyrus on sMRI (ID: 6489; D, G), the LZHGE feature of the right posterior cingulate gyrus on sMRI (ID: 11517; B, E, H), and the variance feature of the left superior parietal gyrus on sMRI (ID: 27442; C, F, I).
+NC, normal control; CI, cognitive impairment; sMRI, structural magnetic resonance imaging; LZHGE, large zone high-gray-level emphasis.
+
+
+
+TABLE 1 |
+Clinical characteristics of participants.Cohort 1 was qualitatively divided into Aβ-P and Aβ-N groups according to participants' SUVR (cutoff: 1.18); cohort 2 was classified by participants' future cognitive outcomes, including Cog-D and Cog-M groups.
+At baseline, all participants were cognitively healthy, and we made comparisons of the clinical data between the two groups of cohorts 1 and 2. Cohort 1 was used as the training and validation dataset, and cohort 2 was used as the test set.
+Cohort 3 was applied to the longitudinal study, including the 24 participants from cohort 2 (Cog-D) and 13 from the ADNI; the latter was a supplement and identical to the evaluation of the Cog-D group.
+The MoCA scale applied in cohort 1 was the Chinese MoCA-Basic version, in cohort 2 was the MoCA-Beijing version, and in ADNI was the traditional MoCA version.
+Continuous measures are presented as mean ± standard deviation.
+Statistical analysis was conducted using the χ 2 test for categorical variables and an independent two-sample two-tailed t-test for quantitative variables.
+
+
+
+TABLE 2 |
+The high-frequency features selected by cross-validation with different methods.
+
+
+
+TABLE 3 |
+Classification performance of the SVM model (radial basis kernel) and RF model.

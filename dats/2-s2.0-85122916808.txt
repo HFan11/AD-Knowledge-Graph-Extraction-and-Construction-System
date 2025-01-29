@@ -1,0 +1,556 @@
+An Intelligent System for Early Recognition of Alzheimer’s Disease Using Neuroimaging
+Alzheimer's disease (AD) is a neurodegenerative disease that affects brain cells, and mild cognitive impairment (MCI) has been defined as the early phase that describes the onset of AD.
+Early detection of MCI can be used to save patient brain cells from further damage and direct additional medical treatment to prevent its progression.
+Lately, the use of deep learning for the early identification of AD has generated a lot of interest.
+However, one of the limitations of such algorithms is their inability to identify changes in the functional connectivity in the functional brain network of patients with MCI.
+In this paper, we attempt to elucidate this issue with randomized concatenated deep features obtained from two pre-trained models, which simultaneously learn deep features from brain functional networks from magnetic resonance imaging (MRI) images.
+We experimented with ResNet18 and DenseNet201 to perform the task of AD multiclass classification.
+A gradient class activation map was used to mark the discriminating region of the image for the proposed model prediction.
+Accuracy, precision, and recall were used to assess the performance of the proposed system.
+The experimental analysis showed that the proposed model was able to achieve 98.86% accuracy, 98.94% precision, and 98.89% recall in multiclass classification.
+The findings indicate that advanced deep learning with MRI images can be used to classify and predict neurodegenerative brain diseases such as AD.
+
+Introduction
+Alzheimer's disease (AD) is a brain disease that has become more prevalent over time and it is now the fourth leading cause of mortality in industrialized nations.
+Memory loss and cognitive decline are the most common signs of AD, and are caused by damage to and death of nerve cells related to memory in the brain area
+Mild cognitive impairment (MCI) is a stage that occurs between normal and AD
+AD progresses gradually through the prodromal stage of MCI, and finally, to AD dementia.
+According to studies, people with MCI acquire AD at a rate of 10-15% every year
+Early identification of patients with MCI can delay or prevent the progression of the disease from the MCI stage to AD.
+The morphological differences in the brain lesions in patients with intermediate stages of MCI are very small
+Furthermore, they have similar clinical manifestations; thus, to act early in the diagnosis and treatment of AD, the diagnosis and prognosis of MCI disease have been analyzed using magnetic resonance imaging (MRI) studies
+In recent years, several machine learning algorithms have been used for the early diagnosis of AD using magnetic resonance imaging.
+A support vector machine (SVM) with particle swarm optimization was applied to the classification of AD and MCI
+The authors of
+The authors of
+The study in
+However, given the very high dimensions of the input image, SVM may not be advantageous
+Deep learning methods have now been proposed for automatic recognition of dementia diseases
+In the latest studies, pre-trained CNNs have proved to be excellent in the automatic diagnosis of cognitive disease from brain MR images.
+AlexNet
+Compared to a model that comprises a single network pre-trained on MRI slices, multiple pre-trained networks on a large scale with MRI may gather potentially useful functional and structural information for discriminating the AD stages.
+An informative feature should keep all the important information from the input image.
+Comparatively, a model based on multiple pre-trained networks has shown outstanding performance in the classification of AD and MCI classification
+Due to the complex structure of MRIs and because the functional changes in the brain in the AD and MCI intermediate classes are closely related, multiple pre-trained networks have been designed to obtain meaningful information randomly from different layers of the pretrained networks.
+This information is then combined or concatenated to extract multi-scale information from the input images
+Concatenation produces a discriminant and appropriate descriptor to further improve the power of the features of the classifier model.
+For example, the authors of
+Although the model extracted the more correlated and diversified features, it could not generalize well on unseen data.
+In this paper, we propose a randomized concatenation of deep features approach for automatic discrimination of patients with AD, early MCI (EMCI), late MCI (LMCI), MCI, and cognitively normal (CN) using deep learning architectures to take advantage of random information from MRI brain imaging data.
+This method was used to develop a definite categorization descriptor.
+First, each pre-trained model receives the discriminating information for the different classes from the MRI imaging data.
+A concatenation technique in which two fully connected layers are appended to combine the features learned, then a constant (weight) is added in concatenation.
+The idea behind the proposed method is that weight can reduce the value of a part of feature maps in concatenation, and then the multiplied convolutional weight will automatically enlarge the useful feature maps.
+The primary contributions of this paper may be summarized as follows.
+• A hybrid pre-trained CNN model for the early diagnosis of AD.
+
+•
+A deep feature concatenation method for merging deep features collected from various pre-trained CNNs.
+
+•
+Weight randomization to lessen the gap between feature maps in the concatenation of fully connected layers.
+
+•
+Gradient-weighted class activation map to visualize discriminative regions of the image to explain the model's decision.
+The remainder of the paper is structured as follows.
+Section 2 describes the recent research on the early detection of AD.
+Section 3 illustrates the proposed hybrid model for diagnosing AD.
+Section 4 shows the result of the experiment on the ADNI dataset, and the discussion is detailed in Section 5. Section 6 shows the comparison of the model with previous research, while we conclude the study in Section 7.
+
+Related Work
+Several CNN-based techniques that were pre-trained have been utilized for multiclass classification and binary classification for the early detection of AD.
+The authors of
+A four-way classifier was implemented to classify AD, MCI, LMCI, and CN using ADNI imaging data.
+The proposed technique resulted in a prediction accuracy of 98.8%.
+The authors of
+The proposed model gave a testing accuracy of 95.31%.
+The study
+In
+Their method provided an accuracy of 99.99% for EMCI vs. AD.
+The authors of
+The experimental results showed that ResNet-101 gave an accuracy of 98.37%.
+The authors of
+The proposed model achieved an accuracy of 99.82%.
+Another study
+Resnet101 performed a three-class classification, and the results showed that the use of a deep learning technique with a pre-trained model proved highly helpful in improving the performance of the classifier.
+A 3D CNN was used in
+The authors of
+The proposed model was able to perform a four-way classification of CN, EMCI, LMCI and AD, on the ADNI dataset.
+The experimental results showed that the proposed model gave an accuracy of 83.33%.
+In
+For the diagnosis of AD and MCI, the authors of
+The ensemble model achieved an obvious improvement in its accuracy (with a 97.52% accuracy) compared to just using the simple average of the networks' predictions.
+The authors of
+The results of the study showed that the VGG architecture gave an accuracy of 99.27% (MCI/AD), 98.89% (AD/CN) and 97.06% (MCI/CN).
+The authors of
+The authors of
+The authors used a pre-trained VGG16 network as a feature extractor and for transfer learning.
+The proposed model achieved a classification accuracy of 95.73%.
+The authors of
+Their model achieved a classification accuracy of 98.35%.
+The authors of
+The model showed promising results with an accuracy of 92.85% for multiclass classification.
+Furthermore, the authors of
+The proposed strategies showed results with an accuracy of 95.70%.
+The authors of
+The severity of AD was divided into five phases according to the proposed model.
+Low-to high-level characteristics were learned during classification, resulting in an average accuracy of 97.64%.
+Their conclusion was that the incorporation of additional pre-trained models and transfer learning could increase classification accuracy.
+Similarly, the authors of
+The experimental results also showed that ResNet18 performed better.
+In another study, the authors of
+The experimental results showed that DenseNet outperformed the others, achieving a maximal average accuracy of 99.05%.
+The authors of
+DenseNet-121 was found to be better than all other models used for the analysis with a classification accuracy of 90.22%.
+
+Proposed Randomized Concatenated Deep Features Approach
+As previously stated, the suggested technique seeks to provide an accurate diagnosis of Alzheimer's disease by weight-randomizing concatenated deep features taken from the ResNet18 and DenseNet121 networks.
+Figure
+classification.
+Furthermore, the authors of
+The proposed strategies showed results with an accuracy of 95.70%.
+The authors of
+The severity of AD was divided into five phases according to the proposed model.
+Low-to high-level characteristics were learned during classification, resulting in an average accuracy of 97.64 %.
+Their conclusion was that the incorporation of additional pre-trained models and transfer learning could increase classification accuracy.
+Similarly, the authors of
+The experimental results also showed that ResNet18 performed better.
+In another study, the authors of
+The experimental results showed that DenseNet outperformed the others, achieving a maximal average accuracy of 99.05%.
+The authors of
+DenseNet-121 was found to be better than all other models used for the analysis with a classification accuracy of 90.22%.
+
+Proposed Randomized Concatenated Deep Features Approach
+As previously stated, the suggested technique seeks to provide an accurate diagnosis of Alzheimer's disease by weight-randomizing concatenated deep features taken from the ResNet18 and DenseNet121 networks.
+Figure
+
+Dataset
+The data for this study were obtained from the ADNI database.
+ADNI is a long-term research project aimed at developing clinical, imaging, genetic, and biochemical indicators for the early diagnosis and tracking of Alzheimer's disease.
+There are 138 MRI scans in the dataset, with 25 CN, 25 SMC, 25 EMCI, 25 LMCI, 13 MCI, and 25 AD scans
+The participants are above the age of 71, and each has been diagnosed with Alzheimer's disease and assigned to one of these phases according to their cognitive test results
+Figure
+A total of 7509 processed MRI images were evaluated from the ADNI database and the data split utility (random split) in PyTorch divided the data into 5256 and 2253 images for training and validation, respectively.
+Details of the data splitting are given in Figure
+A new set of samples were extracted from subjects that were separate from the subjects used for training and validation to test the model for generalizability.
+Sensors 2022, 22, x FOR PEER REVIEW 5 of 21
+
+Dataset
+The data for this study were obtained from the ADNI database.
+ADNI is a long-term research project aimed at developing clinical, imaging, genetic, and biochemical indicators for the early diagnosis and tracking of Alzheimer's disease.
+There are 138 MRI scans in the dataset, with 25 CN, 25 SMC, 25 EMCI, 25 LMCI, 13 MCI, and 25 AD scans
+The participants are above the age of 71, and each has been diagnosed with Alzheimer's disease and assigned to one of these phases according to their cognitive test results
+
+Deep Feature Extraction
+The ResNet18 and DenseNet121 deep CNN architectures were used in the feature extraction procedure from MRI images.
+In CNN designs, multiple layers are used to extract features.
+The offered layers include convolutional pooling, batch normalization, rectified linear unit (ReLU), SoftMax, and fully connected (FC)
+The FC layer was kept
+
+Dataset
+The data for this study were obtained from the ADNI database.
+ADNI is a long-term research project aimed at developing clinical, imaging, genetic, and biochemical indicators for the early diagnosis and tracking of Alzheimer's disease.
+There are 138 MRI scans in the dataset, with 25 CN, 25 SMC, 25 EMCI, 25 LMCI, 13 MCI, and 25 AD scans
+The participants are above the age of 71, and each has been diagnosed with Alzheimer's disease and assigned to one of these phases according to their cognitive test results
+
+Deep Feature Extraction
+The ResNet18 and DenseNet121 deep CNN architectures were used in the feature extraction procedure from MRI images.
+In CNN designs, multiple layers are used to extract features.
+The offered layers include convolutional pooling, batch normalization, rectified linear unit (ReLU), SoftMax, and fully connected (FC)
+The FC layer was kept
+
+Deep Feature Extraction
+The ResNet18 and DenseNet121 deep CNN architectures were used in the feature extraction procedure from MRI images.
+In CNN designs, multiple layers are used to extract features.
+The offered layers include convolutional pooling, batch normalization, rectified linear unit (ReLU), SoftMax, and fully connected (FC)
+The FC layer was kept the same Sensors 2022, 22, 740 6 of 21 for all models.
+The convolutional layer was made up of several weights H l kernels for each layer y to take the input X y-1 and extract the local characteristics.
+Both Resnet18 and DenseNet121 were set with weights that had been pre-trained using natural photos from ImageNet
+Then, we ran each model one time on our training and validation images to extract the deep features.
+
+Concatenation of Deep Features
+Concatenation of the recovered deep features is an effective approach to combine multiple characteristics to improve the classification process
+In this study, the concatenation procedure was achieved by extracting characteristics from images using Resnet18 and DenseNet121 features.
+The high-level features of the entire connected layers of both Resnet18 and Densenet21 were linked into a single vector to form the classification descriptor as shown in Equation
+(1)
+
+Weight Randomization and Classification
+Combining information by concatenating or adding leads to different information being mixed in the fusion layer.
+However, some of this information may be useless, and as such, narrowing the gap among the fused layers can result in better classification accuracy.
+In this study, an inbuilt weight initialization in PyTorch was implemented, including a uniform Kaiming distribution
+The Kaiming weight initialization was created to perform non-symmetrical activation functions such as ReLUs, while the Xavier initialization was designed for layers with sigmoid activators.
+Each layer's weights are created using a normal distribution.
+The resulting tensor using the Kaiming weight will have values sampled from N (-bound, bound), where bound is described in Equation (2).
+The resulting tensor using Xavier will have values sampled from U(-a, a) where a is described in Equation (3).
+The following parameters depicted in Table
+The last description of the feature determines whether the input image is classified as MCI or LMCI or EMCI or AD or CN.
+The fully connected layer turns the input data into a 1D vector, and the SoftMax layer computes the five class scores.
+
+Gradient-Weighted Class Activation Map (Grad-CAM)
+Grad-CAM is the generalization of the class activation map (CAM), which locates the discriminative region(s) for a CNN prediction by computing class activation maps with gradient information.
+Grad-CAM creates a map of the working class by incorporating gradient data into the final decision layers.
+Grad-CAM weighs the 2D activations with the average gradient.
+It helps to understand what the network sees, and which neurons are firing in a particular layer, given an input image
+The last class gradient related to a channel is used to measure all channels, following the final convolution layer to create a localization map showing the critical locations in an image that have a significant impact on the model forecast.
+To obtain the class discrimination localization map, the class score gradient was calculated relative to the feature maps of the convolutional layer
+Then, to obtain the key weights of the neuron, we took a global average of these gradients as described in Equation (
+where s is width for any class, v is height for any class, ∂w v is gradient for the class score, X U are feature maps, and ∝ v u are neuron weights.
+Finally, the Grad-CAM map was obtained by linearly combining the weights with the activation map of ReLU.
+
+Implementation Details
+Our proposed study was created on the NVIDIA Corporation Tu116 (Geforce GTX 1660) GPU using Python 3.6 with the Pytorch package.
+The proposed study was evaluated on the prepared dataset using the random split approach, and the details of the data split can be found in Table
+The images of the dataset were resized to 224 × 224 pixels, and a batch size of 10 was kept due to memory usage with the number of epochs, which was 10.
+The number of loader worker processes was set to 4.
+For optimization of the hyperparameters of the deep learning model, we used the AutoKeras 1.0.8
+library, which optimizes both the architecture and hyperparameters as guided by the Bayesian optimization to select the best hyperparameter values
+Based on the hyperparameter optimization stage, the learning rate was fixed to 0.0001 for the training of the proposed model.
+A dropout of 0.4 and weight decay of 0.002 were also used to fit the proposed model for the purpose of fine-tuning.
+The architecture of the prototype system developed for AD diagnostics is presented in Figure
+The doctor uses his/her personal computer to access the patient's records on the hospital server via a dedicated web service.
+The hospital server retrieves the patient's brain MRI images from the MRI server, which are stored in NIfTI (Neuroimaging Informatics Technology Initiative) format.
+The diagnostic decision is taken by the Alzheimer's disease classifier implementing the approach described in this paper.
+The decision is supported by Grad-CAM attention images that explain the suggested decision.
+Sensors 2022, 22, x FOR PEER REVIEW 7 of 21
+
+Gradient-Weighted Class Activation Map (Grad-CAM)
+Grad-CAM is the generalization of the class activation map (CAM), which locates the discriminative region(s) for a CNN prediction by computing class activation maps with gradient information.
+Grad-CAM creates a map of the working class by incorporating gradient data into the final decision layers.
+Grad-CAM weighs the 2D activations with the average gradient.
+It helps to understand what the network sees, and which neurons are firing in a particular layer, given an input image
+The last class gradient related to a channel is used to measure all channels, following the final convolution layer to create a localization map showing the critical locations in an image that have a significant impact on the model forecast.
+To obtain the class discrimination localization map, the class score gradient was calculated relative to the feature maps of the convolutional layer
+Then, to obtain the key weights of the neuron, we took a global average of these gradients as described in Equation (
+where  is width for any class,  is height for any class,  is gradient for the class score,  are feature maps, and ∝ are neuron weights.
+Finally, the Grad-CAM map was obtained by linearly combining the weights with the activation map of ReLU.
+
+Implementation Details
+Our proposed study was created on the NVIDIA Corporation Tu116 (Geforce GTX 1660) GPU using Python 3.6 with the Pytorch package.
+The proposed study was evaluated on the prepared dataset using the random split approach, and the details of the data split can be found in Table
+The images of the dataset were resized to 224 × 224 pixels, and a batch size of 10 was kept due to memory usage with the number of epochs, which was 10.
+The number of loader worker processes was set to 4.
+For optimization of the hyperparameters of the deep learning model, we used the AutoKeras 1.0.8
+library, which optimizes both the architecture and hyperparameters as guided by the Bayesian optimization to select the best hyperparameter values
+Based on the hyperparameter optimization stage, the learning rate was fixed to 0.0001 for the training of the proposed model.
+A dropout of 0.4 and weight decay of 0.002 were also used to fit the proposed model for the purpose of fine-tuning.
+The architecture of the prototype system developed for AD diagnostics is presented in Figure
+The doctor uses his/her personal computer to access the patient's records on the hospital server via a dedicated web service.
+The hospital server retrieves the patient's brain MRI images from the MRI server, which are stored in NIfTI (Neuroimaging Informatics Technology Initiative) format.
+The diagnostic decision is taken by the Alzheimer's disease classifier implementing the approach described in this paper.
+The decision is supported by Grad-CAM attention images that explain the suggested decision.
+
+Experimental Results
+We provide the experimental results for one five-way benchmark multiclass classification problem
+The suggested model's training efficiency was evaluated in terms of important parameters, i.e., training accuracy, validation accuracy, training loss, and validation loss at different epochs without dropout, with dropout, with dropout and weight decay.
+Learning rates of 0.0001 and 0.0003 were optimized with stochastic gradient descent (SGD) and adaptive moment estimation (ADAM).
+The proposed model performed better when using a learning rate of 0.0001 with the SGD optimizer.
+These parameters are calculated to estimate the trained models with a learning rate of 0.0001 optimized with SGD.
+These parameters are calculated to estimate the overfitting of the trained models.
+The graphs of the training loss/validation accuracy and training accuracy/validation accuracy of the proposed model with a random split are depicted in Figure
+Furthermore, a confusion matrix was generated for the proposed model to quantify the performance metrics, i.e., precision, recall, F1 score, and accuracy.
+The results of the parameters with the five-way multiclass, the four-way multiclass, and the three-way multiclass problem using the Kaiming and Xaiver weight initialization are presented in Tables
+Table
+Each of the classes consists of 20 slices each.
+
+Experimental Results
+We provide the experimental results for one five-way benchmark multiclass classification problem
+The suggested model's training efficiency was evaluated in terms of important parameters, i.e., training accuracy, validation accuracy, training loss, and validation loss at different epochs without dropout, with dropout, with dropout and weight decay.
+Learning rates of 0.0001 and 0.0003 were optimized with stochastic gradient descent (SGD) and adaptive moment estimation (ADAM).
+The proposed model performed better when using a learning rate of 0.0001 with the SGD optimizer.
+These parameters are calculated to estimate the trained models with a learning rate of 0.0001 optimized with SGD.
+These parameters are calculated to estimate the overfitting of the trained models.
+The graphs of the training loss/validation accuracy and training accuracy/validation accuracy of the proposed model with a random split are depicted in Figure
+Furthermore, a confusion matrix was generated for the proposed model to quantify the performance metrics, i.e., precision, recall, F1 score, and accuracy.
+The results of the parameters with the five-way multiclass, the four-way multiclass, and the three-way multiclass problem using the Kaiming and Xaiver weight initialization are presented in Tables
+Table
+Each of the classes consists of 20 slices each.
+The confusion matrix was generated using a test dataset taking samples from one subject that was not used for training.
+The confusion matrix for a five-way multiclass, four-way multiclass, and three-way multiclass is represented in Figure
+The confusion matrix was generated using a test dataset taking samples from subject that was not used for training.
+The confusion matrix for a five-way mult four-way multiclass, and three-way multiclass is represented in Figure
+The per class classification report of the proposed model based on precision, recall, and F1-score is detailed in Figure
+The proposed model gave an average precision and recall of 98.94% and 98.89%, 89.61% and 88.89, 98.14%, 98.14% for the five-way, four-way, and three-way multiclass, respectively.
+The per class classification report of the proposed model based on precision, recall, and F1-score is detailed in Figure
+To verify the efficacy of our proposed technique, the representation of the output data from the model before classification was featured in the form of cluster figures by the t-SNE projection, as shown in Figure
+This was achieved by reducing the dimensional output layer down to five dimensions, four dimensions, and three dimensions for five-way, four-way, and three-way classification, respectively.
+To verify the efficacy of our proposed technique, the representation of the output data from the model before classification was featured in the form of cluster figures by the t-SNE projection, as shown in Figure
+This was achieved by reducing the dimensional output layer down to five dimensions, four dimensions, and three dimensions for five-way, four-way, and three-way classification, respectively.
+
+Discussion
+The proposed model has minimal training and validation loss and exhibits the best training and validation accuracy with dropout (0.4) and a weight decay of 0.02.
+In Figure
+This indicates that the model was no longer learning.
+Likewise, the validation accuracy remained the same after 5 epochs.
+Although the model was able to fit adequately with the use of a 0.4 dropout, the accuracy was lower than that of the model with a dropout of 0.4 and weight decay of 0.002.
+The overfitting was reduced to minimal with the use of dropout and weight decay.
+However, the validation accuracy was slightly higher than the training accuracy with a very close margin as the number of epochs increased.
+In Tables
+As shown in Table
+It was evident from the results that the proposed model accurately discriminates between three-way multiclass (AD/MCI/CN) and five-way multiclass (AD/CN/LMCI/EMCI/MCI) classifications of Alzheimer's disease.
+However, for the purpose of this study, more emphasis was on the five-way multiclass classification.
+Table
+Therefore, Kaiming weight initialization was set for this study.
+As we can see in Table
+The result of the generalization of the proposed model on different test data is shown in Table
+Figure
+Although LMCI was found to be very close to being diagnosed as AD, from the confusion matrixes in Figure
+This is because a single modality cannot capture more disparate differences between EMCI and LMCI.
+One CN was misclassified as MCI in both five-way and three-way multiclass,
+
+Discussion
+The proposed model has minimal training and validation loss and exhibits the best training and validation accuracy with dropout (0.4) and a weight decay of 0.02.
+In Figure
+This indicates that the model was no longer learning.
+Likewise, the validation accuracy remained the same after 5 epochs.
+Although the model was able to fit adequately with the use of a 0.4 dropout, the accuracy was lower than that of the model with a dropout of 0.4 and weight decay of 0.002.
+The overfitting was reduced to minimal with the use of dropout and weight decay.
+However, the validation accuracy was slightly higher than the training accuracy with a very close margin as the number of epochs increased.
+In Tables
+As shown in Table
+It was evident from the results that the proposed model accurately discriminates between three-way multiclass (AD/MCI/CN) and five-way multiclass (AD/CN/LMCI/EMCI/MCI) classifications of Alzheimer's disease.
+However, for the purpose of this study, more emphasis was on the five-way multiclass classification.
+Table
+Therefore, Kaiming weight initialization was set for this study.
+As we can see in Table
+The result of the generalization of the proposed model on different test data is shown in Table
+Figure
+Although LMCI was found to be very close to being diagnosed as AD, from the confusion matrixes in Figure
+This is because a single modality cannot capture more disparate differences between EMCI and LMCI.
+One CN was misclassified as MCI in both five-way and three-way multiclass, which was an indication of an effective model because in medical diagnosis, it is preferred to screen a person as diseased than to eliminate a diseased person by falsely predicting a negative.
+As shown in Figure
+The proposed model also achieved a precision of 94% and 94% to differentiate MCI from other classes in five-way and three-way multiclass classification, respectively.
+From the per class classification result in Figure
+The proposed model was trained to be incredibly confident in its predictions, as an image with a confidence score of 0.687 had the predicted intent of being a solid subject for the predicted class.
+This result also showed that if the features of the different classes (EMCI and LMCI) could be more represented, the misclassification error would be greatly reduced, thus increasing the classification accuracy.
+The confidence in the predicted label was very high because some of the numerical properties provided by the initialization technique were not kept when the training process updated the weight values.
+The confidence level of the proposed model for the incorrectly classified image was 0.602.
+The designated classes of each multiclass classification look well separated, as depicted in Figure
+This could improve the model classification performance.
+In the Grad-CAM maps in Figures
+In MRI images with a sagittal plane view, the model focuses on the vermis of cerebellum
+For the EMCI prediction, white matter hyperintensities (WMH) are found to be associated with EMCI class prediction
+In Figures
+
+Comparison with Existing Methods
+To our knowledge, our approach is the first to have a concatenated randomized output from two pre-trained models for the early diagnosis of Alzheimer's disease based on a multiclass classification of five-ways, four-ways, and three-ways.
+To assess our method, we compared the proposed technique to similar studies that used the same parameters, as shown in Table
+It can be clearly seen that the proposed method yielded the best results in regard to all metrics.
+The neuroimaging data of all these comparative studies are based on the ADNI website, and their methods are confined to pre-trained networks.
+As described in Section 2, the studies described in
+As shown in Table
+Additionally, in our comparative analysis, we discovered that our model performed better than the study in
+
+Conclusions
+In this study, we adopted two pre-trained models to learn features simultaneously from MRI images, and the learned features were concatenated for AD classification.
+The concatenation of features amounted to distant or irregular information in fully connected layers during the classification process, and we hypothesized that adopting weight randomization would reduce the gap between feature maps.
+We tested our hypothesis by performing detailed experiments using brain MRI images from the ADNI dataset, which serves as a benchmark, where 25 subjects were used from each of the five categories of AD, MCI, EMCI, LMCI, and NC (a total of 125 subjects).
+We investigated the effectiveness of different weight randomization in our application by using Kaiming weight initialization and Xavier weight initialization in our model, and we presented in-depth results and their relation to the number of classes for multiclass classification based on precision.
+Our results showed that the MRI features concatenated by our proposed model improve the discrimination between classes in five-way multiclass classification compared to four-way multiclass classification.
+Finally, our findings were compared to four other state-of-the-art methodologies, where our proposed strategy outperformed them by a significant margin and resulting in a 0.98% and 0.06% improvement in the accuracy of AD vs. CN vs. EMCI vs. LMCI vs.
+MCI and AD vs. CN vs. EMCI vs. LMCI classification problems, respectively.
+Likewise, the model achieved an increase of 0.84% and 1.38% in precision for AD vs. CN vs. EMCI vs. LMCI vs.
+MCI and AD vs. CN vs. EMCI vs. LMCI multiclass classification, respectively.
+Although the weight mechanism has been proven to be an effective strategy to collect information from feature maps
+There were some limitations in the present study.
+A multimodal input should be further considered to enhance the capture of more disparate differences between EMCI and LMCI.
+In addition, a base domain model learned from brain images is possibly more appropriate to the target domain.
+A large dataset is also required to drastically reduce overfitting.
+Tackling these limitations in future work will continue to improve the robustness of the recommended approach.
+
+
+
+Figure 1 .
+Figure 1.
+The main framework for the proposed method.Figure 1.
+The main framework for the proposed method.
+
+
+
+Figure 1 .
+Figure 1.
+The main framework for the proposed method.Figure 1.
+The main framework for the proposed method.
+
+
+Figure 2 shows the class distribution of the MRI dataset.
+A total of 7509 processed MRI images were evaluated from the ADNI database and the data split utility (random split) in PyTorch divided the data into 5256 and 2253 images for training and validation, respectively.
+Details of the data splitting are given in Figure 3.
+A new set of samples were extracted from subjects that were separate from the subjects used for training and validation to test the model for generalizability.
+
+
+
+Figure 2 .
+Figure 2. Class distribution of the MRI dataset.
+
+
+
+Figure 3 .
+Figure 3. Details of dataset splitting per class.
+
+
+
+Figure 2 .
+Figure 2. Class distribution of the MRI dataset.
+
+
+Figure 2 shows the class distribution of the MRI dataset.
+A total of 7509 processed MRI images were evaluated from the ADNI database and the data split utility (random split) in PyTorch divided the data into 5256 and 2253 images for training and validation, respectively.
+Details of the data splitting are given in Figure 3.
+A new set of samples were extracted from subjects that were separate from the subjects used for training and validation to test the model for generalizability.
+
+
+
+Figure 2 .
+Figure 2. Class distribution of the MRI dataset.
+
+
+
+Figure 3 .
+Figure 3. Details of dataset splitting per class.
+
+
+
+Figure 3 .
+Figure 3. Details of dataset splitting per class.
+
+
+
+Figure 4 .
+Figure 4. Detailed workflow of data used in the proposed model.Figure 4. Detailed workflow of data used in the proposed model.
+
+
+
+Figure 4 . 21 Figure 5 .
+Figure 4. Detailed workflow of data used in the proposed model.Figure 4. Detailed workflow of data used in the proposed model.
+
+
+
+Figure 5 .
+Figure 5. Deployment of the developed system architecture.
+
+
+
+Figure 6 .
+Figure 6.
+Training/validation accuracies and training loss/validation loss: (a) model without dropout; (b) mode with dropout; (c) model with dropout and weight decay discussions.Figure 6. Training/validation accuracies and training loss/validation loss: (a) model without dropout; (b) mode with dropout; (c) model with dropout and weight decay discussions.
+
+
+
+Figure 6 .
+Figure 6.
+Training/validation accuracies and training loss/validation loss: (a) model without dropout; (b) mode with dropout; (c) model with dropout and weight decay discussions.Figure 6. Training/validation accuracies and training loss/validation loss: (a) model without dropout; (b) mode with dropout; (c) model with dropout and weight decay discussions.
+
+
+
+Figure 7 .Figure 7 .
+Figure 7. Confusion matrices of proposed model based on Kaiming weight initialization data: (a) 5-way multiclass; (b) 4-way multiclass; (c) 3-way multiclass.
+
+
+
+Figure 8 .
+Figure 8. Per class classification report: (a) precision; (b) recall; (c) F1-Score.
+
+
+
+Figure 8 .
+Figure 8. Per class classification report: (a) precision; (b) recall; (c) F1-Score.
+
+
+
+Figure 9 .
+Figure 9.
+The t-SNE projection visualization of several MRI features: (a) 5-way multiclass classification; (b) 4-way multiclass classification; (c) 3-way multiclass classification.
+
+
+
+Figures 10 -
+Figures 10-14 show the result of the Grad-CAM on the predicted classes AD, EMCI, CN, MCI, and LMCI respectively.
+
+
+
+Figure 9 .
+Figure 9.
+The t-SNE projection visualization of several MRI features: (a) 5-way multiclass classification; (b) 4-way multiclass classification; (c) 3-way multiclass classification.
+
+
+
+Figures 10 -
+Figures 10-14 show the result of the Grad-CAM on the predicted classes AD, EMCI, CN, MCI, and LMCI respectively.
+
+
+
+Figure 10 .Figure 11 .
+Figure 10.
+Grad-CAM explanation for the prediction of class AD: (a) MRI image, (b) Grad-CAM attention map.
+
+
+
+Figure 10 .Figure 10 .Figure 11 .
+Figure 10.
+Grad-CAM explanation for the prediction of class AD: (a) MRI image, (b) Grad-CAM attention map.
+
+
+
+Figure 11 .Figure 12 .Figure 13 .
+Figure 11.
+Grad-CAM explanation for the prediction of class EMCI: (a) MRI image, (b) Grad-CAM attention map.Figure 11.
+Grad-CAM explanation for the prediction of class EMCI: (a) MRI image, (b) Grad-CAM attention map.
+
+
+
+Figure 12 .Figure 12 .Figure 13 .
+Figure 12.
+Grad-CAM explanation for the prediction of class CN: (a) MRI image, (b) Grad-CAM attention map.
+
+
+
+Figure 13 .Figure 14 .
+Figure 13.
+Grad-CAM explanation for the prediction of class MCI: (a) MRI image, (b) Grad-CAM attention map.Figure 13.
+Grad-CAM explanation for the prediction of class MCI: (a) MRI image, (b) Grad-CAM attention map.
+
+
+
+Figure 14 .
+Figure 14.
+Grad-CAM explanation for the prediction of class LMCI: (a) MRI image, (b) Grad-CAM attention map.
+
+
+
+Table 1 .
+Parameters for Kaiming and Xavier weight initialization.
+
+
+
+Table 2 .
+The training performance of the proposed model on various multiclass classifications utilizing Kaiming weight initialization.
+
+
+
+Table 3 .
+The proposed model's training performance on various multiclass classifications utilizing Xaiver weight initialization.
+
+
+
+Table 4 .
+Test accuracy and test loss of the proposed model based on Xaiver and Kaiming weight initialization.
+
+
+
+Table 5 .
+Results of the proposed model for test data with different subjects.
+
+
+
+Table 4 .
+Test accuracy and test loss of the proposed model based on Xaiver and Kaiming initialization.
+
+
+
+Table 5 .
+Results of the proposed model for test data with different subjects.
+
+
+
+Table 6 .
+Classification performance comparison.

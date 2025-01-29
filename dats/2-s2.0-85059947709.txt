@@ -1,0 +1,278 @@
+DNA methylation variability in Alzheimer's disease
+DNA methylation plays a critical role in brain aging and AD.
+While prior studies have largely focused on testing mean DNA methylation, DNA methylation instability (quantified by DNA methylation variability) may also affect disease susceptibility.
+Using DNA methylation data collected by the Religious Orders Study and the Rush Memory and Aging Project (ROSMAP), we identified 249 and 115 variably methylated probes (VMPs) associated with amyloid-β and neurofibrillary tangles, respectively.
+These VMPs clustered into 133 and 14 regions, respectively.
+Notably, we found that majority of these VMPs did not overlap with differentially methylated probes (DMPs), indicating that VMPs and DMPs may capture different sets of genes associated with AD pathology.
+Overall, our results demonstrated that DNA methylation instability affects AD neuropathology, and highlights the importance of testing methylation variability in epigenetic research.
+
+Introduction
+Alzheimer's dementia is a devastating neurodegenerative disorder affecting over 35 million people worldwide, and this number is expected to nearly triple by 2050
+Accumulation of extracellular amyloid-β and intraneuronal neurofibrillary tangles (NFTs) are the two hallmarks of Alzheimer's disease (AD).
+DNA methylation plays an important role in regulating gene expression, and altered DNA methylation has been implicated in AD pathology
+Several epigenome-wide association studies (EWAS)
+While previous studies have largely focused on testing the difference in mean DNA methylation level between patients and controls.
+Recent evidence suggests that DNA methylation instability, may also affect disease susceptibility
+For example, several recent studies found that increased DNA methylation variability in multiple genes was associated with cancers
+This evidence suggests that, in addition to the mean change in DNA methylation, altered DNA methylation variability or instability of DNA methylation may also play an important role in disease pathophysiology.
+To date, we are not aware of any study that examined the role of DNA methylation variability in AD neuropathology.
+Using existing DNA methylation and gene expression data generated in postmortem prefrontal cortex of older individuals participating in two community-based population cohorts of aging and dementia (the Religious Orders Study and the Rush Memory and Aging Project [ROSMAP]) (A
+For comparison purpose, we also examined the potential overlap between variably methylated genes (e.g., genes showing altered methylation variability) and differentially methylation genes (e.g., genes showing altered mean DNA methylation level) at a genome scale.
+Moreover, we assessed the impact of DNA methylation instability on gene expression profiled on the same brain cortex.
+
+Materials and Methods
+
+Study population.
+This study included deceased participants from two ongoing, prospective studies of brain aging and dementia in older individuals, as described below.
+Detailed study design and assessment methods were described previously
+Both studies were approved by the Institutional Review Board of the Rush University Medical Center.
+Data are available for sharing at www.radc.rush.edu.
+Clinical characteristics of the study participants at the time of death are shown in Table
+The mean (SD) age of brain donors was 88.0 (6.7) years at the time of death.
+Men account for 37% of the study participants, and AD accounts for 42%.
+
+Religious Orders Study (ROS):
+Initiated in 1994, ROS enrolled older Catholic priests, nuns and brothers from across the USA free of known dementia at time of enrollment.
+Participants agreed to annual clinical evaluations including standardized neurological examination and neuropsychological testing and signed both an informed consent and an Anatomic Gift Act donating their brains at time of death
+Both the follow-up rate of survivors and the autopsy rate exceed 90% (autopsies of deaths).
+
+Rush Memory and Aging Project (MAP):
+Established in 1997, MAP consists of older men and women from across the Chicagoland area, without known dementia at enrollment.
+Participants agreed to annual clinical evaluations and signed both an informed consent and an Anatomic Gift Act donating their brains, spinal cords and selected nerves and muscles at the time of death
+The follow-up rate for survivors exceeds 90% and the autopsy rate for deceased subjects exceeds 80% (autopsies of deaths).
+
+Assessment of neuropathological phenotypes.
+We collected comprehensive neuropathological phenotypes for brain aging and AD in ROSMAP by the same investigators using a large common core of testing batteries.
+Thus, data can be efficiently merged for joint analyses.
+Detailed methods for clinical phenotyping have been described previously
+The quantitative AD pathologic burden (our primary outcomes) include the overall amyloid-β load based on percent area occupied with image analysis, and the density of PHF (paired helical filament) tau tangles assessed with stereology, which were identified by molecularly-specific immunohistochemistry and quantified by imaging analysis.
+These two composite summary measures were obtained by averaging the percent area occupied by amyloid-β or tangles across 8 regions, as previously described
+Neuropathologic examinations were made by board-certified neuropathologists blinded to the clinical data.
+
+Assessment of cognitive performance.
+During each annual clinical visit, participants received evaluations of their cognition functions via a battery of 21 cognitive performance tests across a range of cognitive abilities.
+Nineteen of them were used to construct a global composite measure of cognitive function, and summarized as 5 cognitive domains including episode memory, working memory, semantic memory, perceptual speed, and visuospatial ability.
+Detailed methods for the assessment of cognitive functions in ROSMAP cohorts have been described previously
+
+DNA methylation data pre-processing.
+DNA methylation in the dorsolateral prefrontal cortex (DLPFC) was measured using Infinium HumanMethylation450 BeadChip as previously described
+Data pre-processing, QC and normalization were performed using the RnBeads software
+Of the 732 subjects and 474,813 autosomal CpG probes, we removed probes and/or subjects based on the following criteria: (1) samples with low bisulfite conversion rate
+Data normalization was performed using the "swan" method implemented in the RnBeads software.
+Our final data analysis included a total of 441,930 probes and 706 subjects.
+Missing values were computed by the KNN algorithm with = 100 using R package impute
+Identifying VMPs/VMRs associated with AD neuropathology.
+To identify VMPs associated with AD pathology, we employed the DiffVar function
+In this analysis, we adjusted for age at death, sex, batch, study (ROS or MAP), and education level.
+Given the high correlation of DNA methylation between adjacent CpG sites, disease-related CpGs can be clustered in genomic regions, we thus also performed regionbased analysis to identify variably methylated regions (VMRs) associated with amyloidβ,tangles, separately, using a 5kb sliding window approach.
+Statistical significance of a VMR was obtained by combining p-values (from DiffVar) of all CpG probes within each 5kb window using the Brown's method
+Multiple testing was controlled by the false discovery rate (FDR)
+A more stringent genome-wide estimate of significance level = 3.6 × 10 -8
+
+VMP/VMRs associated with cognitive performance.
+To identify VMPs/VMRs associated with cognitive performance, we employed the same statistical methods with adjustments for same covariates.
+The cognitive performance was quantified by the composite measure of cognitive functions proximate to death, including global cognitive function, episode memory, working memory, semantic memory, perceptual speed, or visuospatial ability.
+
+Sensitivity analyses.
+To examine whether and how non-linear effect of age affects methylation variation, we additionally adjusted for age 2 and age 3 (age at death).
+To examine whether neuronal cell proportions influence our results, we first estimated the NeuN+ cells (primary neurons) proportion using the projectCellType function in the minfi R package
+To examine whether population substructure affects our results, we calculated the genomic inflation factors using the R package QQperm
+
+Functional annotation and validation.
+To explore the potential functions of the identified VMPs/VMRs, we first annotated them to genomic features using the GenomicFeatures package in Bioconductor
+We then tested the association between gene expression (RNA-seq in same brain cortex) of VMPs and AD neuropathology using the limma function in R
+We focused on cis-regulation (±5kb of a tested VMP) and adjusted for age at death, sex, batch, study (ROS or MAP) and education level.
+Functional enrichment analysis was conducted using the Kolmogorov Smirnov test (KS-test)
+In this analysis, we considered two pathway databases: (1) curated genes based on the Molecular Signatures Database v6.1 (
+GWAS catalog
+Pathways with less than 10 or greater than 400 genes were excluded from the enrichment analysis.
+Multiple testing was corrected for total number of pathways using FDR, and q<0.05 was considered statistical significance.
+
+Co-methylation networks.
+To examine whether genes that are differentially variably methylated in relation to AD neuropathology are co-methylated, we conducted the Weighted Gene Correlation Network Analysis (WGCNA)
+This analysis included a total of 1,145 or 967 VMPs showing nominal associations (p< 0.001) with amyloid-β or tangles, respectively.
+Co-methylation modules were constructed separately among subjects with high (upper tertile) vs low (bottom tertile) pathological burden for each measure.
+Differential networks -modules vary by pathological burden, were identified by comparing the two groups via preservation analysis in the WGCNA.
+Hub genes within each co-methylation modules were detected using the ARACNE algorithm
+Network visualization was done using the R package igraph
+
+Overlapping between VMPs and DMPs.
+To examine whether and to what extent the identified VMPs overlapped with DMPs in relation to AD pathology, we performed differential methylation analysis to identify DMPs associated with AD neuropathology using R package limma
+
+Replication.
+To replicate our findings in the ROSMAP, we downloaded DNA methylation data from the publicly available dataset GSE80970 (n=142, mean age 85.7, 38% men).
+The data contains DNA methylation data (450K array) in dorsolateral prefrontal cortex (same brain region as that in ROSMAP) and clinical information for Braak (a semi-quantitative measure for tangle), age, and gender.
+Detailed information for this dataset has been described previously
+As the data did not include phenotype information for amyloid, we focused on replication of tangle-related VMPs only.
+
+Results
+
+VMPs/VMRs associated with AD neuropathology.
+At the level of q<0.05, we identified 249 VMPs (223 hypervariable (i.e., greater variability with more neuropathology), 26 hypovariable (i.e., less variability with more neuropathology) associated with amyloid-β load (Figure
+By contrast, 115 VMPs (48 hypervariable, 67 hypovariable) were associated with tangles (Figure
+Tables
+The identified VMPs are clustered into 133 and 14 VMRs for amyloid-β and tangles, respectively.
+A full list of the VMPs/VMRs associated with amyloid-β and tangles is shown in the online Tables
+
+VMPs associated with cognitive performance.
+We identified 1 VMP associated with global cognitive function, 6 VMPs associated with semantic memory, and 14 VMPs with working memory at FDR 5% (Tables
+
+Sensitivity analyses.
+After additional adjustment for non-linear age effect (Table
+In addition, the genomic inflation factors were 1.02 for tangles and 1.06 for amyloid-β, indicating that population stratification did not confound our results either.
+
+Genomic distribution of the identified VMPs.
+To explore the potential functional impact of the VMPs on transcriptional activities, we annotated the identified VMPs to pre-determined genomic features (Figure
+Compared to the null distribution of CpG probes included in the Illumina HumanMethylation450 array, VMPs associated with amyloid-β were significantly enriched in introns (15% vs 21%, p<0.001) and intergenic regions (57% vs 66%, p<0.001), but depleted in promoter regions (23% vs 8.4%, p<0.001).
+By contrast, VMPs associated with tangles were over-represented in promoter regions (23% vs 31%, p=0.001), but depleted in intergenic regions (57% vs 51%, p=0.001).
+Figure
+It shows that: (1) a large proportion of tangle-related VMPs are hypo-variably methylated (58% hypo vs 42% hyper), and these VMPs are more likely to be located in promoters (36% vs. 23%), and less likely to be located in exons (1% vs. 5%), introns (10% vs. 15%), and intergenic regions (52% vs. 57%), as compared to the null distribution of the CpG probes in the Illumina HumanMethylation450 array.
+(2) Majority of the amyloidrelated VMPs are hyper-variable (90% hyper vs 10% hypo), and these VMPs are more likely to be located in intergenic regions (70% vs. 57%), followed by introns (21% vs. 15%), exons (1% vs. 5%), and promoters (9% vs. 23%), after adjusting for the null distribution of the CpG probes on the chip.
+To further examine whether this differential association (i.e., tangle-related VMPs are more likely to be hypovariable whereas amyloid-related VMPs are more likely to be hypervariable) is confounded by genomic locations, we fitted a logistic regression model, in which methylation variability status (hyper-or hypo-variable, y/n) was the dependent variable, and a neuropathological trait of interest (tangle or amyloid) was the independent variable, adjusting for genomic location.
+We found that the observed differential association of DNA methylation variability status with AD neuropathology is independent of genomic location of the probes (p-value =1.32×10 -16 ).
+These findings support a role of DNA methylation instability in AD pathology, and demonstrated that DNA methylation variability is trait-specific.
+The differential genomic distributions for amyloidrelated and tangle-related VMPs also suggest that these two hallmarks of AD are etiologically heterogeneous.
+
+Functional validation by RNA-seq.
+Using RNA-seq data profiled from the same brain neocortical regions, we examined whether the identified VMPs/VMRs affected gene expression.
+We found that, of the 115 VMPs (annotated to 70 unique genes) associated with tangles, 35 genes were also differentially expressed (q<0.05), whereas of the 249 VMPs (annotated to 113 unique genes) associated with amyloid-β, only 2 genes showed differential expression (q<0.05).
+Genes showing both differential variability and differential expression are listed in the Table
+While these results demonstrated that the identified VMPs might affect gene expression, the seemingly larger effect of tangle-related VMPs, as compared to amyloid-β-related VMPs, on gene expression deserves further investigation.
+
+Enrichment analysis.
+Pathway enrichment analysis revealed that the identified VMPs/VMRs associated with AD neuropathology were over-represented in biological processes related to neuron differentiation, neuron projection development, calcium ion transmembrane transport, positive regulation of nervous system development, synaptic membrane, and neuronal postsynaptic density.
+Moreover, the putative VMR genes were enriched in GWAS loci that were previously implicated in AD
+Table
+A full list of the enriched pathways is shown in Table
+GWAS loci enrichment is shown in Table
+
+Co-methylation networks.
+Our network analysis identified four co-methylated modules for VMPs/VMRs associated with amyloid-β (Figure
+The network structure of two modules associated with amyloid-β (brown and yellow) was not preserved, suggesting potential differential networks between patients with high (upper tertile) vs low (bottom tertile) burden for AD pathology (Figure
+
+Overlapping between VMPs and DMPs.
+To compare whether and to what extent the identified VMPs overlap with DMPs, we conducted differential methylation analyses and identified 415 and 3,859 DMPs associated with amyloid-β and tangles, respectively (Table
+Of these, 17.7% of the amyloid-βrelated VMPs were also DMPs, whereas 26.1% of the tangle-related VMPs overlapped with DMPs.
+These results demonstrated that majority of the AD-related VMPs were not overlapped with DMPs, implying that VMPs and DMPs may capture different sets of genes, and thus may reflect different aspects of AD pathology.
+In addition, in order to test whether the overlapping between VMPs and DMPs could be more or less than would expect by chance, we conducted the Fisher's exact test.
+We obtained highly significant p-values for both neuropathological phenotypes ( 2.17×10 -80 for amyloid-β, 7.52×10 -32 for tangles), suggesting that the observed overlapping between VMPs and DMPs should most likely represent true biology rather than chance alone.
+
+External replication of tangle-related VMPs.
+Of the 115 tangle-related VMPs identified in ROSMAP, 31 probes were nominally associated with Braak score at a raw p-value < 0.05 after adjusting for age at death and gender.
+Of these, 29 probes (94%) had the same direction (hyper-/hypo-variably methylated) as that in the ROSMAP.
+However, only 4 probes passed multiple testing at FDR<0.05.
+The lack of replication could be due to multiple reasons.
+First, the sample size used in the external validation was rather small compared to that used in ROSMAP.
+Second, the Braak score included in the publicly available dataset is different from the quantitative measure of tangles (quantified by molecularly specific immunohistochemistry across 8 brain regions) used in our analysis.
+Third, the publicly available dataset didn't contain information for confounding variables such as education.
+We were unable to replicate the association of amyloid-related VMPs due to lack of the amyloid phenotype in the external dataset.
+
+Discussion
+In two community-based population cohort studies of aging and dementia, we found that the variability in DNA methylation was related to AD neuropathology.
+Specifically, we identified 249 VMPs (clustered into 133 VMRs) and 115 VMPs (clustered into 14 VMRs) significantly associated with amyloid-β and tangles, respectively.
+The identified VMR genes were enriched in biological processes related to excitatory synapse, neuron differentiation, calcium ion transmembrane transport, positive regulation of nervous system development, and neuronal postsynaptic density.
+Our results support a role of DNA methylation variability in AD pathology, and highlight the importance of testing DNA methylation variability in epigenetic research.
+Of the identified VMR genes, the TUBGCP3 gene showed the strongest association with amyloid-β.
+This gene encodes the tubulin gamma complex associated protein 3, and is expressed in multiple brain regions.
+It plays an important role in microtubule nucleation, reduction of which may contribute to neuronal degeneration
+Another VMR gene is NGFR, which acts as a proapoptotic receptor in neuron cell death via binding to Aβ in the AD brain
+Genetic polymorphisms of this gene were associated with AD
+Other top-ranked VMR genes include CCR3
+The most significant VMR gene associated with tangles was FAF1, which is a fas-binding protein that plays an important role in neurodevelopment
+The second gene showing strong variably methylation in relation to tangles was LRPAP1.
+This gene encodes a protein that interacts with low density lipoprotein receptor-related protein (LRP) that plays a critical role in brain Aβ clearance
+Moreover, genetic polymorphisms in LRPAP1 was associated with AD
+Another VMR gene associated with tangles was MYC, a proto-oncogene that encodes a nuclear phosphoprotein that plays a role in cell cycle progression, apoptosis and cellular transformation
+In a mouse model, neuronal expression of MYC causes a neurodegenerative phenotype
+Moreover, there is evidence demonstrating that MYC might be a key regulator of cell cycle-mediated neuronal cell death
+Notably, some of the VMR genes may contribute to AD pathology through changing variability, but not mean level of DNA methylation, and thus would otherwise be missed by testing DMPs only.
+Our network analysis identified two modules (the brown module and yellow module).
+The hub genes of these networks highlight the potential role of HOXA3 and HOXA5 in AD pathology.
+This is corroborated by previous evidence demonstrating that expression of the HOX family genes plays critical roles in the formation and function of the central nervous system
+While the current analysis and previous studies
+It is possible that altered DNA methylation stability may reflect the exposure of disease risk factors, and thus differential methylation variability could represent the different exposure profiles of these factors between cases and controls
+It is also possible that the altered DNA methylation variability could represent beneficial adaptions in response of disease process
+Further research is needed to test these hypotheses.
+Several aspects of our findings deserve discussions.
+First, while we found that some genes showed differential methylation at both the mean and variance levels, e.g., about 18% and 26% of the VMPs associated with amyloid-β and tangles, respectively, overlapped with the DMPs.
+However, many genes showed either variable methylation or differential mean methylation, but not both.
+For instance, majority of the identified VMPs (more than 70%) did not overlap with those DMPs detected based on mean DNA methylation analysis.
+These observations indicate that VMPs and DMPs analyses capture different sets of genes associated with AD pathology, and thus both mean and variance should be tested in epigenetic analysis.
+Statistical analysis that tests only the mean DNA methylation level without considering variability will miss important disease-related genes.
+Second, the VMPs/VMRs identified in the current study most likely represented true biological variability instead of technical artifacts, because: (1) many VMR genes, especially those associated with tangles, also showed differential expression; (2) the identified VMR genes were significantly over-represented in excitatory synapse, and neuron differentiation, calcium ion transmembrane transport, etc.
+Moreover, these VMR genes were enriched in previous GWAS loci for AD
+Third, as part of the QC procedures, we compared DMPs identified in this study with those reported in previous EWAS in the same brain cortex
+We found that 65.4% of the DMPs identified in the current analysis overlapped with previously reported probes associated with neuritic plaque
+However, the DMPs identified in the current analysis are not identical to those reported previously by
+In the work by
+Fourth, our results demonstrate that the two AD hallmarks -amyloid-β and tangles -are etiologically highly heterogeneous.
+For instance, of the identified VMPs associated with either amyloid-β or tangles, only one probe (cg01869224) associates with both traits.
+Moreover, we observed differential genomic distribution of the VMPs associated with amyloid-β or tangles, that is, amyloid-β-associated VMPs are largely enriched in introns and intergenic regions, but depleted in promoter regions, whereas those associated with neurofibrillary tangles are overrepresented in promoters but depleted in intergenic regions.
+While the mechanisms behind the observed trait-specific distribution of these VMPs are unclear, it is possible that DNA methylation variability of probes located in the promoter regions may have a larger impact on gene expression than those located in the introns/intergenic regions
+In line with this hypothesis, majority (62.5%) of the VMR genes associated with tangles are differentially expressed, whereas only a small proportion (1.8%) of the amyloid-β-associated VMR genes showed differential expression.
+The observed trait-specific genomic distributions of the identified VMPs also suggest that the two hallmarks of AD (i.e., amyloid plaque and tangle) may be etiologically heterogeneous.
+Fifth, nearly 90% of the amyloid-β-associated VMPs are hypervariable probes, whereas majority (~58%) of the tangle-related VMPs are hypovariable ones.
+While these observations support a role of DNA methylation variability in gene regulation and AD pathogenesis, our findings unravel the etiological heterogeneity of the two hallmarks, and highlight the importance of studying both traits in future research.
+Last, because the relationship between gene expression and DNA methylation is not one-on-one, it is possible that DNA methylation variability affects the two phenotypes through different biological pathways.
+Together, our findings suggest that the relationship between DNA methylation variability and gene expression in human AD brain may be trait-specific.
+Our study has several limitations.
+First, the present study only examined VMRs in one brain region (prefrontal cortex), but it is possible that DNA methylation variability varies across different brain regions.
+Future research should investigate the region-specific effect of DNA methylation variability on AD pathology.
+Second, participants included in the current analysis are highly educated European Caucasians, and our results may not be generalized to other ethnic groups or population settings.
+Third, the identified association between DNA methylation variability and AD pathology do not imply causality.
+However, our study has several strengths.
+To our knowledge, this is the first study examining the association between variably methylated probes/regions and AD neuropathology in a large collection of postmortem human brains.
+Moreover, we conducted statistical analyses including differentially variably methylation analysis, functional annotation analysis, pathway enrichment analysis and co-methylation network analysis.
+Further, we studied different neuropathological phenotypes, e.g., amyloid-β and tangles, and identified trait-specific association of variably methylated genes with AD neuropathology.
+Volcano plots showing the identified VMPs associated with amyloid plaques (1A) and tangles (1B).
+The p-values in -log10 scale (Y-axis) are plotted against the log2 fold change (log2FC) of variability with respect to unit increase of the pathological burden (X-axis).
+A positive log2FC represents hypervariable methylation and a negative log2FC represents hypovariable methylation.
+The VMPs with q < 0.05 are marked with the blue color and the VMPs with q > 0.05 are marked with red color.
+The dashed horizontal line represents genome wide significance level α = 3.6 × 10 -8 , and the VMPs with < 3.6 × 10 -8 are annotated by genes within ±5kb of the probe.
+Genomic distribution of the identified VMPs associated with amyloid-β and tangles.
+The "null" represents all probes included in the Illumina HumanMethylation450 array.
+Positive regulation of nervous system development 3.77×10 -6 4.36×10 -7
+Cell projection membrane 5.90×10 -6 2.04×10 -6
+Divalent inorganic cation transport 5.90×10 -6 6.08×10 -4
+Regulation of dendrite development 8.98×10 -6 1.60×10 -4
+Gtpase binding 9.91×10 -6 6.31×10 -5
+Synaptic membrane 1.02×10 -5 4.07×10 -8
+Guanyl nucleotide exchange factor activity 1.21×10 -5 6.84×10 -8
+Main axon 1.55×10 -5 8.56×10 -4
+Excitatory synapse 2.39×10 -5 2.93×10 -9
+Regulation of small gtpase mediated signal transduction 2.39×10 -5 1.08×10 -6
+Regulation of cell morphogenesis involved in differentiation 8.82×10 -5 4.36×10 -7
+Cation channel activity 1.17×10 -4 1.31×10 -6
+Neuron porjection morphonenesis 1.31×10 -4 4.03×10 -7 Axon 1.33×10 -4 9.97×10 -8
+Receptor complex 2.27×10 -4 1.50×10 -6
+Ras guanyl nucleotide exchange factor activity 1.42×10 -3 4.36×10 -7
+Gated channel activity 3.47×10 -3 1.06×10 -7
+Neuronal postsynaptic density 3.99×10 -2 1.11×10 -6 * Adjusted for multiple testing by the Benjamini-Hochberg method Neurobiol Aging.
+Author manuscript; available in PMC 2020 April 01.
+
+
+Figure 1.
+
+
+Figure 2.
+
+
+
+Table 1 .
+Clinical characteristics of the brain donors (N = 706)
+
+
+
+Table 2 .
+Top 50 most significant variably methylated probes (VMPs) associated with amyloid-β (q<0.05).
+
+
+
+Table 3 .
+Top 50 most significant variably methylated probes (VMPs) associated with tangles (q<0.05)
+* The nearest annotated gene within ±5kb of the CpG probe † ↑ indicates hypervariable (increased variability in subjects with higher neuropathological burden as compared to those with lower burden), and ↓ indicates hypovariable (decreased variability in subjects with higher neuropathological burden as compared to those with lower burden).
+
+
+
+Table 4 .
+Top 30 enriched pathways related to AD neuropathology

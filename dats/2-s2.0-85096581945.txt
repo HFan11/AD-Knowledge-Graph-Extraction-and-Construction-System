@@ -1,0 +1,327 @@
+Association between Structural Connectivity and Generalized Cognitive Spectrum in Alzheimer’s Disease
+Modeling disease progression through the cognitive scores has become an attractive challenge in the field of computational neuroscience due to its importance for early diagnosis of Alzheimer's disease (AD).
+Several scores such as Alzheimer's Disease Assessment Scale cognitive total score, Mini Mental State Exam score and Rey Auditory Verbal Learning Test provide a quantitative assessment of the cognitive conditions of the patients and are commonly used as objective criteria for clinical diagnosis of dementia and mild cognitive impairment (MCI).
+On the other hand, connectivity patterns extracted from diffusion tensor imaging (DTI) have been successfully used to classify AD and MCI subjects with machine learning algorithms proving their potential application in the clinical setting.
+In this work, we carried out a pilot study to investigate the strength of association between DTI structural connectivity of a mixed ADNI cohort and cognitive spectrum in AD.
+We developed a machine learning framework to find a generalized cognitive score that summarizes the different functional domains reflected by each cognitive clinical index and to identify the connectivity biomarkers more significantly associated with the score.
+The results indicate that the efficiency and the centrality of some regions can effectively track cognitive impairment in AD showing a significant correlation with the generalized cognitive score (R = 0.7).
+
+Introduction
+Alzheimer's disease (AD) is a widespread neurodegenerative disease that causes irreversible and progressive memory loss, resulting in the decline of intellectual and social skills
+The early stages of AD are characterized by mild memory problems, hence great efforts have been done in investigating effective markers for early diagnosis of the disease in order to improve care and treatment pathways or find innovative personalized drug therapies
+Moreover, the amnestic onset in AD is by large the most prevalent, but it is important to note that atypical onset (with frontal and posterior cortical variants) have an incidence of about 20%
+Several tests provide information about the neuropsychological conditions of patients and measure the severity of the most important symptoms of AD.
+The most commonly used cognitive indices include: Alzheimer's Disease Assessment Scale cognitive total score (ADAS), Mini Mental State Exam score (MMSE) and Rey Auditory Verbal Learning Test (RAVLT) which measures cognitive impairment, attention, language and visuospatial functions and memory deficits.
+Such scores provide a quantitative assessment of the cognitive conditions of the patients, and they are used as objective criteria for clinical diagnosis of dementia
+As a matter of fact, modeling disease progression through the cognitive scores has become an attractive challenge in the field of computational neuroscience due to its importance for early diagnosis of AD
+The AD progression can also be accurately observed by using magnetic resonance imaging (MRI).
+Several MRI features have been associated with cognitive scores in AD such as average regional cortical thickness, white matter (WM) volume
+Early works focused on simple regression models to predict selected cognitive outcomes.
+More recently, several studies have proposed multivariate learning methods in order to improve the predictive performance and identify the most relevant imaging biomarkers
+An ever-increasing number of works is dedicated to the study of brain connectivity in Alzheimer's disease
+Indeed, the recent literature highlights that the AD decline is associated to disrupted connectivity among brain regions caused by degeneration of white matter (WM)
+In particular, diffusion weighted imaging (DWI) has become the most popular technique to investigate the physical connection among WM fibers, i.e., the structural connectivity
+DWI and tractography algorithms are combined to define diffusion tensor imaging (DTI) structural networks that could be analyzed through complex network models
+This approach involves modeling the brain as a network of anatomical regions linked by WM fiber tracts.
+Hence, connectivity patterns could be investigated by using several topological network metrics describing the roles of the regions, the structure of paths connecting them and their importance for the network integrity
+Very accurate classification of AD and MCI subjects has been achieved by combining complex network modeling and machine learning (ML) algorithms proving the potential applications of structural DTI networks in the clinical setting
+We carried out a pilot study to investigate the strength of association between DTI structural connectivity and cognitive spectrum in Alzheimer's disease.
+Our hypothesis is based on the assumption that, if some structural connectivity patterns are efficiently used to classify groups of pathological and MCI subjects, then connectivity configurations could exist to shape the cognitive decline spectrum.
+Our goal is predicting the cognitive decline on a continuum range of values instead of using distinct diagnostic labels in order to better characterizes the cognitive changes at individual level.
+Hence, we firstly summarized the cognitive domains by using a single generalized data-driven score.
+Then, we used a machine learning framework with the twofold aim to: (i) test the strength of association between the cognitive score and the structural connectivity of subjects with a broad spectrum of decline; and (ii) identify the biomarkers of structural connectivity more significantly associated with the generalized score.
+
+Materials
+
+Subjects
+A dataset from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+In 2003, ADNI was initiated as a multi-site longitudinal study involving multiple biological markers and clinical and neuropsychological tests to determine the progression of early AD.
+The goal of recognizing responsive and precise markers of AD progression is to help researchers to develop new therapies and monitor their validity, as well as to reduce costs and length of clinical trials.
+The images analyzed for this study belong to 191 subjects, both male and female.
+In accordance with the diagnosis, the subjects were grouped into 48 normal controls (NC) (age 73.4 ± 5.7), 39 AD patients (age 75.4 ± 8.8) and 104 MCI converter subjects (age 72.8 ± 7.4), i.e., MCI that converted to AD from 3 months to 5 years after the date of scan.
+NC subjects show no signs of depression, MCI or dementia.
+Participants with AD are those who meet the NINCDS/ADRDA criteria for probable AD.
+MCI subjects have reported a subjective memory concern, but without any significant impairment in other cognitive domains: they substantially preserved everyday activities with no sign of dementia.
+Each subject underwent a cognitive assessment including mini-mental state examination test (MMSE) (scores below 24 indicate impairment) and Alzheimer's disease assessment scale (ADAS) (scores less than or equal to 10 may be considered in the normal range) and other tests described in Section 2.2.
+Demographic information and clinical scores for the participants are listed in Table
+The diffusion-weighted scans were acquired using a 3T GE Medical Systems scanner.
+For each subject, we considered both T1-weighted 3D anatomical spoiled gradient echo (SPGR) sequences (256 × 256 matrix; voxel size = 1.2 × 1.0 × 1.0 mm 3 ; TI = 400 ms; TR = 6.98 ms; TE = 2.85 ms; flip angle = 11 • ) and diffusion weighted images (256 × 256 matrix with a field of view of 35 cm; voxel size = 2.7 × 2.7 × 2.7 mm 3 ; scan time = 9 min; repetition time/echo time = 9 s/60 ms; flip angle = 90 • ).
+More specifically, 46 separate DWI images were acquired for each scan: 5 with negligible diffusion effects (b 0 images) and 41 diffusion-weighted images (b = 1000 s/mm 2 ).
+More details can be found at:
+
+Cognitive Assessment
+We considered 24 clinical measures available for each participant in the ADNI Neuropsychological Battery table.
+This table includes multiple cognitive and functional assessments about memory deficits and behavioral symptoms commonly used as screening tools for detecting dementia and AD.
+Since some cognitive batteries correlate significantly with each others, we performed a correlation analysis in order to retain only indices with a mutual correlation coefficient R < 0.75.
+Finally, we included the following S = 10 clinical measures in the outcome matrix Y of our analysis: CDR-SOB, ADAS-Cog-13, MMSE, MoCA, FAQ, RAVLT-immediate, RAVLT-learning, RAVLT-percforgetting, ECog-PT-total and ECog-SP-total.
+They are detailed as follows:
+
+•
+Clinical Dementia Rating Scale Sum of Boxes (CDR-SOB) is the index most used in clinical practice for evaluating disease severity including the mild and early symptomatic stages of dementia.
+The CDR is obtained through semistructured interviews of patients and informants, and cognitive functioning is rated in six functional domains: memory, home and hobbies, personal care, judgment and problem solving, community affairs and orientation.
+Each domain is rated on a 5-point scale: 0, no impairment; 0.5, questionable impairment; 1, mild impairment; 2, moderate impairment; and 3, severe impairment.
+The final CDR-SOB score is obtained by summing each of the domain box scores, with scores ranging from 0 to 18
+
+•
+The cognitive subscale (ADAS-Cog-11) comprises 11 tasks that include both subject-completed tests and observer-based assessments.
+The tasks assess cognitive functioning of memory, praxis and language.
+Specific tasks comprise Naming Objects, Word Recall, Fingers, Commands, Orientation, Word Recognition, Constructional Praxis, Ideational Praxis and Language
+The extended version, i.e., the ADAS-Cog-13, includes all ADAS-Cog-11 items as well as a test of delayed word recall and a number cancellation or maze task
+
+•
+The mini-mental state examination (MMSE) assesses various cognitive domains, including memory, attention and language.
+Scores for MMSE range from 0 to 30; lower scores indicate greater cognitive dysfunction
+
+•
+The Montreal cognitive assessment (MoCA) consists of 12 individual tasks (grouped into cognitive domains, including visuospatial and executive functioning, attention, language, abstraction, naming, delayed memory recall and orientation), most of which are binary, and are scored and summed with a 6-item orientation screening and an educational correction to generate a total score representing the global cognitive functioning
+
+•
+The Functional Activities Questionnaire (FAQ) rates the instrumental activities of daily living (IADLs), such as preparing meals and managing personal finances
+The sum scores range in the 0-30 interval and the cut-point of 9 (dependent in 3 or more activities) is recommended to indicate possible cognitive impairment.
+
+•
+The Rey auditory verbal learning test (RAVLT) consists of five presentations of a 15-word list (List A), each followed by attempted recall.
+This is followed by a second 15-word interference list (List B), followed by recall of List A. It scores different aspects of episodic memory such as the learning rate (learning and immediate RAVLT) but also delayed recall (forgetting and percent forgetting RAVLT)
+
+•
+The Everyday Cognition (ECog) scale is an informant-rated questionnaire that includes one global factor and six domain-specific factors.
+The psychometric properties in the ECog scale focus on everyday function and cognition mild problems reported from both both participant (ECog-PT) and study partner (ECog-SP)
+
+Methods
+
+Image Processing
+The following steps were performed to reconstruct the brain connectivity of each subject from the raw DWI scans.
+First, we acquired the raw DICOM images from the ADNI database.
+We converted the DICOM images into the NIFTI format by using the MRIcron suite (
+Then, we organized the NIFTI images into the BIDS standard format.
+We executed all the processing steps by using the MRtrix3 software package (
+In detail, the DWI images were processed by performing some standard steps, as described in our previous works
+First, we applied a denoising step to enhance the signal-to-noise ratio (SNR) of the MR signals.
+The FSL's eddy correct tool was applied to correct the head motion and eddy distortion in each subject by performing alignment of the DWI scans to the average b 0 image.
+Skull-stripping was done with the brain extraction tool (BET)
+A correction field was firstly estimated from the b 0 image, and then we applied the bias-field correction to all volumes.
+The software tool fsl_anat was applied to process the T1-weighted anatomical scans and re-orient them to the standard image MNI152.
+The inter-modal registration between the T1-weighted anatomical image and the DWI for each subject was the last step.
+We applied the connectome pipeline to generate the structural connectome by firstly generating a tissue-segmented image
+The fiber orientation distributions (FOD) for spherical deconvolution
+To generate the probabilistic tractography
+Finally, we mapped the resulting streamlines through an anatomical parcellation scheme using the AAL2 atlas
+
+Network Metrics
+A 120 × 120 weighted symmetric connectivity matrix W was obtained for each subject as output of the image processing steps; the entry w ij of W represents the number of fiber tracts connecting region i to region j.
+Several topological metrics exist to assess the importance of the regions with respect to the rest of the network.
+In this pilot study, we chose to explore the most intuitive metrics to quantitatively describe the centrality and influence of the network of each region.
+In detail, the following graph metrics were extracted from each matrix W and for each node of the network i = 1, . . .
+, N, with N = 120:
+
+•
+The node strength is a direct measure of centrality that characterize the relative importance of a node in a network by considering the weights of all the links of a node:
+• Eigenvector centrality assesses the influence of a node in a self-referential manner by computing the centrality for a node based on the centrality of its neighbors
+where Λ is the largest eigenvalue associated with the eigenvector of the matrix W.
+
+•
+The local efficiency of a node E(G i ) characterizes how well information is exchanged by its neighbors when it is removed
+where G i is the local subgraph including the immediate neighbors of the node i, n i denotes the total nodes in the subgraph G i and d(i, j) denotes the length of the shortest path between the node i and another neighbor node j obtained by minimizing the sum of the weights of the links connecting the two nodes.
+We used the MATLAB implementation of Brain Connectivity Toolbox (BCT)
+We finally constructed two matrices of features:
+1.
+The M × P 1 , (M = 191, P 1 = 7140) matrix X 1 has as features the elements of the upper triangular matrix W of each subject.
+Thus, this matrix includes the connectivity-related weights.
+
+2.
+The M × P 2 , (M = 191, P 2 = 360) matrix X 2 has as features the three network metrics (e.g., strength, eigenvector centrality and efficiency) for each ROI.
+Accordingly, each feature is labeled as: "graph metric-roi".
+This matrix describes the central role of each brain region.
+
+Machine Learning Framework
+Here, we developed a machine learning framework to:
+1. identify a generalized index that effectively summarizes the cognitive spectrum of the population under investigation; 2.
+find significant associations between the identified index and the features derived from the structural connectivity of the subjects; and 3.
+identify the most important features in order to understand the strongest biological associations between the structural connectivity and cognitive spectrum.
+The main steps are shown in Figure
+Briefly, V = 10 re-sampling of a k-fold (k = 10) cross-validation was executed, producing T = 100 subsets of X 1 , X 2 and Y datasets.
+In each iteration, nine folds of the score matrix (i.e., Y TRAI N ) were input to the first module to find a single generalized cognitive score Z TRAI N from the ten clinical indices by means of principal component analysis (PCA).
+The new score was validated by using a clustering-based analysis in conjunction with the diagnosis labels L TRAI N for each subject provided in the ADNI Neuropsychological Battery table.
+Within each cross-validation round, we trained a Lasso regression model for each dataset X 1 TRAI N and X 2 TRAI N .
+We finally tested the two trained model on the left out fold X 1 TEST and X 2 TEST to predict Z TEST and evaluate the most effective connectivity dataset.
+We also used the weights β ij of the best Lasso models to identify the particular subset of features that yields the best performance by means of a stability analysis
+Each step of the framework is detailed in the next sections.
+Within each cross-validation round, a Lasso regression model was trained for each of the two datasets X 1 TRAI N and X 2 TRAI N .
+The two trained models were tested on the left out fold X 1 TEST and X 2 TEST to predict Z TEST and evaluate the most effective connectivity dataset.
+The weights β ij of the best Lasso models were employed to identify the particular subset of features that yields the best performance.
+
+Identification and Validation of the Generalized Cognitive Score
+We applied PCA
+PCA has been broadly adopted in clinical applications to reduce the dimensionality of large datasets in an interpretable way, while preserving the statistical information of the data
+Thus, we computed the first component of the matrix of the clinical scores within each training fold (i.e., Y TRAI N ) to obtain the vector of the generalized scores Z TRAI N for the training samples as:
+where c 1 is the corresponding vector of coefficients of the first component.
+Then, the generalized scores Z TEST for the test data were computed by using the coefficients obtained from the PCA of the training dataset:
+The contribution of each variable to the explained variance of the first principal component across the rounds was quantified to describe the final composition of the generalized score.
+Moreover, we performed a clustering analysis to provide a clinical validation of the computed score, as follows:
+
+•
+Gaussian mixture models (GMM) were adopted to model Z TRAI N as a mixture of unimodal distributions in which each mode corresponds to a different subpopulation
+This clustering algorithm involves the Expectation Maximization (EM) technique for automatically estimating the parameters of the individual distribution components
+
+•
+The normalized mutual information (NMI)
+This procedure shown in Figure
+We also performed a permutation test to assess the statistical significance of the overlap between the identified clusters and the clinical groups.
+In detail, a null distribution was generated by randomizing group labels 10,000 times and by calculating the NMI value between the GMM clusters and the permuted labels at each permutation.
+Finally, a p value was assigned as the number of times that the permuted overlap was greater than the actual NMI values, divided by the number of permutations.
+We used the MATLAB GMM implementation provided by the Statistics and Machine Learning Toolbox (
+
+Association between Connectivity and Generalized Cognitive Score
+Lasso (Least Absolute Shrinkage and Selection Operator)
+Indeed, Lasso is a regularization method that was introduced to solve both overfitting and multicollinearity problems in ordinary least square regression.
+This approach involves a penalty term that controls the complexity of the model by introducing sparsity.
+This term penalizes the coefficients of the least significant variables shrinking some of them to zero so only the most important features are retained.
+The outcome is a subset of the predictors that contribute mostly to the regression model, so the algorithm is also used as embedded feature selection method.
+The goal of this method is to minimize the residual sum of squares (RSS) to find the coefficients of the predictors: The λ parameter should be tuned for the optimization of the accuracy.
+We divided the training set X TRAI N within each round into a training and validation set to find the best value of λ.
+Hence, a single model was trained with the dataset X TRAI N within each round and it was tested on the left out fold X TEST to predict Z TEST .
+We used the Statistics and Machine Learning MATLAB Toolbox for Lasso implementation.
+Within each round, we evaluated the performance of the model through the correlation coefficient between the actual values of the generalized cognitive score z i of Z TEST and the model's predicted values ẑi :
+where z and z denote their sample means.
+
+Identification of Significant Features
+The output produced by Lasso within each round of cross-validation is a sparse vector of weights β.
+We analyzed the matrix B = [β 1 , . . .
+, β T ] of size T × P, being T the number of iterations and P the number of features.
+Since the matrix B is sparse, we considered only entries with non-zero weight as features relevant to the target variable within each round of cross validation.
+Consequently, we analyzed both the stability and the relevance of the features by applying a frequency-based criterion and a threshold-based selection of their weights across the rounds.
+In particular, to identify the most repeatable features among all the rounds, we selected only the features whose frequency was greater than 99% percentile of the frequency distribution.
+In fact, a feature selection algorithm might be sensitive with respect to changes in the training set, yielding subsets of features not representative of the overall population under investigation
+The assessment of the stability of the selected features over the rounds was thus carried out to select the list of more stable features with respect to small changes in the training sets taken from the whole sample distribution
+
+Results
+
+Identification and Clinical Validation of the Generalized Cognitive Score
+We performed the PCA of the ten cognitive scores in each round of cross-validation as described in Section 3.3.1.
+As shown in Figure
+This result suggests that the first latent variable may explain the relationship between the ten observed variables, and it can therefore reasonably represent a generalized cognitive score.
+Then, we used the GMM algorithm to identify the optimal partition of the cognitive score into clusters.
+We measured the overlap between the GMM clusters and the clinical groups by computing the NMI score within each cross-validation round.
+The distributions of the actual NMI values and the null distribution are shown in Figure
+A significant overlap between the GMM clusters and the clinical groups was obtained with an average NMI value = 0.65 ± 0.09 (p = 0).
+Figure
+
+Best Model Selection
+Figure
+To compare the performance achieved with the proposed generalized cognitive score, we also performed the association analysis with each of the ten clinical indices.
+Table
+As clearly shown in Figure
+We also performed a Wilcoxon rank-sum test to compare the distributions of R values resulting from the generalized score and the other clinical indices finding that the generalized score performed significantly better than the others for both matrices X 1 and X 2 (p < 0.0001 for each comparison).
+Moreover, the model with the graph metrics as features shows significantly greater performance (average R = 0.7 ± 0.05, Wilcoxon rank-sum test p < 0.0001) than the model that employs the entire structural connectivity matrix (average R = 0.57 ± 0.11), highlighting that a local description of the connectivity of each individual could adequately predict the generalized cognitive score.
+We found λ = 0.62 ± 0.1 for X 1 and λ = 0.25 ± 0.1 for X 2 across the rounds.
+
+Identification of Significant Features
+The relative frequency of the selected features and their average weights (β i ) were evaluated across the validation rounds to rank the importance of each feature for the most performing matrix X 2 .
+As can be noticed in Figure
+In particular, the most stable features (i.e., those with an occurrence greater than 70%) for both negative and positive association with the generalized cognitive score are shown in the bottom part of Figure
+In Table
+It is worth noting that, for both positive and negative associations, the nodal efficiency of the regions prevails over the other two graph metrics.
+
+Discussion
+In this study, we combined all the cognitive clinical indices of a mixed ADNI cohort of AD, MCI and NC subjects in a data driven manner to extract a generalized score reflecting multiple cognitive domains.
+The final composition of the generalized index showed in Figure
+We clinically validated the new generalized score by using an unsupervised approach.
+Our results show that the new score explains a percentage of variance of all the indices greater than 70% and that the partitions identified with the clustering algorithm significantly overlap with the clinical labels in the database as shown in Figure
+Then, we applied a machine learning regression algorithm to: (i) investigate the strength of association between the generalized score and the structural connectivity of the subjects; and (ii) identify the connectivity features most related to the generalized score.
+We also investigated the association between the connectivity patterns and each of the clinical index included in the ADNI database.
+Our analysis revealed a stronger association between structural connectivity and generalized score than between the other clinical indices, showing the highest correlation index between the actual and predicted scores (R = 0.7).
+It is important to note that this score was introduced to summarize the different cognitive functional domains, maximizing the variance of the different clinical indices in order to test the association between the topological organization of structural connectivity and a single quantitative index through a regression algorithm.
+However, as shown in Table
+These two indices are widely recognized as the most reliable for the cognitive assessment in the clinical setting.
+The associations of these two indices with some MRI biomarkers have been explored in other works.
+In
+They found a correlation between the estimated and the measured MMSE scores around 0.73 obtained by using regional features.
+Zhang et al.
+Similar results were achieved in
+Such approaches are focused on clinical classification of the subjects, hence combine clinical label and clinical scores to build a more robust classification model by taking into account the information of the relation between the high-level clinical label and clinical scores as well as the relation among samples in the feature selection step.
+More recently, Huang et al.
+These works underline some important aspects of disease staging in AD: (i) more complex nonlinear models could better characterize real relationship between the applied features and the clinical scores; and (ii) multimodal imaging could considerably improve the accuracy of machine learning models by providing complementary information to better recognize neurodegenerative patterns.
+We carried out a preliminary exploratory analysis of the association between the structural connectivity derived from the single DTI modality and a new score representative of the maximum information content of the ten clinical indices.
+For this reason, we adopted a less complex model in favor of a direct interpretability of the features more strongly related to the regression task.
+Indeed, both l 1 and l 2 norm regularization methods were extensively employed to extract features that have impact on the clinical scores, based on the assumption that a given imaging marker can affect multiple cognitive scores and only a subset of the features are relevant for the regression task
+These models are often used to perform feature selection as sparsity is imposed by regularization methods to extract the most important predictors
+It is important to underline that a critical interpretation of the results must take into account the different dimensionality of the datasets (i.e., P 1 >> P 2 ).
+A high number of superfluous predictors may lead to models that overfit the training data and fail to generalize on the test data, even when regularization algorithms are adopted
+Further investigations could clarify the worst performance achieved with the dataset X 1 .
+As an example, more objective comparisons between the two datasets could be reached by including more subjects in the analysis.
+In addition, we performed a stability analysis on the features selected across all validation rounds in order to derive the most significant set of features for the generalized score prediction task, regardless of the subpopulation extracted in a specific validation fold.
+As shown in Figure
+In particular, bilateral superior temporal pole, right anterior cingulate cortex and left inferior occipital were found negatively associated with the proposed score.
+Volumetric reduction, atrophy increase and WM integrity changes of the cingulate, occipital gyrus and temporal pole have been found in AD progression
+In several studies, DTI brain networks were used to analyze the main differences between some topological metrics in the AD, NC and MCI groups.
+In particular, decreased global efficiency and reduced nodal efficiency in cingulate cortex and several prefrontal regions were found in AD and amnestic MCI
+These findings are consistent with our results that show a strength decrease of both left and right superior temporal pole and reduced efficiency in the other regions.
+Moreover, as shown in Table
+The local efficiency measures the ability of information exchange of the subnetwork consisting of itself and its direct neighbors, thus it could detect the nodes that play a key role in the information integration
+Interestingly, we also found features positively associated with the generalized cognitive score, i.e., their values increase, as the cognitive impairment increases.
+Such findings could be related to structural reorganization of brain connectivity and compensatory processes such as resilience mechanisms to cognitive decline
+It is noteworthy that our work explicitly addresses an association analysis between structural connectivity and cognitive spectrum.
+However, numerous studies have exploited functional magnetic resonance imaging to correlate functional connectivity to a patient's cognitive status
+A future study using both modalities could better highlight functional and structural connectivity patterns associated with the cognitive spectrum in AD.
+
+Conclusions
+In this study, we found that a generalized cognitive score obtained in a data-driven manner by combining the available clinical cognitive scores is more significantly associated with structural connectivity.
+In particular, we showed that some local topological descriptors of structural connectivity can effectively track cognitive impairment in Alzheimer's disease.
+These promising results suggest that structural DTI networks contain clinically relevant information about cognitive function and can be developed into biomarkers to describe cognitive decline associated with AD.
+In future work, we will test more complex nonlinear machine learning models on a larger data sample to further investigate the relationship between the cognitive status and the topological organization of the structural connectivity networks in a more heterogeneous aging population.
+
+
+
+Figure 1 .
+Figure 1.
+Machine learning framework: V = 10 re-sampling of a k-fold (k = 10) cross-validation were executed, producing T = 100 subsets of X 1 , X 2 and Y datasets.
+In each iteration, nine-folds of the score matrix (i.e., Y TRAI N ) were input to principal component analysis (PCA) to find a single generalized cognitive score Z TRAI N from the ten clinical indices.
+A Gaussian Mixture Models (GMM) clustering analysis was executed to compare the data-driven partitions with the diagnosis labels L TRAI N for each subject provided in the ADNI Neuropsychologica Battery table.Within each cross-validation round, a Lasso regression model was trained for each of the two datasets X 1 TRAI N and X 2 TRAI N .
+The two trained models were tested on the left out fold X 1 TEST and X 2 TEST to predict Z TEST and evaluate the most effective connectivity dataset.
+The weights β ij of the best Lasso models were employed to identify the particular subset of features that yields the best performance.
+
+
+
+Figure 2 .
+Figure 2. Illustrative example of clinical validation of the generalized scores resulting from PCA in a single round: a cluster analysis with gaussian mixture models (GMM) was conducted to decompose the distributions of scores into a mixture of unimodal distributions in which each mode corresponds to a different cluster.
+The normalized mutual information (NMI) between the set of identified clusters and the set of diagnostic labels (e.g., NC, AD and MCI) was used to assess the percentage of overlap between the identified clusters and the clinical groups.
+
+
+
+Figure 3 .
+Figure 3. (a) Empirical probability distribution of the variance explained by the first component of the ten indices.
+(b) Empirical probability distributions of NMI values for the actual labels and permuted labels.
+(c) Contribution of each clinical index to the explained variance of the generalized score averaged across the validation rounds.
+
+
+
+Figure 4 .
+Figure 4. Correlation between the actual values and the values predicted by Lasso algorithm of the generalized cognitive score and each of the ten clinical indices by using both connectivity weights (matrix X 1 ) and local graph metrics (matrix X 2 ) as features.
+
+
+
+Figure 5 .
+Figure 5. (Top) Weights vs. stability of the X 2 features across all the validation rounds; (bottom left) the most stable features with the highest negative associations with the generalized cognitive score; and (bottom right) the most stable features with the highest positive associations with the generalized cognitive score.
+
+
+
+Author Contributions:
+Conceptualization, A.L. and S.T.; data curation, A.L. and D.D.; investigation, A.L.; software, A.L; writing-original draft preparation, A.L.; methodology, A.L., S.T. and R.B.; formal analysis A.L.; visualization, A.L.; resources, D.D.; supervision, R.B. and S.T.; validation, A.L., N.A., D.D., A.M., G.L., R.D.B., R.B. and S.T.; and writing-review and editing, A.L., N.A., D.D., A.M., G.L., R.D.B., R.B. and S.T.
+All authors have read and agreed to the published version of the manuscript.
+Funding: This paper has been partially supported by the Apulian regional INNONETWORK project SINACH (Sistemi Integrati di Navigazione per Chirurgia Mini Invasiva), project code BNLGWP7and AIM (Artificial Intelligence in Medicine) Project funded by INFN.
+
+
+
+Table 1 .
+Demographic and clinical scores (mean ± standard deviation) of the study participants.
+
+
+
+Table 2 .
+Mean and standard deviation quantities of the distribution of correlation coefficients between the actual values of each clinical index and the values predicted by Lasso regression algorithm.
+0.07 RAVLT-immed 0.40 ± 0.10 0.51 ± 0.07 RAVLT-learn 0.39 ± 0.18 0.59 ± 0.07 RAVLT-percforg 0.42 ± 0.14 0.54 ± 0.07 ECog-PT-total 0.41 ± 0.14 0.48 ± 0.08 ECog-SP-total 0.37 ± 0.11 0.47 ± 0.08
+
+
+
+Table 3 .
+Most stable features and their association with the generalized cognitive score.

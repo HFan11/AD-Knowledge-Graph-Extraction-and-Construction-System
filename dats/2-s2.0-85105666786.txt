@@ -1,0 +1,323 @@
+Comparing Pre-trained and Feature-Based Models for Prediction of Alzheimer's Disease Based on Speech
+Speech-Based Models for AD Prediction models numerically outperformed feature-based approaches on the AD detection task, but the difference was not statistically significant.
+Our main contribution is the observation that when tested on the same, demographically balanced dataset and tested on independent, unseen data, both domain knowledge and pretrained linguistic models have good predictive performance for detecting AD based on speech.
+It is notable that linguistic information alone is capable of achieving comparable, and even numerically better, performance than models including both acoustic and linguistic features here.
+We also try to shed light on the inner workings of the more black-box natural language processing model by performing an interpretability analysis, and find that attention weights reveal interesting patterns such as higher attribution to more important information content units in the picture description task, as well as pauses and filler words.
+This approach supports the value of well-performing machine learning and linguistically-focussed processing techniques to detect AD from speech and highlights the need to compare model performance on carefully balanced datasets, using consistent same training parameters and independent test datasets in order to determine the best performing predictive model.
+Introduction: Research related to the automatic detection of Alzheimer's disease (AD) is important, given the high prevalence of AD and the high cost of traditional diagnostic methods.
+Since AD significantly affects the content and acoustics of spontaneous speech, natural language processing, and machine learning provide promising techniques for reliably detecting AD.
+There has been a recent proliferation of classification models for AD, but these vary in the datasets used, model types and training and testing paradigms.
+In this study, we compare and contrast the performance of two common approaches for automatic AD detection from speech on the same, well-matched dataset, to determine the advantages of using domain knowledge vs. pre-trained transfer models.
+
+Methods:
+Audio recordings and corresponding manually-transcribed speech transcripts of a picture description task administered to 156 demographically matched older adults, 78 with Alzheimer's Disease (AD) and 78 cognitively intact (healthy) were classified using machine learning and natural language processing as "AD" or "non-AD."
+The audio was acoustically-enhanced, and post-processed to improve quality of the speech recording as well control for variation caused by recording conditions.
+Two approaches were used for classification of these speech samples: (1) using domain knowledge: extracting an extensive set of clinically relevant linguistic and acoustic features derived from speech and transcripts based on prior literature, and (2) using transfer-learning and leveraging large pre-trained machine learning models: using transcript-representations that are automatically derived from state-of-the-art pre-trained language models, by fine-tuning Bidirectional Encoder Representations from Transformer (BERT)-based sequence classification models.
+Results: We compared the utility of speech transcript representations obtained from recent natural language processing models (i.e., BERT) to more clinically-interpretable language feature-based methods.
+Both the feature-based approaches and fine-tuned BERT models significantly outperformed the baseline linguistic model using a small set of linguistic features, demonstrating the importance of extensive linguistic information for detecting cognitive impairments relating to AD.
+We observed that fine-tuned BERT
+
+INTRODUCTION
+Alzheimer's disease (AD) is a progressive neurodegenerative disease that causes problems with memory, thinking, and behavior.
+AD affects over 40 million people worldwide with high costs of acute and long-term care
+Current forms of diagnosis are both time consuming and expensive
+Studies have shown that valuable clinical information indicative of cognition can be obtained from spontaneous speech elicited using pictures
+Studies have capitalized on this clinical observation, using speech analysis, natural language processing (NLP), and machine learning
+Some of the first papers on this topic reported ML methods for automatic AD-detection using speech datasets achieving high classification performance (between 82 and 93% accuracy)
+These models serve as quick, objective, and non-invasive assessments of an individual's cognitive status which could be developed into more accessible tools to facilitate clinical screening and diagnosis.
+Since these initial reports, there has been a proliferation of studies reporting classification models for AD based on speech, as described by recent reviews and meta-analyses
+The existing studies that have addressed differences between AD and non-AD speech and worked on developing speech-based AD biomarkers, are often descriptive rather than predictive.
+Thus, they often overlook common biases in evaluations of AD detection methods, such as repeated occurrences of speech from the same participant, variations in audio quality of speech samples, and imbalances of gender and age distribution in the used datasets, as noted in the systematic reviews and metaanalyses published on this topic
+As such, the existing ML models may be prone to the biases introduced in available data.
+In addition, the performance of the previously developed predictive AD-detection models has been evaluated using either random train/test split or a cross-validation technique, which may result in artificially increased reported performance of ML models (i.e., overfitting) as compared to their evaluation on a held out unseen dataset (more details on evaluation techniques are provided in the section 2.3.1.2),
+especially when it comes to smaller and unbalanced datasets
+Due to these reasons, it's difficult to compare model performance across papers and datasets, since they are rarely matched in terms of data and model characteristics.
+To overcome the problem of bias and overfitting and introduce a common dataset to compare model performance, the ADReSS challenge
+The challenge consisted of two key tasks: (1) Speech classification task: classifying speech as AD or non-AD.
+(2) Neuropsychological score regression task: predicting Mini-Mental State Examination (MMSE)
+The organizers restricted access to the test dataset to make it completely unseen for participants to ensure the fair evaluation of models' performance.
+The work presented in this paper is focused entirely on this new balanced dataset and follows the ADReSS challenge's evaluation process.
+As such, the models presented in this paper are more generalizable to unseen data than those developed in the previously discussed studies.
+In this work, we develop ML models to detect AD from speech using picture description data of the demographically-matched ADReSS Challenge speech dataset
+1. Using domain knowledge: with this approach, we extract clinically relevant linguistic features from transcripts of speech, and acoustic features from corresponding audio files for binary AD vs. non-AD classification and MMSE score regression.
+The features extracted are informed by previous clinical and ML research in the space of cognitive impairment detection
+2. Using transfer learning: with this approach, we fine-tune pretrained BERT
+We describe below the details of each approach.
+
+Domain Knowledge-Based Approach
+The overwhelming majority of NLP and ML approaches on AD detection from speech are still based on hand-crafted engineering of clinically-relevant features (de la Fuente
+Previous work that focused on automatic AD detection from speech uses certain acoustic features (such as zero-crossing rate, Mel-frequency cepstral coefficients etc.) and linguistic features (such as proportions of various parts-of-speech (POS) tags
+Fraser et al.'s model was evaluated using cross-validation.
+More recent studies showed the addition of normative data helped increase accuracy up to 93%, when evaluated using a random train/test split
+Detecting AD or predicting MMSE scores with preengineered features of speech and thereby infusing domain knowledge into the task has several advantages, such as more interpretable model decisions, the possibility to represent speech in different modalities (both acoustic and linguistic), and potentially lower computational resource requirements when paired with conventional ML models.
+However, there are also a few disadvantages, e.g., a feature engineering process is very expensive and time-consuming, it requires clinical expertise, is prone to biases in data, and carries the risk of missing highly relevant features.
+
+Transfer Learning-Based Approach
+In the recent years, transfer learning, or in other words, utilizing language representations from huge pre-trained neural models that learn robust representations for text, has become ubiquitous in NLP
+One of the most popular transfer learning models is BERT
+This model offers enhanced parallelization and better modeling of long-range dependencies in text and as such, has achieved state-of-the-art performance on a variety of tasks in NLP.
+Previous research
+BERT uses powerful attention mechanisms to encode global dependencies between the input and output.
+This allows it to achieve state-of-the-art results on a suite of benchmarks
+Fine-tuning BERT for a few epochs can potentially attain good performance even on small datasets.
+The transfer learning technique in general and BERT model specifically are promising approaches to apply to the task of AD detection from speech because such a technique eliminates the need of expensive and time-consuming feature engineering, mitigates the need of big training datasets, and potentially results in more generalizable models.
+However, the common critique is that BERT is pre-trained on the corpus of healthy language and as such is not usable for detecting AD.
+In addition, BERT is not directly interpretable, unlike feature-based models.
+Finally, the original version of the BERT model is only able to use text as input, thus eliminating the possibility to employ the acoustic modality of speech, when detecting AD.
+All these may be the reasons why BERT was not previously used for developing predictive models for AD detection, even though its performance on many other NLP tasks is exceptional.
+
+Motivation and Contributions
+Our motivation in this work is to benchmark a BERT training procedure on transcripts from a pathological speech dataset, and evaluate the effectiveness of high-level language representations from BERT in detecting AD.
+We are specifically interested in understanding whether BERT has a potential to outperform traditional widely used domain-knowledge based approaches given that it does not include acoustic features, and at the same time increase the generalizability of the predictive models.
+To eliminate the biases of unbalanced data, we perform all our experiments on the carefully demographically-matched ADReSS dataset.
+To understand how well the presented models generalize to unseen data, we evaluate performance of the models using both cross-validation and testing on unseen held out dataset.
+We find that the feature-based SVM model with RBF kernel outperforms all the other models, and performs on par with BERT, when evaluated using cross-validation.
+When evaluation is performed on the unseen held out test data, the fine-tuned BERT text sequence classification models achieve the highest AD detection accuracy of 83.3%.
+This BERT model numerically, though not significantly, outperforms the SVM model that achieves 81.3% accuracy on the unseen test set.
+These results show that: (1) Extensive feature-based-i.e., containing linguistic information for various aspects of language such as semantics, syntax, and lexicon-classification models significantly outperforms the linguistic baseline provided in the challenge showing that feature engineering to capture various aspects of language such as semantics and syntax helps with reliable detection of AD from speech, (2) BERT proved to be a generalizable model comparable to feature-based ones that make use of domain knowledge via hand-crafted feature engineering as shown by its higher performance on the independent test set in our case, (3) linguistic-only information encoded in BERT is sufficient for the strong predictive performance of the AD detection models.
+
+MATERIALS AND METHODS
+
+ADReSS Dataset
+Our data are derived from the ADReSS Challenge dataset
+Speech is elicited from participants through the Cookie Theft picture from the Boston Diagnostic Aphasia exam
+Transcripts were annotated using the CHAT coding system
+In contrast to other speech datasets for AD detection such as DementiaBank's English Pitt Corpus
+Recordings were acoustically enhanced by the challenge organizers with stationary noise removal and audio volume normalization was applied across all speech segments to control for variation caused by recording conditions such as microphone placement
+The speech dataset is divided into the train set and the unseen held out test set.
+MMSE
+
+Feature Extraction
+The speech transcripts in the dataset are manually transcribed as per the CHAT protocol
+We only use the portion of the transcripts corresponding to the participant.
+Additionally, we combine all participant speech segments corresponding to a single picture description for extracting acoustic features.
+We extract 509 manually-engineered features from transcripts and associated audio files (see Tables
+These features are identified as indicators of cognitive impairment in previous literature, and hence encode domain knowledge.
+All the features are divided into three higher-level categories:
+1. Lexico-syntactic features (297): Frequencies of various production rules from the constituency parsing tree of the transcripts
+We also extract syntactic features
+2. Acoustic and temporal features (187): Mel-frequency cepstral coefficients (MFCCs), fundamental frequency, The number of features in each subtype is shown in the second column (titled "#Features").
+The number of features in each subtype is shown in the second column (titled "#Features").
+statistics related to zero-crossing rate, as well as proportion of various pauses (for example, filled and unfilled pauses, ratio of a number of pauses to a number of words etc.;
+The number of features in each subtype is shown in the second column (titled "#Features").
+3. Semantic features based on picture description content (
+Hyperparameter tuning: All parameters in classification models were tuned to the best possible setting by searching within a grid of possible parameter values using 10-fold cross validation on the ADReSS challenge "train" set.
+
+Experiments
+The random forest classifier fits 200 decision trees and considers features when looking for the best split.
+The minimum number of samples required to split an internal node is 2, and the minimum number of samples required to be at a leaf node is 2. Bootstrap samples are used when building trees.
+All other parameters are set to the default value.
+The Gaussian Naive Bayes classifier is fit with balanced priors and variance smoothing coefficient set to 1e -10 and all other parameters default in each case.
+The SVM is trained with a radial basis function kernel with kernel coefficient(γ ) 0.001, and regularization parameter set to 100.
+The NN used consists of two layers of 10 units each (note we varied both the number of units and number of layers while tuning for the optimal hyperparameter setting).
+The ReLU activation function is used at each hidden layer.
+The model is trained using Adam
+All other parameters are default.
+We perform feature selection by choosing top-k number of features, based on ANOVA F-value between label/features.
+The number of features is jointly optimized with the classification model parameters.
+Transfer learning-based approach: In order to leverage the language information encoded by BERT
+All our experiments are based on the bert-base-uncased variant
+Maximum input length is 512 tokens.
+Initial learning rate is set to 2e-5, and Adam optimizer
+Cross-entropy loss is used while fine-tuning for AD detection.
+While the base BERT model is pre-trained with sentence pairs, our input to the model consists of speech transcripts with several transcribed utterances with start and separator special tokens from the BERT vocabulary at the beginning and end of each utterance respectively, following
+This is performed to ensure that utterance boundaries are easily encoded, since cross-utterance information such as coherence and utterance transitions is important for reliable AD detection
+An embedding, following
+This is then passed to the classification layer, and the combined model is fine-tuned on the AD detection task-all using an open-source PyTorch
+As noted by
+The transcript input to the classification model consists of several transcribed utterances with corresponding start and end tokens for each utterance, following
+The final hidden state corresponding to the first start ([CLS]) token in the transcript which summarizes the information across all tokens in the transcript using the self-attention mechanism in BERT is used as the aggregate representation, and passed to the classification layer
+This model is then fine-tuned on training data.
+Hyperparameter tuning: We optimize the number of epochs to 10 by varying it from 1 to 12 during CV.
+Adam optimizer
+Learning rate and other parameters are set based on prior work on fine-tuning BERT
+
+Evaluation
+
+Cross-validation on ADReSS train set:
+We use two CV strategies in our work-leave-one-subject-out CV (LOSO CV) and 10-fold CV at transcript level.
+We report evaluation metrics with LOSO CV for all models except fine-tuned BERT for direct comparison to challenge baselines.
+Due to computational constraints of GPU memory, we are unable to perform LOSO CV for the BERT model.
+Hence, we perform 10-fold CV to compare feature-based classification models with fine-tuned BERT.
+Values of performance metrics for each model are averaged across three runs with different random seeds in all cases.
+Predictions on ADReSS test set: We generate three predictions with different seeds from each hyperparameter-optimized classifier trained on the complete train set, and then produce a majority prediction to avoid overfitting.
+We report performance on the challenge test set, as obtained from the challenge organizers.
+We evaluate task performance primarily using accuracy scores, since all train/test sets are known to be balanced.
+We also report precision, recall, specificity, and F1 with respect to the positive class (AD).
+
+MMSE Score Regression
+
+Training regimes
+Domain knowledge-based approach: For this task, we benchmark two kinds of regression models, linear, and ridge, using pre-engineered features as input.
+MMSE scores are always within the range of 0-30, and so predictions are clipped to a range between 0 and 30.
+Hyperparameter tuning: Each model's performance is optimized using hyperparameters selected via grid-search LOSO CV.
+We perform feature selection by choosing top-k number of features, based on an F-Score computed from the correlation of each feature with MMSE score.
+The number of features is optimized for all models.
+For ridge regression, the number of features is jointly optimized with the coefficient for L2 regularization, α.
+
+Evaluation
+We report root mean squared error (RMSE) and mean absolute error (MAE) for the predictions produced by each of the models on the training set with LOSO CV.
+In addition, we include the RMSE for two models' predictions on the ADReSS test set.
+Hyperparameters for these models were selected based on performance in grid-search 10-fold cross validation on the training set, motivated by the thought that 10-fold CV better demonstrates how well a model will generalize to the test set.
+
+RESULTS
+
+AD vs. Non-AD Classification
+In Table
+We observe that BERT numerically outperforms all domain knowledge-based ML models with respect to all metrics, with an average accuracy of 81.8%.
+SVM is the best-performing domain knowledge-based model.
+However, accuracy of the fine-tuned BERT model is not significantly higher than that of the SVM classifier based on an Kruskal-Wallis H-test (H = 0.4838, p > 0.05).
+Note that we used a Kruskal-Wallis H-test here, and in performance-comparisons in sections below since we observe that accuracy is not normally distributed on varying the random seed while training/inference.
+We also report the performance of all our classification models with LOSO CV (Table
+Each of our classification models significantly outperform the challenge baseline, which is uses 34 simple language summary statistic measures (e.g., duration, total utterances, MLU, type-token ratio, percentages of nine parts of speech) on the CHAT transcripts by a large margin (+10% accuracy for the best performing model, p = 0.036 with Kruskal-Wallis H = 4.35 test).
+Feature selection results in accuracy increase of about 13% for the SVM classifier.
+Performance results on the unseen, held out challenge test set are shown in Table
+The accuracy with a BERT-based classification model ranges between 85.14 and 81.25%.
+
+MMSE Score Regression
+Performance of regression models evaluated on both train and test sets is shown in Table
+The results show that feature selection is impactful for performance and helps achieve a decrease of up to 1.5 RMSE points (and up to 0.86 of MAE) for a ridge regressor.
+Furthermore, a ridge regressor is able to achieve an RMSE of 4.56 on the ADReSS test set, a decrease of 0.64 from the baseline.
+We also experimented with different non-linear regression methods-however, given the small dataset size and the difficulty of the task, the linear regression models highlighted in Table
+
+DISCUSSION
+
+Feature Differentiation Analysis
+While we extracted a large number of linguistic and acoustic features to capture a wide range of linguistic and acoustic changes in speech associated with AD, based on a survey of prior literature
+In order to study statistically significant differences in linguistic/acoustic phenomena, we perform independent t-tests between feature means for each class in the ADReSS training set, following the methodology followed by
+87 features are significantly different between the two groups at p < 0.05.
+Seventynine of these are text-based lexicosyntactic and semantic features, while eight are acoustic.
+These eight acoustic features include the number of long pauses, pause duration, and mean/skewness/variance-statistics of various MFCC coefficients.
+However, after Bonferroni correction for multiple testing, we identify that only 13 features are significantly different between AD and non-AD speech at p < 9e -5, and none of these features are acoustic (Table
+This implies that linguistic features are particularly differentiating between the AD/non-AD classes here, which explains why models trained only on linguistic features (i.e., BERT models) attain performance well above random chance.
+The features that differentiate the AD and non-AD groups largely indicate semantic impairments in AD, reflected in the types of words used and the content of their picture descriptions.
+Importantly, many of the differentiating features replicate findings from
+In addition, the differentiating features are consistent with other previous clinical literature  documenting decreased specificity and information content in AD.
+For example, the features relating to the content units in the picture and the cosine similarity between utterances and picture content units show that the picture descriptions produced in AD have fewer relevant content words and that the words used are less semantically related to the themes of the picture.
+Lower average cosine distance in AD signifies more repetition in speech.
+These findings are consistent with previous studies reporting reduced information content and coherence in AD
+Other differentiating features related to the use of shorter words, and increased use of pronouns, adverbs, and words not found in the dictionary.
+These features may all reflect the use of less specific and simpler language, and replicate previous findings of decreased specificity of language in AD
+Interestingly, while
+In order to visualize the class-separability of the feature-based representations, we visualize (t-SNE) t-Distributed Stochastic Neighbor Embedding
+t-SNE is a non-linear dimensionality reduction algorithm used for exploring high-dimensional data.
+It maps multi-dimensional data to two or more dimensions suitable for human observation.
+We observe strong class-separation between the two classes, indicating that a non-linear model would be capable of good AD detection performance with these representations.
+
+Interpreting Attention Patterns in BERT-Based Models
+We look at multi-scale attention visualizations of BERT finetuned for the AD detection task, using the BertViz library
+Self-attention is an important component of BERT-based models, and looking at attention patterns can help us interpret model decisions.
+We used the BERT-base model which consists of 12 layers, and 12 attention heads in each layer.
+We visualize, for both AD and healthy speech transcripts, the attention weights for the final "[CLS]" token, whose representation is passed to the fully-connected layer for classification.
+On analyzing the attention weights attributed to words in both healthy and AD transcripts, we find that:
+1. attention weights are often attributed to a few important "information content units."
+which have been identified to be important speech indicators of AD in prior work
+Hence, as seen in sections 4.1 and 4.2, we observe that for both the feature-based classification models and BERT-based models, information units and fillers such as "uh" and "um" seem to be important predictors, similar to findings observed by
+
+Analysing AD Detection Performance Differences
+We observe that both feature-based and BERT-based classification models are significantly better than the linguistic baseline, showing the importance of an extensive amount of linguistic features for detecting AD-related differences.
+When compared on this well-matched dataset, BERT tended to have higher performance, but the difference was not significant.
+Based on feature differentiation analysis, we hypothesize that good performance with a text-focused BERT model on this speech classification task is due to the strong utility of linguistic features on this dataset.
+BERT captures a wide range of linguistic phenomena due to its training methodology, potentially encapsulating most of the important lexico-syntactic and semantic features.
+It is thus able to use information present in the lexicon, syntax, and semantics of the transcribed speech after fine-tuning
+We also see a trend of better performance when increasing the number of folds (see SVM in Tables
+We postulate that this is due to the small size of the dataset, and hence differences in training set size in each fold (N train = 107 with LOSO, N train = 98 with 10-fold CV).
+Note that, in this dataset, both feature-based and BERT-based classification methods rely on linguistic features to achieve better classification than baseline.
+This implies that the linguistic features from speech transcripts are quite informative for the AD detection task.
+Hence, an interesting direction of future research is expanding our current set of features to incorporate more discourse-related features (which could be getting captured to some degree in fine-tuned BERT models).
+
+Regression Weights for MMSE Prediction
+To assess the relative importance of individual input features for MMSE prediction, we report features with the five highest and five lowest regression weights reflecting the five strongest positive and negative relationships with MMSE scores (Table
+Each presented value is the average weight assigned to that feature across each of the LOSO CV folds.
+We also present the correlation with MMSE score coefficients for those 10 features, as well as their significance, in Table
+We observe that for each of these highly weighted features, a positive or negative correlation coefficient is accompanied by a positive or negative regression weight, respectively.
+This demonstrates that these 10 features are so distinguishing that, even in the presence of other regressors, their relationship with MMSE score remains the same.
+We also note that all 10 of these are linguistic features, further demonstrating that linguistic information is particularly distinguishing when it comes to predicting the severity of a patient's AD.
+Notably, seven of the ten features were among those that differentiated between AD and non-AD groups, demonstrating that there is high overlap between the features relevant to group differentiation and MMSE score prediction.
+These features included those relating to the information content and the coherence of picture descriptions, reflected by content unit and cosine distance features.
+Word length and use of adverbs were also relevant to MMSE prediction, with longer words and fewer adverbs correlating with higher MMSE scores.
+The use of gerund verbs was found to have a high regression weight for MMSE prediction and positively correlated with MMSE scores, despite not being significantly different between AD and non-AD groups after Bonferroni correction.
+Reduced use of inflected verbs has been found in some previous research
+
+CONCLUSIONS
+In this paper, we rigorously compare two widely used approaches-linguistic and acoustic feature engineering based on domain knowledge, and text-only transfer learning using finetuned BERT classification model.
+Our results show that pretrained models that are fine-tuned for the AD classification task are capable of performing well on AD detection, achieving comparable, or even slightly improved performance compared to hand-crafted feature engineering.
+We observe that linguistic features are capable of attaining predictive performance well above chance on this acoustically and demographically balanced speech dataset, and posit this to be the reason why a textonly approach with BERT numerically outperforms a multimodal feature-engineering based approach.
+The present findings highlight the importance of measuring the linguistic, and especially semantic content of speech, in addition to acoustic analyses.
+In future work, it would be interesting to study methods that combine feature-based and pre-trained neural LM-based prediction models to optimize AD detection from speechthis could potentially help harness complementary benefits of both approaches.
+It is interesting to note that the winners of the ADReSS challenge also used a pre-trained language model, augmented with additional information about speech disfluencies
+These results build on previous work to demonstrate how automated speech analysis can be used to help characterize AD.
+Speech samples can be collected quickly and non-invasively, and as demonstrated in the present results, yield measures relating to the presence and severity of AD.
+Further work will build on these results to develop improved tools for disease screening and monitoring in AD, improving the efficiency of clinical research and treatment.
+In the future, we will experiment with different neural models such as XLNet
+A direction for future work is developing ML models that combine representations from BERT and hand-crafted features
+Such feature-fusion approaches could potentially boost performance on the cognitive impairment detection task.
+
+
+2.3.1.
+AD vs. Non-AD Classification2.3.1.1.
+Training RegimesWe benchmark the following training regimes for classification: classifying features extracted at transcript-level and a BERT model fine-tuned on transcripts.Domain knowledge-based approach:We classify lexicosyntactic, semantic, and acoustic features extracted at transcript-level with four conventional ML models (SVM), neural network (NN), random forest (RF), naïve Bayes (NB) 1 .
+
+
+
+FIGURE 1 |
+FIGURE 1 | A t-SNE plot showing class separation.
+Note we only use the 13 features significantly different between classes (see Table10) in feature representation for this plot.
+
+
+
+FIGURE 2 |
+FIGURE 2 | An attention visualization plot showing attention contributions of embeddings corresponding to each word to the "pooled" representation.
+This example is a sub-sample (first two utterances) of a speech transcript from a healthy person.
+
+
+
+TABLE 1 |
+Basic characteristics of the patients in each group in the ADReSS challenge dataset are more balanced in comparison to DementiaBank.
+
+
+
+TABLE 2 |
+Luz et al. (2020)et fromLuz et al. (2020): basic characteristics of the patients in each group (M, male; F, female).
+
+
+
+TABLE 3 |
+Luz et al. (2020)romLuz et al. (2020): basic characteristics of the patients in each group (M, male; F, female).
+
+
+
+TABLE 4 |
+Summary of all lexico-syntactic features extracted.
+
+
+
+TABLE 5 |
+Summary of all acoustic/temporal features extracted.
+
+
+
+TABLE 6 |
+Summary of all semantic features extracted.
+
+
+
+TABLE 7 |
+Ten-fold CV results averaged across three runs with different random seeds on the ADReSS train set.Accuracy for BERT is higher, but not significantly so from SVM (H = 0.4838, p > 0.05 Kruskal-Wallis H-test).
+Bold indicates the best result.
+
+
+
+TABLE 9 |
+LOSO-CV MMSE regression results on the ADReSS train and test sets.
+
+
+
+TABLE 8 |
+AD detection results on unseen, held out ADReSS test set averaged over three runs with different random seeds.
+
+
+
+TABLE 11 |
+LOSO-CV results averaged across three runs with different random seeds on the ADReSS train set.Accuracy for SVM is significantly higher than NN (H = 4.50, p = 0.034 Kruskal-Wallis H-test).
+Bold indicates the best result.

@@ -1,0 +1,250 @@
+Acoustic and Language Based Deep Learning Approaches for Alzheimer's Dementia Detection From Spontaneous Speech
+Current methods for early diagnosis of Alzheimer's Dementia include structured questionnaires, structured interviews, and various cognitive tests.
+Language difficulties are a major problem in dementia as linguistic skills break down.
+Current methods do not provide robust tools to capture the true nature of language deficits in spontaneous speech.
+Early detection of Alzheimer's Dementia (AD) from spontaneous speech overcomes the limitations of earlier approaches as it is less time consuming, can be done at home, and is relatively inexpensive.
+In this work, we re-implement the existing NLP methods, which used CNN-LSTM architectures and targeted features from conversational transcripts.
+Our work sheds light on why the accuracy of these models drops to 72.92% on the ADReSS dataset, whereas, they gave state of the art results on the DementiaBank dataset.
+Further, we build upon these language input-based recurrent neural networks by devising an end-to-end deep learning-based solution that performs a binary classification of Alzheimer's Dementia from the spontaneous speech of the patients.
+We utilize the ADReSS dataset for all our implementations and explore the deep learning-based methods of combining acoustic features into a common vector using recurrent units.
+Our approach of combining acoustic features using the Speech-GRU improves the accuracy by 2% in comparison to acoustic baselines.
+When further enriched by targeted features, the Speech-GRU performs better than acoustic baselines by 6.25%.
+We propose a bi-modal approach for AD classification and discuss the merits and opportunities of our approach.
+
+INTRODUCTION
+Alzheimer's disease and related dementia disorders constitute a significant cause of disability and dependency among older adults worldwide and are among the costliest diseases in society.
+By 2030, it is estimated that the global cost of dementia could grow to US$ 2 trillion, which could overwhelm health and social care systems
+Alzheimer's Dementia (AD) is an irreversible brain disease that results in a gradual decrease in an individual's cognitive functioning.
+The main risk factor for AD is age, and therefore its highest incidence is amongst the elderly.
+However, if detected early, we can slow down or halt the degeneration with appropriate medication.
+Current methods of diagnosis usually involve lengthy medical evaluations, including lengthy questionnaires.
+There is an urgency for cost-efficient and scalable methods that can identify AD from an early stage.
+Thus, researchers worldwide are trying to find non-invasive early detection methods and treatments for these disorders.
+Early symptoms of dementia are characterized by difficulty in word-finding, impaired reasoning, changes in language and speech, etc.
+This makes current research methodologies in speech and language processing suitable to be applied for early detection of cognitive impairment and AD.
+AD detection from spontaneous speech has been approached using speech inputbased methods, language-based (text input-based) methods, and multi-modal approaches.
+Deep learning is a part of a broader family of machine learning methods based on artificial neural networks with representation learning.
+In prior work using language-based methods, we observe that deep learning based approaches
+Motivated by the shortcomings of manual feature-engineering for such a diverse and complex task,
+Word embedding is any set of language modeling where words from a vocabulary are mapped to a vector of real numbers.
+POS-tagging is assigning a parts-of-speech tag to every word in the corpus, depending on it's context and definition.
+It is a method of enriching the feature processing stream.
+CNN layers are locally connected layers and pick up features in shorter time windows, where as LSTM layer is a type of recurrent neural network (RNN) layer which learns features and remembers features over longer timesteps.
+Recurrent layer or recurrent unit is any layer whose output not only depends on the input at the current timestep but also it's hidden state in the previous timestep.
+Thus, a CNN-LSTM architecture uses convolutional layers early on for feature extraction and then LSTM layers to learn patterns in a sequence.
+Di Palo and Parde (2019) further enrich the deep neural network models by
+We build upon the work by
+Amongst speech input-based methods, prior work has been more focused on using handcrafted acoustic features
+These features are not necessarily designed specifically for AD speech but capture various paralinguistic features relevant to AD speech.
+Effectively combining these features from various speech segments is an ongoing research problem that our work addresses.
+Previously,
+They get the best results using the eGeMAPS feature set and even better results using a hard fusion of the feature sets.
+However, these methods fail to capture the temporal dynamics across the segments to the full extent.
+In this work, by using a recurrent unit, we combine the speech segment features in a fixed dimension vector while learning the features across the time span of the participant's conversation session.
+Amongst multi-modal approaches using spontaneous speech,
+The concatenation of these feature vectors is then passed on to an SVM for AD classification.
+X-vectors and I-vectors are speech embeddings used in speaker recognition tasks, especially with speech segments of variable lengths.
+They use these embeddings even though AD diagnosis and speaker recognition are different tasks, as the voice biometrics and Alzheimer's signs are similar to an extent as both need to extract some specific patterns from captured signal contaminated with variations from various irrelevant sources.
+This prior work mentioned is relevant to our work because our work focuses on some of the open research problems, such as-How to capture complex patterns and temporal relations in speech and language modalities?
+And more importantly are there temporal patterns in the acoustic features extracted using the feature sets mentioned above, which can prove to be useful early detection of AD.
+The majority of the previous results have been benchmarked on subsets from the Cookie theft task from the DementiaBank dataset
+Dementia Bank dataset includes multiple transcripts from the same participant and has a significant imbalance in the age and gender distribution of the participants.
+ADReSS dataset
+In this work, we address this by proposing a network that can train on speech segments using recurrent units and can be integrated with existing language-based deep learning models, which can also be enriched with targeted features.
+Our contributions are as follows:
+1. We re-implement the prior work by
+2. We explore the deep learning-based methods of combining acoustic features into a common vector using recurrent units and propose a bi-modal approach for both the tasks.
+3. We discuss the possibilities of further enriching the acoustic processing stream using features specific to AD speech and propose a bi-modal model based on concatenation of latent outputs of acoustic and language based models.
+
+MATERIALS AND METHODS
+
+ADReSS Dataset
+Most earlier methods use a subset of the DementiaBank
+Cookie theft task provides the largest source of unstructured speech and text data and thus has been used in
+
+Classification Models and Approach
+In this section, we'll briefly explain the language-based (transcript text input), acoustic feature-based and bi-modal models that we propose and progressively build on.
+
+Language-Based Models
+We first implement a CNN-LSTM model (Model A0) as proposed in
+A dropout rate of 0.5 was used between the CNN and LSTM layer to prevent overfitting.
+We then implement the Model A1, as proposed by Di Palo and Parde (2019).
+It improves upon Model A0 by replacing the unidirectional LSTM in Model A0 with bidirectional LSTM layers with the insertion of attention mechanism on the hidden states of the LSTM and by including a dense neural network at the end of the LSTM layer to include targeted psycholinguistic, sentiment, and demographic features as described in Di Palo and Parde (2019).
+These targeted features are further explained in section 2.3.
+For models A0 and A1, we don't need to implement class weighting as done in Di Palo and Parde (2019) as ADReSS dataset doesn't have a class imbalance.
+Schematic representation of Models A0 and A1 can be found in Figure
+
+Acoustic-Feature Based Models
+Similar to how previous models have proposed a recurrent unit based language processing stream which is later further enriched with targeted features, we propose a similar approach of using speech input stream and taking acoustic features into account, which is later enriched with relevant, targeted features.
+These acoustic features are extracted from audio segments.
+The Model B0 is comprised of a Speech-GRU, which is defined by a recurrent layer (GRU) which takes in audio segment features per from each speech segment while maintaining the temporal structure across segments as in the full-wave audio session.
+The goal of this GRU unit is to combine the features from the speech segments into a common vector while maintaining the temporal structure across segments.
+A schematic of the GRU cell is included in Figure
+We also briefly experimented with the Model B0, by replacing the unidirectional GRU with bidirectional GRU layers with the insertion of attention mechanism on the hidden states of the GRU.
+But, since they do not improve the performance significantly, we continue with the Speech-GRU in our further study.
+In Model B1, we progressively build upon Model B0, by enriching the speech input processing stream with various AD specific features extracted from lengths of speech segments provided by voice activity detection (VAD) and disfluency and interventional features as well as idea densitybased features from complete transcripts and full-wave audio.
+Schematic representation of Models B0 and B1 can be found in Figure
+
+Bi-Modal Model
+The Model that we propose is a direct combination of Model A1 and Model B1.
+The dense outputs from these two input streams is then concatenated and then connected to the output layer using dense connections.
+We use all targeted features from both the models in Model C. Schematic representation of Model C can be found in Figure
+
+Feature Extraction
+In this subsection, we'll explain the targeted features used in Model A1, the acoustic feature sets used in Model B0, B1, C and the targeted features used in Model B1 and C. The targeted features used in Model A1, are token-level psycholinguistic features, token-level sentiment features and demographic features as described in Di Palo and Parde (2019).
+Each of the token-level features was averaged across all tokens in the instance, allowing us to obtain a participantlevel feature vector to be coupled with the participant-level demographic features.
+The psycholinguistic features include (1) Age of acquisition of words which is the age at which a particular word is usually learned by individuals, (2) Concreteness which is a measure of word's tangibility, (3) Familiarity which is a
+eGeMAPS: The eGeMAPS feature set
+The eGeMAPS features thus have the potential to detect physiological changes in voice production.
+It contains the F0 semitone, loudness, spectral flux, MFCC, jitter, shimmer, F1, F2, F3, alpha ratio, Hammarberg index, and slope V0 features, as well as their most common statistical functional.
+ComParE: The ComParE feature set
+LLDs include logarithmic harmonicto-noise ratio, voice quality features, Viterbi smoothing for F0, spectral harmonicity, and psycho-acoustic spectral sharpness.
+Statistical functionals are also computed, bringing the total to 6,373 features.
+We used OpenSMILE 2 library for feature extraction using the emobase, eGeMAPS, ComParE feature bank.
+We performed a Pearson correlation test on the whole dataset to remove acoustic features that were significantly correlated with the segment duration (when R > 0.2).
+Hence, 72 eGeMAPS, 1,072 emobase, and 3,056 ComParE features were not correlated with the duration of the speech chunks and were therefore selected for the machine learning experiments.
+The purpose of this step is to remove acoustic features correlated with the segment duration to remove the "local" features which are independent of segment duration while training the Model B0 purely on the low-level acoustic features.
+We later add global features such as mean, median, and standard deviation of all the segment lengths in an interview while training Model B1.
+Local features which are highly correlated with the segment duration can at times act as unnecessary noise and lead the machine learning models to learn spurious correlations.
+This preprocessing step is common with the approach by
+Our Model B1 is an extension of our Model B0, enriched with targetted features and our Model C is a combination of Model A1 and B1 and thus Model C uses targetted features from both models A1 and B1.
+The additional targetted features used in Model B1 and then subsequently in Model C are specific to AD speech and are obtained from a combination of speech segments, full wave audio as well as manually generated transcripts.
+These targetted features specific to AD speech can be broadly split into three categories-speech segment length-based features, disfluency, and interventional rate-based features and the features based on the concept of idea density.
+It is important to note that these features are not captured by our Model B0.
+Segment length features include six statistics about speech chunks segmented by the VAD.
+Disfluency and interventional features include a set of six distinct features from the transcripts, such word rate, intervention rate, and different kinds of pause rates reflecting upon speech impediments like slurring and stuttering, which show up in the transcripts in forms of "umm, " "uhh" etc. Lastly, idea density based features comprise of the DEPID and DEPID-R features
+Idea density measures the rate at which ideas or elementary predications are expressed in an utterance or a text.
+Proportional idea density (PID) counts the expressed ideas and can be applied to any text.
+DEPID is a dependency-based method for computing PID and its version DEPID-R that enables to exclude repeating ideas which is a feature characteristic of AD speech.
+
+Training and Validation Details
+The following info is common to the training of all the models.
+We implement the models using Tensorflow 2.0
+AdaGrad optimizer
+We train all the models for 200 epochs with early stopping as implemented in Di Palo and Parde (2019).
+All classification metrics use a classification threshold of 0.5.
+The total dataset is split into a train dataset of 108 participants (54 AD and 54 non-AD participants) and test dataset of 48 participants (24 AD and 24 non-AD participants) as provided by
+Thus the test set is 30% of the total ADReSS dataset.
+K-fold cross validation (CV) is a useful CV strategy when sample size is lower as it uses every sample in the dataset but does not necessarily maintain balance in the labels (AD and non-AD) in each fold while splitting the train dataset into "k" folds.
+Performing a stratified k-fold CV assures this balance in labels in each fold and thus increases the reliability of metrics calculated on k-fold CV.
+We use 5-fold stratified cross-validation for all our models with the same seed value.
+We chose this crossvalidation scheme over hold-out cross-validation schemes due to the small size of the dataset and to use every sample in the dataset.
+In
+For inference on test data, the models were trained on the complete train set for both the tasks separately and then tested on the test set.
+
+RESULTS
+The outputs of a binary classification algorithm fall into one of the four categories-true positives tp, false positives fp, false negatives fn and true negatives tn, depending on whether the predicted label matches with the true label or not.
+Recall is also known as Sensitivity or the true positive rate.
+Then classification metrics are defined as follows,
+In context of reproducing results by
+The results show that Model A1 performs better than Model A0 in all aspects of the classification task.
+We notice the difference between AD classification accuracy (0.8384 and 0.8820, respectively) achieved in
+In the context of the proposed acoustic feature processing Speech-GRU, the classification task results with the use of different acoustic feature set are shown in Table
+We observe that our model B0 with use of emobase as the acoustic feature set performs best followed by eGeMAPS and we observe that our recurrent model with ComParE features as input fails to learn.
+Our model B0 with the feature set emobase performs better than the acoustic feature-based baseline accuracy of 0.62 set by
+We use the best performing feature set (emobase) further, for our models B1 and C. We further also experimented with Speech-GRU in model B0 (emobase feature set) by replacing GRU layer  with a bidirectional GRU layer followed by the use of attention mechanism, but it resulted in validation accuracy of 0.6632 ± 0.0368 which did not significantly better than our basic Speech-GRU stream.
+Since we did not observe a significant improvement, we use our plain GRU stream for acoustic feature processing in models B1 and C. The classification task results for the models B1 and C are shown in Table
+Our results show that model B1, enriched with targeted features performs better than model B0 with an accuracy of 0.6875 on the test set.
+We further conduct ablation experiments on model B1 to tease out which of these targeted features contribute the most.
+The results of our ablation experiment in Table
+But all of these features combined improve the classification accuracy of our model B1.
+Our model C benefits from linguistic feature processing stream of model A1 but does not perform better than model A1 in terms of test or validation accuracy.
+We notice a significant improvement in AD class Recall and a reduction in AD class Precision from model A1 to model C.
+Finally, we include the Area under the Receiver-Operator characteristic curve for all the models in the Figure
+
+DISCUSSION
+Amongst language-based models, the improvement in performance from model A0 to A1 can be attributed to the use of attention as well as the use of psycholinguistic and sentiment features.
+As per our results, model A0 and A1 which have shown the state of the art results on the complete Dementia bank dataset don't perform better than the linguistic feature baseline set by
+This is important to note because the primary motivation of
+Furthermore, noticing the difference in accuracy and F1 scores, there could be multiple factors involved in the success of
+The most prominent factor being, repeated occurrences of samples from the same participant in the Dementia Bank dataset.
+This could lead to significant overfitting to participant dependent features in models trained the DementiaBank dataset.
+As explained in section 2.1, DementiaBank has 243 transcripts from 104 non-AD participants whereas 1,049 transcripts from 208 AD participants.
+In comparison to that, ADReSS dataset includes only one transcript and full wave audio per participant, with 54 AD and 54 non-AD participants in the train set and 24 AD and 24 non-AD participants in the test set.
+Thus the total number of samples in DementiaBank is 1,292, which is around 8 times the dataset size of ADReSS.
+ADReSS dataset allows us to test the speaker independent nature of previously proposed models and our new model as there are no multiple sessions per participant.
+It is evident from other success of deep learning methods in other domains (not specific to AD speech) that such methods do scale with data, but that need not necessarily apply to tasks such as early detection of AD.
+Thus, we cannot take a purely minimal feature engineering approach, and future work should instead focus more on developing and utilizing features relevant to AD speech.
+Benchmarking on a dataset with more subjects in the future would help build a better understanding of whether these methods perform better compared to complete manual feature engineering-based solutions or not.
+Accuracy comparison of all the models with baselines on ADReSS dataset by
+Our results from Table
+Amongst the three feature sets, we observe that our Speech-GRU does pickup some relevant temporal patterns and effectively combines these features into a common vector.
+Our Speech-GRU with emobase feature set also performs better than the baseline by
+Still, the improvement is relatively small (2%).
+Moreover, the use of attention did improve the performance in language-based model A1, suggesting that there are temporal patterns which are relevant to AD speech in word vectors and POS-tags.
+But the same approach did not improve the performance in Speech-GRU, suggesting a general lack of temporal patterns across paralinguistic features of the speech segments.
+Future work could benefit from the development of AD specific feature sets.
+It is important to note that our performance of model B0 is representative of the performance of AD detection without the use of any manual transcription.
+All the transcripts in Dementia Bank and ADReSS dataset are manually generated, and deploying this service would instead require automated transcription.
+Readers can refer to
+Various disfluency and interventional features in our approach, as well as other state of the art approaches, rely on these manually generated transcripts for feature extraction and their performance may vary depending on whether the transcription is automated or not.
+In the ablation experiments, the decrease in the test accuracy in case of enrichment with disfluency and interventional features could be as these word rates, interventional rates, pause rates were extracted from manual transcripts.
+A better approach could be using forced alignment tools to get precise disfluency features, but since not all samples in the ADReSS dataset aligned with the transcript text, we didn't explore that idea further.
+We observe that the language-based models A0 and A1 are characterized by higher non-AD class recall scores and higher AD class precision scores which are further aggravated from model A0 to A1.
+We observe that speech-based models were generally characterized by nearly equal precision and recall scores in AD and non-AD classes and we can also observe similar influence in the model C.
+There are two possible reasons for the bimodal model C not performing significantly better than the language-based model A1, which are explained as follows.
+The first is that, the inherent representations learnt by the recurrent stream in Model A1 (trained on word embeddings and POS tags) and in Model B1 (on acoustic features of each segment, in lieu of acoustic embeddings) are quite different.
+And a mere concatenation of the final layers, can be thought of as a linear combination of the two representations and we observe that it does not provide rich space for a variety of cross-dimensional and nonlinear combinations among the two representations.
+Because of this, the outputs of a Model B1 (which is a relatively weak learner in comparison to it's language counterpart Model A1) can act as noise in linear combination of these representations.
+This problem has been addressed by a variety of trainable feature aggregation methods, especially visual and language based representations, in the context of multimodal emotion detection or sentiment analysis.
+One of the most promising solution, which has proven to be successful in the context of multimodal sentiment analysis is focusing on word-level fusion
+Unfortunately, word-level fusion methods require alignment of both the modalities, which is very expensive in terms of reduction in data size as not all samples align even with the state of the art methods.
+Though this is a feasible option for other problems such as sentiment analysis, where data is in abundance and where the study can be carried out with a fraction of aligned data.
+But it's not a feasible option in small sized datasets like the ADReSS dataset as we observed while running the alignment tools (Montreal Forced Aligner 3 ), <70% of the full wave audio samples aligned with the manually generated transcripts.
+The speech segment chunks provided by the ADReSS dataset use voice activity detection (VAD) and often include multiple words rather than providing a word-to-word alignment thus cannot be used for creating multimodal word embeddings.
+Readers can refer to
+Future work, in availability of more data, can attempt similar approaches to AD detection.
+The second reason is that the idea density features used in Model B1 and then subsequently in Model C, have been computed using the transcripts.
+The disfluency and interventional rates used are also obtained from transcripts in lieu of aligning speech with transcripts.
+We compute the similarity in predictions of two models as ratio of predictions which match between two models upon total predictions in the test set
+We find the similarity between predictions of Model A1 and Model C to be 0.6667 whereas the similarity in predictions of model B1 and model C to be 0.5416.
+Furthermore, we also observe that the similarity between predictions of Model A1 and B1 is 0.6667 and is greater than similarity between predictions of Model A1 and Model B0 which is 0.5834, suggesting that the additional targeted features obtained from transcripts and used in Model B1 might have already been captured in the Model A1 which trained only on the transcript data.
+Apart from the similarities in predictions, we can observe the confusion matrices of test predictions of Model A1, B1, and C in Figure
+
+CONCLUSIONS
+We re-implement existing deep learning-based methods on ADReSS dataset and discuss the challenges of the approach.
+We also introduce a bi-modal deep learning approach to AD classification from spontaneous speech and study in detail the Speech-GRU stream, which is further enriched with AD specific features through comprehensive comparisons of different variants.
+An important finding of this study is that the addition of targeted features increases the performance in AD detection in both language-based and acoustic-based models.
+Though the speech-GRU stream in our bi-modal approach is a relatively weaker learner compared to the language-based counterparts in the network, future work can aim at improving the acoustic feature extraction as well as a better combination of representations from different modalities.
+The Speech-GRU without and with extra targeted features performs much better than acoustic baselines and Model B0 is also representative of the extent of performance of solutions which don't rely on manual transcription.
+Our results help us answer questions regarding the existence of temporal patterns relevant to AD detection in para-linguistic acoustic features often extracted using common feature sets as well as also address the reasons for a drop in accuracy of models on ADReSS dataset which were previously state of the art approaches on the complete Dementia Bank dataset.
+
+
+
+FIGURE 1 |
+FIGURE 1 | (i) Language-based models, (ii) speech-based models, (iii) GRU cell schematic, and (iv) bi-modal model for AD detection.
+
+
+
+FIGURE 2 |
+FIGURE 2 | Receiver operating characteristics for all Models A0, A1, B0, B1, and C and the area under the curve (AUC).
+Results on test set.
+
+
+3 https://github.com/MontrealCorpusTools/Montreal-Forced-Aligner.
+
+
+
+FIGURE 3 |
+FIGURE 3 | Accuracy comparison of all Models A0, A1, B0, B1, and C with baselines on ADReSS dataset as well as referred state of the art approaches on DementiaBank dataset.
+
+
+
+TABLE 1 |
+Validation and Test results of the language based models on the classification task.Bold values represent the validation and test accuracies of best performing model amongst the models under consideration in the respective table.
+
+
+
+TABLE 2 |
+Validation and Test results of the Model B0 with different feature sets on the classification task.
+
+
+
+TABLE 3 |
+Validation and Test results of the Model B1 and Model C on the classification task.
+Bold values represent the validation and test accuracies of best performing model amongst the models under consideration in the respective table.
+
+
+
+TABLE 4 |
+Ablation experiments with Model B1 with different targeted features; Test results on classification task.

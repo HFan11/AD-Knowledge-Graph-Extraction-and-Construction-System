@@ -1,0 +1,215 @@
+Quantile graphs for EEG-based diagnosis of Alzheimer’s disease
+Known as a degenerative and progressive dementia, Alzheimer's disease (AD) affects about 25 million elderly people around the world.
+This illness results in a decrease in the productivity of people and places limits on their daily lives.
+Electroencephalography (EEG), in which the electrical brain activity is recorded in the form of time series and analyzed using signal processing techniques, is a well-known neurophysiological AD biomarker.
+EEG is noninvasive, low-cost, has a high temporal resolution, and provides valuable information about brain dynamics in AD.
+Here, we present an original approach based on the use of quantile graphs (QGs) for classifying EEG data.
+QGs map frequency, amplitude, and correlation characteristics of a time series (such as the EEG data of an AD patient) into the topological features of a network.
+The five topological network metrics used here-clustering coefficient, mean jump length, betweenness centrality, modularity, and Laplacian Estrada index-showed that the QG model can distinguish healthy subjects from AD patients, with open or closed eyes.
+The QG method also indicates which channels (corresponding to 19 different locations on the patients' scalp) provide the best discriminating power.
+Furthermore, the joint analysis of delta, theta, alpha, and beta wave results indicate that all AD patients under study display clear symptoms of the disease and may have it in its late stage, a diagnosis known a priori and supported by our study.
+Results presented here attest to the usefulness of the QG method in analyzing complex, nonlinear signals such as those generated from AD patients by EEGs.
+
+Introduction
+Alzheimer's disease (AD) is the main cause of dementia in people over 65 years of age, affecting nearly 25 million people throughout the world
+AD is marked primarily by progressive cognitive impairment, loss of memory, and disorientation of time and space.
+With an unknown cause, AD usually evolves slowly, following a specific pathway that first involves the
+
+Materials and methods
+As described in detail previously
+In the QG method, each quantile q i for i = 1, 2, . .
+., Q of X is attributed to a node n i 2 N in g.
+Two nodes n i and n j are connected with a weighted arc ðn i ; n j ; w k ij Þ 2 A whenever two values x(t) and x(t + k) belong respectively to quantiles q i and q j , with t = 1, 2, . .
+., T and k = 1, . .
+., k max < T. Weights w k ij in the weighted directed adjacency matrix, which is denoted as A k , are equal to the number of times q i at time t is followed by q j at time t + k.
+Thus, repeated transitions through the same edge increase the the corresponding weight value
+Normalizing A k , it becomes a Markov transition matrix W k , with P Q j w k ij ¼ 1
+As shown in
+Here, the number of quantiles is given by Q � 2T 1/3
+A C-code implementation of our method has been made freely available by Pineda et al.
+As an illustrative example, Fig
+Quantiles are defined as [x(0), x(4)[, [x(4), x
+For a given k, the quantiles are mapped into a network with N ¼ 5 nodes and each quantile is assigned to a node n i 2 N in the corresponding network g.
+For k = 1, 2, and 5, the nodes n i and n j are connected with weighted arcs ðn i ; n j ; w 1 ij Þ, ðn i ; n j ; w 2 ij Þ, and ðn i ; n j ; w 5 ij Þ 2 A, respectively.
+The arc weights are given by (1,1,1), (1,3,1), (1,5,2), (2,1,1), (2,2,1), (2,4,2),
+Note that the more repeated transitions between the quantiles q i and q j occur, the larger the weights between the nodes n i and n j are (represented in the corresponding network by thicker lines).
+
+Network measures
+In the recent past, several studies have shown the relevance and usefulness of complex network theory to the comprehension of a wide range of phenomena, across various scientific disciplines, from social sciences to biology
+Complex network theory relies on the use of mathematical metrics that can to quantify different features of the network's topology.
+Based on the adjacency matrix A and Markov transition matrix W, we describe the network measures used in this work, namely the clustering coefficient (CC), the mean jump length (Δ), the betweenness centrality (BC), the modularity (Mo), and the Laplacian Estrada index (LEE).
+Code implementations of those measures have been made freely available by Pineda et al.
+
+Clustering coefficient
+Some networks tend to have more links between adjacent vertices, in a way that their topology deviates from that of an uncorrelated random network, in which triangles are sparse.
+This pattern is called clustering
+There have been various attempts in the literature to develop a clustering coefficient for weighted networks.
+Here, the clustering coefficient of a given node n i is given by
+where w ij is an element in the weighted matrix W, a ij = 1 if there is a arc from node n i to node n j , and 0 otherwise.
+d i is the total degree of node n i , and s i is the strength of connectivity of node n i .
+The global clustering coefficient for the entire network, denoted as CC, is defined by the average of the local clustering coefficients over all nodes.
+
+Mean jump length
+Given a Markov transition matrix W of a graph g, it is possible to perform a random walk on it and compute the mean jump length Δ, defined as follows
+where s = S is the total number of jumps, and the length δ s (i, j) = |i -j|, with i, j = 1, . .
+., Q being the node indices, as defined by W. As described previously
+with W T being the transpose of W, P a Q × Q matrix with elements p i,j = |i -j|, and tr the trace operation.
+
+Betweenness centrality
+Betweenness is a centrality measure based on shortest paths, widely used in complex network analysis.
+The betweenness centrality (BC) of a node n u is given by
+where σ(n i , n u , n j ) is the number of shortest paths between nodes n i and n j that go through node n u , σ(n i , n j ) is the total number of shortest paths between n i and n j , and the sum is calculated over all pairs n i , n j of distinct nodes
+The betweenness centrality for the entire network, denoted by BC, is defined as the average of the local betweenness centralities over all nodes.
+
+Modularity
+Recently, the subject of detecting the modular structure of a complex network has gained a large amount of attention
+Networks with high modularity present smaller clusters of nodes connected more to each other than to the network at large
+Several methodologies have been developed for modules detection and characterization
+The goal of a module identification algorithm is to find P i that maximizes the modularity M(P i ), where P i is the set of nodes of module i.
+Given the ensemble P of all partitions, the modularity of P 2 P is computed as:
+with E being the total number of edges in the network, d i the sum of all node degrees in module i, and e i the number of edges within module i.
+In Eq (5), the sum is evaluated over all the m modules in the partition P
+In the present work, we used the algorithm developed by
+
+Laplacian estrada index
+Let g be a network without loops and multiple edges.
+The Laplacian matrix of g is the matrix L = D -A where D is a diagonal matrix with (d 1 , . .
+., d n ) on the main diagonal in which d i is the degree of the node n i .
+Since L is a real symmetric matrix, its eigenvalues μ 1 , μ 2 , . .
+., μ n are real numbers.
+These are referred to as the Laplacian eigenvalues of the underlying network
+Let's assume those to be labelled in a non-increasing manner μ 1 � μ 2 . . .
+� μ n .
+The Laplacian Estrada index of a network g is defined as
+
+Data
+The database was designed jointly by researchers at Florida State University and it was recorded from the 19 scalp Statistical Manual of Mental Disorders (DSM)-III-R criteria, as described previously
+EEG segments of 8 s duration, band-limited to the range of 1-30 Hz, were recorded at a sampling frequency of 128 Hz (free from eye motion and blinking, and myogenic artifacts) and extracted from the EEG recordings.
+An EEG technician was with each patient during the recordings to monitor the patients' vigilance state.
+The database has been provided by Dr. Dennis Duke of Florida State University and made freely available by Campanharo et al.
+A detailed description of the database can be found in
+Exemplary data from channel F 7 are depicted in Fig 2 .
+5 Results
+
+Discriminating between aging and Alzheimer's disease
+We apply the QG method to the problem of discriminating patients with AD from normal controls.
+The data from channel F 7 was chosen in the simulations due to its closeness to the hippocampal region, which is is one of the first regions of the brain to be affected by AD.
+As all time series have the same length (T = 1, 024), we used
+Table
+Comparing the results across the five network metrics, we also observe that Δ provides the best discriminating power.
+Finally, we used a support vector machine (SVM,
+Based on the values of CC(k), Δ(k), BC(k), Mo(k), and LEE(k) of 24 healthy subjects (groups A and B) and 24 patients with AD (groups C and D) and the k-fold cross-validation strategy (k = 10), the patients were randomly divided into ten equivalent subsamples.
+Among the ten subsamples, nine-fold (90% of samples) were considered the training set and the remaining fold (10% of samples) was considered the test set.
+The values of accuracy (ACC) (100%), sensitivity (SEN) (100%), specificity (SPE) (100%), and area under the curve(AUC) (1.0) show that the QG method is a reliable technique for differentiating patients in different health conditions.
+
+EEG channels influence in the AD detection
+To verify the extent to which the electrode location affects the differentiation between normal controls and patients with AD, we used the 19 EEG channels available in our analysis.
+Analogous to previous case, since for all channels the time series have the same length (T = 1, 024), we used Q = 2(1, 024) 1/3 � 20 and k = 1, 2, . .
+., 25 in all calculations.
+Therefore, we mapped 19 × 2 × 24 × 25 time series into 22,800 quantile graphs (or 22,800 A k matrices), and therefore, we obtained 22,800 W k matrices with Q 2 = 400 elements each.
+For all groups and all channels, we calculated CC(k), Δ(k), BC(k), Mo(k), and LEE(k) versus k.
+For a given network measure and channel, k max was chosen in such way to obtain the maximum separation between the curves of normal controls (groups A or B) and patients with AD (groups C or D) and the average of A ROC , denoted here by ÂROC , was computed through the combination between the groups.
+Fig
+The color map indicates values close to one for ÂROC in all cases, which means that the QG method was effective in differentiating normal controls from patients with AD, regardless of the network measure and the electrode location.
+Overall, Δ is the metric that displays the best results with 0:9183 � ÂROC � 1:000.
+This result corroborates the knowledge that all patients under study display clear symptoms of the disease.
+Regardless of the network measure, the brain damage was found mostly in the parietal lobes and some loci in the temporal lobes (T 5 and T 6 ).
+
+EEG wave patterns in the AD detection
+It is widely accepted that Alzheimer's disease earliest changes are an increase in theta activity and a decrease in beta activity, which are followed by a decrease in alpha activity
+Delta activity increases later during the course of the disease
+In particular, the increase in theta activity is a typical finding in mild AD.
+The increase in delta activity is not evident until the more advanced stages of the disease take place
+We apply the QG method to check if it can capture the influence of the EEG wave patterns in the AD development.
+Since the alpha rhythm increases in amplitude at rest with eyes closed
+Moreover, the data from channel P 3 was chosen in the simulations due to its closeness to the parietal region, which is one of the regions to be later affected by AD.
+Wavelet digital filter
+Analogous to previous cases, as all time series have the same length (T = 1, 024), we used Q = 2(1, 024) 1/3 � 20 and k = 1, 2, . .
+., 25 in all calculations.
+Thus, we mapped 4 × 24 × 25 time series into 2,400 quantile graphs (or 2,400 A k matrices), and therefore, we obtained 2,400 W k matrices with Q 2 = 400 elements each.
+Following, for each group and wave and for a given k, we computed the median over all weighed directed adjacency matrices A k and obtained the Markov transition matrix of medians.
+For all groups and frequency bands, the mean jump length, which is the metric that best discriminates the groups in our analysis, was computed (Fig
+Observe that the curves for normal controls (B) and patients with AD (D) are very similar for theta, alpha, and beta waves, regardless the value of k.
+On the other hand, there was statistically significant difference (95% confidence interval (CI) and a p-value of less than 0.05) between the sample means in groups B and D for delta waves.
+(Table
+This result confirms the prior knowledge that all patients under study display clear symptoms of the disease and may have it in its late stage.
+
+Conclusion
+Presently, there is no conclusive technique for the accurate diagnosis of AD
+Thus, an automatic computer implemented technique based solely on the analysis of EEG data would potentially have a broad application.
+Building upon the work described in
+QGs map frequency, amplitude, and correlation characteristics of a time series (such as the EEG data of an AD patient) into the topological features of a network.
+The five network topological measures used here showed that the QG method is capable of discriminating health controls (with eyes open or closed) from patients with AD (with eyes open or closed), and indicate which channels (corresponding to 19 different locations on the patients' scalp) provide the best discriminating power.
+All five network topological measures were able to generate statistically robust positive AD diagnostics, although the mean jump length provided the best results.
+Moreover, the combination of the network measures with a machine learning technique achieved outstanding performance in the two-class pattern classification problem presented here.
+Spatially, the electrodes that best captured the symptoms were those nearer to the left and temporal-parietal chains.
+This observation is in line with the current understanding of the AD progression.
+Generally, AD mainly affects the left side of the temporal-hippocampal network, which is responsible for verbal memory and, apparently, is a more vulnerable hemisphere
+Furthermore, the joint analysis of delta, theta, alpha, and beta wave results indicate that all AD patients under study display clear symptoms of the disease and may have it in its late stage, a diagnosis known a priori and supported by our study.
+In conclusion, we can say that the set of results presented in this paper attests that the QG method is an effective technique for the complex temporal pattern analysis like those found in EEGs from AD patients.
+It is worth mentioning that the subjects under study were not submitted to a definitive pathological diagnosis of AD as well as health controls.
+Some clinical features were not available at the time of this investigation.
+Moreover, the number of subjects is quite small limiting the extrapolations of the findings.
+Therefore, further research is necessary, with a larger and richer data set, to estimate the efficacy of the QG method in providing an early diagnostic of AD patients with only mild cognitive impairment.
+
+
+
+Fig 1 .
+Fig 1. Example of the QG method for a time series with T = 20, Q = 5, and k = 1, 2 and 5.
+The quantile intervals for the sorted data are given by [x(0), x(4)[, [x(4), x(8)[, [x(8), x(12)[, [x(12), x(16)[, and [x(16), x(20)], i.e., [-7.783, -3.050 [, [-3.050, 0.829[, [0.829, 4.657[, [4.657, 7.070[, and [7.070, 9.090].
+The quantiles are mapped into three networks with N ¼ 5 nodes each and arc weights given by (1,1,1), (1,3,1), (1,5,2), (2,1,1), (2,2,1), (2,4,2), (3,3,2), (3,4,1), (4,1,1), (4,2,1), (4,3,1), (4,4,1), (5,1,1), (5,2,1), (5,5,2) for k = 1; (1,3,1), (1,5,2), (2,1,1), (2,4,2), (2,5,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,3,2), (4,4,1), (5,1,1), (5,2,2), (5,5,1) for k = 2; and (1,4,1), (1,5,1), (2,3,2), (2,5,1), (3,1,2), (3,4,1), (4,2,1), (4,3,1), (4,4,1), (5,2,2), (5,3,1), (5,4,1) for k = 5.
+
+
+Fig 1. Example of the QG method for a time series with T = 20, Q = 5, and k = 1, 2 and 5.
+The quantile intervals for the sorted data are given by [x(0), x(4)[, [x(4), x(8)[, [x(8), x(12)[, [x(12), x(16)[, and [x(16), x(20)], i.e., [-7.783, -3.050 [, [-3.050, 0.829[, [0.829, 4.657[, [4.657, 7.070[, and [7.070, 9.090].
+The quantiles are mapped into three networks with N ¼ 5 nodes each and arc weights given by (1,1,1), (1,3,1), (1,5,2), (2,1,1), (2,2,1), (2,4,2), (3,3,2), (3,4,1), (4,1,1), (4,2,1), (4,3,1), (4,4,1), (5,1,1), (5,2,1), (5,5,2) for k = 1; (1,3,1), (1,5,2), (2,1,1), (2,4,2), (2,5,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,3,2), (4,4,1), (5,1,1), (5,2,2), (5,5,1) for k = 2; and (1,4,1), (1,5,1), (2,3,2), (2,5,1), (3,1,2), (3,4,1), (4,2,1), (4,3,1), (4,4,1), (5,2,2), (5,3,1), (5,4,1) for k = 5. https://doi.org/10.1371/journal.pone.0231169.g001
+
+
+in all calculations.
+Thus, we mapped 2 × 24 × 25 time series into 1,200 quantile graphs (or 1,200 A k matrices), and therefore, we obtained 1,200 W k matrices with Q 2 = 400 elements each.
+Following, for each group and a given k, we computed the median over all weighed directed adjacency matrices A k and obtained the Markov transition matrix of medians.
+For all groups, we computed CC(k), Δ(k), BC(k) Mo(k), and LEE(k) versus k using Eqs (1), (3), (4), (5) and (6), respectively(Fig 3).
+Note in all cases that the curves for normal controls (A or B) and patients with AD (C or D) form two distinct clusters with maximum separation at approximately k max = 9 for CC(k), k max = 10 for Δ(k), k max = 6 for BC(k), k max = 6 for Mo(k), and k max = 8 for LEE(k).
+
+
+
+Fig 2 .
+Fig 2. Exemplary EEG segments (channel F 7 ) from each of the four groups (A, B, C, and D).
+From top to bottom: health controls, eyes open (group A), health controls, eyes closed (group B), patient with AD, eyes open (group C) and patient with AD, eyes closed (group D). https://doi.org/10.1371/journal.pone.0231169.g002
+
+
+
+Fig 3 .Fig 4 .
+Fig 3. CC(k), Δ(k), BC(k), Mo(k), and LEE(k) versus k, T = 1, 024, Q = 20, and k = 1, 2, . .
+., 25 for the groups A (patients from health controls, eyes open), B (patients from health controls, eyes closed), C (patients with AD, eyes open), and D (patients with AD, eyes closed).
+https://doi.org/10.1371/journal.pone.0231169.g003
+
+
+
+Fig 5 .
+Fig 5. Location on scalp of the 19 EEG channels, represented by circles and colored according to the value of Â ROC for CC (A), Δ (B), BC (C), Mo (D), and LEE (E), respectively.
+Circles with darker colors indicate a better differentiation between aging and AD.
+https://doi.org/10.1371/journal.pone.0231169.g005
+
+
+
+Fig 6 .
+Fig 6.
+Δ(k) versus k (channel P 3 ),T = 1, 024, Q = 20, and k = 1, 2, . .
+., 25 for delta (Δ delta ), theta (Δ theta ), alpha (Δ alpha ), and beta (Δ beta ) waves and patients for the groups B and D. https://doi.org/10.1371/journal.pone.0231169.g006
+
+
+T 4 , P z , P 3 , P 4 , T 5 , T 6 , O 1 , and O 2 ) loci of the international 10-20 system using a Biologic Systems Brain Atlas III Plus
+
+
+
+Table 1 . Statistical comparison (95% confidence interval, p < 0.05) among the sample means of the network measures CC, Δ, BC, Mo, and LEE for the groups A, B, C and, D, through ANOVA.
+BC, Mo, and LEE, for patients in groups A and C, B and D, A and D and B and
+
+
+
+Table 2 . Areas under the ROC curves (A ROC ) of the network measures CC, Δ, BC, Mo, and LEE, for patients in groups A and C, B and D, A and D, and B and C for k max = 9, 10, 6, 6 and 8, respectively.
+
+
+
+Table 3 . Statistical comparison between the sample means of the network measure Δ for the groups B and D.

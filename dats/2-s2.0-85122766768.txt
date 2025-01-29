@@ -1,0 +1,551 @@
+Artificial intelligence framework identifies candidate targets for drug repurposing in Alzheimer’s disease
+Background: Genome-wide association studies (GWAS) have identified numerous susceptibility loci for Alzheimer's disease (AD).
+However, utilizing GWAS and multi-omics data to identify high-confidence AD risk genes (ARGs) and druggable targets that can guide development of new therapeutics for patients suffering from AD has heretofore not been successful.
+To address this critical problem in the field, we have developed a network-based artificial intelligence framework that is capable of integrating multi-omics data along with human protein-protein interactome networks to accurately infer accurate drug targets impacted by GWAS-identified variants to identify new therapeutics.
+When applied to AD, this approach integrates GWAS findings, multi-omics data from brain samples of AD patients and AD transgenic animal models, drug-target networks, and the human protein-protein interactome, along with large-scale patient database validation and in vitro mechanistic observations in human microglia cells.
+Results: Through this approach, we identified 103 ARGs validated by various levels of pathobiological evidence in AD.
+Via network-based prediction and population-based validation, we then showed that three drugs (pioglitazone, febuxostat, and atenolol) are significantly associated with decreased risk of AD compared with matched control populations.
+Pioglitazone usage is significantly associated with decreased risk of AD (hazard ratio (HR) = 0.916, 95% confidence interval [CI] 0.861-0.974,
+P = 0.005) in a retrospective case-control validation.
+Pioglitazone is a peroxisome proliferator-activated receptor (PPAR) agonist used to treat type 2 diabetes, and propensity score matching cohort studies confirmed its association with reduced risk of AD in comparison to glipizide (HR = 0.921, 95% CI 0.862-0.984,
+P = 0.0159), an insulin secretagogue that is also used to treat type 2 diabetes.
+In vitro experiments showed that
+
+Background
+Alzheimer's disease (AD) is a chronic neurodegenerative disorder associated with progressive cognitive decline, extracellular amyloid plaques, intracellular neurofibrillary tangles, and neuronal death
+AD and other dementias are an increasingly important global health burden, recently estimated to affect 43.8 million people worldwide
+Although genome-wide association studies (GWAS) have identified over 40 genome-wide significant susceptibility loci for AD
+Indeed, since Dr. Alois Alzheimer first described the condition in 1906, there are only five small-molecule drugs approved by the U.S. Food and Drug Administration (FDA) for treatment of AD: three cholinesterase inhibitors (donepezil, galantamine, and rivastigmine), one N-methyl-D-aspartate (NMDA) receptor antagonist (memantine), and one fixed combination of donepezil and memantine
+Aducanumab, a monoclonal antibody targeting aggregated betaamyloid, is the first disease-modifying drug approved by U.S FDA for Alzheimer's treatment in nearly 20 years; yet, its clinical efficacy is limited to a narrow segment of the AD continuum andpotential side effects
+The number of AD patients is expected to rise to 13.8 million by 2050 in the United States (U.S.) alone
+One possible explanation for why most candidate drugs fail in later-stage clinical trials is poor target selection.
+Broadly in disease, drug targets with genetic support have carried a high success rate among U.S. Food and Drug Administration (FDA)approved therapies
+However, this has not been the case with AD, and the translational application of multi-omics data such as GWAS for target identification and therapeutic development in AD remains challenging.
+We recently demonstrated the utility of network-based methodologies for accelerating target identification and therapeutic discovery by exploiting multi-omics profiles from individual patients in multiple complex diseases, including cardiovascular disease
+We now posit that systematic identification of likely causal genes by incorporating GWAS findings and multi-omics profiles with human interactome network models will also reveal diseasespecific targets for genotype-informed therapeutic discovery in AD.
+This approach entails unique integration of the genome, transcriptome, proteome, and the human protein-protein interactome.
+In this study, we presented a network-based artificial intelligence (AI) framework that is capable of integrating multi-omics data along with human protein-protein interactome networks to accurately infer drug targets impacted by GWAS-identified variants to identify new therapeutics.
+Specifically, under the AI framework, we first apply a Bayesian algorithm to infer AD risk genes (termed ARGs) from AD GWAS loci via integrating multi-omics data and gene networks.
+Then repurposable drugs will be prioritized by quantifying the network proximity score
+Finally, we test the drug user's relationship with AD using large-scale, longitudinal patient data and further investigate drug's mechanism-of-action using in vitro mechanistic observations in human microglia cells (Fig.
+
+Material and methods
+
+Collection of GWAS SNPs from large-scale studies
+In this study, we assembled multiple single-nucleotide polymorphisms (SNPs) associated with AD from 15 large-scale GWAS studies in diverse population groups, conducted between 2007 and 2019 (Table
+Some of the collected SNPs may represent the same genetic signal due to the use of overlapping samples across studies.
+To avoid this bias, we filtered the collected SNPs to remove redundant genetic signals (Supplementary Methods).
+To maximize genetic signals based on the omnigenic hypothesis
+
+Construction of human protein-protein interactome
+To build a comprehensive human protein-protein interactome, we assembled data from 15 common resources with multiple levels of experimental evidence (Supplementary Methods).
+Specifically, we focused on highquality protein-protein interactions (PPIs) with the following five types of experimental data:
+The genes were mapped to their Entrez ID based on the National Center for Biotechnology Information (NCBI) database (www.
+ncbi.
+nlm.
+nih.
+gov), and duplicated pairs were removed.
+Collectively, the integrated human interactome included 351,444 PPIs connecting 17,706 unique proteins.
+More details are provided in our recent studies
+
+Collection of functional genomics data
+We collected the distal regulatory element (DRE)-promoter links inferred from two studies.
+The first study was the capture Hi-C study of a lymphoblastoid cell line (GM12878) and we obtained 1,618,000 DRE-promoter links predicted from GM12878
+The second dataset we used was from the Functional Annotation of the Mammalian Genome 5 (FANTOM5) project
+d Network-based mechanistic observation.
+Experimental validation of network-predicted drug's proposed mechanism-of-action in human microglial cells.
+Specifically, target prioritization and drug repurposing were conducted using network models in addition to the Bayesian algorithm.
+In step 1, we predicted ARGs (AD risk genes) as potential drug targets from GWAS findings using the Bayesian algorithm.
+In step 2, we prioritized candidate drugs via quantifying network proximity score between drug targets and ARGs under the human protein-protein interactome network models across multiple human tissues.
+We downloaded FAN-TOM5 data and obtained 66,899 enhancer-promoter links
+
+Disease-associated genes
+Open Targets database refers to a comprehensive platform for therapeutic target identification and validation
+We collected 527 AD-associated genes (Table
+
+Seed genes with experimental evidence for Alzheimer's disease
+We further collected 144 AD seed genes having either genetic, experimental, or functional evidence reported in large-scale GWAS studies, AD transgenic animal models, or human-derived samples (Table
+These genes are involved in pathobiology of amyloidosis, tauopathy, or both, and genes characterizing other AD pathological hypotheses including neuroinflammation, vascular dementia, and other pathobiological pathways (Supplementary Methods).
+
+Brain-specific gene expression
+We downloaded RNA-Seq data (transcripts per million, TPM) of 31 tissues from GTEx V8 release (accessed on March 31, 2020,
+gtexp ortal.
+org/ home/).
+We defined those genes with counts per million (CPM) ≥ 0.5 in over 90% of samples as tissue-expressed genes and the other genes as tissue-unexpressed.
+To quantify the expression significance of tissue-expressed gene i in tissue t, we calculated the average expression 〈E(i)〉 and the standard deviation δ E (i) of a gene's expression across all tissues evaluated.
+The significance of gene expression in tissue t is defined as The details have been described in previous studies
+
+Gene expression from single-cell/nucleus transcriptomics
+We collected mouse single-cell/nucleus RNA sequencing (sc/snRNA-Seq) data in 5XFAD brain samples versus controls from two recent studies (GSE98969 and GSE140511)
+We also collected human snRNA-Seq datasets on AD patient brain tissues from two publications
+The first set of human snRNA-Seq data contains 10 frozen post-mortem human brain tissues from both entorhinal cortex (EC) and superior frontal gyrus (SFG) regions.
+This dataset has been deposited in the AD knowledge portal (
+org, Synapse ID: syn21788402).
+(1)
+The raw data were deposited on Gene Expression Omnibus (GEO ID: GSE147528), which contains astrocytes, excitatory neurons, inhibitory neurons, and microglia cells
+We also assembled human snRNA-Seq data in AD cases versus controls with entorhinal cortex samples across six major brain cell types (GEO ID: GSE138852): microglia, astrocytes, neurons, oligodendrocytes, oligodendrocyte progenitor cells (OPCs), and endothelial cells
+The original sc/snRNA-Seq datasets were downloaded from the GEO database (www.
+ncbi.
+nlm.
+nih.
+gov/ geo/), and detailed information of these datasets is provided in Table
+The analyses were completed with Seurat (v3.1.5),
+scran (v1.16.0), scater (v1.16.1) packages in R with steps complied with the original literature
+Data were normalized using a scaling factor of 10,000, and all differential gene expression analyses were conducted by function FindMarkers in the Seurat R package with parameter test.use
+= "MAST.
+" All mouse genes were further mapped to unique human-orthologous genes using the Mouse Genome Informatics (MGI) database
+Details of processing of sc/snRNAseq data and quality control are provided in Supplementary Methods and our recent study
+
+Gene expression from microarray
+We collected human microarray data in AD cases versus healthy controls with human brain samples from two independent datasets (GSE29378 and GSE84422)
+We also collected mouse microarray data from AD transgenic mouse vs. controls, including brain microglia of 5XFAD mice from 2 independent datasets (GSE65067 and GSE74615)
+The original microarray datasets were obtained from Gene Expression Omnibus (
+ncbi.
+nlm.
+nih.
+gov/ geo).
+Detailed information of these 6 GEO datasets is provided in Table
+All raw expression data were log2 transformed, and all samples were quantile normalized together.
+Probe IDs in each dataset were mapped to NCBI Entrez IDs, and probes mapping to multiple genome regions or without corresponding entrez IDs were deleted.
+The items were imported to R statistical processing environment using a LIMMA/Bioconductor package.
+All the mouse genes were further transferred into unique human-orthologous genes using the MGI database
+Genes with threshold fold change (FC) > 1.2 were defined as exhibiting differential expression and prioritized as predicted AD risk genes.
+
+Bulk RNA sequencing data
+We collected 2 RNA-seq datasets from brain or brain microglia of 5XFAD mice
+In addition, we obtained 4 RNA-seq datasets from brain microglia of Tg4510 mice across different months [M] age (2M, 4M, 6M, and 8M)
+Differential expression analysis was performed using DESeq
+After mapping mouse genes to human-orthologous gene
+
+Proteomic data in AD models
+In total, 10 proteomic datasets were assembled from 3 types of AD transgenic mouse models in two recent publications
+The first study performed global quantitative proteomic analysis in hAPP and hAPP-PS1 mouse models at young (3 month [M]) and old ages (12 M)
+We obtained four sets of DEPs (hAPP_3M, hAPP_12M, hAPP-PS1_3M, and hAPP-PS1_12M) after merging the DEPs from different brain regions.
+The second study performed quantitative proteomics to uncover molecular and functional signatures in the hippocampus of three types of transgenic mice
+Two of these mouse lines, including ADLPAPT (4M, 7M, 10M) that carry three human transgenes (APP, PSEN1, and tau) and hAPP-PS1 (4M, 7M, 10M) mouse, were used in this study.
+After mapping mouse genes to human-orthologous gene
+
+Enrichment analysis
+Differentially expressed gene/protein (DEG/DEP) sets from multiple data sources were collected for enrichment analysis using Fisher's exact test.
+This included a total of 6 bulk RNA-seq datasets and 10 proteomic datasets from 4 types of AD transgenic mouse models, including 5XFAD, Tg4510, ADLPAPT, and hAPP (see Supplementary Methods).
+
+AD risk gene prediction
+We utilized a Bayesian model selection method, adapted from our recent work
+Specifically, we collected at most 20 genes in the 2-Mb region centered at a GWAS index SNP as the candidates for that particular locus.
+Assigning L as the number of GWAS loci, and we then denoted a vector of genes with length L, each being from one of the L GWAS loci, as (X 1 , …, X L ), and termed it as candidate risk gene set (CRGS).
+Assigning N to represent the biological network, we then calculated P (X 1 ,…, X L |N) with the goal to select a CRGS with maximum posterior probability.
+Computationally, it is not feasible to enumerate all possible gene combinations, and we therefore adopted a Gibbs sampling algorithm to transition the problem into a single-dimensional sampling procedure.
+For example, when sampling the risk gene from candidates at the Lth locus, we assumed that the risk genes at all other L-1 loci had been selected, and the sampling probability for a gene at the Lth locus was computed as conditional on the L-1 risk genes, based on its closeness to other L-1 risk genes in the network.
+For each candidate gene X L at the Lth locus, we assigned M 1 to represent the event that X L is the risk gene at locus L, M 0 represent the event that X L is not the risk gene at locus L, and X -L to represent all the selected risk genes in the other L-1 loci.
+The Bayesian model selection can be depicted as where P(X -L |M 1 , N ) P(X -L |M 0 , N ) is a Bayesian Factor (BF) measuring the closeness between X -L and X L in network N and P(M 1 )
+is prior odds.
+The prior odds reflect the prior knowledge whether X L is a risk gene or not and we assumed P(M 1 ) = P(M 0 ) in this study.
+In regard to P(X -L |M 1 , N ) P(X -L |M 0 , N ) , we adopted the random walk with restart (RWR) algorithm to calculate the BF.
+Starting from any node n i in a predefined network N, the walker faces two options at each step: either moving to a direct neighbor with a probability 1r or jumping back to n i with a probability r.
+The fixed parameter r is called the restart probability in RWR, and r was set as 0.3 in this study
+Let W be the adjacency matrix that decides which neighbor to be moved to, and q t be the reaching probability of all nodes at step t.
+The RWR algorithm is formalized as s n i is a vector with the ith element as 1 and 0 for others, which means th starting node is n i .
+Following the equation, q t can be updated step by step until |q t + 1q t | 2 < T rwr , where T rwr is a predefined threshold.
+We set T rwr as 1 × 10 -6
+The adjacency matrix W represents the distance between any two nodes in the network, and we adopted the same network and strategy in our previous work to calculate W. We calculated P(X -L | M 1 , N) based on W. We mapped X L to the rows of W and X -L to the columns of W, and obtained a vector with the same length as X -L .
+The sum of the vector was calculated as P(X -L | M 1 , N).
+In this study, we assumed P(X -L | M 0 , N) to be the same for all different candidate genes.
+Through the Bayesian model selection equation, we obtained a value for each candidate genes at locus L. We used these values as sampling for Gibbs sampling to choose a risk gene for locus L. We then repeated the sampling across the remaining loci and iterated the (2)
+sampling process until convergence.
+Specially, in each round of Gibbs sampling, we calculated the sampling frequency for each candidate gene.
+The frequency was compared with that of the previous round, and if the sum of squares of frequency differences across all selected genes was smaller than a predefined threshold (1 × 10 -4 used in this study), then the sampling procedure was halted.
+Based on the sampling, we are able to assess the confidence of candidates being risk genes.
+
+Construction of drug-target network
+We integrated six commonly used resources to collect high-quality physical drug-target interactions for FDAapproved drugs.
+We obtained biophysical drug-target interactions using reported binding affinity data: inhibition constant/potency (K i ), dissociation constant (K d ), median effective concentration (EC 50 ), or median inhibitory concentration (IC 50 ) ≤ 10 μM.
+First, we extracted the bioactivity data from the DrugBank database (v4.3)
+To improve data quality, we pooled only those items that satisfied the following four criteria: (i) binding affinities, including K i , K d , IC 50 , or EC 50 , ≤ 10 μM; (ii) the target protein has a unique UniProt accession number; (iii) proteins marked as "reviewed" in the UniProt database; and (iv) proteins are from Homo sapiens.
+Totally, we constructed a drug-target network including 15,367 physical drugtarget interactions (edges), which connected 1608 FDAapproved drug nodes and 2251 unique human target nodes (Table
+
+Description of network proximity
+Given the set of disease proteins (A), the set of drug targets (B), then the closest distance d AB measured by the average shortest path length of all the nodes to the other module in the human protein-protein interactome can be defined as:
+where d(a, b) denotes to the shortest path length between protein a and drug target b.
+To calculate the significance of the network distance between a given drug and disease module, we constructed a reference distance distribution corresponding to the expected distance between two randomly selected groups of proteins of the same size and degree distribution as the original disease proteins and drug targets in the network.
+This procedure was run 1000 times.
+The
+
+Pharmacoepidemiologic validation
+
+Patient cohort preparation
+The pharmacoepidemiology study utilized the Mar-ketScan Medicare Supplementary database from 2012 to 2017.
+The dataset included individual-level diagnosis codes, procedure codes, and pharmacy claims for 7.23 million U.S. older adults (i.e., age ≥ 65 to be eligible for Medicare benefits) per year, which represents approximately 14% of the 46 million retirees with Medicare benefits.
+Pharmacy prescriptions of pioglitazone, febuxostat, atenolol, nadolol, sotalol, and glipizide were identified by using RxNorm and National Drug Code (NDC).
+For a subject exposed to the aforementioned drugs, a drug episode is defined as the time between drug initiation and drug discontinuation.
+Specifically, drug initiation is defined as the first day of drug supply (i.e., first prescription date).
+Drug discontinuation is defined as the last day of drug supply (i.e., last prescription date + days of supply) accompanied by no drug supply for the next 60 days.
+Gaps of less than 60-day of drug supply were allowed within a drug episode.
+For example, the pioglitazone cohort included the first pioglitazone episode for each subject, as well as the glipizide cohort.
+Further, we excluded observations that started within 180 days of insurance enrollment.
+For the final cohorts, demographic variables including age, gender and geographical location were collected.
+Additionally, diagnoses of hypertension (HTN), type 2 diabetics (T2D), and coronary artery disease (CAD), defined by The International Statistical Classification of Diseases (ICD) 9/10 codes (Supplementary Methods, Table
+These variables were specifically selected to address potential confounding biases.
+Lastly, a control cohort was selected from patients not exposed to that drug (i.e., pioglitazone).
+Specifically, non-exposures were matched to the exposures (ratio 1:4) by initiation time of the drug, enrollment history, age, and gender.
+The geographical location, diagnoses of HTN, T2D, and CAD were collected for the control cohort as well.
+
+Outcome measurement
+The outcome was time from drug initiation to diagnosis of AD, which was defined by using the ICD codes (Supplementary Methods).
+For the control cohort, the corresponding drug (i.e., pioglitazone) episode's starting date was used as the starting time.
+For pioglitazone and glipizide cohorts, observations without diagnose of AD were censored at the end of drug episodes.
+Observations without diagnosis of AD were censored at the corresponding pioglitazone episode's end date (Fig.
+
+Propensity score estimation
+We define Location = region of residence (i.e., North East, North Central, South, and West), T2D = type 2 diabetes, HT = hypertension, and CAD = coronary artery disease.
+The propensity score of taking repurposing drug vs. a comparator drug was estimated by the following logistic regression model: Stratified Cox models were used to compare the AD risks.
+For repurposing drug vs. comparator drug or control, the analyses were stratified (n strata = 10) by the estimated propensity score.
+The propensity score adjusted Cox model is For repurposing drug vs. control, the analyses were stratified based on the subgroups defined by gender, T2D diagnose, HT diagnoses, and CAD diagnoses.
+
+Statistical analysis
+Survival curves for time to AD were estimated using a Kaplan-Meier estimator.
+Additionally, propensity score stratified survival analysis was conducted to investigate the risk of AD between pioglitazone users and pioglitazone non-users, febuxostat users and febuxostat non-users, atenolol users and atenolol non-users, nadolol users and nadolol non-users, and sotalol users and sotalol non-users.
+In addition, we conducted new comparison studies to calculate the risk of AD between pioglitazone users and glipizide users.
+For each comparison, the propensity score of taking each drug was estimated by using a logistic regression model in which covariates included age, gender, geographical location, T2D diagnosis, HTN diagnosis, and CAD diagnoses.
+Furthermore, propensity score stratified Cox-proportional hazards models were used to conduct statistical inference for the hazard ratios (HR) of developing AD between cohorts.
+
+Experimental validation Reagents
+Pioglitazone was acquired from Topscience.
+Lipopolysaccharides (LPS) (Cat# L2880) and 3-(4,5-dimethylthiazol-2-yl)-2,5-diphenyltetrazolium bromide (MTT) were obtained from Sigma-Aldrich.
+Antibodies against Phospho-GSK3B-Y216 (Cat# AP0261), GSK3B (Cat# A2081), and CDK5 (Cat# A5730) were purchased from ABclonal Technology.
+CDK5-Phospho-Tyr15 (Cat# YP0380) was obtained from Immunoway (Plano, Texas, USA).
+All other reagents were purchased from Sigma-Aldrich unless otherwise specified.
+
+Cell viability
+Human microglia HMC3 cells were purchased from American Type Culture Collection (ATCC, Manassas, VA).
+Cell viability was detected by MTT method.
+In total, 5000 cells/well were plated in 96-well plates for 12 h, and then treated with pioglitazone for 48 h.
+After treatment, MTT solution was added to the cells to a final concentration of 1 mg/mL, and the mixture was allowed to incubate at 37 °C for 4 h.
+The supernatant was removed, and precipitates were dissolved in DMSO.
+Absorbance was measured at 570 nm using a Synergy H1 microplate reader (BioTek Instruments, Winooski, VT, USA).
+
+Western blot analysis
+HMC3 cells were pre-treated with pioglitazone (3 μM or 10 μM) and DMSO (control vehicle), and followed with 1 μg/mL LPS for 30 min.
+Cells were harvested, washed with cold PBS, and then lysed with RIPA Lysis Buffer with 1% Protease Inhibitor (Cat# P8340, Sigma-Aldrich).
+Total protein concentrations were measured using a standard BCA protein assay kit (Bio-Rad, CA, USA), according to the manufacturer's manual.
+Samples were electrophoresed by sodium dodecyl sulfate-polyacrylamide gel electrophoresis (SDS-PAGE), then blotted onto a polyvinylidene difluoride (PVDF; EMD Millipore, Darmstadt, Germany) membrane.
+After transferring, membranes were probed with specific primary antibodies (1:1000) at 4 °C overnight.
+Specific protein bands were detected using a chemiluminescence reagent after hybridization with a horseradish peroxidase (HRP)-conjugated secondary antibody (1:3000).
+
+Results
+
+Pipeline of the network-based artificial intelligence methodology
+We utilized a Bayesian model selection method to predict ARGs
+By applying this Bayesian model to the 106 AD GWAS loci after being filtered the redundant genetic signals from original 366 SNPs ("Material and methods" and Table
+Meanwhile, we also predicted a set of local background genes (LBGs) as a negative control for the following analyses
+We validated our 103 ARGs using multi-omics data, including functional genomic characteristics and transcriptomics, as well as proteomic profiles generated from diverse AD transgenic mice models and AD patient brain samples.
+
+Multi-omics validation of network-predicted risk genes in AD
+Recent studies showed that disease-associated proteins tend to cluster in the same neighborhood of the human protein-protein interactome, forming a disease module, a connected subgraph that contains molecular determinants of a disease
+Disease modules are commonly used to represent the molecular determinants of disease pathobiology/physiology in a variety of human diseases, including AD
+We found that 103 ARGs formed significantly connected subgraphs (termed disease module) rather than being scattered randomly in the human protein-protein interactome (Supplementary Methods), consistent with previous disease module analyses that we demonstrated in other multiple complex diseases
+Specifically, 68.0% of ARGs (70/103, P = 0.015, permutation test) form the largest connected subnetwork (disease module), in comparison to the same number of randomly selected genes with similar connectivity (degree) as the original seed genes in the human interactome (Fig.
+This disease module (Fig.
+Network analysis revealed 14 genes with connectivity higher than 5, the top five of which were ESR1, PSMC5, MAPK1, PAK1, and NFKB1.
+These same five genes have previously been implicated in AD
+For example, ESR1 interacts with tau protein in vivo, and prevents glutamate excitotoxic injury by Aβ via estrogen signaling
+Gene expression analysis shows that PSMC5 was significantly overexpressed in patients carrying apolipoprotein E-ε4 (APOE4) mutations in comparison to APOE wild-type group
+In summary, 103 predicted ARGs comprise a strong disease module in the human interactome.
+Because a majority of GWAS SNPs lie in noncoding region and exert their function by gene regulation
+We collected DRE-promoter connection data generated by two technologies: CAGE from FANTOM5 project and capture Hi-C (see "Material and methods")
+Through this, we found that the ARGs are indeed connected to more DREs in both capture Hi-C data (adj-P = 7.76 × 10 -3 , Fig.
+We next investigated differential expression of ARGs under different pathobiology contexts of AD.
+We measured fold changes of gene expression levels of ARGs across 4 sc/snRNA-seq datasets (Table
+We found that ARGs were more likely to be differentially expressed in all sc/snRNA datasets (Fig.
+ARGs were more likely to be differentially expressed in (i) 5XFAD mouse brain microglial cells (Fig.
+We further performed differentially expressed gene enrichment analysis for network-predicted ARGs in AD using bulk tissue expression data (Supplementary Methods).
+We collected bulk RNA-seq data from whole brain tissue or brain microglial cells from two common AD transgenic mouse models (5XFAD and Tg4510) and observed that ARGs were significantly differentially expressed in 5XFAD brain (P = 0.003), 5XFAD microglial cells (P = 0.002), and brain microglia of Tg4510 (Table
+This suggests that our identified ARGs are potentially involved in diverse pathobiological pathways of AD.
+We further inspected differentially expressed proteins encoded by 103 network-predicted ARGs across 10 published proteomics datasets (see Supplementary Methods) in AD.
+Herein, we evaluated 3 types of AD transgenic mouse models: (a) hAPP model containing APP transgene, (b) 5XFAD model harboring human transgenes for both APP and PSEN1 mutations, and (c) ADLPAPT model carrying three human transgenes (APP, PSEN1, and MAPT).
+We found that products of ARGs were significantly differentially expressed in all 3 AD transgenic mouse models (P < 0.05, Fisher test, Table
+Collectively, we have thus shown that network-predicted ARGs are significantly involved in disease-related functional genomic, transcriptomic, and proteomic profiles, supporting their functional role as likely causal genes for AD.
+
+Incorporation of AD multi-omics data to prioritize ARGs
+We next turned to prioritize high-confidence ARGs by integrating multi-omics profiles.
+In total, we incorporated 8 criteria that can be categorized into 5 types of biological evidence: (1) brain-expression specificity (z-score) derived from GTEx database, (2) availability of supportive experimental evidence from the literatures and manually curated data from Open Targets database
+Figure
+Among 103 ARGs, 89 genes (86.4% [89/103]) satisfy at least one criterion.
+To validate the remaining 14 ARGs without any omics evidence, we further collected significantly expressed proteins or genes from the most recent human AD brain proteomic or transcriptomic studies
+We found that 7 were significantly expressed in five recent human AD brain proteomics or sc/snRNA-seq datasets (Table
+In addition, among 103 ARGs, 13 ARGs have at least 5 types of AD-related evidence, including 8 well-known AD genes: APOE, PTK2B, NOS1, MEF2C, SORL1, EPHA5, ADAM10, and CD33.
+For the rest of the ARGs, all but BRSK1 had corresponding published literature-derived evidence.
+For example, PAK1 is a predicted risk gene with 6 criteria of biological evidence: high brain expression specificity (z-score = 1.01), supportive experimental evidence from the literature, druggable target data, and differential expression in human brain of AD patients, microglial cells of 5XFAD mouse model, and brain hippocampus of a tau mouse model (Fig.
+P21-activated kinase 1, encoded by the PAK1 gene, has been implicated in AD
+Among 103 ARGs, we selected 37 likely causal genes (Table
+To advance disease understanding of networkpredicted high-confidence risk genes, we performed biological pathway enrichment analysis using ClueGO plugin in Cytoscape (Table
+We found 4 statistically significant biological pathways in AD and further discussed as below: (a) regulation of neurotransmitter transport, (b) Aβ-related biologic process, (c) long-term synaptic potentiation, and (d) oxidative stress (Table
+
+Neurotransmitter transport
+Specifically, MEF2C and RIMS1, encoding myocytespecific enhancer factor 2C and regulating synaptic membrane exocytosis protein 1, play key roles in neurotransmitter secretion and synaptic plasticity.
+MEF2C (rs254776) has been reported in several AD GWAS studies
+RIMS1 is a newly predicted ARG, and a recent proteome study from human hippocampus revealed its overexpression in AD
+RIMS1 is significantly overexpressed in 5XFAD mouse microglia (adj-P = 0.036, one side Wilcoxon test) compared to controls (Fig.
+
+Beta-amyloid-related biologic process
+Five genes (APOE, ADAM10, CHRNA7, SORL1, and LRP2) are associated with beta-amyloid biologic process.
+Among them, APOE, ADAM10, and SORL1 are wellknown AD risk genes, validated by large-scale genetic studies and preclinical studies
+For example, APP cleavage by ADAM10 will produce an APP-derived fragment that is neuroprotective, sAPPα
+CHRNA7 (neuronal acetylcholine receptor subunit alpha-7) and LRP2 (low-density lipoprotein receptor-related protein 2) are two newly identified risk genes.
+There is a significantly lower expression level of CHRNA7 in the Tg4510 mouse (adj-P = 3.64 × 10 -3 ) compared to controls (Fig.
+CHRNA7 binds to Aβ with a high affinity
+Finally, a previous study showed that the rs3755166 polymorphism within LRP2 is associated with susceptibility to AD in the Chinese population
+
+Long-term synaptic potentiation
+Mitogen-activated protein kinase (MAPK1) and PTK2B are two identified risk genes related to long-term synaptic potentiation.
+Mitogen-activated protein kinase 1, encoded by MAPK1 gene, is highly expressed in brain Fig.
+Circle plot shows all 103 predicted AD risk genes validated by multiple-scale biological evidence.
+In total, 8 types of biological evidence were evaluated: (1) Brain-expression specificity derived from GTEx database (z-score > 0 as a high brain-specific expressed gene); (2) literature evidence validation for the gene associated with AD;
+(3) drug target information; (4) literature-derived experimental data from Open targets database; (5) high-quality experimentally validated AD-associated genes; (5-8) transcriptomics-based evidence (Table
+Gray bar denotes the number of biological evidence.
+A total of 13 selected risk genes involved in four AD key pathways are highlighted by red: including regulation of neurotransmitter transport, Aβ metabolic process, long-term synaptic potentiation, and oxidative stress tissue (z-score = 1.42).
+The MAPK1 cascade can be activated by Aβ via alpha7 nicotinic acetylcholine receptors
+PTK2B, a well-known AD gene with high expression in brain (z-score = 0.90), was identified as an early marker and in vivo modulator of tau pathology
+There is significantly lower expression of PTK2B in AD patient brain transcriptome (adj-P = 2.05 × 10 -5 ) compared to controls (Fig.
+
+Oxidative stress
+Oxidative stress is a prominent hypothesis in the pathogenesis of AD
+Here we found four network-predicted ARGs (FOXO3, NOS1, NFKB1, and ESR1) that were associated with regulation of oxidative stress.
+FOXO3 encoding Forkhead box protein O3 transcription factor is a direct substrate of CDK5.
+FOXO3 activates several genes (e.g.
+BCL2L11 and FASLG) to promote neuronal death and aberrant Aβ processing
+Significantly lower expression of FOXO3 was found in 5XFAD mouse microglia (adj-P = 6.90 × 10 -3 ) compared to controls (Fig.
+NFKB1, encoding transcription factor nuclear factor kappa B (NF-κB), is implicated in oxidative stress, synaptic plasticity, and learning and memory
+Taken together, these findings suggest that our network-predicted ARGs are involved in diverse pathobiological pathways of AD.
+However, experimental validations are warranted for several newly predicted ARGs.
+
+Network-predicted ARGs are more likely to be drug targets
+To date, most disease genes generated from GWAS findings are undruggable
+For example, a recent study revealed that none of approved and investigational AD drugs target products (proteins) of GWAS-derived genes in AD
+We examined whether network-predicted ARGs were more druggable compared to randomly selected proteins from human protein-coding gene background.
+Based on drug-target networks from 6 commonly used resources (see "Material and methods"), we obtained 2866 potential druggable proteins for FDAapproved or clinically investigational drugs.
+Surprisingly, we found that 41 out of 103 predicted ARGs (39.8 %) are known druggable proteins, which is four-fold higher than druggable proteins (P = 9.25 × 10 -11 , Fisher test) in the genome-wide human protein-coding genome background.
+High druggability of network-predicted ARGs offers more candidate targets for therapeutic discovery (such as drug repurposing) in AD.
+For example, ADRA2A, one of the predicted ARGs, encodes adrenoceptor alpha 2A receptor.
+ADRA2A is a potential target of clozapine
+Long-term clozapine treatment reduces Aβ deposition and improves cognitive impairment in an AD transgenic mice model
+NR1I3, encoding the nuclear receptor constitutive androstane receptor (CAR), is a potential drug target activated by the lipid-lowering drug simvastatin
+Simvastatin was reported to significantly reduce levels of Aβ in vitro and in vivo
+In summary, networkpredicted ARGs showed higher druggability compared to traditional GWAS-based analysis approaches.
+We next examined opportunities for drug repurposing by integrating findings from ARGs with the human proteinprotein interactome network.
+
+ARGs offer candidate targets for Alzheimer's drug repurposing
+We have identified that network-predicted ARGs are related to the known pathobiology of AD and offer potential druggable targets, prompting us to examine opportunities for AD therapeutic discovery.
+We hypothesized that for a drug with multiple targets to be beneficial for treating a disease, its target proteins should be within or in the immediate vicinity of the corresponding disease module (Fig.
+To examine the potential application of ARGs on AD drug repurposing, we applied a network proximity approach
+We used the cutoff of z-score (z < -1.5) to select networkpredicted repurposable drugs in AD.
+After exclusion of nutraceutical drugs, metal drugs, and radioactive diagnostic agents, 130 drug candidates were obtained.
+We then systematically retrieved the published anti-AD clinical, in vitro/in vivo reported data for the 130 predicted drugs.
+In total, 25 had corresponding preclinical or clinical evidence for potential application to AD (Table
+Figure
+These drugs are classified into 6 categories according to Anatomical Therapeutic Chemical classification (ATC) codes: musculoskeletal systems (n = 6), genitourinary system and hormones (n = 5), cardiovascular (n = 3), alimentary tract and metabolism (n = 3), respiratory system (n = 2), and others (n = 6).
+Among them, we found 4 predicted drugs having known AD clinical evidence
+Febuxostat, a xanthine oxidase (XO) inhibitor approved for hyperuricemia, exerts a significant network proximity (z = -1.60)
+with the ARGs.
+Pioglitazone, an FDA-approved drug for T2D, has a significant network proximity (z = -1.64)
+with the ARGs. Figure
+
+Network-predicted pioglitazone usage reduces risk of AD in patient data
+To test both the febuxostat and pioglitazone users' relationships with AD outcomes using population-based validation, we conducted 2 rigorous retrospective casecontrol studies to compare AD risk by analyzing 7.23 million U.S. commercially insured individuals ("Material and methods").
+These included the following: (i) pioglitazone (n = 101,650, z = -1.64
+[network proximity score between ARGs and drug targets in the human interactome network]) vs. a matched control population (control, n = 402,488), and (ii) febuxostat (n = 24,218, z = -1.60) vs. control (n =
+In order to identify more drug candidates with potential of reducing risk of AD, we conducted another 3 rigorous retrospective case-control studies for 3 antihypertensive agents with moderate z-score (z > -1.0).
+These included the following: (iii) atenolol (n = 366,277, z = -1.16) vs. control (n = 1,449,815); (iv) nadolol (n = 19,253, z = -1.26) vs. control (n = 76,136); and (v) sotalol (n = 43,819, z = -1.512) vs. a control (n = 172,375).
+Table
+For each comparison, we estimated the unstratified Kaplan-Meier curves, conducted by both propensity score stratified (n strata = 10) log-rank test and Cox model.
+After 6 years of follow-up, pioglitazone (P = 0.005, hazard ratio (HR) = 0.916, 95% confidence interval [CI] 0.861-0.974),
+febuxostat (HR = 0.815, 95% CI 0.710-0.936,
+P = 0.004), and atenolol (HR = 0.949, 95% CI 0.923-0.976,
+P = 2.8 × 10 -4 ) are associated with a reduced risk of AD compared with matched control populations (Figs.
+Several clinical trials have been conducted with pioglitazone to treat AD.
+A phase II study (NCT00982202) showed no statistically significant difference between controls and patients with mild to moderate AD
+However, another study showed that pioglitazone was associated with cognitive and functional improvement, as well stabilization of AD in 42 diabetic patients
+Many of these studies were conducted in populations without biological confirmation of AD by biomarkers, and in some cases (e.g., the TOMMOW study; NCT01931566), the dose of pioglitazone was substantially lower than that used in clinical practice for the treatment of diabetes.
+The available clinical trial data do not exclude a beneficial effect of pioglitazone on AD.
+Except for the TOMMOW study that was conducted in cognitively normal at-risk individuals, other trials examined symptomatic patients that addressed a question different from the risk-reduction interrogation we prosecuted.
+For these reasons, we chose pioglitazone to conduct new comparison analysis to reduce unobserved bias.
+In pharmacoepidemiologic studies, a comparator drug sharing similar indications with the investigational drug is usually selected as a "control drug"
+This approach is able to reduce unobserved bias, as the comparator drug and the investigational drug are likely to target the same population.
+Since both of pioglitazone and glipizide are treated for T2D, we therefore selected glipizide as a comparator drug.
+We next conducted new comparison analyses between pioglitazone and glipizide (an anti-T2D drug, n = 191,656) to evaluate the predicted association based on individual-level longitudinal patient data and a novel user active comparator design ("Material and methods").
+New comparison analyses confirm that pioglitazone is associated with a reduced risk of AD in comparison to glipizide (HR = 0.921, 95% CI 0.862-0.984,
+P = 0.0159, Fig.
+Thus, two independent comparison analyses support our network-based prediction for pioglitazone.
+
+In vitro observation of pioglitazone's mechanism-of-action in AD
+Figures
+To further investigate its mechanism-of-action in AD, we performed a network analysis through integration of drug targets and ARGs into the brain-specific PPI network (see "Material and methods").
+Network analysis shows that pioglitazone potentially targets two tauopathy-related proteins (GSK3β and CDK5) in AD (Fig.
+RNA sequencing data from the GTEx database (GTEx Consortium, 2015) suggests that GSK3β and CDK5 are highly expressed in brain tissue.
+Accumulating studies suggested that inhibition of GSK3β and CDK5 activity is a potential therapeutic strategy for AD
+We next examined pioglitazone's mechanism-ofaction using human microglia HMC3 cells.
+First, to assess the potential cell cytotoxicity, HMC3 cells were treated with pioglitazone at various concentrations (0.03 μM to 100 μM) for 48 h, and cell viability was determined by MTT method.
+As presented in Fig.
+Thus, these optimized concentrations of pioglitazone (≤ 10 μM) were used in subsequent experiments.
+As shown in Fig.
+Pre-treating with pioglitazone significantly reduced phosphorylated GSK3β and CDK5 in a dose-dependent manner (Fig.
+Altogether, these data suggest that pioglitazone may offer potential benefits for patients with AD by reducing activation of GSK3β and CDK5.
+However, further mechanistic observations using patient-derived
+Then, we estimated the unstratified Kaplan-Meier curves, conducted propensity score stratified (n strata = 10) log-rank test and Cox model.
+Using propensity score stratified survival analyses, non-exposures were matched to the exposures (ratio 4:1) by adjusting the initiation time of drug, enrollment history, age and gender, and disease comorbidities (hypertension, type 2 diabetes and coronary artery disease) microglia cells or disease-relevant cell lines are warranted.
+
+Discussion
+AD risk involves a complex polygenic and pleiotropic genetic architecture
+The AD genetics altered the molecular interactions of cellular pathways, which are represented through the organized structure of molecular networks (i.e., gene regulatory networks) or gene coexpression modules
+Traditional reductionist paradigms overlook the inherent complexity of human disease and often led to treatments that are inadequate or have adverse effects
+Understanding AD from the point-of-view of how cellular systems and molecular interactome perturbations underlie the disease is the essence of network medicine
+Based on this hypothesis, we have proposed an artificial intelligence framework for AD drug repurposing, which integrates genetic findings, multi-omics data, drug-target networks, and the human protein-protein interactome, along with largescale population-based validation and in vitro mechanistic observations in human microglia cells (see "Material and methods").
+In total, we identified 103 ARGs by utilizing our recently developed Bayesian model selection method
+Functional genomics enrichment analysis shows that ARGs harbor more gene regulatory elements in the human genome.
+Both transcriptomics and proteomics data analyses imply that ARGs are more likely to be differentially expressed in human AD brain and multiple AD transgenic mouse models.
+The marginal difference of fold change (Fig.
+These comprehensive observations suggest that ARGs potentially capture pathobiological pathways of AD (Fig.
+Importantly, drug-target network analysis shows a 4-fold higher druggability compared to the known drug targets in the human genome.
+A previous study showed that few products (proteins) of GWAS-derived closest genes could be applied for therapeutic discovery
+To compare the performance between the nearest genes to the risk loci using traditional approach and ARGs derived from our Bayesian model, we assembled 108 nearest genes (Table
+Unlike to 103 ARGs (Fig.
+In addition, among 25 candidate drugs (with known AD evidence) identified by ARGs, only 2 drugs (hydralazine and deferoxamine) exerted significant network proximity score with AD (Table
+None of three positive drugs (pioglitazone [z = -1.64],
+febuxostat [z = -1.6],
+and atenolol [z = -1.16]) in Fig.
+Altogether, these observations implied poor performance of GWAS-derived closest genes as candidate targets for therapeutic discovery, consistent with previous studies
+Several factors may account for this.
+First, the reported significant loci occupy only a small proportion of heritability and provide limited information about underlying AD biology
+Second, many genome-wide significant loci lie in noncoding regions, and genes closest to index SNPs may not represent causal genes of AD
+Thus, systematic identification of likely causal genes from GWAS findings
+Network-based drug repurposing from ARG findings prioritize 4 repurposable drug candidates for AD, including pioglitazone (NCT02913664), carvedilol (NCT01354444), febuxostat, and fluticasone.
+Carvedilol, an FDA-approved drug for hypertension that blocks the beta adrenergic receptor, significantly attenuates brain oligomeric β-amyloid level and cognitive deterioration in two independent AD mice models
+Fluticasone is an approved glucocorticoid receptor agonist for treatment of asthma, and recent studies showed that long-term use of fluticasone reduces incidence of developing AD
+A propensity-matched analysis has suggested that a daily dose of 40 mg febuxostat is associated with reduced likelihood of dementia in older adults
+Nevertheless, whether febuxostat reduces the risk of AD dementia remains unknown.
+Combining network-based prediction and patient data observation, we found that febuxostat is significantly associated with a decreased risk of AD Fig.
+a Network analysis highlighting the inferred mechanism-of-action for pioglitazone in AD.
+The potential molecular mechanisms of pioglitazone were inferred through integration of known drug targets and predicted AD risk or AD seed genes into brain-specific co-expressed protein-protein interactome network (see "Material and methods").
+The green shadow emphasizes the two key proteins (GSK3B and CDK5) related to drug's mechanism-of-action.
+Node size indicates the protein-coding gene expression level in brain compared with other 31 tissues from GTEx database (GTEx V8 release, 2020).
+Larger size highlighting the high expression level in brain compared with other tissues.
+We excluded the literature-derived protein-protein interactions.
+b Effects of pioglitazone on the cell viability of HMC3 cells.
+HMC3 cells were treated with indicated concentrations of pioglitazone for 48 h and cell viability was determined using MTT.
+Data are represented as mean ± SEM (n = 3) and each experiment was performed at least three times in duplicate.
+c Effects of pioglitazone on LPS-induced activation of GSK3β (d) and CDK5 (e) in human microglia HMC3 cells.
+HMC3 cells were pre-treated with pioglitazone and followed LPS treatment (1 μg/mL, 30 min).
+The total cell lysates were collected and subjected to Western blot analysis.
+Quantification data represent mean ± sd. of two independent experiments (Figs.
+In addition, epidemiological studies have shown that hypertension is a risk factor for AD-related dementia; yet, there is some dispute as to whether antihypertensive drugs reduce the risk of AD
+Among three adrenergic beta blocker-based antihypertensive drugs (atenolol, nadolol, and sotalol), atenolol is associated with reduced risk of AD, while nadolol and sotalol are not (Figs.
+Since there are lack of strong preclinical or clinical evidence to support the relationship between atenolol and AD, we excluded atenolol in our follow-up studies.
+However, future studies to confirm potential beneficial effects of antihypertensive drugs in reducing AD risk are needed.
+Pioglitazone, a U.S. FDA-approved anti-T2D drug, was reported to restore energy metabolism and reduce Aβ levels in the brain of APP/PS1 mice
+A previous clinical study has shown that pioglitazone improves cognition and regional cerebral blood flow in patients with mild AD accompanied with T2D
+In this study, by combining network-based prediction and population-based validation, we found that pioglitazone potentially reduced risk of AD in large-scale patient database (Figs.
+Under active drug user design framework
+As pioglitazone was approved for antidiabetes, and we therefore chose glipizide as a comparator drug.
+New active drug user design analysis further support that pioglitazone is associated with a reduced risk of AD in comparison to glipizide.
+In addition, in vitro mechanistic observations (Fig.
+However, a phase II study (NCT00982202) shows no statistically significant differences between controls and patients with mild to moderate AD for pioglitazone
+One possible explanation is that pioglitazone reduces risk of AD only in patients with pre-existing diabetes or that pioglitazone may have its effects before symptoms occur but not in more advanced patients.
+Thus, our findings suggest that larger clinical trials and additional mechanistic studies may be necessary to clarify pioglitazone's action in AD prevention in both a broad population and a welldefined subpopulation.
+Our network methodology presented here has several strengths.
+First, it contributes to identification of highconfidence likely causal genes, followed by multi-omics data validation, network-based drug repurposing investigation, large-scale patient data analysis, and in vitro mechanistic observation in human microglial cells.
+This work illustrates translation of GWAS findings to pathobiology and therapeutic development in AD.
+Second, our proposed network proximity approach outperform other network approaches, such as weighted gene co-expression network analysis (WGCNA) in which it infers gene co-expression networks from gene/protein expression profiles using network community detection theory
+Multiple studies have demonstrated high false positive rate of the gene/protein co-expression networks compared to the physical protein-protein interaction network
+Third, the large patientlevel longitudinal data ensures that our analyses integrate real-world patient evidence to test the drug's efficiency in AD risk reduction.
+
+Limitations
+Potential weaknesses of this work should be acknowledged.
+First, as genetic variants from GWAS that influence human disease traits are far from complete, a relative loose threshold (1 × 10 -5 ) rather than genomewide significant threshold (5 × 10 -8 ) is adopted, which may affect the accuracy of identification of ARGs.
+Second, we only integrated SNPs associated with AD from large-scale GWAS studies conducted between 2007 and 2019.
+Since several recent GWAS studies have been conducted
+Third, incompleteness of human protein-protein interactome network data and potential literature bias may influence performance of our methodology as discussed in a recent study
+Since the likely causal genes were predicted based on SNPs identified from GWAS that are primarily centered on the variants in the noncoding regions, some AD genes or proteins harboring protein-coding variants may not be covered in this study.
+Integration of large-scale wholegenome/exome sequencing from the Alzheimer's Disease Sequencing Project (ADSP;
+niaga ds.
+org/ adsp/ conte nt/ home) may offer novel risk genes for AD.
+Fourth, detailed clinical information is missing for health insurance claims data regardless of high-dimensional covariate adjustment.
+This limits our ability to test the effects of pioglitazone on subpopulation of AD patients such as those with mild AD.
+Longitudinal analyses were conducted in populations without biological confirmation of AD by biomarkers, such as lack of cerebrospinal fluid information (i.e., levels of Aβ and Tau), which may affect the results of pharmacoepidemiologic analyses.
+In addition, although our dataset contains a geographically diverse population of commercially insured Americans seniors, the results are not representative of individuals who are not commercially insured or uninsured.
+The phenotyping algorithms may not capture all AD cases.
+Thus, this approach may need to be re-applied on a regular iterative basis as datasets are expanded, in order to offer maximum utility.
+Furthermore, clinical data heterogeneity from real-world patients and other confounding factors may lead to potential false positive rate in population-based drug outcome analysis.
+Finally, all novel ARGs need to be validated experimentally (including both in vitro and in vivo) and clinical benefits of drugs must be tested in AD randomized clinical trials in the future.
+
+Conclusion
+In summary, this study presents a network-based artificial intelligence methodology to translate GWAS findings to emerging therapeutic discovery by incorporating multi-omics, drug-target network, and the human protein-protein interactome, along with largescale population-based and in vitro mechanistic observation.
+This study shows the strong proof-of-concept application of high-confidence risk gene identification from human genetic and multi-omics findings to identifying treatments that can be repurposed for AD and has identified pioglitazone as a potential new treatment for AD using artificial intelligence approaches.
+In this way, we can minimize the translational gap between genetic findings and clinical outcomes, which is a significant problem in current AD therapeutic development.
+From a translational perspective, if broadly applied, the artificial intelligence-based tools developed here could help develop novel efficacious treatment strategies for other human complex diseases.
+
+
+
+Fig. 1 A
+Fig. 1 A diagram illustrating a genotype-informed, network methodology and population-based validation for Alzheimer's therapeutic discovery.
+a A framework of network-based Bayesian algorithm (see "Material and methods") for identifying Alzheimer' disease (AD) risk genes.
+Specifically, this algorithm integrates multi-omics data and gene networks to infer risk genes from AD GWAS loci.
+b Network-based drug repurposing by incorporating ARGs and the human interactome network.
+c Population-based validation to test the drug user's relationship with AD outcomes.Comparison analyses were conducted to evaluate the predicted drug-AD association based on individual-level longitudinal patient data and the state-of-the-art pharmacoepidemiologic methods (see "Material and methods").
+d Network-based mechanistic observation.
+Experimental validation of network-predicted drug's proposed mechanism-of-action in human microglial cells.
+Specifically, target prioritization and drug repurposing were conducted using network models in addition to the Bayesian algorithm.
+In step 1, we predicted ARGs (AD risk genes) as potential drug targets from GWAS findings using the Bayesian algorithm.
+In step 2, we prioritized candidate drugs via quantifying network proximity score between drug targets and ARGs under the human protein-protein interactome network models
+
+
+a∈A min b∈B d(a, b) + b∈B min a∈A d(a, b) mean d and standard deviation (σ d ) of the reference dis- tribution were used to caluculate a z-score (z d ) by converting an observed (non-Euclidean) distance d to a normalized distance.
+
+
+
+
+
+( 7 )
+log[Hazard] ∼ Strata[log(Baseline Hazard)|Propensity Score]+1[Repurposing drug yes].
+
+
+
+(Fig. 2 (
+Fig. 2 (See legend on previous page.)
+
+
+
+Fig. 4
+Fig. 4 Risk gene-informed drug repurposing for Alzheimer's disease (AD).
+a A Sankey diagram illustrates a global view of 25 repurposable drug candidates with published evidence for AD.
+These drugs are linked to their physical binding targets or neighborhood proteins derived from network-predicted AD risk genes.
+b Network proximity analysis measures the network distance between disease module and drug targets in the human interactome.
+A subnetwork indicates the molecular mechanism of pioglitazone implicated in AD, which targets six physical binding proteins of which neighborhoods are 12 predicted AD risk genes.
+c Drugs are grouped by their first-level Anatomical Therapeutic Chemical Classification (ATC) codes.
+The drugs with known anti-AD clinical status, in vitro and in vivo mouse model published data are given.
+Pioglitazone and febuxostat with anti-AD clinical evidence are highlighted
+
+
+
+Fig. 5
+Fig. 5 Longitudinal analyses reveal that pioglitazone reduces incidence of Alzheimer's disease in patient data.
+Six comparison analyses were conducted including (i) pioglitazone (n = 101,650) vs. matched control population (n = 402,184); (ii) pioglitazone vs. glipizide (a diabetes drug, n = 191,656); (iii) febuxostat (n = 24,218) vs. control (n = 95,192); (iv) atenolol (n = 366,277) vs. control (n = 1,449,815); (v) nadolol (n = 19,253) vs. control (n = 76,136); and (vi) sotalol (n = 43,819) vs. control (n = 172,375).
+First, for each comparison, we estimated the propensity score by using the variables described in Table2.
+Then, we estimated the unstratified Kaplan-Meier curves, conducted propensity score stratified (n strata = 10) log-rank test and Cox model.
+Using propensity score stratified survival analyses, non-exposures were matched to the exposures (ratio 4:1) by adjusting the initiation time of drug, enrollment history, age and gender, and disease comorbidities (hypertension, type 2 diabetes and coronary artery disease)
+
+
+
+Fig. 6
+Fig. 6 Hazard ratios and 95% confidence interval (CI) for six cohort studies.
+Six cohorts include the following: (i) pioglitazone (n = 101,650) vs. matched control population (n = 402,184), (ii) vs. glipizide (a diabetes drug, n = 191,656); (iii) febuxostat (n = 24,218) vs. control (n = 95,192), (iv) atenolol (n = 366,277) vs. control (n = 1,449,815); (v) nadolol (n = 19,253) vs. control (n = 76,136); and (vi) sotalol (n = 43,819) vs. control (n = 172,375).
+For each comparison, we estimated the propensity score for confounding factor (Table2) adjustment as described in "Material and methods"
+
+
+
+Table 1
+Network-predicted risk genes involved in four pathobiological pathways of Alzheimer's disease (AD) a Genes have experimental or functional evidence reported in AD transgenic animal models or human-derived samples (see TableS2and Supplementary Method).The detailed literature data are provided in TableS2
+
+
+
+Table 2
+Statistics of patient data used for pharmacoepidemiologic analysisWe estimated the unstratified Kaplan-Meier curves, conducted propensity score stratified (n strata = 10) log-rank test and Cox model.
+CAD coronary artery disease, T2D type 2 diabetes, HTN hypertension, SD standard

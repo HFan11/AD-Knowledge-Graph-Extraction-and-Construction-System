@@ -1,0 +1,626 @@
+Reproducible evaluation of diffusion MRI features for automatic classification of patients with Alzheimer's disease
+Diffusion MRI is the modality of choice to study alterations of white matter.
+In past years, various works have used diffusion MRI for automatic classification of Alzheimer's disease.
+However, classification performance obtained with different approaches is difficult to compare because of variations in components such as input data, participant selection, image preprocessing, feature extraction, feature rescaling (FR), feature selection (FS) and crossvalidation (CV) procedures.
+Moreover, these studies are also difficult to reproduce because these different components are not readily available.
+In a previous work (Samper-González et al. 2018), we propose an open-source framework for the reproducible evaluation of AD classification from T1-weighted (T1w) MRI and PET data.
+In the present paper, we first extend this framework to diffusion MRI data.
+Specifically, we add: conversion of diffusion MRI ADNI data into the BIDS standard and pipelines for diffusion MRI preprocessing and feature extraction.
+We then apply the framework to compare different components.
+First, FS has a positive impact on classification results: highest balanced accuracy (BA) improved from 0.76 to 0.82 for task CN vs AD.
+Secondly, voxel-wise features generally gives better performance than regional features.
+Fractional anisotropy (FA) and mean diffusivity (MD) provided comparable results for voxel-wise features.
+Moreover, we observe that the poor performance obtained in tasks involving MCI were potentially caused by the small data samples, rather than by the data imbalance.
+Furthermore, no extensive classification difference exists for different degree of smoothing and registration methods.
+Besides, we demonstrate that using non-nested validation of FS leads to unreliable and over-optimistic results: 5% up to 40% relative increase in BA.
+Lastly, with proper FR and FS, the performance of diffusion MRI features is comparable to that of T1w MRI.
+All the code of the framework and the experiments are publicly available: general-purpose tools have been integrated into the Clinica software package Wen 2 (www.clinica.run)
+and the paper-specific code is available at:
+
+Introduction
+Alzheimer's disease (AD), the most prevalent form of dementia, is expected to affect 1 out of 85 people in the world by the year 2050
+Neuroimaging offers the possibility to study pathological brain changes associated with AD in vivo
+The most common neuroimaging modalities used to study AD are T1-weighted (T1w) magnetic resonance imaging (MRI) and positron emission tomography (PET) with various tracers
+These techniques allow the study of different types of alterations in the gray matter (GM).
+However, while AD is often considered primarily a gray matter disease, white matter (WM) is also extensively altered.
+There has thus been an increased interest in using diffusion MRI to study alterations in WM as the disease progresses
+Over the past decades, there has been a strong interest in developing machine learning methods to assist the diagnosis and prognosis of AD based on neuroimaging data
+In particular, a large number of studies using machine learning have looked at the potential of diffusion MRI for AD classification
+Several of these studies make use of the same publicly available dataset: the Alzheimer's Disease Neuroimaging Initiative (ADNI) (adni.loni.usc.edu).
+However, classification performance is not directly comparable across these studies because of differences in participant selection, feature extraction and selection, and performance metrics.
+It is thus difficult to know which approach performs best and which components of the method have the greatest influence on classification performance.
+We recently proposed a framework for the reproducible evaluation of machine learning algorithms in AD classification and demonstrated its use on
+The framework is composed of tools for management of public datasets and in particular their conversion into Wen 4 the Brain Imaging Data Structure (BIDS) format (K.
+J.
+This framework was devoted to T1w MRI and PET data.
+In the present work, we extend this framework to diffusion MRI data and apply it to assess the influence of different components on classification performances.
+We first perform a systematic review of the previous works devoted to automatic classification of AD using diffusion MRI data.
+We then present the extension of the framework to diffusion MRI data, including conversion of ADNI diffusion MRI data into BIDS, and diffusion MR image preprocessing pipelines.
+We finally apply the framework to study the influence of various components on classification performance: feature type (voxel or regional features), imaging modality (T1w or diffusion MRI), data imbalance, smoothing strength, registration methods (single contrast or multicontrast registration), feature rescaling (FR) and feature selection (FS) strategy.
+All the code (both of the framework and of the experiments) is publicly available: the general-purpose tools have been incorporated into Clinica
+
+State of the art
+AD is associated with altered integrity of WM, in particular the loss of cellular barriers that constrain free water motion (S.
+The fact that DTI was designed to study WM microstructure has led to the hypothesis that DTI-based features can be used for AD classification
+In recent years, a large body of research has been published for classification of AD using diffusion MRI.
+Here, we provide a systematic review of works on this topic.
+We performed an online search of publications concerning classification of AD using diffusion MRI.
+We included only publications in English, only original research publications (excluding review papers) and only peer-reviewed papers (either in journals or in conference proceedings), thereby excluding abstracts and preprints.
+We first searched on PubMed with the following search criteria: i) keywords: "(((classification diffusion MRI alzheimer's disease[Title/Abstract]) OR classification DTI alzheimer's disease[Title/Abstract]) OR diagnosis DTI alzheimer's disease[Title/Abstract]) OR diagnosis diffusion MRI alzheimer's disease[Title/Abstract]", ii) publication date: before the 31st October 2018, and iii) study species: humans.
+We identified 616 studies based on these criteria.
+Among these studies, 105 review papers were excluded.
+Based on the abstract, we then selected only papers devoted to AD classification and using at least diffusion MRI.
+This resulted in 18 studies.
+Secondly, another query was performed on Scopus with the following criteria: i) keywords: "(TITLE-
+
+ABS-KEY(classification OR diagnosis) AND TITLE-ABS-KEY((diffusion AND mri) OR dti)
+AND TITLE-ABS-KEY((alzheimer's OR alzheimer) AND disease))", and ii) publication date before the search day (the 31st October 2018).
+This resulted in 425 studies.
+We then excluded 104 review papers.
+Moreover, limiting to only peer-reviewed journals or conference proceedings resulted in 298 studies.
+Based on the abstract, we selected only papers devoted to AD classification and using at least diffusion MRI, resulting in 27 studies.
+After merging the studies found by both PubMed and Scopus, we obtained 32 studies.
+To complete this search, we also did a search on Google Scholar with keywords: "classification diffusion MRI alzheimer's disease" or "classification DTI alzheimer's disease" or "diagnosis DTI alzheimer's disease" or "diagnosis diffusion MRI alzheimer's disease".
+Two additional studies were included, resulting in a total of 34 studies which are presented in the current state-of-the-art section.
+These 34 studies can be categorized according to the following criteria.
+i) Studied modality.
+While the majority used only diffusion MRI, some used multimodal data (combining diffusion MRI with T1w MRI or functional MRI for instance).
+ii) Type of features.
+We subdivided between papers using DTI metric features, such as fractional anisotropy (FA) and mean diffusivity (MD), and those using more advanced features, such as tract-based or network-based features.
+iii) Classifiers.
+The most commonly used are support vector machines (SVM) but random forests (RF), logistic regression (LR), nearest neighbours (NN) or naive Bayes (NB) were also used in some studies.
+iv) Dataset.
+The most commonly used dataset is the ADNI although it does not constitute an overwhelming majority, unlike for T1w-MRI or PET studies.
+This is probably because diffusion MRI was not present in ADNI1.
+v) Classification task.
+Some studies focused on the discrimination between AD patients and CN (cognitively normal) subjects while other tackled classification of patients with MCI (mild cognitive impairment) or prediction of progression to AD among MCI patients.
+vi) FS approach.
+A large proportion of the surveyed studies, denoted as Non-nested or Unclear in Table
+It arises when FS is performed on the entire dataset and not within the cross-validation (CV) procedure, thus introducing data leakage.
+On the contrary, a nested FS is a procedure blind to the test data and embedded into the nested CV
+A summary of these characteristics for the different studies is presented in Tables 1 (for those using DTI metric Wen 7 features) and  Wen 11
+Twenty-one studies used DTI metrics as features (see details in Table
+Among the DTI derived metrics, FA and MD were most frequently used
+Besides, radial diffusivity (RD), axial diffusivity (AD) and mode of anisotropy (MO) were also examined in some papers
+Voxel-and region-wise features were both used.
+For voxel-wise classification, all voxels from the segmented GM or WM were used.
+For region-wise classification, the mean value of DTI metric maps within regions of interest (ROI) were extracted using an anatomical atlas.
+The most commonly used atlases were the John Hopkins University (JHU) atlases
+Ten studies adopted only diffusion MRI for AD classification
+The other eleven studies looked at the potential of multimodal MRI, for instance T1w MRI and diffusion MRI, for AD diagnosis and compared the performance cross modalities.
+For the DTI metric-based studies, SVM was most frequently used
+Thirteen works demonstrated the usage of more complex features, such as tract-based or network-based features (see details in Table
+In such approaches, tractography is used to extract white matter tracts from diffusion MRI data.
+To be reliable, such a procedure requires having high angular resolution diffusion imaging data.
+Then, tract-based approaches compute indices that characterize the tract, including tract volume, average FA/MD across the tract or more advanced features
+Such indices are used as input of the classifier.
+In network-based features, the result of the tractography (also called the tractogram) is used to build a graph of anatomical connections.
+Usually, the gray matter is parcellated into a set of anatomical regions and the connectivity between two given regions is computed based on the tractogram.
+To that purpose, different measures have been used, including the number of fibers or the average FA along the connection.
+This results in a connectivity network which can be described through network-based measures.
+Such features characterize the local and global topology of the network and are fed to a classifier.
+Ten studies used network-based features derived from diffusion MRI for AD classification
+There is a high variability in terms of classification performance across studies.
+The most frequently reported performance metric is the accuracy.
+Other metrics, such as balanced accuracy, area under the curve (AUC), specificity, and sensitivity, are also used.
+This makes it difficult to quantitatively compare classification performance across different studies.
+For DTI metric features, classification performance numerically ranges from 0.71 to 1 for task CN vs AD.
+With regard to the results across types of features, no consistency existed across studies.
+For instance, Nir et al observed that, in their study, the performance of MD outperformed FA
+However, O'Dwyer et al reported higher accuracy for FA than MD in their experiments
+Conflicting results were also reported for the comparison of different modalities.
+Mesrob et al obtained higher performance with T1w MRI than with diffusion MRI
+For network-or tract-based features, the classification results numerically Wen 13 range from 0.71 to 0.95 for task CN vs AD, a range which is comparable to that obtained with DTI metrics.
+Of note, the numbers representing the general performance ranges are not for comparison purpose across studies.
+In this work, we choose to focus on DTI metrics because: i) they are more simple than connectivity or tractography features; ii) they can be easily computed and can make use of standard diffusion MRI sequences, thus are more adapted to translation to clinical practice, iii)
+to date, there is no clear evidence that connectivity/tractography features lead to higher accuracies for AD classification; iv) conflicting results exist regarding the respective performance of different DTI metrics in this context.
+
+Materials
+The data used in the preparation of this article were obtained from the Alzheimer's Disease
+Neuroimaging Initiative database (ADNI) (adni.loni.usc.edu)
+(more details are presented in supplementary eMethod 1).
+Five diagnosis groups were considered:
+• CN: subjects who were diagnosed as CN at baseline;
+• AD: subjects who were diagnosed as AD at baseline;
+• MCI: subjects who were diagnosed as MCI, EMCI or LMCI at baseline;
+• pMCI: subjects who were diagnosed as MCI, EMCI or LMCI at baseline, were followed during at least 36 months and progressed to AD between their first visit and the visit at 36 months;
+• sMCI: subjects who were diagnosed as MCI, EMCI or LMCI at baseline, were followed during at least 36 months and did not progress to AD between their first visit and the visit at 36 months.
+Naturally, all participants in the pMCI and sMCI groups are also in the MCI group.
+Note that the reverse is false, as some MCI subjects did not convert to AD but were not followed long enough to state whether they were sMCI or pMCI.
+The diffusion-weighted images (DWIs) of ADNI were downloaded in October 2016.
+They all come from ADNI GO and ADNI2 phases.
+Two different acquisition protocols are described for DWIs: Axial DTI (images with "Sequence" field starting by "AX_DTI" and "Axial_DTI" in the file of "IDA_MR_Metadata_Listing.csv") and Enhanced Axial DTI (images with "Sequence" field equal to "Enhanced_Axial_DTI" in the file of "IDA_MR_Metadata_Listing.csv").
+In total, Axial DTI were available for 1019 visits and Enhanced Axial DTI for 102 visits.
+Only Axial DTI images were available for the baseline visit
+
+Methods
+The classification framework is illustrated in
+
+Converting datasets to a standardized data structure
+Public datasets, such as ADNI, are extremely useful to the research community.
+However, using the ADNI can be difficult because the downloaded raw data does not possess a clear and uniform organization.
+We thus proposed to convert ADNI data into the BIDS format (K.
+J.
+BIDS is based on a file hierarchy rather than on a database management system.
+It can thus be easily deployed in any research laboratory.
+The ADNI to BIDS converter was originally developed in a previous study
+Here, we extended that to diffusion MRI.
+The converter allows the user to automatically convert the raw dataset downloaded from the ADNI website to BIDS.
+The user has to download all the ADNI study data (tabular data in csv format) and the imaging data of interest.
+Importantly, the downloaded data must be kept exactly as they were downloaded.
+All conversion steps are then performed by the automatic converter, requiring no user intervention.
+Details regarding conversion of clinical, sociodemographic and T1w MRI data can be found in
+For DWIs, first, we selected from the file "IDA_MR_Metadata_Listing.csv", all entries containing "DTI" in the "Sequence" field.
+Images with a sequence name containing "Enhanced" were discarded.
+Then, "IMAGEUID" field was matched to corresponding "loni_image" field of 'MAYOADIRL_MRI_IMAGEQC_12_08_15.csv' file, to find QC information for each image.
+In cases where there existed several scans for a visit, we kept the one marked as selected
+(1 in 'series_selected' field of QC csv file).
+If there was no image marked as selected, then we chose the image with the best quality, (as specified in "series_quality" field, ranging from 1 to 4, 1 being excellent and 4 being unusable), excluding the images that failed QC (series_quality = 4).
+If there were several images for the same visit and QC information was not present, we chose the scan that was acquired first.
+No images were discarded at this step.
+Once paths for each of the selected images were gathered, the images in DICOM format were converted to Wen 18
+NIfTI format using the dcm2niix3 tool, or in case of error the dcm2nii4 tool (X.
+During the conversion from DICOM to NIfTI format, there were 4 images failing the conversion using both tools because of the lack of information of image header or the wrong format of b-value or b-vec file.
+Thus, they were manually discarded.
+Finally, the converted images in NIfTI format were organised by following the BIDS standard.
+Note that all these steps are automatically performed by the converter.
+We also provide tools for subject selection according to the duration of follow up and the diagnose.
+In the present study, all the participants whose T1w MRI and diffusion MRI scans were available at baseline were included.
+Finally, we organized all the outputs of the experiments into a BIDS-inspired standardized structure.
+
+Preprocessing pipelines
+
+Preprocessing of T1w MRI
+The image processing pipeline for T1w MRI was previously described in
+In brief, the Unified Segmentation procedure
+Moreover, the DARTEL template generated its corresponding GM and WM tissue maps.
+These maps were then binarized with a probability threshold of 0.3 to obtain the tissue masks (i.e., GM, WM or GM+WM mask), which will be used in the following diffusion MRI pipeline.
+
+Preprocessing of diffusion MRI
+For each subject, all b0 images were rigidly registered to the first b0 image and then averaged as the b0 reference.
+The diffusion-related artifacts were corrected by the following steps.
+First, the raw DWIs were corrected for eddy current-induced distortions and subject movements by simultaneously modelling the effects of diffusion eddy currents and movements on the image using eddy tool (Andersson and Sotiropoulos 2016) from FMRIB Software Library (FSL) software
+Secondly, to correct for susceptibility-induced distortions, as fieldmap data were not available in ADNI1, ADNI GO or ADNI2, the T1w MRI was used instead in this context.
+The reference b0 image was firstly skull-stripped.
+To obtain the transformation flow from the native diffusion space into the T1w MRI space, the skull-stripped b0 image was registered to the T1w MRI with two sequential steps: first a rigid registration using FSL flirt tool and then a non-linear registration using SyN registration algorithm from ANTs
+SyN is an inverse-consistent registration algorithm allowing EPI induced susceptibility artifacts correction
+The resulting transformation was applied to the DWIs to correct for the susceptibility-induced distortions.
+Lastly, the DWI volumes were corrected for nonuniform intensity using the ANTs N4 bias correction algorithm
+It estimates a single multiplicative bias field from the b0 reference image.
+Moreover, the diffusion weighting directions were appropriately updated
+The implementation of these different steps is available in the dwi-preprocessingusing-t1 pipeline of Clinica.
+Wen 20
+We performed QC on the results of the preprocessing pipeline.
+Specifically, we inspected the results for the presence of head motion artifacts and eddy current artifacts.
+Registration quality was also visually checked by overlapping the source image onto the target image.
+All preprocessed data were considered of acceptable quality.
+The preprocessed DWIs were then fitted by DTI model to generate FA and MD maps using MRtrix
+In order to register individual DTI metric maps (i.e., FA and MD maps) into MNI space, two registration approaches were tested with the ANTs SyN algorithm
+The estimated nonlinear deformation with both approaches was finally applied to the MD maps to have all FA and MD maps in the same space.
+This is implemented in the dwi-dti pipeline of Clinica.
+As the registration quality is crucial for the following analysis, we performed another QC step: the registered DTI metric maps were visually checked by overlapping the source image onto the target image.
+All images were considered of acceptable quality.
+
+Feature extraction
+We extracted two types of features: voxel-wise and regional features.
+After image processing, all T1w MRI and diffusion MRI are in MNI space and we have a voxel-wise correspondence across subjects.
+Voxel-wise features simply correspond to all the voxels in GM for T1w MRI.
+In order to extract the DTI-based voxel-wise features, FA and MD maps were masked using the tissue masks (i.e., WM, GM and GM+WM tissue binarized masks) obtained from T1w MRI pipeline.
+Maps were smoothed using Gaussian kernel with 8mm full width at half maximum (FWHM).
+The resulting maps were remasked by the tissue masks.
+We also tested the influence of the kernel size from no smoothing to up to 12mm.
+Thus voxels in GM, WM or
+Wen 21
+GM+WM tissue maps were used as voxel-wise features for diffusion MRI experiments.
+Regional features correspond to the average value (gray matter density for T1w MRI; FA or MD for diffusion MRI) computed in a set of regions of interest (ROIs) obtained from different atlases.
+AAL2 atlas containing 120 ROIs
+Two JHU atlases, ICBM-DTI-81 white-matter labels atlas (referred as JHULabel with 48 ROIs) and JHU white-matter tractography atlas with a 25% threshold (referred as JHUTract25 with 20 ROIs),
+were used for diffusion MRI.
+The different features are shown in Table
+
+Classification
+Classification was performed using a linear SVM for both voxel-wise and regional features.
+As output of the classification, we reported the balanced accuracy, AUC, accuracy, sensitivity, specificity.
+Additionally, the optimal margin hyperplane (OMH) coefficient maps were reported.
+The OMH coefficient map represents the influence of each voxel or region on the classification performance.
+Thus, it characterizes the potential anatomical patterns associated to a given classifier
+
+Cross-validation
+As emphasized in the recent literature
+FR is the process of scaling different magnitudes of features to have unit norm and has been widely used in machine learning (Ben-Hur and Weston 2010;
+The features that we used in our study are, in principle, inherently normalized even Wen 23
+though not of unit norm, but it still seemed worthwhile to assess the influence of FR.
+On the other hand, FS aims to identify task-relevant features and thereby reduce the dimensionality to mitigate overfitting
+In the present work, we aim to explore the impact of FR and FS on classification performance.
+W adopted the commonly used z-score standardization method for FS and incorporated it into the nested CV procedure.
+Two different FS algorithms were applied: an ANOVA univariate test and an embedding SVM recursive feature elimination (SVM-RFE)
+Specifically, the ANOVA test can be seen as a filter without taking the classifier into account and was performed for each feature independently.
+SVM-RFE uses the coefficients from the SVM models to assess feature importance.
+Then the least important features, which have the least effect on classification, are iteratively pruned from the current set of features.
+The remaining features are kept for the next iteration until the desired number of features has been obtained.
+For both methods, we tested for varying numbers of selected features (1% of the total number of features and then from 10% to 100%, increasing by 10% at each step).
+
+Classification experiments
+Four different classification tasks were considered: CN vs AD, CN vs pMCI, sMCI vs pMCI and CN vs MCI.
+We assessed the influence of key components on classification performance.
+First of all, we studied the influence of FR for both DTI and T1w features.
+Secondly, we compared the performance obtained with different DTI metrics (FA, MD), different feature types (voxel, regional) and different atlases.
+Thirdly, we studied the impact of imbalanced data.
+Three tasks (i.e., CN vs pMCI, CN vs MCI and sMCI vs pMCI) have imbalanced data: the number of subjects of the majority group is nearly twice as many as that of the minority group.
+To assess
+Wen 24 the impact of data imbalance, a random down-sampling technique was used for each task.
+In each iteration of the outer CV, this technique randomly excluded certain subjects from the majority group to ensure the subject balance between groups (Raamana 2017).
+Fourthly, the influence of the degree of smoothing on classification performance was evaluated on the task of CN vs AD.
+Fifthly, the single contrast and multicontrast registration were compared on the task of CN vs AD.
+Sixthly, we evaluated the effect of FS bias on the task of CN vs AD.
+Lastly, we compared the classification performance between diffusion MRI and T1w MRI for task CN vs AD.
+Of note, the nested CV procedure, in each iteration, guaranteed the same subjects for data split (i.e., training and testing data) between modalities (Raamana 2017).
+
+Results
+Here, we present the classification results with BA as performance metric.
+All the results with other performance metrics are available at
+
+Influence of the feature rescaling
+Classification results without and with FR are both shown in Table
+Overall, for DTI features, FR substantially improved the classification results.
+Specifically, when FR was used and properly incorporated in the CV procedure, the highest BA changed from 0.76 to 0.82 for task CN vs AD, from 0.62 to 0.70 for CN vs pMCI , and from 0.53 to 0.60 for sMCI vs pMCI.
+Surprisingly, the erroneous classification for region-wise MD features (BA=0.5 with variance=0) were improved by the FR technique (BA>0.7).
+Due to this positive impact with DTI features, FR was performed in the subsequent experiments.
+For T1w MRI features, the influence of FR was negligible and resulted in similar results.
+
+Influence of the type of features
+Generally, for experiments with FR (Table
+While the difference was moderate for FA, it was more evident for MD.
+In general, for voxel-wise features, the performance obtained with MD outperformed FA features.
+For instance, for task CN vs AD, the highest BA was 0.82 for GM-MD features and 0.75 for WM-FA features.
+Finally, for MD, the inclusion of GM (either in isolation or when combined with WM) considerably increased the performance over the use of WM alone.
+
+Influence of the imbalanced data
+For voxel-wise classification, compared to the results using imbalanced data, balanced data showed comparable accuracies for all three tasks, as shown in Figure
+For the region-wise approach, switching from imbalanced data to balanced data, BA considerably increased from Wen 27 0.49 to 0.57 with JHUTract25 MD features for task CN vs MCI, and from 0.50 to 0.57 with JHUTract25 MD features for task sMCI vs pMCI (full details are provided in online supplementary eTable 1).
+
+Influence of the smoothing
+We studied the influence of smoothing on classification performance with the following experiments: GM+WM-FA and GM+WM-MD features for task CN vs AD, which are the cases with the highest number of features and for which the performance is higher.
+The results are shown in Figure
+The mean BA increased moderately with the increase of smoothing kernel size for both FA (BA=0.68,
+0.72, 0.73 and 0.73) and MD (BA=0.74,
+0.80, 0.81, 0.82) features (full details are provided in online supplementary eTable 2).
+
+Influence of the registration method
+We assessed the influence of registration (single contrast using FA vs multicontrast using both FA and b0) for voxel-based experiments for task CN vs AD.
+As shown in Figure
+When visually checking the registration results, we found that, using single contrast registration, the WM was relatively well-matched while this was not the case for GM and CSF.
+On the contrary, the entire brain has noticeably better registration accuracy when the FA and b0 images are used simultaneously to drive the registration.
+Wen 29
+
+Influence of the feature selection bias
+To assess the influence of FS bias, the experiments of GM+WM-FA and GM+WM-MD features for task CN vs AD were performed.
+Note that FR was not considered for both FS approaches, in order to estimate the bias purely caused by non-nested FS.
+For both FS algorithms, the non-nested approach resulted in vastly over-optimistic evaluations of performance, from 5% up to 40% increase in BA.
+Specifically, for ANOVA, the highest BA was obtained with the first 1% most informative voxels for the non-nested approach (BA=0.77
+for FA and BA=0.82 for MD), and with all available voxels for the nested approach (BA=0.71
+for FA and BA=0.76 for MD).
+For SVM-RFE, the highest BA was achieved with the first 10% most informative voxels for the non-nested approach (BA=1 for FA and BA=0.82
+for MD), and with the first 90% most informative voxels with FA (BA=0.75)
+and the first 1% most informative voxels with MD (BA=0.77)
+for the nested approach.
+Compared to the non-Wen 30
+FS case, where all voxels were considered, the nested SVM-RFE FS, not ANOVA, showed potential to improve classification performance (Figure
+
+Influence of the imaging modality
+Diffusion MRI voxel-wise features and T1w MRI features (i.e., GM-density features) were compared with consideration of both FR and FS (i.e., SVM-RFE) for task CN vs AD, due to the fact that both have positive impact on classification performance.
+Overall, the highest BA was obtained with the first 10% most discriminative voxels for GM-density features (BA=0.94)
+and for GM+WM-MD (BA=0.94).
+Inside GM voxels, GM-MD features obtained lower performance (BA=0.90)
+with the first 30% most discriminative voxels than GM-density features (BA=0.94).
+When no FS was performed, GM-density (BA=0.88)
+outperformed DTI voxel-wise features (BA=0.82
+for GM-MD features) (Figure
+
+Comparison to state-of-the-art results
+We aim to present the comparison between our results and the state-of-the-art results.
+For the current study, we presented results with two different scenarios: i) classification without FR and FS and ii) classification with both FR and FS.
+For the purpose of a fair comparison, we presented the studies from the literature with following criteria: i) only the studies without data leakage from Table
+Otherwise, accuracy was reported.
+Table
+The results without FR and FS are in general comparable with those studies using ADNI data, but substantially lower than that of several studies using other datasets (for example EDSD, DZNE, MCXWH, TJH).
+On the other hand, the results with the adoption of FR and FS obtain better results than those reported in literature (Table
+
+Potential anatomical pattern
+Figure
+For MD features, discriminative voxels were mainly within the gray matter (hippocampus and medial temporal cortex) (Figure
+When restricting the analysis Wen 33
+to WM, only small regions were discriminative and outside of the JHUTract25 atlas (Figure
+This is consistent with the poor performance obtained with MD regional features.
+For GM-density features (Figure
+For FA, discriminative voxels included both GM and WM regions (Figure
+In the GM, discriminative voxels were mainly located within the medial temporal lobe.
+In the WM, they were more diffuse and absent in deep WM.
+These regions were close to the forceps minor and major tracts and inferior fronto-occipital fasciculus.
+
+Discussion
+In the present work, we proposed an open-source framework for the reproducible evaluation of AD classification from diffusion MRI.
+It extends our previous framework devoted to T1w MRI and PET by adding conversion of diffusion MRI to BIDS and providing standardized image processing pipelines for diffusion MRI.
+We then demonstrated its use to assess the influence of key components on classification performance: i) FR, ii) feature types, iii) data imbalance, iv) smoothing strength, v) registration methods (single contrast and multicontrast), vi) FS and vii) imaging modalities (T1w MRI and diffusion MRI).
+Generally, we hopefully contribute to make evaluation of machine learning approaches in AD more reproducible and more objective.
+Firstly, providing the tools to fully automatically convert original ADNI diffusion MRI into the community standard BIDS, we hope to facilitate the future work of researchers.
+Secondly, the literature
+Thus, a standard diffusion MRI processing pipeline was proposed in the present work.
+Lastly, we proposed rigorous CV procedures following recent best practices
+The key components are publicly available in Clinica, a freely available software platform for clinical neuroscience research studies.
+We hope this framework will allow researchers to easily and rigorously evaluate their own classification algorithms, FS algorithms or image processing pipelines.
+Furthermore, the modular nature of the framework allows using its different parts in independent ways.
+For instance, extracted features could be used as input to other ML tools for neuroimaging such, as Neuropredict
+We then aimed to benchmark classification performance for future studies.
+When FR and FS were not performed, the results obtained in our framework were in line with the stateof-the-art results (Table 6*).
+In our experiments, we obtained the balanced accuracy of 0.76 for task CN vs AD, 0.60 for task CN vs MCI and 0.61 for task CN vs pMCI.
+One can note that several studies using DTI-based features reported superior performance over our work
+This was in particular the case for studies using other datasets (such as for instance EDSD, DZNE, MCXWH, TJH).
+This discrepancy may come from the differences in image quality in different datasets or data sample size.
+Interestingly, when combining FR and FS, we obtained better classification results than the literature (Table
+Specifically, we obtained the BA of 0.94 for task CN vs AD, 0.74 for task CN vs MCI and 0.80 for task sMCI vs pMCI.
+We first studied the impact of FR.
+FR showed a strong positive impact on classification performance for diffusion MRI features, which was not the case for T1w MRI features.
+Specifically, compared to the case where no FR was performed, FR increased the classification results from 0.76 to 0.82 in BA for task CN vs AD, from 0.62 to 0.70 for task CN vs pMCI, from 0.53 to 0.60 for task sMCI vs pMCI (Table
+In fact, the features considered in our study have an inherent normalization.
+So it was not clear that FR would have such an impact on performance.
+The classification improvement may be due to the fact that FR influences the Euclidean distance between support vectors and, thus, affect the final decision boundary.
+Although SVMs are known to be sensitive to the way features are scaled (Ben-Hur and Weston 2010; Chang and Lin 2011) and some previous studies have studied its impact.
+Chapelle and authors
+Zhang and Wu
+However, there are scarcities and ambiguities regarding explicit exposition of FR in the literature of AD classification, thus making it hard to objectively evaluate and reproduce their results.
+Different types of DTI-based features were assessed (Table
+Generally, voxel-wise features provided higher accuracies than region-wise features.
+This was consistent
+Wen 36
+with a previous study
+Note that the most discriminative voxels (original features without performing FR or FS) for WM-MD classification are outside the regions of the JHUTract25 atlas.
+This finding explains the poor performance obtained using MD regional features.
+Thus, the atlas used for region-wise approaches should be chosen with care.
+Moreover, our results showed that MD gave higher performance than FA for voxel-wise classification.
+This finding was in conflict with some of the literature: three previous studies
+One possible explanation for this discrepancy may be due to the fact that those studies did not explicitly perform FR.
+Their findings were consistent with our results
+without FR and FS (Table
+We evaluated the impact of data imbalance on classification performance.
+It is commonly agreed that imbalanced data may adversely impact classification performance as the learned model will be biased towards the majority class to minimize the overall error rate
+Efforts have been made to deal with imbalanced data, which could be generally classified as algorithmic level
+In the current study, for voxel-wise classification, we found that the low accuracies obtained in discriminating pMCI from sMCI or CN are potentially caused by the small sample size, rather than by the imbalanced data.
+Interestingly, Dubey et al showed that the balanced data obtained by several data resampling techniques gave better results than the imbalanced data using T1w MRI from ADNI
+Thus our hypothesis for the limited sample size needs to be further confirmed as more subjects are becoming available.
+Spatial smoothing is widely used in MRI data analysis as a preprocessing step.
+In the case of diffusion MRI, we did not find a major influence of smoothing kernel size.
+This is Wen 37 consistent with our previous study
+However, smoothing does slightly improve classification performance compared to nosmoothing case: 5% up to 7% relative increase in BA (Figure
+Spatial smoothing is beneficial for suppressing spatial noise, which is the case of diffusion MRI.
+Moreover, although different in application, previous studies demonstrated the positive effect of spatial smoothing on quantitative analysis
+Thus we suggest a 4-12 mm FWHM spatial smoothing in the context of classification of AD.
+We studied the effect of registration methods as the accuracy of image registration significantly influences the quantitative analysis results.
+Our experiments showed that multicontrast registration (FA and b0) was substantially more accurate than single contrast (FA only) registration, in particular outside of the white matter, consistently with the conclusions made by
+This could be expected because FA does not provide much information outside the WM.
+However, the substantial difference in registration quality did not lead a major difference in classification performance.
+This may be due to the fact that most of the discriminative voxels are in the vicinity of the WM or in areas where inter-individual variability is lower, such as the hippocampus.
+In the literature, researchers have emphasized that "double-dipping" or data leakage or data leakage, referring to the use of test subjects in any part of the training process, such as non-nested FS in the context, is bad practice and may lead to over-fitted classification
+Similarly, in a recent study, Maggipinto et al showed that the adoption of FS strategies should be taken with care
+They proved that a biased FS, usually a non-nested FS, leads to over-optimistic results.
+Unfortunately, many previous studies using diffusion MRI for AD classification adopted the non-nested FS and reported nearly perfect classification
+In our literature search, we found that 15 out Wen 38
+of 34 papers have the potential of data leakage caused by the FS bias (Table
+In the current study, our findings reinforced the message that non-nested FS could result in overoptimistic results.
+With the adoption of the non-nested SVM-RFE FS, nearly perfect performance was achieved.
+Besides, FA outperformed MD for classification accuracies for this non-nested FS approach.
+Similar patterns were also witnessed in the study of Maggipinto et al
+Replacing the non-nested FS with the nested one, we obtained considerably inferior performance.
+On the other hand, we found that, with SVM-RFE not with ANOVA, the nested FS could potentially (slightly) improve the performance compared to the case no FS was performed.
+The difference between ANOVA and SVM-RFE may stem from the fact that ANOVA is performed for each feature (voxel) independently while GM and WM in contiguous voxels are highly correlated
+Interestingly, another study found that, with the adoption of ReliefF algorithm, FS improved the classification accuracy up to 8% compared to the non-FS for task CN vs AD
+However, they did not give enough details concerning their validation scheme.
+In particular, it is not clear if they used a nested FS
+We also systematically compared classification performance between T1w MRI and diffusion MRI.
+Our results showed that T1w MRI outperformed diffusion MRI without FR and FS (Table
+Several previous studies have compared the performance of these two modalities without explicitly stating the inclusion of FR.
+Several factors could explain the better performance of T1w MRI when FR were not performed.
+First, it is controversial but possible that WM degeneration is a secondary degenerative process compared to brain atrophy
+Another possibility is that ADNI diffusion MRI acquisitions used within our study do not make use of state-of-the-art methods that impact on image quality.
+In particular, no fieldmap data is acquired which leads to suboptimal correction of magnetic susceptibility artifacts
+On the other hand, it seems that, when combining FR and FS, DTI features achieve a performance which is comparable to that of T1w MRI.
+Nevertheless, since anatomical MR images are easier to acquire, we believe that there is currently no clear reason to prefer diffusion MRI over T1 MRI for computer-aided diagnosis of AD.
+Visualization of optimal margin hyperplane coefficient maps revealed which voxels contribute the most to discrimination.
+FA, MD and GM-Density features shared a typical AD anatomical pattern: voxels in hippocampus and temporal lobe showed more discriminative ability in the classification.
+These findings were consistent with the literature.
+DTI-based group comparison analyses demonstrated altered FA or MD in the hippocampus
+Moreover, the OMH coefficient map displayed a diffuse pattern for WM voxels in our work.
+Similar patterns of WM voxels were also witnessed in the FS procedure using diffusion MRI
+In the current study, we only focused on SVM as the classifier.
+In our previous study
+
+Reproducible evaluation of diffusion MRI features for automatic classification of patients with Alzheimer's disease
+
+Supplementary Material
+We present additional methodological explanations and tables in this supplementary material.
+More specifically, we first describe the dataset used in our study in eMethod 1.
+We then present how to install and use the current framework in eMethod 2. Lastly, from eTable1 to eTable4, we present the results of the influence of imbalanced data, smoothing and registration method, respectively.
+eMethod 1. Dataset used in our study eMethod 2. Instructions on how to install the framework and run the experiments eTable 1. Results of all the classification experiments using balanced data eTable 2. Results of all the classification experiments using different degree of smoothing eTable 3. Results of all the classification experiments using different registration methods approaches eMethod 1. Dataset used in our study.
+The data used in the preparation of this article were obtained from the Alzheimer's Disease Neuroimaging Initiative database (ADNI) (adni.loni.usc.edu).
+The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD.
+The primary goal of ADNI has been to test whether serial MRI, PET, other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of MCI and early AD.
+Over 1,650 participants were recruited across North America during the first three phases of the study (ADNI1, ADNI GO and ADNI2).
+Around 400 participants were diagnosed with AD, 900 with MCI and 350 were control subjects.
+Three main criteria were used to classify the subjects
+The normal subjects had no memory complaints, while the subjects with MCI and AD both had to have complaints.
+CN and MCI subjects had a mini-mental state examination (MMSE) score between 24 and 30 (inclusive), and AD subjects between 20 and 26 (inclusive).
+The CN subjects had a clinical dementia rating (CDR) score of 0, the MCI subjects of 0.5 with a mandatory requirement of the memory box score being 0.5 or greater, and the AD subjects of 0.5 or 1.
+The other criteria can be found in
+eMethod 2. Instructions on how to install the framework and run the experiments.
+We assume that you have installed all the dependencies of the Clinica software platform (
+and downloaded the ADNI original data without changing anything.
+Here the command lines for reproducing our experiments:
+Step 1, go back to paper version of Clinica.
+bash 1-go_back_to_paper_version_clinica.sh
+Step 2, convert the original ADNI data into BIDS format.
+The original ADNI data should be downloaded without further touch (Data we used in our paper was downloaded in October 2016).
+bash 2-ADNI_conversion.sh
+Step 3, create the subjects lists.
+python 3-create_subjects_list.py
+Step 4, create the demographic table information.
+python 4-population_statistics.py
+Step 5, run image processing pipelines.
+The fist preprocessing and processing pipelines were already integrated into Clinica software and the postprocesing python script was in the current repository.
+Run these pipelines sequentially:
+bash 5-ADNI_preprocessing.sh bash 6-ADNI_processing.sh
+python 7-ADNI_postprocessing.py
+Step 6, run classification tasks.
+Classification results of original data on T1-weighted and diffusion MRI:
+
+
+
+(
+222).
+These DWIs were acquired with the following parameters: 35 cm field of view, 128×128 acquired matrix, reconstructed to a 256×256 matrix; voxel size: 1.35×1.35×2.7mm
+; scan time = 9 min; 41 diffusion-weighted directions at b-value = 1000 s/mm2 and 5 T2-weighted images (b-value = 0 s/mm2, referred to as b0 image).
+Besides, each participant underwent a T1w MRI sequence with the following parameters: 256×256 matrix; voxel size = 1.2×1.0×1.0 mm ; TI = 400 ms; TR = 6.98 ms; TE = 2.85 ms; flip angle = 11°.
+We included the participants whose diffusion and T1w MRI scans were both available at baseline.
+We used quality check (QC) information provided by ADNI to select participants (see below Section 4.1).
+After converting images from DICOM to NIfTI format, four participants were excluded because of the lower image resolution (4.5×4.5×4.5mm).
+Moreover, QC was conducted on the results of the preprocessing pipeline (see below Section 4.2).
+Finally, 46 CN, 97 MCI, 54 sMCI, 24 pMCI and 46 AD were included.
+
+
+
+Figure 1 .
+It includes: tools for data management, image processing, feature extraction and selection, classification, and evaluation.
+Conversion tools allow an easy update of ADNI as new subjects become available.
+To facilitate future development and testing, the different components were designed in a modular-based architecture: processing pipelines using Nipype (K.
+Thus the objective measurement of the impact of each component on the results could be clarified.
+A simple command line interface is provided and the code can also be used as a Python library.
+
+
+
+Figure 1 .
+Figure 1.
+Overview of the framework.
+
+
+, it is important to properly perform the cross-validation (CV) procedures.
+In the present work, the CV procedure included two nested loops: an outer loop evaluating classification performance and an inner loop used to optimize the hyperparameters of the model (C for SVM).
+More precisely, repeated random splits (all of them stratified) with 250 repetitions was used for outer CV.
+For hyperparameter optimization, we used an inner loop with 10-fold CV.
+For each fold, the hyperparameter value corresponding to the highest validation balanced accuracy (BA) is selected, and then these selected hyperparameters are averaged across folds to profit from model averaging.
+Naturally, the repeated random splits result in different subjects in training and test datasets.
+For full reproducibility of the current experiments, we provide the tsv and pickle files containing information about the 250 splits of all experiments.
+
+
+
+Figure 2 .
+Figure 2. Distribution of the balanced accuracy obtained from the randomly balanced classifications (GM+WM-balanced and JHUTract25-balanced) for tasks CN vs MCI, CN vs pMCI and sMCI vs pMCI.
+For comparison, the original data classification (GM+WM-original and JHUTract25-original) results are also displayed.
+(A) GM+WM-FA voxel-based feature experiments; (B) GM+WM-MD voxel-based features; (C) JHUTract25 FA regional feature experiments; (D) JHUTract25 MD regional feature experiments.
+
+
+
+Figure 3 .
+Figure 3. Distribution of the balanced accuracy for CN vs AD obtained by varying the degree of smoothing.
+All experiments were performed with GM+WM features.
+The influence of the kernel size was tested with different smoothing kernel size, namely no smoothing, 4 mm, 8 mm or 12 mm FWHM.
+
+
+
+Figure 4 .
+Figure 4. Distribution of the balanced accuracy for CN vs AD obtained based on single contrast (FA only) and multicontrast (FA and b0) registration.
+All experiments were performed with (A) WM-FA, GM-FA and GM+WM feature experiments; (B) WM-MD, GM-MD and GM+WM-MD feature experiments.
+
+
+
+Figure 5 .
+Figure 5. Balanced accuracy for CN vs AD obtained by varying the number of voxels for ANOVA and SVM-RFE FS methods.
+For each FS method, both nested and non-nested method was tested.
+(A) GM+WM-FA feature experiments; (B) GM+WM-MD feature experiments.
+
+
+
+Figure 6 .
+Figure 6.
+Distribution of the balanced accuracy obtained from both T1w and diffusion MRI for tasks CN vs AD.
+GM density features and DTI voxel-wise features were used for T1w MRI and diffusion MRI, respectively.
+
+
+
+Figure 7 .
+Figure 7. Normalized coefficient maps in MNI space.
+Task CN vs AD with (A) GM+WM-FA features; (B) GM+WM-MD features; (C) GM-Density features; (D) WM-MD features superimposed onto the JHUTract25 atlas (in gray).
+Warm colors, it means higher likelihood of classification into AD.
+
+
+2018), we have demonstrated that increased training set size led to increased classification Wen 41 performance.
+Thus, both limitations can result in inferior classification performance.
+Furthermore, our study only explored DTI-based features.
+With a proper CV and FS, more sophisticated features, such as brain tractography-or network-based features, could also be studied.
+Lastly, unit and functional tests are important to ensure the robustness of the current framework.
+Such tests have been added to the Clinica software since version 0.3.
+We plan to expand their scope to the current framework in the future.
+
+
+python 8-ADNI_classification_original_data.py
+Classification results of balanced data on diffusion MRI: python 9-ADNI_classification_balanced_data.py
+Classification results of feature selection bias on diffusion MRI: python 10-ADNI_classification_feature_selection.py
+eTable 1. Results of all the classification experiments using balanced data.
+Balanced accuracy was used as performance metric.
+
+
+
+Table 2 (
+for connectivity or tractography features).
+Besides, if multimodal imaging or different type of features (i.e., DTI metric and more advanced features) were used in a study, we reported the results of the best performance.
+
+
+
+Table 1 .
+Summary of the studies using DTI metric features for AD classification.
+a non-amnestic Mild Cognitive Impairment; b amnestic Mild Cognitive Impairment; c MCI-Aβ 42-; d MCI-Aβ 42+; e sd-aMCI, single domain amnestic MCI; f sd-fMCI, single domain frontal MCI; g md-aMCI, multiple domains amnestic MCI; h late MCI; i early MCI; ACC: accuracy; BA: balanced accuracy; AUC: area under the curve; --: not applicable.
+See the section of abbreviation for more details.
+
+
+
+Table 2 .
+Summary of the studies using tract-based or network-based features for AD classification.
+
+
+
+Table 3
+
+
+
+Table 3 .
+Summary
+
+
+
+Table 4 .
+Summary of the different types of features.
+Both regional and voxel-based feature were extracted with T1w MRI and diffusion MRI.
+
+
+
+Table 5 .
+Results
+
+
+
+Table 6 .
+Comparison of our results to the state-of-the-art using DTI-based features.
+* The results obtained with both FR and FS.
+The highest BA was chosen during FS evaluation with different threshold for the number of chosen voxels.
+For task CN vs AD, the best performance (BA=0.94)
+was obtained with the first 10% most discriminative voxels for
+
+
+
+(
+(Samper-González et al. 2018)t al. 2015;mpared the performance of different classifiers and Wen 40 found that random forests resulted in inferior performances compared to SVM and logistic regression with L2 regularization.Besides, other studies(Aguilar et al. 2013;Cabral et al. 2015;   Sabuncu et al. 2014) have found that the features add more influence on the performance than the classifier itself.Nevertheless, studying the impact of different classifiers could be easily performed with the current framework.The current framework is for general use.Indeed, we applied this framework to ADNI dataset and offered the automatic tools to convert raw ADNI data into BIDS.However, researchers can easily adapt our framework to other datasets, diseases or tasks.In our previous work(Samper-González et al. 2018), we also applied the framework to other public datasets, namely OASIS and AIBL.
+In the current work, we did not use OASIS and AIBL because they
+
+
+Results of all the classification experiments using different degree of smoothing.
+Balanced accuracy was used as performance metric.
+Results of all the classification experiments using different registration methods.
+Balanced accuracy was used as performance metric.

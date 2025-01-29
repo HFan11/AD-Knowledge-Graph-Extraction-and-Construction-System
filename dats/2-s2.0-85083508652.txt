@@ -1,0 +1,248 @@
+Predicting Alzheimer’s Disease Conversion From Mild Cognitive Impairment Using an Extreme Learning Machine-Based Grading Method With Multimodal Data
+Identifying patients with mild cognitive impairment (MCI) who are at high risk of progressing to Alzheimer's disease (AD) is crucial for early treatment of AD.
+However, it is difficult to predict the cognitive states of patients.
+This study developed an extreme learning machine (ELM)-based grading method to efficiently fuse multimodal data and predict MCI-to-AD conversion.
+First, features were extracted from magnetic resonance (MR) images, and useful features were selected using a feature selection method.
+Second, multiple modalities of MCI subjects, including MRI, positron emission tomography, cerebrospinal fluid biomarkers, and gene data, were individually graded using the ELM method.
+Finally, these grading scores calculated from different modalities were fed into a classifier to discriminate subjects with progressive MCI from those with stable MCI.
+The proposed approach has been validated on the Alzheimer's Disease Neuroimaging Initiative (ADNI) cohort, and an accuracy of 84.7% was achieved for an AD prediction within 3 years.
+Experiments on predicting AD conversion from MCI within different periods showed similar results with the 3-year prediction.
+The experimental results demonstrate that the proposed approach benefits from the efficient fusion of four modalities, resulting in an accurate prediction of MCI-to-AD conversion.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common cognitive impairment disease, which gradually impacts the activities of a patient's daily life.
+The number of AD patients was estimated to be approximately 30 million in 2015
+The pathology changes of AD begin several years before the first clinical symptoms, and mild cognitive impairment (MCI) is thought to be the prodromal stage of AD
+Approximately 10-17% of those with MCI progress to AD over the course of a few years, yet some MCI patients remain stable after several years
+It is crucial to identify people who are at high risk of progressing from MCI to AD because it can help physicians treat these patients sooner and apply suitable therapies to slow down the progression or even improve a patient's condition.
+Numerous studies have used machine learning techniques for computer-aided diagnosis of AD or prediction of AD conversion.
+The diagnosis of AD is relatively easier than the prediction of AD because there are apparent differences between AD and a normal control (NC), and the accuracy of diagnosis has reached to above 96%
+However, the prediction of AD, more specifically, discriminating progressive MCI (pMCI) from stable MCI (sMCI), is more challenging because the differences between these two groups are slight.
+Different modalities of medical data have been used to detect the pathology associated with AD.
+Structural magnetic resonance imaging (sMRI) is one of the most widely used modality due to its high resolution and non-invasive characteristics
+AD patients are always accompanied by cerebral atrophy or ventricular expansion that is caused by the death of neurons in the affected regions.
+The cerebral atrophy patterns associated with AD can be revealed by MRI, and MRI is a good detection technique for the atrophy of AD.
+These methods only focused on MRI data and could only predict a 3-year AD conversion with an accuracy no greater than 80%.
+Fluorodeoxyglucose positron emission tomography (FDG-PET) is another useful neuroimaging modality for the detection of AD.
+Studies
+The brain's metabolic activity can be quantitatively measured by FDG-PET, which makes FDG-PET a potential tool for the early detection of AD
+In a recent study
+In addition to MRI and FDG-PET, biological biomarkers can also contribute to the detection of AD.
+The abnormal concentrations of proteins in cerebrospinal fluid (CSF), such as total tau (T-tau), hyperphosphorylated tau (P-tau), and the 42 amino acid isoforms of amyloid β (Aβ42), are some of the earliest signs of AD that occur many years before the onset of clinical symptoms
+Therefore, these biomarkers can provide valuable information for the early detection of AD.
+Genetics are also an important indicator of the risk of AD.
+Individuals with the apolipoprotein E (APOE) 4 gene have a much higher risk of developing AD than those without APOE 4
+Taking APOE 4 into account with imaging or biological biomarkers can improve the accuracy of AD prediction.
+Different modalities of biomarkers reflect the AD-related pathological changes in different aspects, thus there may be complementary information among several modalities.
+Combining multimodal biomarkers would provide more information and improve the accuracy of AD prediction.
+A simple way to fuse different modalities is to directly concatenate multimodal features and feed them into a classifier
+However, this is not the optimal approach, and it can lead to bias of the modality with a larger number of features.
+A better way is to map these multimodal features into a kernel space before concatenation
+In recent years, deep learning architecture has been employed to extract multimodal feature representations.
+These deep learning-based methods achieved promising results in the classification of AD/NC, but the accuracy of classifying pMCI/sMCI was just 74.58%
+To exploit the complementarity across multimodal data,
+Although all of these multimodal data-based methods achieved promising results in the diagnosis of AD, the performance of AD prediction needs to be further improved for clinical use with the help of an efficient fusion of multimodal biomarkers.
+Since the efficient multimodality fusion can improve the performance of an artificial intelligence system
+Specifically, each modality feature, from the MCI subjects, was individually graded by an ELM that trained with the corresponding modality features of AD and NC, and the grading score represented the similarity of MCI-to-AD or NC.
+Then, the scores of all modalities were concatenated and fed to an ELM classifier for classification of pMCI/sMCI.
+The results of the proposed method were evaluated by 100 runs of 10-fold crossvalidation with data from the ADNI cohort.
+The contributions of this paper are as follows:
+(i) Useful information about AD/NC was included by using the AD/NC features when training the grading ELMs, which improved the process of discriminating pMCI from sMCI.
+(ii) These grading ELMs were trained with discrete labels of AD/NC and modified to output grading values, instead of discrete labels, to represent the similarity of MCI to AD or NC.
+(iii) Each modality was graded into one single score, avoiding bias of the modality with a greater number of features.
+(iv) The proposed approach achieved promising results in the prediction of MCI-to-AD conversion.
+
+MATERIALS
+The multimodal data used in this study included 313 MRI features, 20 FDG-PET features, three CSF biomarkers, and one gene feature.
+The MRI features, consisting of volume, surface area, and cortical thickness of the cerebral regions, were obtained through analysis with the FreeSurfer software using crosssectional processing
+There was 345 features obtained from the FreeSurfer analysis; however, because 32 features were absent from most subjects, only 313 MRI features were selected.
+For FDG-PET scans, five regions, frequently cited in FDG-PET studies of AD, were adopted, including left angular, right angular, bilateral posterior cingulate, left inferior temporal, and right inferior temporal
+The mean, minimum, maximum, and standard deviation values of the intensity in each region were taken as the FDG-PET features.
+The levels of the biomarkers Aβ42, T-tau, and P-tau in CSF were used as the CSF features.
+The gene feature was a single categorical variable indicating the presence of APOE 4 in subjects.
+All the multimodal data were downloaded from the ADNI website.
+Specifically, the MRI, CSF, and gene data were provided by the Tadpole Challenge Data files, and the FDG-PET data were provided by the UC Berkeley FDG Analysis file.
+To date, there have been over 1,500 participants, ages 55 to 90 years, recruited by ADNI, and most of them were visited and tested multiple times in the following years for long-term study.
+In this study, we only take baseline data to predict the future state (progress to AD or remain MCI) for MCI subjects.
+Because not all subjects underwent all possible examinations, we excluded subjects without all modalities data available at the baseline visit, which presented 200 NC subjects, 102 AD subjects, 110 pMCI subjects who converted to AD within 3 years, and 205 sMCI subjects who did not convert to AD. Demographic and clinical information of these subjects are listed in
+
+METHODS
+The overall framework of the proposed approach is shown in Figure
+There are three major steps in this framework: (i) MRI features are first preprocessed by feature selection with the least absolute shrinkage and selection operator (LASSO) algorithm; (ii) each modality (CSF and gene are combined as biological modality) of MCI is graded by ELM.
+These ELMs are trained with corresponding modality of features and labels from AD/NC groups.
+A grading score is calculated for each modality, which represents the similarity of MCI-to-AD or NC; (iii) these scores are combined to form the new representative features of MCI and fed into an ELM classifier to discriminate pMCI from sMCI.
+Ten-fold cross-validation is utilized to assess the performance of the proposed approach.
+Before these steps, all features of AD/NC are first normalized to have zero mean and unit variance.
+The features of MCI are also normalized with the mean and deviation of the AD/NC features.
+In the following sections, we will present the details of these steps.
+
+Feature Selection With Least Absolute Shrinkage and Selection Operator
+Different from other modalities, the MRI features are the morphological characters of all cerebral regions.
+However, some of them may be aging-related and not AD-related, which can interfere with the classification, and thus need to be excluded.
+In this study, we adopted LASSO to select only useful MRI features.
+LASSO is an L 2,1 norm sparse regression model
+In formula (1), y∈R 1×N is the vector of N labels, and D∈R N ×M is a feature matrix that consists of N training samples with M features in each sample.
+The variable λ is the penalty coefficient that was set to 0.015 in this study, and α∈R 1×M is the target sparse coefficients.
+When this model is solved, only some coefficients in α would be non-zero, where the larger absolute value of these coefficients indicates higher usefulness of the corresponding features.
+Therefore, the results of α can be used to select discriminative features.
+Unlike previous studies
+Then, the features with non-zero coefficients in α were selected.
+
+Extreme Learning Machine
+Extreme learning machine is a one-step learning algorithm that is faster and has a higher performance than the support vector machine
+There are two types of basic ELM; the first is a feed-forward neural network with only a single layer of randomly generated hidden nodes
+The second type is an ELM with kernels
+ELM with kernels yields more stable results and has a higher performance than the feed-forward neural network.
+In our previous work
+Therefore, we adopted ELM with a Gaussian kernel in this study.
+The process of ELM with a Gaussian kernel can be described as follows: Suppose we have N training samples [x 1 , x 2 , • • • , x N ] and N labels.
+The variable x n represents a vector with M features of one sample, and Y∈R N ×2 is a ground truth label matrix with N rows.
+In each row, the element corresponding to the true label is set to 1, and the other is set to -1.
+When a new sample, x, is obtained, the label of x can be predicted as
+where K(x, x N ) is the Gaussian kernel described as
+and is an N × N kernel matrix that is related to the training samples, which is calculated in the training phase as
+The variable C in formula (2) is a regularization coefficient and is set to 1.
+The variable γ in formula (3) is a parameter of the Gaussian kernel, which is set to 10 times M number of features in this study.
+The output of formula (2) is a vector with two elements: [s 1 , s 2 ].
+When ELM is used as the classifier, the output is the result of comparing the values of s 1 and s 2 .
+In this study, we used the ELM to grade MCI samples, and the output of ELM was modified as s = s 1 -s 2 .
+When the ELM was trained with AD/NC and tested on MCI, the output score s can represent the similarity of MCI-to-AD or NC.
+
+Classification and Performance Analysis
+Ten-fold cross-validation was implemented to assess the performance of the proposed approach.
+All MCI subjects were separated into 10-folds randomly.
+In each validation iteration, one different fold was selected as testing data and the other nine folds were used as training data.
+This process was repeated for 10 iterations.
+The classification results of 10 iterations were compared to the true labels, and the accuracy, sensitivity, specificity, and area under receiver operating characteristic (ROC) curve (AUC) were calculated.
+To avoid sampling bias, the 10-fold cross-validation was run 100 times with randomly permuted samples, and the mean and standard deviation of the accuracy, sensitivity, specificity, and AUC were given.
+
+EXPERIMENTS AND RESULTS
+
+Results Using Multimodality Data
+To evaluate the improvement of the proposed approach, we compared it with the method that directly concatenates multimodal data.
+The results of the comparison are shown in Figure
+For a non-biased performance evaluation, we calculated the balanced accuracy, which is the FIGURE 2 | The comparison of the proposed approach with the method that directly concatenates multiple modalities.
+The black lines superimposed on each bar, and the second number in each bar represents the standard deviations derived from 100 runs of validation.
+ACC, accuracy; AUC, area under receiver operating characteristic curve; BACC, balanced accuracy; SEN, sensitivity; SPE, specificity.
+average of sensitivity and specificity, and obtained 75.3%, which is not optimal.
+The proposed approach had better results in terms of accuracy and sensitivity, with an accuracy of 84.7% and a sensitivity of 72.7%.
+This is approximately 13% higher than the direct concatenation method.
+The proposed approach also has a promising balanced accuracy of 81.9%, which is 6.6% higher than the other method.
+Beside these scores, we also obtained an improved AUC of 88.8% for our proposed method.
+This comparison indicates that the proposed approach is more efficient at predicting the MCI-to-AD conversion than the method using directly concatenated multimodal data.
+
+Contributions of Different Modalities
+To reveal the contributions of the different modalities in the proposed method, experiments were conducted with only one modality and one modality absent.
+The results are listed in Table
+Because the APOE 4 data failed to classify pMCI/sMCI individually (with balanced accuracy of 55.2%), we used CSF + APOE 4 to demonstrate the effect of APOE 4.
+From these results, we can see that when only one modality was used, the performance of the CSF ranked third in terms of accuracy and AUC, but it had the best sensitivity.
+The APOE 4 feature can slightly improve the results using CSF.
+FDG-PET achieved the best results, but the best accuracy and balanced accuracy were only 76.7 and 71.7%, respectively.
+When all modalities were used, the accuracy and balanced accuracy was greatly improved to 84.7 and 81.9%, respectively, and there was also a significant improvement in AUC. Figure
+In the situation with one modality absent, it shows that the performance declined without CSF, especially a significant decline of sensitivity, which led to the decline of balanced accuracy.
+The MRI and FDG-PET had a similar impact on the performance of the proposed method, while the APOE 4 had minimal influence on the performance.
+Even when all modalities were used, if the LASSO was disabled, the performance suffered from a 1.2 and 1.8% drop in the accuracy and balanced accuracy, respectively, which illustrates the contribution of LASSO.
+
+Prediction Within Different Periods
+The 3-year cutoff period for predicting MCI-to-AD conversion is not a unique criterion.
+We also conducted experiments to predict the states of MCI patients with different periods from 1 to 5 years.
+was high and the sensitivity was low at the point of 1 year, owing to the disparity of the number of individuals with pMCI versus sMCI (46/343), and the balanced accuracy was only 60.2%.
+At the point of 2 years, the bias is still large: 89/268 pMCI/sMCI.
+As a result, the balanced accuracy was only 74.9%.
+At the 3-5-year mark, the bias reduced and the balanced accuracies stabilized at approximately 82%.
+At the points of 3-5 years, we achieved an accuracy, balanced accuracy, and AUC of 83, 81.8, and 88.8%, respectively.
+These results show a promising performance of the proposed approach for predicting MCI-to-AD conversion within different periods.
+
+Experiments on Other Conditions
+We also conducted the experiments on different conditions, including:
+(i) An Support Vector Machine (SVM) version, in which SVM was the classifier instead of ELM.
+(ii) In some studies, neuropsychological test scores (MMSE, clinical dementia rating-sum of boxes, Alzheimer's disease assessment scale-cognitive subtest, Rey's auditory verbal learning test, functional activities questionnaire) were included to boost the performance of prediction.
+Therefore, these neuropsychological test scores were also included and concatenated with grading scores.
+(iii) In previous studies
+Therefore, we also excluded 64 subjects with the same criterion, and then obtained 141 sMCI and 110 pMCI.
+The results are listed in Table
+When neuropsychological test scores were included in  the proposed method, there was not a significant improvement in accuracy, but the AUC greatly improved.
+When the ambiguous subjects were excluded from the sMCI group, the performance was further improved.
+To the best of our knowledge, the accuracy of 87.1% and AUC of 94.7%, achieved in this experiment, are the best for predicting AD.
+
+DISCUSSION
+In this study, we propose a novel approach for predicting MCIto-AD conversion with multimodal data.
+To effectively fuse different modalities and avoid the bias of a number of features in each modality; an ELM-based grading method was employed to calculate a grading score for each modality.
+The scores of multiple modalities were combined and fed into the ELM classifier to discriminate the pMCI from sMCI.
+With the help of AD/NC information included in the grading procedure, the scores effectively represented the states of the MCI subjects and were used to predict the AD conversion individually.
+When the scores from all modalities were combined, the accuracy of prediction was boosted to 84.7%.
+The results of the experiments conducted on the ADNI cohort demonstrate that: (i) the proposed method with multimodality scores has a much higher accuracy than with a single modality score, such that the proposed method has at least a 10% higher balanced accuracy than when a single modality is used.
+This means that the complementary information among the multimodal data can be represented by these scores.
+(ii) Direct concatenation of multimodal data is not the best way of exploiting the complementary information, and the proposed method showed a more efficient fusion of multimodal data and achieved a much better performance.
+(iii) The proposed method can predict MCI-to-AD conversion of different periods with a high accuracy.
+As more modalities bring more complementary information, the performance of the prediction should improve.
+As shown in Table
+The assumption is that there might be an upboundary for discriminating pMCI from sMCI, from the fact that the diagnosis in ADNI is not 100% reliable
+Therefore, when we defined the sMCI more strictly and excluded ambiguous samples, the accuracy was further boosted to 87.1% as shown in Table
+It is also observed that the specificity was much higher than sensitivity in Table
+This can be explained in Figure
+Although the proposed approach achieved a promising result in predicting AD conversion, it requires four modalities, which is difficult to obtain in clinical practice.
+However, in the research of longitudinal regression for modeling the trajectory of AD progression, it is crucial to estimate the cognitive states of patients.
+In our future work, we will consider the use of the ELMbased grading method proposed in this study to improve the accuracy of longitudinal regression for AD trajectory modeling.
+In the proposed approach, the feature selection was only applied to MRI features since the PET features were from five AD-related regions and the three CSF biomarkers and APOE 4 gene contained useful information about AD.
+Because the MRI features from the FreeSurfer analysis were morphology features of whole brain, inevitably it had to include some useless features.
+As a result, LASSO was employed to do the feature selection on MRI features, and it improved the results of prediction.
+To explore which MRI features were selected, we have listed the top 10 features in Table
+We can observe that the volumes and thicknesses of the hippocampus, amygdala, temporal lobe, and entorhinal cortex play an important role in the detection of AD, which is consistent with previous studies
+
+CONCLUSION
+In this study, we have developed an ELM-based grading method to fuse multimodal data for the prediction of MCI-to-AD  conversion within 3 years.
+With the input of four modalities: MRI, FDG-PET, CSF, and gene presence, we achieved a promising result with an accuracy of 84.7% and AUC of 88.8%.
+When compared with method that directly concatenates multiple modalities, the proposed approach outperformed the other in terms of accuracy and AUC.
+The experiments demonstrated that this approach can also predict AD conversion of other periods with a similar performance of the 3-year prediction.
+
+
+
+FIGURE 1 |Classification
+FIGURE 1 | The overall framework of the proposed approach.
+
+
+
+FIGURE 3 |
+FIGURE 3 | The receiver operating characteristic curves when different modalities were used.
+
+
+With the criterion changed, different numbers of pMCI/sMCI for different conversion times were obtained: 46/343 (1 year), 89/268 (2 years), 110/205 (3 years), 119/146 (4 years), 117/62 (5 years).
+The results of predicting MCI-to-AD conversion at different time periods are shown in Figure 4. From Figure 4A, we can see that the accuracies are all above 83% for 1-5 years prediction.
+However, from Figure 4B, we found the specificity
+
+
+
+FIGURE 4 |
+FIGURE 4 | The performance of predicting MCI-to-AD conversion at different time periods.
+(A) Performance of accuracy and AUC.
+(B) Performance of sensitivity, specificity, and balanced accuracy.
+AD, Alzheimer's disease; AUC, area under receiver operating characteristic curve; MCI, mild cognitive impairment.
+
+
+of left middle temporal 8 Cortical thickness standard deviation of right transverse temporal 9 Cortical thickness standard deviation of right lateral orbitofrontal 10 Cortical thickness average of right entorhinal AD, Alzheimer's disease; LASSO, least absolute shrinkage and selection operator.
+
+
+
+Table 1 ,
+including gender, age, education history, and Mini Mental State Examination (MMSE) score.
+
+
+
+TABLE 1 |
+The demographic information of subjects.
+
+
+
+TABLE 2 |
+The contributions of different modalities.
+
+
+
+TABLE 3 |
+The experiments on different conditions.
+
+
+
+TABLE 4 |
+The top 10 AD-related MRI features from LASSO feature selection.

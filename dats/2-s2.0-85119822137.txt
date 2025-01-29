@@ -1,0 +1,354 @@
+Improving 3D convolutional neural network comprehensibility via interactive visualization of relevance maps: evaluation in Alzheimer’s disease
+Background: Although convolutional neural networks (CNNs) achieve high diagnostic accuracy for detecting Alzheimer's disease (AD) dementia based on magnetic resonance imaging (MRI) scans, they are not yet applied in clinical routine.
+One important reason for this is a lack of model comprehensibility.
+Recently developed visualization methods for deriving CNN relevance maps may help to fill this gap as they allow the visualization of key input image features that drive the decision of the model.
+We investigated whether models with higher accuracy also rely more on discriminative brain regions predefined by prior knowledge.
+We trained a CNN for the detection of AD in N = 663 T1-weighted MRI scans of patients with dementia and amnestic mild cognitive impairment (MCI) and verified the accuracy of the models via cross-validation and in three independent samples including in total N = 1655 cases.
+We evaluated the association of relevance scores and hippocampus volume to validate the clinical utility of this approach.
+To improve model comprehensibility, we implemented an interactive visualization of 3D CNN relevance maps, thereby allowing intuitive model inspection.
+Results: Across the three independent datasets, group separation showed high accuracy for AD dementia versus controls (AUC ≥ 0.91) and moderate accuracy for amnestic MCI versus controls (AUC ≈ 0.74).
+Relevance maps indicated that hippocampal atrophy was considered the most informative factor for AD detection, with additional contributions from atrophy in other cortical and subcortical regions.
+Relevance scores within the hippocampus were highly correlated with hippocampal volumes (Pearson's r ≈ -0.86, p < 0.001).
+
+Introduction
+Alzheimer's disease (AD) is characterized by widespread neuronal degeneration, which manifests macroscopically as cortical atrophy that can be detected in vivo using structural magnetic resonance imaging (MRI) scans.
+Particularly at earlier stages of AD, atrophy patterns are relatively regionally specific, with volume loss in the medial temporal lobe and particularly the hippocampus.
+Therefore, hippocampus volume is currently the best-established MRI marker for diagnosing Alzheimer's disease at the dementia stage as well as at its prodromal stage amnestic mild cognitive impairment (MCI)
+Automated detection of subtle brain changes in early stages of Alzheimer's disease could improve diagnostic confidence and early access to intervention
+Convolutional neural networks (CNNs) provide a powerful method for image recognition.
+Various studies have evaluated the performance of CNNs for the detection of Alzheimer's disease in MR images with promising results regarding both separation of diagnostic groups and the prediction of conversion from MCI to manifest dementia.
+Despite the high accuracy levels achieved by CNN models, a major drawback is their algorithmic complexity, which renders them black-box systems.
+The poor intuitive comprehensibility of CNNs is one of the major obstacles which hinder the clinical application.
+Novel methods for deriving relevance maps from CNN models
+In general, relevance or saliency maps indicate the amount of information or contribution of a single input feature on the probability of a particular output class.
+Previous methodological approaches like gradient-weighted class activation mapping (Grad-CAM)
+In contrast, more recent methods such as guided backpropagation
+Recently, three studies compared LRP with other CNN visualization methods for the detection of Alzheimer's disease in T1-weighted MRI scans
+The derived relevance maps showed the strongest contribution of medial and lateral temporal lobe atrophy, which matched the a priori expected brain regions of high diagnostic relevance
+These preliminary findings provided the first evidence that CNN models and LRP visualization could yield reasonable relevance maps for individual people.
+We investigated whether this approach could be used as the basis for neuroradiological assistance systems to support the examination and diagnostic evaluation of MRI scans.
+Furthermore, we wanted to develop a data-driven and hypothesis-free CNN modeling approach that is capable of automatically deriving discriminative features and, therefore, might support complex diagnostic tasks where clear clinical criteria are still missing such as the differential diagnosis of various types of dementia.
+In the current study, our aims were threefold: First, we trained robust CNN models that achieved a high diagnostic accuracy in three independent validation samples.
+Second, we developed a visualization software to interactively derive and inspect diagnostic relevance maps from CNN models for individual patients.
+Here, we expected high relevance to be shown in brain regions with strong disease-related atrophy, primarily in the medial temporal lobe.
+Third, we evaluated the validity of relevance maps in terms of correlation of hippocampus relevance scores and hippocampus volume, which is the best-established MRI marker for Alzheimer's disease
+We expected a high consistency of both measures, which would strengthen the overall comprehensibility of the CNN models.
+Table
+We focused on the aspects whether the studies used independent validation samples to assess the generalizability of their models and whether they evaluated which image features contributed to the models' decision.
+Studies reported very high classification performances to differentiate AD dementia patients and cognitively healthy participants, typically with accuracies around 90% (Table
+For the separation of MCI and controls, accuracies were substantially lower ranging between 75 and 85%.
+However, there is a high variation of the accuracy levels depending on various factors such as (i) differences in diagnostic criteria across samples, (ii) included data types, (iii) differences in image preprocessing procedures, and (iv) differences between machine learning methods
+CNN performance estimation and model robustness are still open challenges.
+Wen and colleagues
+Different CNN approaches exist for MRI data
+Although final accuracy is almost comparable between all three approaches for detecting MCI and AD
+For instance, a single 2D convolutional kernel has 3 × 3 = 9 parameters whereas the 3D version requires 3 × 3 × 3 = 27 parameters.
+Here, relevance maps and related methods enable the assessment of learnt CNN models with respect to overfitting to clinically irrelevant brain regions and the detection of potential biases present in the training samples, which cannot be directly identified just from the model accuracy.
+
+Approaches to assess model comprehensibility
+In the literature, the most often applied methods to assess model comprehensibility and sensitivity were (i) the visualization of model weights, (ii) occlusion sensitivity analysis, and (iii) more advanced CNN methods such as guided backpropagation or LRP (Table
+Notably, studies using approaches i and ii showed visualizations characterizing the whole sample or group averages.
+In contrast, studies applying iii also presented relevance maps for single participants
+Böhle and colleagues
+Eitel and colleagues
+After training ten individual models based on the same training dataset, they reported the highest consistency and lowest deviation of relevance maps for LRP and guided backpropagation among five different methods
+Recently, we compared various methods for relevance and saliency attribution
+Visually, all tested methods provided similar relevance maps except for Grad-CAM, which provided much lower spatial resolution, and, hence, lost a high amount of regional specificity.
+For the other methods, the main difference was the amount of "negative" relevance which indicates evidence against a particular diagnostic class.
+Notably,
+All three studies did not validate their results in independent samples.
+
+Materials and methods
+
+Study samples
+Data for training the CNN models were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database (
+loni.
+usc.
+edu).
+The ADNI was launched in 2003 by the National Institute on Aging, the National Institute of Biomedical Imaging and Bioengineering, the Food and Drug Administration, private pharmaceutical companies, and non-profit organizations, with the primary goal of testing whether neuroimaging, neuropsychological, and other biological measurements can be used as reliable in vivo markers of Alzheimer's disease pathogenesis.
+A complete description of ADNI, upto-date information, and a summary of diagnostic criteria are available at
+adni-info.
+org.
+We selected a sample of N = 663 participants from the ADNI-GO and ADNI-2 phases, based on the availability of concurrent T1-weighted MRI and amyloid AV45-PET scans.
+Notably, we used only one (i.e., the first) available scan from each ADNI participant in our analyses.
+The sample characteristics are shown in Table
+We included 254 cognitively normal controls, 220 patients with (late) amnestic mild cognitive impairment (MCI), and 189 patients with Alzheimer's dementia (AD).
+Amyloid-beta status of the participants was determined by the UC Berkeley
+For validation of the diagnostic accuracy of the CNN models, we obtained MRI scans from three independent cohorts.
+The sample characteristics and demographic information are summarized in The PET scans were processed using the Centiloid SPM pipeline and converted to Centiloid values as recommended for the different amyloid PET traces
+Amyloid-beta status of the participants was determined using the cutoff 24.1 CL
+As a third sample, we included data from N = 474 participants of the German Center for Neurodegenerative Diseases (DZNE) multicenter observational study on Longitudinal Cognitive Impairment and Dementia (DELCODE)
+Comprehensive information on the diagnostic criteria and study design are provided in
+For the DELCODE sample, cerebrospinal fluid (CSF) biomarkers were available for a subsample of 227 participants (48%).
+Amyloid-beta status was determined using the Aβ42/Aβ40 ratio with a cutoff 0.09
+
+Image preparation and processing
+All MRI scans were preprocessed using the Computational Anatomy Toolbox (CAT12, v9.6/r7487)
+Wellcome Centre for Human Neuroimaging, London, UK).
+Images were segmented into gray and white matter, spatially normalized to the default CAT12 brain template in Montreal Neurological Institute (MNI) reference space using the DARTEL algorithm, resliced to an isotropic voxel size of 1.5 mm, and modulated to adjust for expansion and shrinkage of the tissue.
+Initially and after all processing steps, all scans were visually inspected to check for image quality.
+In all scans, effects of the covariates age, sex, total intracranial volume (TIV), and scanner magnetic field strength (FS) were reduced using linear regression.
+This step was performed, as these factors are known to affect the voxel intensities or regional brain volume
+For each voxel vx ij , linear models were fitted on the healthy controls:
+with i being the voxel index, j being the healthy participant index, β i being the respective model coefficients (for each voxel), and ε i being the error term or residual.
+Subsequently, the predicted voxel intensities were subtracted from all participants' gray matter maps to obtain the residual images:
+(1) Notably, we performed the estimation process (1) only for the healthy ADNI-GO/2 participants.
+Then, (2) was applied to all other participants and the validation samples.
+This method was applied as brain volume, specifically in the temporal lobe and hippocampus, is substantially decreasing/shrinking in old age independently of the disease process
+As sensitivity analysis, we also repeated CNN training on the raw gray matter volume maps for comparison.
+Patients with MCI and AD were combined into one disease-positive group.
+On the one hand, this was done as we observed a low sensitivity of machine learning models for MCI when trained only on AD cases, due to the much larger and more heterogeneous patterns of atrophy in AD than in MCI, where atrophy is specifically present in medial temporal and parietal regions
+On the other hand, combining both groups substantially increased the training sample, which was required to reduce the overfitting of the CNN models.
+
+CNN model structure and training
+The CNN layer structure was adapted from
+The model was implemented in Python 3.7 with Keras 2.2.4 and Tensorflow 1.15.
+The layout is shown in Fig.
+The residualized/raw 3D images with a resolution of 100 × 100 × 120 voxels were fed as input into the neural network and processed by three consecutive convolution blocks including 3D convolutions (5 filters of 3 × 3 × 3 kernel size) with rectified linear activation function (ReLU),
+Then, three dropout (10%) and fully connected layers with ReLU activation followed, each consisting of 64, 32, and 2 neurons, respectively.
+The weights of last two layers were regularized with the L2 norm penalty.
+The last layer had the softmax activation function that rescaled the class activation values to likelihood scores.
+The network required approximately 700,000 parameters to be estimated.
+The analysis, we also repeated the whole procedure based on the raw image data (normalized gray matter volumes) instead of using the residuals as CNN input.
+Here, we set the number of epochs to 20 due to slower convergence of the models.
+We also trained CNN models on the whole ADNI-GO/2 sample for further evaluation.
+Here, we fixed the number of epochs to 4 for the residualized data and 8 for the raw data.
+These values provided the highest average accuracy and lowest loss in the previous cross-validation.
+
+Model evaluation
+The balanced accuracy and area under the receiver operating characteristic curve (AUC ) were calculated for the independent validation samples.
+We report first the numbers for the model trained on the whole ADNI-GO/2 dataset and second the average values for the models obtained via cross-validation.
+As an internal validity benchmark, we compared CNN model performance and group separation using hippocampus volume, the best-established MRI marker for Alzheimer's disease.
+Automated extraction of hippocampus volume is already implemented in commercial radiology software to aid physicians in diagnosing dementia.
+We extracted total hippocampus volume from the modulated and normalized MRI scans using the Automated Anatomical Labeling (AAL) atlas
+The extracted volumes were corrected for the effects of age, sex, total intracranial volume, and magnetic field strength of the MRI scanner in the same way as described above for the CNN input (see the section "Image preparation and processing").
+Here, a linear model was estimated based on the normal controls of the ADNI-GO/2 training sample, and then, the parameters were applied to the measures of all other participants and validation samples to obtain the residuals.
+Subsequently, the residuals of the training sample were entered into a receiver operating characteristic analysis to obtain the AUC .
+The optimal threshold providing the highest accuracy was selected based on the Youden index.
+We obtained two thresholds.
+One for the separation of MCI and controls, which was the residual volume of -0.63 ml.
+That means participants with the deviation of individual hippocampus volume from the expected value (for that age, sex, total brain volume, and magnetic field strength) below -0.63 ml were classified as MCI.
+The other threshold for AD dementia and controls was -0.95 ml.
+Additionally, we repeated the same cross-validation training/test splits as used for CNN training to compare the variability of the derived thresholds and performance measures.
+
+CNN relevance map visualization
+Relevance maps were derived from the CNN models using the LRP algorithm
+LRP has previously been demonstrated to yield relevance maps with high spatial resolution and clinical plausibility
+In this approach, the final network activation scores for a given input image are propagated back through the network layers.
+LRP applies a relevance conservation principle that means that the total amount of relevance per layer is kept constant during the back-tracing procedure to reduce numerical challenges that occur in other methods
+Several rules exist, which apply different weighting to positive (excitatory) and negative (inhibitory) connections such that network activation for and against a specific class can be considered differentially.
+Here, we applied the so-called α = 1, β = 0 rule that only considers positive relevance as proposed by
+In this case, the relevance of a network neuron R j was calculated from all connected neurons k in the subsequent network layer using the formula: with a j being the activation of neuron j, w + jk being the positive weight of the connection between neurons j and k, and R k being the relevance attributed to neuron k
+As recent studies reported further improvements in LRP relevance attribution
+In the ϵ rule, (3) is being extended by a small constant term added to the denominator, i.e., ϵ = 10 -10 in our case, which is expected to reduce relevance when the activation of neuron k is weak or contradictory
+To facilitate model assessment and quick inspection of relevance maps, we implemented an interactive Python visualization application that is capable of immediate switching between CNN models and participants.
+More specifically, we used the Bokeh Visualization Library 2.2.3 (
+org).
+Bokeh provides a webserver backend and web browser frontend to directly run Python code that dynamically generates interactive websites containing various graphical user interface components and plots.
+The Bokeh web browser JavaScript libraries handle the communication between the browser and server instance and translate website user interaction into Python function calls.
+In this way, we implemented various visualization components to adjust plotting parameters and provide easy navigation for the 2D slice views obtained from the 3D MRI volume.
+(3)
+The application is structured following a modelview-controller paradigm.
+An overview of implemented functions is provided in Supplementary Fig.
+A sequence diagram illustrating function calls when selecting a new person is provided in Supplementary Fig.
+com/ marti ndyrba/ DeepL earni ngInt eract iveVis.
+As core functionality, we implemented the visualization in a classical 2D multi-slice window with axial, coronal, and sagittal views, cross-hair, and sliders to adjust the relevance threshold as well as minimum cluster size threshold (see Fig.
+Here, a cluster refers to groups of adjacent voxels with high relevance above the selected relevance threshold.
+The cluster size is the number of voxels in this group and can be controlled in order to reduce the visual noise caused by single voxels with high relevance.
+Additionally, we added visual guides to improve usability, including (a) a histogram providing the distribution of cluster sizes next to the cluster size threshold slider, (b) plots visualizing the amount of positive and negative relevance per slice next to the slice selection sliders, and (c) statistical information on the currently selected cluster.
+Furthermore, assuming spatially normalized MRI data in MNI reference space, we added (d) atlas-based anatomical region lookup for the current cursor/cross-hair position and (e) the option to display the outline of the anatomical region to simplify visual comparison with the cluster location.
+
+CNN model comprehensibility and validation
+As quantitative metrics for assessing relevance map quality are still missing, we compared CNN relevance scores in the hippocampus with hippocampus volume.
+Here, we used the same AAL atlas hippocampus masks as for deriving hippocampus volume and applied it on the relevance maps obtained from all ADNI-GO/2 participants for each model.
+The sum of relevance score of each voxel inside the mask was considered as hippocampus relevance.
+Hippocampus relevance and volume were compared using Pearson's correlation coefficient.
+Additionally, we visually examined a large number of scans from each group to derive common relevance patterns and match them with the original MRI scans.
+Furthermore, we calculated mean relevance maps for each group.
+We also extracted the relevance for all lobes of the brain and subcortical structures to test the specificity of relevance distribution across the whole brain.
+These masks were defined based on the other regions included in the AAL atlas
+In an occlusion sensitivity analysis, we evaluated the influence of local atrophy on the prediction of the model and the derived relevance scores.
+Here, we slid a cube of 20 voxels = 30 mm edge size across the brain.
+Within the cube, we reduced the intensity of the voxel by 50%, simulating gray matter atrophy in this area.
+We selected a normal control participant from the DELCODE dataset without visible CNN relevance, a prediction probability for AD/MCI of 20%, and hippocampus volume residual of 0 ml, i.e., the hippocampus volume matched the reference volume expected for this person.
+For each position of the cube, we derived the probability of AD predicted by the model obtained from the whole ADNI-GO/2 sample.
+Additionally, we calculated the total amount of relevance in the scan.
+
+Results
+
+Group separation
+The accuracy and AUC for diagnostic group separation are shown in Table
+Additional performance measures are provided in Supplementary Table
+The CNN reached a balanced accuracy between 75.5 and 88.3% across validation samples with an AUC between 0.828 and 0.978 for separating AD dementia and controls.
+For MCI vs. controls, the group separation was substantially lower with balanced accuracies between 63.1 and 75.4% and an AUC between 0.667 and 0.840.
+These values were only slightly better than the group separation performance of hippocampus volume (Table
+The performance results for the raw gray matter volume data as input for the CNN are provided in Supplementary Table
+In direct comparison to the CNN results for the residualized data, the balanced accuracies and AUC values did not show a clear difference (Table
+
+Model comprehensibility and relevance map visualization
+The implemented web application frontend is displayed in Fig.
+com/ marti ndyrba/ DeepL earni ngInt eract iveVis and the web application can be publicly accessed at
+net/ demo.
+In the left column, the user can select a study participant and a specific model.
+Below, there are controls (sliders) to adjust the thresholds for displayed relevance score, cluster size, and overlay transparency.
+As we used the spatially normalized MRI images as CNN input, we can directly obtain the anatomical reference location label from the automated Table
+In parenthesis, the mean values and standard deviation for the ten models trained in the tenfold cross-validation procedure are provided to indicate the variability of the measures.
+Values for the ADNI-GO/2 sample (in italics) may be biased as the respective test subsamples were used to determine the optimal model during training.
+We still report them for better comparison of the model performance across samples
+
+Sample
+Hippocampus anatomical labeling (AAL) atlas
+The green box displays statistics on the currently selected relevance cluster such as number of voxels and respective volume.
+In the middle part of Fig.
+We further added sliders and plots of cumulated relevance score per slices as visual guides to facilitate navigation to slices with high relevance.
+All user interactions are directly sent to the server, evaluated internally, and updated in the respective views and control components in real-time without major delay.
+For instance, adjusting the relevance threshold directly changes the displayed brain views, the shape of the red relevance summary plots, and the blue cluster size histogram.
+A sequence diagram of internal function calls when selecting a new participant is illustrated in Supplementary Fig.
+The group mean relevance maps for the DEL-CODE validation sample are shown in Fig.
+They are very similar to traditional statistical maps obtained from voxel-based morphometry, indicating the highest contribution of medial temporal brain regions, more specifically the hippocampus, amygdala, thalamus, middle temporal gyrus, and middle/posterior cingulate cortex.
+Also, they were highly consistent between samples (Supplementary Fig.
+The occlusion sensitivity analysis also showed identical brain regions' atrophy to contribute to the model's decision (Fig.
+Interestingly, the occlusion relevance maps showed a ring structure around the most contributing brain areas, indicating that relevance was highest when the occluded area just touched the salient regions, leading to a thinning-like shape of the gray matter.
+The correlation of individual DELCODE participants' hippocampus relevance score and hippocampus volume for the model trained on the whole ADNI-GO/2 dataset is displayed in Fig.
+For this model, the correlation was r = -0.87 for bilateral hippocampus volume (p < 0.001).
+Across all ten models obtained using cross-validation, the median correlation of total hippocampus relevance and volume was r = -0.84 with a range of -0.88 and -0.44 (all with p < 0.001).
+Crossvalidation models with higher correlation between hippocampus relevance and volume showed a tendency for better AUC values for MCI vs. controls (r = 0.61, p = 0.059).
+To test whether hippocampus volume and relevance measures were specific to the hippocampus, we also compared the correlation between hippocampus volume and other regions' and whole-brain relevance.
+Here, the correlations were lower, with r = -0.62 (p < 0.001) between hippocampus volume and whole-brain relevance.
+More detailed results are provided as a correlation matrix in Supplementary Fig.
+
+Discussion
+
+Neural network comprehensibility
+We have presented a CNN framework and interactive visualization application for obtaining class-specific relevance maps for disease detection in MRI scans, yielding human-interpretable and clinically plausible visualizations of key features for image discrimination.
+To date, most CNN studies focus on model development and optimization, which are undoubtedly important tasks and there are still several challenges to tackle.
+However, as black-box models, it is typically not feasible to judge, why a CNN fails or which image features drive a particular decision of the network.
+This gap might be closed with the use of novel visualization algorithms such as LRP
+In our application, LRP relevance maps provided a useful tool for model inspection to reveal the brain regions which contributed most to the decision process encoded by the neural network models.
+Currently, there is no ground truth information for relevance maps, and there are no appropriate methods available to quantify relevance map quality.
+Samek and colleagues
+Furthermore, adapted from classical neural network sensitivity analysis, they assessed the robustness of relevance maps using perturbation testing where small image patches were replaced by random noise, which was also applied in
+Already for 2D data, this method is computationally very expensive and only practical for a limited number of input images.
+Instead of adding random noise, we simulated gray matter atrophy by lowering the image intensities by 50% in a cube-shaped area.
+As visible from Fig.
+Notably, the ring-shaped increase in relevance around the salient regions (Fig.
+Most probably, this means that the model was more sensitive to thinning patterns of gray matter than to equally distributed volume reduction.
+However, our findings have to be seen as preliminary, as we only assessed this analysis in one normal control participant due to the computational effort, and therefore, it requires more extensive research in future studies.
+Based on the extensive knowledge about the effect of Alzheimer's disease on brain volume as presented in T1-weighted MRI scans
+Here, we obtained very high correlations between hippocampus relevance scores and volume (median correlation r = -0.84),
+underlining the clinical plausibility of learnt patterns to differentiate AD and MCI patients from controls.
+In addition, visual inspection of relevance maps also revealed several other clusters with gray matter atrophy in the individual participants' images that contributed to the decision of the CNN (Figs.
+Böhle and colleagues
+Notably, the CNN models presented here were solely based on the combinations of input images with their corresponding diagnostic labels to determine which brain features were diagnostically relevant.
+Traditionally, extensive clinical experience is required to define relevant features (e.g., hippocampus volume) that discriminate between a clinical population (here: AD, MCI) and a healthy control group.
+Also, typically, only few predetermined parameters are used (e.g., hippocampus volume or medial temporal lobe atrophy score
+Our results demonstrate that the combination of CNN and relevance map approaches constitutes a promising tool for improving the utility of CNN in the classification of MRIs of patients with suspected AD in a clinical context.
+By referring back to the relevance maps, trained clinicians will be enabled to compare classification results to comprehensible features visible in the relevance images and thereby more readily interpret the classification results in clinically ambiguous situations.
+Perspectively, the relevance map approach might also provide a helpful tool to reveal features for more complex diagnostic challenges such as differential diagnosis between various types of dementia,
+
+CNN performance
+As expected, CNN-based classification reached an excellent AUC ≥ 0.91 for the group separation of AD compared to controls but a substantially lower accuracy for group separation between MCI and controls (AUC ≈ 0.74, Table
+When restricting the classification to amyloid-positive MCI versus amyloid-negative controls, group separation improved to AUC = 0.84 in DELCODE, highlighting the heterogeneity of MCI as a diagnostic entity and the importance of biomarker stratification
+In summary, these numbers are also reflected by the recent CNN literature as shown in Table
+Notably,
+To overcome such challenges, we validated the models on three large independent cohorts (Table
+To put the CNN model performance into perspective, we compared the accuracy of the CNN models with the accuracy achieved by assessing hippocampus volume, the key clinical MRI marker for neurodegeneration in Alzheimer's disease
+Interestingly, there were only minor differences in the achieved AUC values across all samples (Table
+The MCI group of the ADNI-3 sample, which yielded the worst group separation of all samples (AUC = 0.68), was actually the group with the largest average hippocampus volumes and, therefore, the lowest group difference compared to the controls (Table
+Obviously, our results here indicate a limited value of using CNN models instead of traditional volumetric markers for the detection of Alzheimer's dementia and mild cognitive impairment.
+Previous MRI CNN papers have not reported the baseline accuracy reached by hippocampus volume for comparison.
+However, as noted above, CNNs might provide a useful tool to automatically derive discriminative features for complex diagnostic tasks where
+
+Limitations
+As already mentioned above, visual inspection of relevance maps also revealed several other regions with gray matter atrophy in the individual participants' images that contributed to the decision of the CNN.
+These additional regions were not further assessed, as a priori knowledge regarding their diagnostic value is still under debate in the scientific community
+Also, we did not perform a three-way classification between AD dementia, MCI, and CN due to the limited availability of cases for training.
+Additionally, MCI itself is a heterogeneous diagnostic entity
+Here, all the studies involved in our analysis tried to increase the likelihood of underlying Alzheimer's pathology by focusing on MCI patients with memory impairment.
+But markers of amyloid-beta pathology were only available for a subset of participants such that we could not stratify by amyloid status for the training of the CNN models.
+However, we optionally applied this stratification for the validation of the CNN performances to improve the diagnostic confidence.
+
+Future prospects
+Several studies focused on CNN models for the integration of multimodal imaging data, e.g., MRI and fluorodeoxyglucose (FDG)-PET
+Here, it will be beneficial, to directly include the variables we used as covariates (such as age and sex) as input to the CNN model rather than performing the variance reduction directly on the input data before applying the model.
+In this context, relevance mapping visualization approaches need to be developed that allow for a direct comparison of the relevance magnitude for images and clinical variables simultaneously.
+Another aspect is the automated generation of textual descriptions and diagnostic explanations from images
+Given the recent technical progress, we suggest that the approach is now ready for interdisciplinary exchange to assess how clinicians can benefit from CNN assistance in their diagnostic workup, and which requirements must be met to increase clinical utility.
+Beyond the technical challenges, regulatory and ethical aspects and caveats must be carefully considered when introducing CNN as part of clinical decision support systems and medical software-and the discussion of these issues has just recently begun
+
+Conclusion
+We presented a framework for obtaining diagnostic relevance maps from CNN models to improve model comprehensibility.
+These relevance maps have revealed reproducible and clinically plausible atrophy patterns in AD and MCI patients, with a high correlation with the well-established MRI marker of hippocampus volume.
+The implemented web application allows a quick and versatile inspection of brain regions with a high relevance score in individuals.
+With the increased comprehensibility of CNNs provided by the relevance maps, the datadriven and hypothesis-free CNN modeling approach might provide a useful tool to aid differential diagnosis of dementia and other neurodegenerative diseases, where fine-grained knowledge on discriminating brain alterations is still missing.
+• fast, convenient online submission • thorough peer review by experienced researchers in your field • rapid publication on acceptance
+• support for research data, including large and complex data types • gold Open Access which fosters wider collaboration and increased citations maximum visibility for your research: over 100M website views per year
+
+•
+At BMC, research is always in progress.
+
+Learn more biomedcentral.com/submissions
+Ready to submit your research Ready to submit your research ?
+Choose BMC and benefit from:
+? Choose BMC and benefit from:
+
+
+
+Fig. 1
+Fig. 1 Data flow chart and convolutional neural network structure
+
+
+
+Fig. 2
+Fig. 2 Web application to interactively examine the neural network relevance maps for individual MRI scans
+
+
+
+Fig. 3
+Fig. 3 Example relevance maps obtained for different people.
+Top row: Alzheimer's dementia patients, middle row: patients with mild cognitive impairment, bottom row: cognitively normal controls
+
+
+
+Fig. 4
+Fig. 4 Mean relevance maps for Alzheimer's dementia patients (top row), patients with mild cognitive impairment (middle row), and healthy controls (bottom row) for the DELCODE validation sample.
+Relevance maps thresholded at 0.2 for better comparison
+
+
+
+Fig. 5
+Fig. 5 Results from the occlusion sensitivity analysis.
+A gray matter volume loss of 50% was simulated in a cube of 30-mm edge length.
+Each voxel encodes the derived values when centering the cube at that position.
+Top: probability of AD for the areas with simulated atrophy.
+Bottom: total sum of image relevance depending on simulated atrophy.
+Numbers indicate the y-axis slice coordinates in MNI reference space
+
+
+
+Fig. 6
+Fig. 6 Scatter plot and correlation of bilateral hippocampus volume and neural network relevance scores for the hippocampus region for the DELCODE sample (r = -0.87,
+p < 0.001)
+
+
+
+Table 2 . The Table 1 Overview of previous studies applying neural networks for the detection of AD and MCI Study (chronologic order) Data type Sample Algorithm Performance Addressed model comprehensibility AD MCI c/nc CN Groups Accuracy Balanced accuracy AUC
+
+
+
+Table 1 (continued) Study (chronologic order) Data type Sample Algorithm Performance Addressed model comprehensibility AD MCI c/nc CN Groups Accuracy Balanced accuracy AUC
+= 575 participants of the recent ADNI-3 phase.
+The second dataset included MR images from N = 606 participants of the Australian Imaging, Biomarker & Lifestyle Flagship Study of Ageing (AIBL) (https:// aibl.
+csiro.
+au), provided via the ADNI system.
+A summary of the diagnostic criteria and additional information is available at https:// aibl.
+csiro.
+au/ about.
+For AIBL, we additionally obtained amyloid PET scans which were available for 564 participants (93%).
+
+
+
+Table 2
+Summary of sample characteristics Numbers indicate mean and standard deviation (SD) if not indicated otherwise.
+Years of education were not available for the AIBL dataset.
+RAVLT Delayed recall scores were not available for the AIBL and DELCODE samples CN cognitively normal controls, MCI amnestic mild cognitive impairment, AD Alzheimer's dementia, SD standard deviation, MMSE Mini Mental State Examination, RAVLT Rey Auditory Verbal Learning Test, WMS-LM Wechsler Memory Scale Logical Memory Test, MRI magnetic resonance imaging

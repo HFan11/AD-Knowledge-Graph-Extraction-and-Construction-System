@@ -1,0 +1,328 @@
+Abstract-Computer-aided early diagnosis of Alzheimer's disease (AD) and its prodromal form mild cognitive impairment (MCI) based on structure Magnetic Resonance Imaging (sMRI) has provided a cost-effective and objective way for early prevention and treatment of disease progression, leading to improved patient care.
+In this work, we have proposed a novel computeraided approach for early diagnosis of AD by introducing an explainable 3D Residual Attention Deep Neural Network (3D ResAttNet) for end-to-end learning from sMRI scans.
+Different from the existing approaches, the novelty of our approach is three-fold: 1) A Residual Self-Attention Deep Neural Network has been proposed to capture local, global and spatial information of MR images to improve diagnostic performance; 2) An explainable method using Gradient-based Localization Class Activation mapping (Grad-CAM) has been introduced to improve the interpretability of the proposed method; 3) This work has provided a full end-to-end learning solution for automated disease diagnosis.
+Our proposed 3D ResAttNet method has been evaluated on a large cohort of subjects from real datasets for two changeling classification tasks (i.e.
+Alzheimer's disease (AD) vs. Normal cohort (NC) and progressive MCI (pMCI) vs. stable MCI (sMCI)).
+The experimental results show that the proposed approach has a competitive advantage over the state-of-the-art models in terms of accuracy performance and generalizability.
+The explainable mechanism in our approach is able to identify and highlight the contribution of the important brain parts (e.g., hippocampus, lateral ventricle and most parts of the cortex) for transparent decisions.
+Index Terms-Deep learning, 3D CNN, MRI brain scans, Model Explanation/Explainable Artificial Intelligence
+
+I. INTRODUCTION
+A LZHEIMER'S disease (AD) is the most common cause of dementia among the old people, which is irreversible and progressive neurodegenerative brain disease.
+It contributes to 60-70% of dementia cases and affects over 30 million individuals
+With the exponentially growing aging population across the globe, the prevalent increased cases of Alzheimer's disease (AD) have presented unprecedented pressures on public healthcare service.
+There is currently no cure for AD.
+However, the progress could be slowed through medicine and optimized physical cognition and activity.
+Therefore, accurate and timely diagnosis of Alzheimer's disease (AD) and its early form mild cognitive impairment (MCI) is essential for optimal management and improved patient care
+Clinically, Structural Magnetic Resonance Imaging (sMRI) has been used for AD diagnosis.
+The structural MRI measurement is considered as a marker of AD progression, which can help detect the structural abnormalities and track the evolution of brain atrophy
+However, the disease identification process is mainly performed manually by specialists, which is time-consuming and expensive.
+To solve this problem, much effort has been devoted to developing computer-aided diagnostic systems for automated discrimination of progression of AD (e.g., mild cognitive impairment (MCI) including progressive MCI (pMCI) and stable MCI (sMCI) and normal cohort (NC)) from sMRI scans based on voxel-wise global features, or predetermined regional features or combination of both
+The volumetric or voxel-based approaches extract global features for detecting the structure changes and identifying voxel-wise disease associated microstructures for AD diagnosis
+The Tensor-based morphology (TBM) diagnostic approach is a voxel-wise optimization approach, which can recognize local structural changes through mapping orders of local tissue volume loss or income over time to understand the neurodegenerative or neurodevelopment processes for AD diagnosis
+In
+Since some specific brain regions such as hippocampal region of interest (ROI) are strongly correlated to the disease, several existing works focused on some predetermined ROIs guided by prior biological knowledge and extracted regional features for AD diagnosis
+For instance, Magnin
+Recently, deep neural networks have shown successful for various computer vision tasks
+A few deep learning methods have been proposed for AD diagnosis with sMRI scans and achieved better performance than the classical machine learning-based methods.
+These methods focused on learning either regional features from prior Knowledge regions (e.g., hippocampus
+Lian et al. proposed a hybrid deep learning approach using convolutional neural networks (CNNs) to learn combined features at multiscale
+Hosseini-Asl et al. predicted AD with a 3D CNNs based on the pretrained 3D convolutional autoencoder model to capture anatomical shape variations from sMRI
+Despite the existing encouraging work, it suffers several limitations.
+Firstly, extracting global features using voxelbased approaches involve processing high-dimensional 3D data, which is computationally intensive.
+Secondly, regionalbased features focusing on certain brain regions of interest (e.g., the cortical thickness and hippocampus shape) may neglect possible pathological locations in the brain and fail to obtain global structural information for accurate AD diagnosis.
+Moreover, these methods require domain-specific prior-knowledge and multi-stage training.
+Thus, it is hard to provide an end-to-end solution for automatic disease diagnosis.
+Thirdly, the existing methods
+However, the use of hybrid loss functions for each layer with the same shared weight may lead to difficulty in training and reproduction.
+Finally, most of existing deep learning-based approaches for AD diagnosis lack transparency in terms of model explanation due to the nature of black-box learning.
+To overcome the aforementioned limitations, this work proposes a novel computer-aided approach for early diagnosis of AD from sMRI by developing an explainable 3D Residual Attention Deep Neural Network (3D ResAttNet) for end-to-end learning from sMRI.
+Different from the existing approaches, our contributions lie in:
+1) A Residual Attention Deep Neural Network has been designed and implemented, allowing for capturing local, global and spatial information to improve diagnostic performance; 2) An explainable Gradient-based Localization Class Activation mapping (Grad-CAM) has been introduced, enabling visual explanation and interpretation of model predictions; 3) The proposed work has provided a full end-to-end solution for automated disease diagnosis.
+The rest of this paper is organized as follows: Section 2 presents related work; Section 3 details the proposed method; In Section 4, the experimental evaluation is described; Section 5 concludes the proposed work and highlights the future work.
+
+II. RELATED WORK A. Computer-aided AD diagnosis
+Computer-aided diagnosis of AD treatment has a long history, with the aim of extracting useful features for automatic classification.
+According to the feature extracted method, it can be broadly divided into three categories: 1) Global feature-based approaches (Voxel-based approaches); 2) Regional feature-based approaches; 3) Combination of both global and regional based approaches.
+The early works on AD diagnosis mainly focused on the extracted global features from the whole MR image.
+The volumetric-based approach using voxel intensity features has been widely used for AD classification.
+Ashburner et al.
+It showed the difference between white and gray voxels in local concentrations compared with the normal cohort (NC) brains.
+Based on the voxel-wise features, Klöppel et al. trained a support vector machine (SVM) model to diagnosis AD from sMRI
+Hinrichs et al.
+However, some limitations include 1) computationally intensive and over-fitting due to high dimensionality of features with the relatively small number of images for model training; 2) neglecting the regional information that has been proven important to AD diagnosis.
+The second category is regional feature-based methods.
+The majority of the works in this category mainly relied on prior knowledge to determine ROIs.
+Several existing works in the literature extracted features from the predetermined ROIs based on biological prior knowledge on the shrinkage of cerebral cortices and hippocampi, the enlargement of ventricles, and the change of regional glucose uptake
+Magnin
+The work in
+Fan
+However, these aforementioned methods are based on empirical regions, which might neglect possible pathological locations in the whole brain.
+Moreover, the features extracted from ROIs may not be able to reflect the subtle changes involved in the brain
+In order to address these limitations, a hierarchical method was introduced by combination of global and regional features.
+Lian et al. divided sMRI images into small 3D patches and extracted features, and then combined the features hierarchically
+Suk et al. also proposed a systematic method for a joint feature representation from the paired patches of sMRI images using the patch-based approach
+These patch-based methods have been proven to efficiently deal with the problem of high dimensional features and also the sensitivity to slight changes.
+However, these models always require multi-stage training, which are not an end-to-end solution.
+Recently, deep learning has achieved a remarkable success in the field of Computer Vision, which has also become a popular and useful method for medical image analysis including Alzheimer's disease (AD) diagnosis based on MRI images.
+The convolutional neural network (CNN)
+Billones et al. proposed a modified 16-layered VGG network to AD classification with sMRI images
+The method selected 20 central slices of a sMRI image and achieved high accuracy on classification tasks using 900 sMRI images from the ADNI database.
+Residual network is the most widely used CNNs architecture that won the Imagenet classification competition
+It aims to alleviate the issues with the vanishing/exploding gradients when the network becomes deeper.
+In ResNet Block, a shortcut connection is added to link the input with the output, thus the Resnet learns the residual of input.
+Li et al.
+
+B. Explainable deep learning
+Due to the nature of black box, one challenge facing in the deep learning models is their explainable capability
+For the AD diagnosis task, most of existing deep learning-based approaches lack transparency with difficulty in explaining why and how a model decision is reached.
+To explain the image classification result by CNNs models, several explainable methods for CNNs have recently been proposed.
+Saliency map
+It computes the gradients of logits based on the backpropagation algorithm and visualizes the feature contributions based on the amount of gradient they receive.
+This Saliency map is suitable for visualization but not good for localization and segmentation due to the noisy results
+Some improved methods based on saliency map
+For instance, the most widely used method is the guided backpropagation by preventing the backward flow of negative gradients on ReLU activation from the higher layer in the CNNs architecture
+Other optimized visualization methods also include PatternNet and PatternAttribution
+Class Activation mapping (CAM) is another explainable method for CNNs.
+In the CAM method, the top fully connected layers was replaced by convolutional layer to maintain the object positions and can find the spatial distribution of distinguished regions for predict category
+The CAM requires retraining the model since it changes the model architecture.
+However, to address this issue, Grad-CAM has been proposed as a generalization of the CAM method
+This method has been widely used to explain the CNN classification models.
+However, since the Grad-CAM extracts the spatial distribution from the last layer of the feature map with low resolution, this results in smaller size than the input image size.
+In order to obtain more accurate location information at high resolution, some optimized CAM methods are proposed, such as Adversarial Complementary Learning for Weakly Supervised Object Localization (ACOL)
+To the best of our knowlege, only a few works presented the explainable methods for deep learning based AD Diagnosis.
+Montavon et al. and Yange et al.
+These methods are able to show how the CNNs made the classification decision.
+But there is no attempt made yet to explain 3D data classification tasks for diagnosis of MCI.
+
+III. METHOD
+The aim of this work is to develop an end-to-end deep learning framework to automatically classify discriminative atrophy localization on sMRI image for AD diagnosis, which consists of two levels of classifications: Alzheimer's disease (AD) vs. Normal cohort (NC) and progressive MCI (pMCI) vs. stable MCI (sMCI).
+
+A. 3D Explainable Residual Self-Attention Convolutional Neural Network (3D ResAttNet)
+We have proposed a 3D explainable residual attention network (3D ResAttNet), a deep convolutional neural network that adopts self-attention residual mechanism and explainable gradient-based localization class activation mapping (Grad-CAM) for AD diagnosis.
+The high-level conceptual framework is shown in Fig.
+The rationale behind of this architecture design includes:
+1) The residual mechanism is designed to allow for more efficient training with fewer parameters for performance enhancement when increasing the depth of the network.
+Existing methods
+In addition, the residual connection avoids losing global features to ensure the integrity of the original information
+2) The self-attention mechanism is added to learn longrange dependencies.
+Capturing long-range dependencies is important in deep learning.
+Since the convolutional operator has a local receptive field, the long-distance dependencies can only be captured when repeatedly applying convolutional operations
+Hence, it is necessary to add self-attention mechanism to address these issues.
+3) The gradient-based localization class activation mapping (Grad-CAM) is introduced to provide visual explanations of predictions of Alzheimer's disease.
+
+B. 3D CNNs
+Deep convolutional neural networks provide an effective way to learn multi-level features with multi-layers of convolutional operations in an end-to-end fashion
+Essentially, the high-level features are obtained by composing low-level features and the levels of features can be enriched by the number of stacked layers (i.e.
+depth).
+We have used 3D CNNs.
+3D convolutions apply a 3D filter to the dataset and the filter moves 3 directions x, y, z to calculate the low-level feature
+
+C. Residual Self-attention block (ResAttNet)
+In this work, for the first time, we have combined selfattention with residual module to capture both global and local information based on 3D images to avoid information loss.
+Attention mechanism has been a popular and useful tool in recent year
+On the other hand, this may cause global information loss.
+Therefore, we have added residual connection to address this issue.
+Residual network was originally designed to solve the issue of disappearance/exploding gradients when a network becomes deeper
+A residual connection is added between the origin input and the processed layer, which allows gradients to propagate more easily through the network.
+
+1) Residual network layer:
+A residual network can be formulated as follows:
+Where y is the output of the residual module, x is the input and r(x) is the residual function.
+This module includes two Conv3D blocks consisting of 3 × 3 × 3 3D convolution layers, 3D batch normalization and rectified-linear-unit nonlinearity layer (ReLU).
+2) Self-attention layer:
+As described in Section III-A, the convolutional operator has a local receptive field and only performs local operations, while the self-attention mechanism can perform non-local operation, capable of capturing long-range dependencies/global information.
+Therefore, inspired by the work in
+A self-attention function can be described as mapping a query, a key, and a value to the input, where those are all vectors.
+Key and value are the features of the whole sMRI extracted by each convolution block and the query determines which values to focus on for learning process.
+By using the 1 × 1 × 1 convolution filter, the key, query, and value are transformed to vectors.
+The key, query and value are denoted by f (x), g(x), h(x) as follows:
+(2)
+V alue :
+Here x ∈ R C×N is the features from the previous layer.
+C is the number of channels and N is the number of locations of features from the previous layer.
+W f , W g and W h are all 1 × 1 × 1 convolution filters.
+The self-attention map (a i,j ) can be calculated as:
+where a i,j indicates the correlative degree of attention between each region i and all other regions.
+j is the index of an output position.
+The output of the attention layer is
+In order to keep the same number of channels as the original input and for memory efficiency, a 1 × 1 × 1 convolution filter (W v ) is used to reduce the channel number of final outputs.
+3) Residual Self-attention block (ResAttNet): Therefore, the final output of the Residual Attention Block is given by: y = x + r(x) + γo(r(x))
+Where the o(r(x)) is the output of self-attention map, r(x) is the output of original output of residual function and x is input feature, the γ is a learnable parameter.
+We set γ as 0 as default to allows the network to first rely on the cues in the local neighborhood.
+When γ increased, the model gradually learns to assign more weight to the non-local evidence.
+
+D. The explainable 3D-CNNs
+To understand inside the proposed deep model, the 3D Grad-CAM have been applied to explain the model decision.
+We first calculated the gradient of the probabilities of disease areas with respect to the activation of unit k at location x, y, z in the last convolutional layer of the network.
+Then, the global average pooling of the gradients (a c k ) is used to show the importance weights for unit k.
+where Z is the number of voxels in the corresponding convolutional layer.
+Then, we combined the unit weights with the activations, A k
+x,y,z , to get the heatmap of 3D gradientweighted class activation mapping.
+
+IV. EXPERIMENTAL EVALUATION A. Dataset description
+Data used in this study are from the ADNI (
+consisting of baseline MRI scans of 1407 subjects from ADNI-1, ADNI-2 and ADNI-3 datasets.
+These subjects are divided into three classes: AD (Alzheimer's disease), MCI (mild cognitive impairment) and NC (normal control) based on the standard clinic criteria (e.g., Mini-Mental State Examination (MMSE) scores and Clinical Dementia Rating (CDR)).
+For MCI conversion prediction, MCI subjects are further divided into two classes: pMCI (progressive MCI subjects who had converted to AD within 36 months after baseline visit) and sMCI (stable MCI subjects who were continuously diagnosed as MCI).
+The ADNI-1 consists of 1.5T T1-weighted MR images, which has 835 scans of four classes: 200 of Alzheimer's Disease (AD) patients and 231 of Normal Cohort (NC), 232 sMCI and 172 pMCI.
+The ADNI-2 dataset consists of 3T T1-weighted MR images, which contains 258 scans of four classes: 108 of AD patients and 150 of NC.
+The ADNI-3 dataset consists of 3T T1-weighted MR images similar to ADNI-2, which has 314 scans of four classes: 45 of AD patients and 269 of NC.
+The demographic information of subjects is presented in Table
+In this work, we have used ADNI-1 for our model construction.
+ADNI-2 and ADNI-3 dataset have been used for independent cross-validation of model generalizability.
+As the original dataset is in Neuroimaging Informatics Technology Initiative (NIfTI) format, the preprocessing is needed for spatial distortion correction caused by gradient nonlinearity and B1 field inhomogeneity.
+This is a standard pipeline process including anterior commissure (AC)-posterior commissure (PC) correction, intensity correction
+We have used MIPAV(Medical Image Processing, Analysis, and Visualization) application to complete AC-PC correction and use FSL(FMRIB Software Library v6.0) to complete skull stripping.
+A line align registration strategy (flirt instruction in FSL) is also executed to align every sMRI linearly with the Colin27 template
+
+B. Evaluation metrics
+We have evaluated two binary classification tasks of AD classification (i.e., AD vs. NC) and MCI conversion prediction (i.e., pMCI vs. sMCI).
+The classification performance has been evaluated based on four commonly used standard metrics, including classification accuracy (ACC), sensitivity (SEN), specificity (SPE), and Area under the curve (AUC).
+These metrics are defined as:
+)
+where T P = T rueP ositive, T N = T rueN egative, F P = F alseP ositive and F N = F alseN egative.
+The AU C is calculated based on all possible pairs of SEN and 1 -SP E obtained by changing the thresholds performed on the classification scores yielded by the trained networks.
+
+C. Experimental evaluation
+To evaluate performance and generalizability of our proposed model, we have conducted three types of experiments: 1) Comparison study with state-of-the-art 3D convolutional neural networks; 2) Evaluation on generalizability of the proposed model using two independent datasets (ADNI-2 and ADNI-3); 3) Comparison study with other existing machine learning/deep learning methods for AD diagnosis.
+1) Evaluation 1: Comparison study with state-of-the-art 3D convolutional neural networks:
+We have performed comparison study with most commonly used 3D convolutional neural networks including 3D-VGGNet, 3D-ResNet under two conditions: with and without self-attention mechanism in 18 and 34 layers.
+The structures of 3D-VGG Block, 3D-ResNet Block and 3D-ResAttNet Block are shown in Fig.
+Each Conv3D layer consists of 3 consistent operations: 3D convolution, batch normalization 3D and RELU.
+The 14 layers and 34 layers network contain 8 and 14 3D Resnet block and 3D-ResAttNet block, respectively.
+A 3 × 3 × 3 3D convolution is 3 times more expensive than 2D version in terms of computational cost.
+In order to reduce the computational cost, we have replaced the 7 × 7 × 7 convolution in the 3D Conv block with three conservative 3 × 3 × 3 convolutions.
+The detailed configuration is shown in Fig.
+In this evaluation, we have trained our model using ADNI-1 dataset and performed a 5 fold cross-validation.
+The dataset is randomly split into 5 groups where 4 groups (80% of the dataset) are used for training and the rest are used for testing each time.
+The experimental results for classification performance are the average of the accuracies on the testing set across all folds, along with Standard deviation (Std).
+pvalue are also used to evaluate the statistical significance.
+To optimize model parameters, Adam, a stochastic optimization algorithm, with a batch size of 8 samples, has been used for optimization to train the proposed network
+We firstly set the learning rate (LR) as 1 × 10 -4 .
+The LR is decreased to 1 × 10 -6 with increased iterations.
+CrossEntropy has been selected as the loss function for this task
+All the experiments have been implemented based on Py-Torch and executed on a server with an Intel(R) Xeon(R) CPU E5-2650, NVIDIA 2080TI and 64 GB memory.
+2) Evaluation 2: Evaluation on generalizability of the proposed model using two independent datasets:
+To investigate generalizability and reproducibility of our proposed model, we have conducted two groups of experimental evaluation as follows:
+• We have first built our model based on ADNI-1 and evaluated it using two independent datasets (ADNI-2 and ADNI-3 respectively).
+• Then we reversed the training and testing datasets where we have trained the model using ADNI-2, and evaluated it on ADNI-1 and ADNI3 respectively.
+In this evaluation, we only performed AD vs. NC classification task due to insufficient pMCI and sMCI samples obtained from ADNI-2 and ADNI-3.
+3) Evaluation 3: Comparison study with other existing machine learning/deep learning methods for AD diagnosis:
+For indirect evaluation, we have selected most recent and state-of-the-art machine learning methods reported in the literature for indirect comparison using baseline sMRI data from ADNI
+
+D. Result and discussion
+1) Results from evaluation 1: As introduced previously, we have added the attention mechanism in the Resnet block.
+In this group of experiments, we have compared the models including 3D-VGGNet and 3D-ResNet models with and without attention layer.
+The results are presented in Table
+The classification performance of models with attention layer are significantly higher than models without it, especially on pMCI vs. sMCI classification.
+Our proposed model (3D-ResAttNet34) shows the best performance in all experiments.
+Fig.
+For the explainable model evaluation, 3D Grad-CAM has been used to explain the model for Alzheimer's Disease Diagnosis.
+We have only applied the 3D Grad-CAM to 3D-ResAttNet34 with the best classification performance.
+The heat-map is created to show how the network learns the importance of the areas.
+As described earlier, the 3D Grad-CAM can be used on an arbitrary layer.
+Fig.
+As more convolutions are processed, the resolution of the feature map also gradually decreases.
+In the first two convolution layers, the results have higher resolutions, which provide more details information.
+However, because they respond more to the corners, edge, texture and color conjunctions, more edges are highlighted.
+In the third and fourth convolution layers, the feature maps look like binary patterns where global and semantic information can be extracted.
+Some significant variation in lateral ventricle and hippocampus areas are highlighted.
+The attention heatmap of the Grad-CAM on 3D-ResAttNet34 result is presented in Fig.
+For comparison, the hippocampus, lateral ventricle and cerebral cortex areas on the input sMRI image in the first row are labeled to show the important areas for Alzheimers disease diagnosis.
+In the second row, we have applied the activation mapping heat-map to the last convolutional layer (i.e the fourth layer in this case).
+The heatmap is blurry because the last convolutional layer of 3D-ResAttNet34 is only of size 6 × 7 × 6.
+The heat map tends to show global information.
+To obtain a higher resolution and more detailed 3D class activation mapping heat-map, we have applied the 3D Grad-CAM to the lower convolutional layer (the third layer), as shown in the third row of Fig.
+It is of size 46 × 55 × 46 heat-map and thus provides more detail information.
+It identifies and highlights the hippocampus, lateral ventricle and most parts of the cortex as important areas, which matches the human expert's approach
+However, as mentioned in
+Therefore, edges are highlighted as well.
+
+2) Results for evaluation 2:
+The evaluation result for generalizability of the proposed model are summarized in Table
+For the first group of experiments, we have trained model using ADNI-1 dataset and evaluated it on ADNI-2 and ADNI-3 respectively.
+Comparing to our model based on ADNI-1 data, the accuracy on ADNI-2 is slightly decreased by 0.004 and the accuracy on ADNI-3 is slightly decreased by 0.021.
+The AUC is slightly dropped by 0.032 and 0.095 respectively.
+However, ACC, SEN, and SPE of our model remain high, which are statistically significant (i.e., p-values <0.05).
+This shows the good generalizabiity of our proposed model.
+For the second group of experiments, we have reversed the training and testing datasets to train the model using ADNI-2 and evaluate it on ADNI-1 and ADNI-3 respectively.
+The accuracy of our proposed model on ADNI-2 reaches 0.956.
+When testing on ADNI-1 and ADNI-3, the accuracies are 0.933 and 0.917 respectively, with slight decreases by 0.23 on ADNI-1 and 0.39 on ADNI-3 respectively.
+The ACC, SEN, and SPE of our proposed model based on ADNI-2 are higher than the ones of the model using ADNI-1, which are statistically significant (i.e., p-values <0.05).
+The main reason is because ADNI-1 and ADNI-2 dataset are captured from distinct phases of the ADNI project, which have different signal to noise ratios (SNR).
+sMRI images from ADNI-1 are scanned using 1.5T scanners, while MR images from ADNI-2 are scanned using 3T scanners.
+The 3T scanner has twice sensitive compared to 1.5T which can generate clearer and higher quality image.
+Based on these experiments, it has demonstrated that our proposed approach has good generalizability and reproducibility for AD diagnosis.
+3) Results for evaluation 3:
+It is unfair to perform the direct comparison between different methods due to the use of different datasets and also the clinical definition of pMCI/sMCI.
+In this case, we have only indirectly compared our model with six state-of-the-art machine learning based methods
+ADNI-1 ADNI-1 0.913 ± 0.012 0.910 ± 0.014 0.919 ± 0.009 0.984 ± 0.009 ADNI-1 ADNI-2 0.909 ± 0.019 0.895 ± 0.026 0.924 ± 0.014 0.952 ± 0.026 ADNI-1 ADNI-3 0.892 ± 0.034 0.788 ± 0.060 0.780 ± 0.076 0.889 ± 0.034 ADNI-2 ADNI-2 0.956 ± 0.089 0.950 ± 0.100 0.950 ± 0.100 0.978 ± 0.044 ADNI-2 ADNI-1 0.933 ± 0.133 0.933 ± 0.133 0.930 ± 0.140 0.967 ± 0.067 ADNI-2 ADNI-3 0.917 ± 0.019 0.885 ± 0.068 0.821 ± 0.046 0.930 ± 0.023
+The results are shown in Table
+There are several important observations including: 1) for the challenging task of MCI conversion prediction, the proposed 3D-ResAttNet outperforms other existing approaches; 2) for AD vs, NC classification, our proposed method has competitive performance, comparing to those methods using MRI only; 3) In terms of data size, our proposed method has been evaluated on a large number of subjects and cross-validated on two independent datasets from ADNI-2 and ADNI-3 respectively, which demonstrates a fair and independent evaluation and a good generalizability of our model.
+In addition, compared with the traditional regionand voxel-level pattern analysis methods, our proposed method takes the whole MRI image as input and automatically extracts high dimensional and nonlinear features, which leads to better classification performance for AD diagnosis.
+
+V. CONCLUSION
+Inspired by the attention mechanism and residual learning, we have proposed an end-to-end framework based on 3D Residual Self-Attention Network (3D ResAttNet) for early efficient diagnosis of AD diseases at two levels (i.e., AD vs. NC and pMCI vs. sMCI) from sMRI scans.
+The proposed method combines residual learning with self-attention mechanism, which can fully exploit both global and local information and avoid the information loss.
+Meanwhile, to understand inside our model and how our model reach decisions, we have also applied the 3D Grad-CAM method to identify and visualize those important areas contributing to our model decisions.
+To evaluate our model performance, we have compared the proposed model with most commonly used 3D convolutional neural networks including 3D-VGGNet, 3D-ResNet.
+The results show that our proposed model with attention layer (3D ResAttNet) outperforms the existing models.
+To evaluate generalization of the proposed model, we have also conducted thorough experiments under different crossvalidation strategies using ADNI datasets (ADNI-1, ADNI-2 and ADNI-3): 1) building the proposed model based on ADNI-1 and then validating it on ADNI-2 and ADNI-3 respectively; 2) building the model based on ADNI-2 and then validating it on ADNI-1 and ADNI-3 respectively.
+The results show that our proposed model has a good generalizability in all cases.
+Moreover, the explainable mechanism in our approach is able to identify and highlight the contribution of the important brain parts (e.g., hippocampus, lateral ventricle and most parts of the cortex) for transparent decisions.
+The future work will focus on continuous improvement of model performance and generalizability using more independent datasets.
+
+
+
+Fig. 1 .
+Fig. 1.
+The architecture of 3D residual attention deep Neural Network
+
+
+
+Fig. 2 .Fig. 3 .
+Fig. 2. The structure of 3D-VGG Block, 3D-ResNet Block and 3D-ResAttNet Block.
+
+
+Fig. 4 a) shows an example on AD vs. NC classification where the classification result using our proposed model 3D-ResAttNet34 with attention layer classifies the image into a normal category (i.e.
+NC) while the result from 3D-ResNet34 classifies the image into disease category (i.e.
+AD).
+Similarly, Fig. 4 b) shows an example on pMCI vs. sMCI classification.
+It indicates that our model correctly identifies the images into the right categories.
+
+
+
+Fig. 4 .
+Fig. 4. Examples of classification results on a) the AD vs. ND classification task.
+The result shows the proposed method classified the image into the right category same as the ground truth (NC) while 3D ResNet34 classified into a wrong catagory (AD); b) the sMCI VS. pMCI task.
+The result shows the proposed method classified it into the right category same as the ground truth while 3D ResNet34 classified into a wrong category (pMCI)
+
+
+
+Fig. 5 .
+Fig. 5. Visualization results of selected convolutional layer feature maps.
+From left to right: first, second, third and fourth convolutional block.
+
+
+
+Fig. 6 .
+Fig. 6.
+Sagittal, Axial and coronal view of the brain MRI and the visual explanation heatmaps.
+The first row shows the highlighted cerebral cortex, lateral ventricle, and hippocampus areas in sMRI images.
+The second row shows the visualization by applying the Grad-Cam to the fourth convolutional layer.
+The third row shows the visualization by applying the Grad-Cam to the third layer.
+
+
+An Explainable 3D Residual Self-Attention Deep Neural Network For Joint Atrophy Localization and Alzheimer's Disease Diagnosis using Structural MRI Xin Zhang, Liangxiu Han, Wenyong Zhu, Liang Sun, Daoqiang Zhang
+
+
+
+TABLE II RESULTS
+OF CLASSIFICATION FOR AD VS.
+
+
+
+TABLE IV COMPARATIVE
+PERFORMANCE OF THE CLASSIFIER VS.
+SIX COMPETITORS ON ADNI DATASET.

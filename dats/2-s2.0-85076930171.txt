@@ -1,0 +1,280 @@
+Brain Connectivity Based Prediction of Alzheimer’s Disease in Patients With Mild Cognitive Impairment Based on Multi-Modal Images
+Structural and metabolic connectivity are advanced features that facilitate the diagnosis of patients with Alzheimer's disease (AD) and mild cognitive impairment (MCI).
+Connectivity from a single imaging modality, however, did not show evident discriminative value in predicting MCI-to-AD conversion, possibly because the intermodal information was not considered when quantifying the relationship between brain regions.
+Here we introduce a novel approach that extracts connectivity based on both structural and metabolic information to improve AD early diagnosis.
+Principal component analysis was performed on each imaging modality to extract the key discriminative patterns of each brain region in an independent auxiliary domain composed of AD and normal control (NC) subjects, which were then used to project the two subtypes of MCI to the low-dimensional space.
+The connectivity between each target brain region and all other regions was quantified via a multi-task regression model using the projected data.
+The prediction performance was evaluated in 75 stable MCI (sMCI) patients and 51 progressive MCI (pMCI) patients who converted to AD within 3 years.
+We achieved 79.37% accuracy, with 74.51% sensitivity and 82.67% specificity, in predicting MCI-to-AD progression, superior to other existing algorithms using either structural and metabolic connectivities alone or a combination thereof.
+Our results demonstrate the effectiveness of multi-modal connectivity, serving as robust biomarker for early AD diagnosis.
+
+INTRODUCTION
+Alzheimer's disease (AD) is the most common neurodegenerative disease characterized by shortterm memory loss and a decline of cognitive functions, including executive, visuospatial abilities, and language
+Mild cognitive impairment (MCI) is referred to as the prodromal stage of AD, which is accompanied by a measurable impairment in memory, without the loss of general cognitive functioning
+Currently, over 50 million people have been diagnosed with AD worldwide, and this number will be nearly double by 2030
+Moreover, as the intermedia stage between normal control (NC) and AD, over onethird of patients with MCI, on average, will progress to AD within 5 years
+Because AD is an incurable disease that has become a serious global issue, developing diagnostic biomarkers for early prediction of the conversion from MCI to AD is of great importance, which, however, remains a challenge.
+Brain network analysis is an efficient tool in characterizing topological organization of the brain (e.g., functional integration and segregation), which has been widely used in investigating cerebral abnormalities caused by mental disorders, such as AD and MCI
+However, unlike a functional network that can be built based on the image of a single subject, the construction of morphological and metabolic networks are mostly at the group-level, which cannot be used to represent individual properties for diagnostic purposes
+To address this issue, several methods for extracting brain networks from individual magnetic resonance (MRI) and positron emission tomography (PET) images have been proposed.
+For example, at the brain parcel level, Pearson correlation, Euclidean distance, mutual information, and the Kullback-Leibler divergence of probability density function were, respectively, used to measure the relationship between the properties (e.g., cortical thickness, volume and metabolism) of distinct brain regions
+These networks were reported with "small-world" organization and altered network matrices with the progression of AD
+Though informative, these networks are based on paired relationships, which omit the nature of inter-play in the brain (one brain region has "first-order" connections with only a few of the other regions)
+Recent studies applied the sparse regression model (e.g., LASSO) to functional MRI to quantify such interaction patterns and established the "hyperfunctional network, " which was powerful in diagnosing patients with MCI, attention deficit hyperactivity disorder (ADHD) and major depressive disorder (MDD)
+We further extended this connectivity extraction strategy to construct a cortical network based on multiple morphological features in the brain (so called multi-feature based network, MFN)
+The connectivity of the MFN achieved outstanding performance that is superior to both anatomical features and some of the aforementioned structural networks in identifying patients with AD, MCI, and autism spectrum disorder (ASD)
+However, the features of the MFN failed to classify the MCI convertors from nonconvertors
+A recent study indicated that FDG-PET and T1 images may characterize the features of AD from different perspectives, e.g., hypometabolism is more related to the pathological processes and clinical severity of AD, whereas cortical atrophy is more related to the cognitive reserve
+We thus speculated that the cortico-cortical connectivity that combines both metabolic and morphological information may further enhance the prediction performance of MCI-to-AD conversion, because this connectivity synergistically depicts the abnormal changes on both sides.
+In the present study, we aimed to develop a brain connectivity that jointly reflects the high-order morphological and metabolic interactions to improve the prediction accuracy of MCI conversion.
+A framework to construct brain networks based on multi-modal images (MRI and PET) was proposed.
+For each imaging modality, we trained the principal patterns of each brain region with large variances in categorization using an independent auxiliary dataset consisting of AD and NC subjects.
+The connectivity extraction of each imaging modality in the target dataset was then treated as a single task, and a multitask sparse regression model
+We examined the diagnostic performance of the multi-modal connectivity (MMC) by cross-validating the results with a support vector machine (SVM)
+The diagnostic performances of the MMC was compared to single-modal connectivities, as well as other existing connectivity analysis methods, based on MRI and PET images.
+
+MATERIALS AND METHODS
+
+Subjects
+Images were obtained from the Alzheimer's Disease Neuroimaging Initiative (ADNI) database
+Subjects had both MRI and 18 F-fluorodeoxyglucose PET (FDG-PET) images were included.
+Notably, we selected MCI patients who have at least 3-year follow up information from the baseline.
+Finally, baseline images of 75 NCs, 78 patients with AD, 75 stable MCI (sMCI) patients, and 51 progressive MCI (pMCI) patients were included.
+The general diagnostic criteria were defined in the ADNI protocol.
+Briefly, the NCs were scored between 24 and 30 (inclusive) on the Mini-Mental State Examination (MMSE)
+The MCI group were scored between 24 and 30 (inclusive) on the MMSE, had a CDR of 0.5, with memory complaints and objective memory loss, but no significant levels of impairment in other cognitive domains, and no presence of dementia.
+In the present study, subjects who progressed to AD within 3 years from baseline were defined as pMCI, and subjects who did not convert to AD within the same time period were define as sMCI patients.
+The patients with AD were scored between 20 and 26 (inclusive) on the MMSE and had a CDR of 0.5 or 1, and met NINCDS/ADRDA criteria
+
+Imaging Data
+Structural images we downloaded were baseline T1 weighted MRI acquired from 1.5T scanners.
+All the images were controlled for quality and underwent corrections for geometry distortion and intensity non-uniformity
+FDG-PET images were acquired 30 to 60 min post-injection and reviewed for quality at the University of Michigan.
+All PET images were co-registered, averaged, reoriented, interpolated into standard resolution (160 × 160 × 96 voxels, 1.5 mm
+
+METHODS
+
+Preprocessing
+MRI and PET images were preprocessed using Statistical Parametric Mapping (SPM12) software.
+The preprocessing of MR images was conducted using the CAT12 toolbox
+Briefly, the process started with registration using affine, followed by realignment, bias correction for inhomogeneity, and the segmentation of gray matter (GM), white matter (WM) and cerebral spinal fluid (CSF)
+Then GM segmentations were spatially normalized to a prior template in the MNI152 space using the DARTEL (Diffeomorphic Anatomical Registration using Exponential Lie Algebra) algorithm
+Normalized images were corrected for non-linear deformation of the spatial normalization to generate modulated normalized images, which were then smoothed using a 5-mm full width at half maximum (FWHM) Gaussian kernel.
+For the preprocessing of PET images, each image was co-registered to the MRI of the same subject and then normalized using the deformation field of the corresponding MRI.
+The normalized images were smoothed using a 5-mm FWHM Gaussian kernel.
+The cerebral part of the two image modalities were segmented into hundreds of brain regions by registering a parcellation atlas to the template image in the MNI152 space.
+Here, we used Human Brainnetome Atlas for brain parcellation, which is a voxel-based parcellation containing 246 brain regions that builds upon multi-modal connectivity information of 40 healthy adults from the Human Connectome Project (HCP) database
+
+Overview of Multi-Modal Network
+Human brain is a highly interactive system, in which a connectivity may link multiple high-related brain regions rather than only two of them.
+Such connective patterns were found in both functional and structural brain networks
+In the present study, we took a further step to extract networks based on multiple imaging modalities to facilitate the diagnosis of MCI-to-AD conversion.
+The multimodal network is denoted as G = (V, E), with a node set V and an edge set E. Here, V is a set of brain regions and E is consisted by the MMC.
+The diagram illustrated in Figure
+Briefly, the MRI and PET images were first preprocessed and registered to a prior template.
+A principal component analysis (PCA) with a bagging strategy was then performed to each imaging modality in the auxiliary domain, consisted by AD and NC subjects, to extract the PCs of each brain region based on resampling the subjects with replacement.
+Regional data in the target domain, consisted by sMCI and pMCI subjects, were then projected to that feature space using the corresponding PCs of the brain region.
+The projected data were submitted to a multi-task sparse regression model to extract the connectivity between one target brain region and other regions.
+The technical details are provided below.
+
+Bagging-Based Principal Component Analysis
+In the present study, we applied PCA to the auxiliary domain to extract the principal patterns of the voxels in each brain region that have large variances between AD and NC.
+We speculated that the information possessed by the top PCs should also be able to contribute to discriminate AD-like (pMCI) and NC-like (sMCI) subjects.
+Studies have found that using classifiers trained by NC and AD subjects enhanced the performance of categorizing MCI convertors from non-convertors
+Because the sample size of the neuroimaging dataset is usually small, the principal patterns that are estimated based on the small dataset may not The dataset used for PCA was derived from the bagging process, which randomly picked subjects with a replacement to form a new sample set.
+This process was repeated for T times, and T matrices of eigenvectors were obtained for each brain region.
+Multi-modal connectivity extraction (green box): For each modality, we projected each brain region of observations in the target domain (sMCI and pMCI) to a low dimensional feature space using the eigenvectors of the corresponding region.
+For each brain, suppose the i-th principal component (eigenvector) was used for projection, then a projected vector of T × 1 could be obtained.
+The projected vectors of all brain regions using the i-th principal component (PC) of each region could form a data matrix X M ∈ R T×K , where K is the number of brain regions, and M is the imaging modalities.
+The multi-task regression was performed with the vector of one brain region in X M , in turn, served as the target variable and the vectors of other regions as regressors.
+The non-zero regression coefficients were set to 1 to represent the connectivity between regressors and the target brain region.
+If S PCs were selected for projection, the aforementioned process was repeated S times.
+Then a binary vector of 1 × S could be obtained that represents the relationship between one regressor and the target brain region derived from S regression processes (as shown in the right of the green box).
+The binary vector was converted to decimal and normalized to represent the connectivity strength between the two brain regions.
+Cross validation: leave-one-out cross validation, with nested two-step feature selection and parameter optimization, was performed on MCI subjects (N = 75 pMCI + 51 pMCI) to examine the validity of the MMC.
+be generalized across datasets.
+Therefore, we applied a bagging strategy to PCA, which trained the PCs of each brain region by random sampling the auxiliary samples with replacement for T times (T = 200 in this study) and ensuring the number of resampled subjects in each group was equal to the original dataset, to reduce the possible estimation bias of single time analysis (see the red box in Figure
+Regional data of each subject in the target domain were then projected to a lower dimensional space using the PCs of each brain region.
+Finally, for each modality of a brain region, we obtained a projected data matrix with the dimension of T × S, where S is the number of PCs that were chosen for projection.
+In the present study, we projected a brain region of an individual in the target domain using the S selected PCs of the same region.
+For example, we denoted the projected individual using the i-th PCs of each brain region as
+1 , x M 2 , ..., x M K ∈ R T×K , with M imaging modalities, K brain regions and T times bootstrapping sampling.
+Therefore, if we selected S top rank PCs of each brain region for projection, the projected individual could be denoted as
+.., X M PC S .
+This step not only extracts the regional principal patterns of the subjects in the target domain, but also expands the feature dimension in brain regions, which allows us to estimate inter-regional relationships on an individual level.
+
+Multi-Modal Connectivity Extraction
+The Multi-task sparse regression model was utilized instead of the paired correlation (e.g., Pearson correlation) and single-task model (e.g., LASSO), to quantify the relationships between a target brain region and multiple predictor regions
+As opposed to learning each task in isolation, multi-task learning exploits similarities across different learning tasks and can be used to jointly estimate the relationship between target variables and regressors across different types of tasks
+For using each of the subset X M PC i ∈ R T×K , (i ∈ S), the MMC among brain regions were generated by repeating the multitask regression procedure K times, with each brain region in turn acting as the target variable and the remaining regions as the regressors.
+In the present study, we denoted each imaging modality as a single learning task, formulated as:
+where X m PC i , y PC i = x m k , (k ∈ K), and w m PC i ∈ R K×1 were the regressor matrix, target vector, and regression coefficient, respectively.
+Notably, during the k-th regression, the regressor matrix X m PC i = x m 1 , . . .
+, x m k-1 , 0, x m k+1 , . . .
+, x m K ∈ R T×K contained all regional vectors, and x m k was set to 0. The multi-task regression function was estimated via l 1 /l q -norm regularization (q = 2 in our study), which applies the l 1 penalty over the regression coefficients that are derived from the l 2 penalty for each input across tasks, thus allowing us to quantify the connections via jointly considering the information from two tasks (morphological and metabolic information).
+The l 1 /l q penalty was formulated as follows:
+where λ is the l 1 /l q -norm parameter specified as a ratio of the maximal sparse parameter whose value lies in the interval [0, 1];
+of regression coefficients of multiple tasks, with each row representing the associations of the same brain region with target regions toward different tasks.
+The multi-task regression was conducted using the SLEP toolbox
+We varied the value of λ in specified ranges (λ ∈ {1, 2, ..., 10} × 10 -3 ) as suggested by
+The W PC i is used to measure the robustness of connectivity, in which rows with non-zero values suggest relatively strong relationships between the regressors and target regions, while rows with only zeros suggest a weak relationship.
+We merged the columns of W PC i into a binary vector with a K × 1 dimension by setting the non-zero rows to 1 and all zero rows to 0. The pipeline of the aforementioned procedure is given in the left of the green box in Figure
+Notably, because we selected S PCs for each brain region, this process was performed S times with X M PC i (i ∈ S) alternately serving as the model input.
+Therefore, for each target brain region, a binary matrix (V ∈ R K×S ) was finally obtained that represents the relationships between this region and all other regions across multiple PCs.
+MCI is known as a transition stage in AD, their alteration modes are similar
+Therefore, the connective strength may possess critical information that should not be omitted in early diagnostic studies.
+However, because the regression coefficients of the back-ward model (e.g., multitask regression model) cannot be used to represent the weights of features
+To this end, we proposed to quantify the connective strength between two brain regions via a binary to decimal encoding strategy, defined as:
+where v k is the k-th row of binary matrix V; v is an allone vector that has the same dimension of v k ; bin2dec is a function to convert the binary sequence to a decimal number.
+We will take the right panel in the green box in Figure
+For a binary matrix V derived from S multi-task regression models with region 2 as the target vector in each model, the j-th row of V represents the relationship between region 2 and region j across the S selected PCs.
+The connective weight between these two brain regions were then calculated via the equation above, which formed the j-th element of the second row of the final connective matrix.
+This method takes the information differences that the PCs possess into account and gives relatively large weights to the top-ranking PCs if they significantly contribute to the regression process.
+For each subject, the obtained network matrix was asymmetric with 246 × (246 -1) = 60, 270 elements, which were concatenated to form a feature vector for feature selection.
+Notably, the asymmetric network does not reflect any communication mechanism or causality, rather, it represents region-to-region relationships.
+
+Feature Selection and Classification
+We used the leave-one-out cross validation strategy to assess the classification performance of each feature type (see the blue box in Figure
+The feature selection was applied to the training set of each validation process.
+Here, we used a twostep feature selection strategy to find a relative optimal feature subset for classification.
+In the first step, the two sample t-test was utilized to roughly filter-out the features that were less relevant to the discrimination, features with the top 20% t values were preserved.
+These features were then evaluated by a linear SVMbased recursive feature elimination (SVM-RFE) strategy
+The ranking criterion of features was evaluated by the square term of weight coefficients (w 2 ) derived from the SVM model, calculated as w = k α k y k x k , where y k and x k is the class label and the feature vector, of sample k, respectively, α is an sparse index of support vectors.
+In each interaction, the 500 lowest ranking features were removed when the feature dimension was over 10,000; the step size was reduced to 50 for the last 10,000 features, 5 for the last 1,000 features, and 1 for the last 100 features
+The classification process was conducted using the LIBSVM toolbox
+A nested five-fold cross validation was performed to optimize the parameter C of linear SVM in the range of 2 β , β ∈ {-8, -7, ..., 8}.
+The classifier was then trained based on the selected features of the training set and the optimized parameter.
+To find the peak of accuracy, we increased the input features of the classifier from the top 10% of features derived from the first step of feature selection, with 5% increments of features.
+The accuracy, sensitivity, specificity, and area under the receiver operating characteristic (ROC) curve (AUC) were calculated for the performance assessment.
+
+RESULTS
+
+Prediction Performance Using the MMC
+Structural and metabolic features showed limited discriminative power in identifying MCI convertors from non-convertors, which achieved an accuracy of 61.11 and 59.52%, respectively.
+The combination of these two types of features slightly improved the prediction accuracy to 62.70%, with AUC of 0.6790, but the classification performance remained limited.
+As shown in Figure
+This is a significant improvement relative to the accuracy of the GM volume, metabolism and their combinations (χ 2 test, ps < 0.005, Table
+ROC curves of classification analyses using different feature types are shown in Figure
+
+Connectivity With Significant Between-Group Difference
+The between-group difference of MMC was evaluated via a two-sample t-test with a false discovery rate (FDR) correction (q < 0.05)
+Connectivity with a significant difference between the MCI convertors and nonconvertors is visualized in Figure
+The MMC that connected the temporal lobe with the frontal and parietal cortices exhibited significant reductions, e.g., the connectivity between the left rostral hippocampus and right middle frontal gyrus
+
+FIGURE 3 |
+The MMC showing a significant difference between sMCI and pMCI.
+The red and blue color indicates increased and decreased strength of connectivity in the pMCI cohort, respectively (two sample t-test, FDR corrected, q < 0.05).
+The direction is used to differentiate the connections between the same-node pairs.
+(IFG, opercular BA44), between the left inferior temporal gyrus (ITG, intermediate lateral BA20) and left inferior parietal lobule (IPL, rostrodorsal BA40), and between the right postcentral gyrus (PoG) and right caudal hippocampus.
+In contrast, the connectivity that connected the right rostroventral IPL with left caudal IPL and left superior frontal gyrus (SFG, BA9) significantly increased.
+These results were in line with previous findings showing abnormal functional and structural alterations within these brain regions (e.g., the hippocampus and temporal cortex)
+
+Comparisons With Other Connectivity Extraction Approaches
+We further compared the prediction performance of the MMC with other widely used connectivity extraction approaches
+As shown in Figure
+Though the combination of connectivity of the two modalities improved the prediction accuracies to 75.40%, it still did not surpass the accuracy of the MMC.
+Comparisons of single-modal connectivity that were extracted following the same method we introduced and using LASSO instead of the multi-task model are shown in Table
+These connectivities exhibited superior performances relative to the connectivity based on the paired-relationship of the same modality (see Figure
+However, it still did not exceed the performance of MMC.
+In addition, connectivity based on
+The asterisk indicates the differences between accuracies are statistically significant (p < 0.05, χ 2 test).
+metabolic information outperformed the structural connectivity in predicting disease progression, which was in line with previous findings showing an excessive hypometabolism relative to atrophy
+
+DISCUSSION
+Extraction of an effective biomarker is one of the critical factors for improving the prediction accuracy of MCI-to-AD conversion.
+Numerous studies in the literature have indicated the superior performance of using cortico-cortical connectivity relative to morphological and metabolic features when identifying patients with MCI and AD from the NCs
+However, most of these connectivities are based on a single imaging modality (e.g., MRI), which omitted the potential coupling mechanism between the information possessed by different imaging modalities, therefore, limiting the performance of categorizing MCI convertors from nonconvertors.
+In the present study, we proposed a novel connectivity extraction approach based on multi-modal images (i.e., MRI and PET), in order to enhance the performance of early AD diagnosis.
+The satisfactory performance achieved by the MMC suggested the effectiveness and feasibility of the multi-modal fusion strategy in connectivity extraction, and the high AUC indicated its remarkable generalizability.
+Possible reasons for the advanced performance of MMC are discussed below.
+Multiple imaging modalities provide a comprehensive representation of abnormal alterations in the brain.
+MRI and FDG-PET were suggested to represent distinct information in depicting AD-related changes in the brain, i.e., structure atrophy is significantly associated with the cognitive reserve of patients with AD, whereas the development process of the disease and its clinical severity are more related to the hypometabolism of the brain
+This is complementary information that cannot be interchanged between imaging modalities for diagnosis
+We speculated that the combination of multi-modal information in the connectivity extraction primarily contribute to the enhanced prediction performance.
+Patients with MCI and AD are accompanied with atrophy and hypometabolism of GM in various cerebral structures, such as the hippocampus, posterior cingulate, and the medial temporal cortices
+Such alterations may influence the inter-regional relationship in a complex manner, thus difficult to represent via a single imaging modality.
+The present connectivity extraction approach simultaneously combines the information from different modalities, providing a more comprehensive description of the changes in the inter-regional relationship, which therefore may be more sensitive to AD progression than connectivity based on a single imaging modality.
+Auxiliary domain training increases the discriminative power of the principal patterns.
+The subtypes of MCI may have similar alteration modes in both morphological and metabolic domains, which limits the extraction of informative features for categorization (e.g., principal alteration patterns)
+Since MCI is the transition stage between NC and AD, a hypothesis arises that the brain alterations of subjects with sMCI may be more like the NCs, while patients who progress to dementia may have a similar alteration mode as the AD cohort.
+This hypothesis has been utilized to promote the separation of MCI convertors and non-convertors, for example, using the classifiers trained by AD and NC subjects
+In the present study, we extracted the principal patterns of each brain region from the auxiliary domain of AD and NC subjects to increase discriminating ability.
+The projection of subjects in the target domain, using these principal patterns, may enlarge the variance between the two MCI subtypes, which therefore contributes to the enhanced prediction performance.
+In addition, auxiliary domain training only needs to be performed once.
+When we have the PCs from the auxiliary domain, it will take a few seconds to build the MMN for a new subject.
+One big challenge of the neuroimaging study is that the available datasets are usually small, especially for multi-modal longitudinal data.
+The small samples and the large dimension of features may give rise to a biased estimation of the model.
+In the present study, we applied the bagging strategy which resamples the subjects with a replacement to form a sub-dataset to the PCA process rather than training PCs on all of the subjects.
+One benefit of using the bagging strategy is that it could give rise to a comprehensive estimation of the principal patterns in each brain region.
+Thus, enhancing the generalizability of the models trained using these PCs.
+Studies have suggested that the linear regression model (e.g., LASSO) may additionally take the possible effects of other brain regions into account, which could take advantage of the nature of cerebral interplay, therefore making it superior to using paired correlations (e.g., Pearson correlation)
+Our results showed that connectivity extracted by LASSO outperformed the paired relationship and were consistent with these findings.
+Compared to learning each task independently, multi-task learning allows using the relationship between different tasks, leading to a better model
+In the present study, multi-task sparse regression was utilized to jointly find brain regions that were both morphologically and metabolically associated with the target region.
+Considering the unique features of the modalities and their potential interaction, the multitask model may better characterize the overall relationships among brain regions.
+Although the MMC has significantly enhanced the prediction performance, there are some limitations that need to be addressed in the future.
+First, the grouping criteria may contain falsecategorized cases.
+In the present study, we defined the sMCI as subjects who maintained MCI status for 3 years
+Since a large number of samples in the ADNI (especially for subjects who have multi-modal images) do not have longitudinal tracking information covering a period that long, this could be an important limitation that influences the discrimination
+Second, we used voxelbased morphometry (VBM) analysis to extract GM volume as the structural measurement, however, there are diversified MRI features (e.g., cortical thickness and sulcal morphology) that were reported to have significant alterations in patients with MCI and AD
+Third, the multi-task model with l 2,1 -norm penalty assumed all tasks share a common set of features, but omitted the information variance conveyed by different modalities
+Methods to quantify an inter-regional relationship by considering the complementary information between tasks must be developed.
+In addition, though we have included all MCI subjects in the ADNI database who have both MRI and PET images and met the grouping criteria, replications on large independent samples would still be beneficial to examine the generalizability and validity of the MMC.
+In addition, we did not got control age and gender effects before network construction because it did not significantly influence the classification performance of morphological connectivity
+The influences of age and gender on classification performance will be investigated in future work.
+
+CONCLUSION
+In conclusion, the connectivity extracted using multi-modal measures possess important information for the categorization of MCI-convertors and non-convertors.
+The classification performance achieved by MMC outperformed both structural and metabolic features, as well as connectivity extracted using other common approaches.
+These results suggested the effectiveness of MMC in early AD diagnosis, with potential clinical implications for the auto-diagnosis of neuropsychiatric disorders.
+
+
+
+FIGURE 1 |
+FIGURE 1 | Schematic representation of the MMC extraction and the classification process.
+Principal pattern training (red box):for each modality, PCA was applied to each brain region of the auxiliary domain data consisted by AD and NC subjects.
+The dataset used for PCA was derived from the bagging process, which randomly picked subjects with a replacement to form a new sample set.
+This process was repeated for T times, and T matrices of eigenvectors were obtained for each brain region.
+Multi-modal connectivity extraction (green box): For each modality, we projected each brain region of observations in the target domain (sMCI and pMCI) to a low dimensional feature space using the eigenvectors of the corresponding region.
+For each brain, suppose the i-th principal component (eigenvector) was used for projection, then a projected vector of T × 1 could be obtained.
+The projected vectors of all brain regions using the i-th principal component (PC) of each region could form a data matrix X M ∈ R T×K , where K is the number of brain regions, and M is the imaging modalities.
+The multi-task regression was performed with the vector of one brain region in X M , in turn, served as the target variable and the vectors of other regions as regressors.
+The non-zero regression coefficients were set to 1 to represent the connectivity between regressors and the target brain region.
+If S PCs were selected for projection, the aforementioned process was repeated S times.
+Then a binary vector of 1 × S could be obtained that represents the relationship between one regressor and the target brain region derived from S regression processes (as shown in the right of the green box).
+The binary vector was converted to decimal and normalized to represent the connectivity strength between the two brain regions.
+Cross validation: leave-one-out cross validation, with nested two-step feature selection and parameter optimization, was performed on MCI subjects (N = 75 pMCI + 51 pMCI) to examine the validity of the MMC.
+
+
+
+FIGURE 2 |
+FIGURE 2 | The classification performance of the MMC.
+(A) Classification accuracy with varying λ and number of selected PCs (S).
+The best accuracy was achieved at λ= 6 × 10 -3 and S = 12.
+(B) ROC curves at the best classification performance.
+
+
+
+FIGURE 4 |
+FIGURE 4 | Accuracies derived from leave-one-out cross validation using different types of connectivity.
+Four commonly used parcellation-based connectivity extraction methods, including Wee et al. (2013); Zheng et al. (2015), Raamana et al. (2015), and Kong et al. (2014), were applied to each imaging modality on our data, and were compared to the performance of the MMC.
+The asterisk indicates the differences between accuracies are statistically significant (p < 0.05, χ 2 test).
+
+
+
+Table 1
+
+
+
+TABLE 1 |
+Demographic information of participants.
+
+
+
+TABLE 2 |
+Comparison of the classification performances based on the original imaging features and MMC.
+
+
+
+TABLE 3 |
+Comparison of classification performances based on different regularization term.
