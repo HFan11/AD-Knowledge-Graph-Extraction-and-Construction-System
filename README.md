@@ -1,22 +1,12 @@
 # **Alzheimer's Disease Knowledge Graph Extraction and Construction System**
 
-This project is designed to automatically extract knowledge graphs related to Alzheimer's disease from medical literature and structure them into a knowledge base.
+This project is designed to **automatically extract knowledge graphs** related to **Alzheimer's disease** from **medical literature** and structure them into a **knowledge base**. 
 
-## **Installation**
+### **Project Highlights:**
+- **Reliable entity type descriptions** are established to **avoid divergence** in the knowledge graph.
+- **Reliable relationship types** are defined according to **our extraction description [extract_description.txt](extract_description.txt)**.
+- **Levenshtein distance** is applied to **remove duplicate or highly similar relationships**, ensuring a clean and consistent knowledge structure.
 
-1. Install **Python 3.9+**
-2. Run:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Change the **Neo4j** credentials to:
-   ```
-   neo4j/123456
-   ```
-4. Execute:
-   ```bash
-   python import_to_neo4j.py
-   ```
 
 ## **System Architecture**
 
@@ -68,6 +58,22 @@ This project is designed to automatically extract knowledge graphs related to Al
   - **Automatically creates nodes and relationships.**
   - **Supports resuming from failed imports.**
   - **Provides import statistics.**
+
+## **Installation**
+
+1. Install **Python 3.9+**
+2. Run:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Change the **Neo4j** credentials to:
+   ```
+   neo4j/123456
+   ```
+4. Execute:
+   ```bash
+   python import_to_neo4j.py
+   ```
 
 ## **Execution Order**
 
