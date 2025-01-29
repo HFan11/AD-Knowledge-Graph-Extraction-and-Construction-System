@@ -10,7 +10,7 @@ This project is designed to **automatically extract knowledge graphs** related t
 
 ## **System Architecture**
 
-![System Architecture](image.png)
+![System Architecture](system architecture.png)
 
 ## **File Descriptions**
 
